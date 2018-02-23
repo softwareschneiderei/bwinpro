@@ -1,0 +1,190 @@
+<HTML>
+<HEAD>
+  <META NAME="GENERATOR" CONTENT="Adobe PageMill 3.0 Win">
+  <TITLE>Tree Growth Open Source Software - Forest Growth Simulation - Waldwachstumsmodell by Juergen Nagel </TITLE>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+</HEAD>
+<BODY BGCOLOR="#ffffff" BACKGROUND="background.jpg">
+
+<P><IMG SRC="http://sourceforge.net/sflogo.php?group_id=61727&type=1"
+WIDTH="88" HEIGHT="31" BORDER="0" ALT="SourceForge.net Logo" 
+NATURALSIZEFLAG="0" ALIGN="BOTTOM"></P>
+
+<P>&nbsp;</P>
+
+<P><CENTER>
+    <p><font size="3"><b><font size="5">ForestSimulatorBWINPro</font></b></font></p>
+    
+  <p><a href="mailto:Juergen.Nagel@nw-fva.de">Juergen.Nagel@nw-fva.de</a></p>
+  <p><a href="http://www.nw-fva.de">Nordwestdeutsche Forstliche Versuchsanstalt</a>, 
+    Gr&auml;tzelstr.2, 37079 G&ouml;ttingen, Germany</p>
+    
+  <p align="left"><b>Kurzbeschreibung: <a href="bwinpro7.pdf">bwinpro7.pdf</a></b></p>
+  <p align="left">Die waldbaulichen Zielsetzungen haben sich in den 90iger Jahren 
+      in den meisten Landesforstverwaltungen ge&auml;ndert. In Niedersachsen wurde 
+      dieser Entwicklung mit dem Programm &quot;Langfristige &ouml;kologische 
+      Waldentwicklung in den Landesforsten&quot; (L&Ouml;WE) Rechnung getragen 
+      und 13 Bewirtschaftungsgrunds&auml;tze aufgestellt (Otto 1990, Nieders&auml;chsische 
+      Landesregierung 1992). Danach sollen u.a. die Best&auml;nde naturnah bewirtschaftet 
+      und der Anteil von Laub- und Mischwald vermehrt werden. Der Wald soll nat&uuml;rlich 
+      verj&uuml;ngt werden und die Entnahme nach Zielst&auml;rken einzelstammweise 
+      erfolgen. &Ouml;kologischer Waldschutz und ein &ouml;kologisch vertr&auml;glicher 
+      Einsatz der Forsttechnik sind zu gew&auml;hrleisten.</p>
+    <p align="left">Das L&Ouml;WE-Programm stellt an den F&ouml;rster vor Ort 
+      und die forstliche Planung hohe Anforderungen, wenn der Wald auch in der 
+      Zukunft bestm&ouml;glich bewirtschaftet werden soll. Als Hilfsmittel f&uuml;r 
+      die Bewirtschaftung wurden in der forstlichen Praxis bis dahin im allgemeinen 
+      Ertragstafeln verwendet, die f&uuml;r gleichaltrige Reinbest&auml;nde erstellt 
+      wurden. Wendet man sie jedoch auf Mischbest&auml;nde an, so l&auml;&szlig;t 
+      sich der zu erwartende Zuwachs nur grob sch&auml;tzen. Dazu trennt man den 
+      Mischbestand gedanklich nach Baumarten auf und ermittelt anschlie&szlig;end 
+      den Zuwachs jeder dieser gedachten Reinbestandsteilfl&auml;chen. Dieses 
+      Vorgehen ist jedoch sehr unbefriedigend, da der gesch&auml;tzte Zuwachs 
+      unabh&auml;ngig von der Mischungsform (z.B. einzelstamm-, horst-, gruppen- 
+      oder streifenweise) des Bestandes ermittelt wird. Der Praktiker erh&auml;lt 
+      aus den Ertragstafeln keine Informationen dar&uuml;ber, wie er einen Mischbestand 
+      am g&uuml;nstigsten bewirtschaften sollte. So z.B. ob er die eine oder die 
+      andere Baumart f&ouml;rdern sollte, was f&uuml;r Mischungsanteile der einzelnen 
+      Baumarten er anstreben sollte, oder wie sich der Wert des Bestandes &auml;ndern 
+      w&uuml;rde, wenn keine Ma&szlig;nahmen durchgef&uuml;hrt werden. In Reinbest&auml;nden 
+      f&uuml;hrten neue Bewirtschaftungsformen (z.B. Bestandesbegr&uuml;ndung) 
+      und ver&auml;nderte Umweltbedingungen (z.B. atmosph&auml;rische Eintr&auml;ge) 
+      zu immer st&auml;rkeren Abweichungen zwischen den Ertragstafelprognosen 
+      und der Wirklichkeit (Spellmann 1991, R&ouml;hle 1995).</p>
+    
+  <p align="left">Aus diesem Grund wurde an der Nordwestdeutsche Forstliche Versuchsanstalt 
+    (damals Nieders&auml;chsischen Forstlichen Versuchsanstalt) ein Managementinstrument 
+    entwickelt, welches sich f&uuml;r die Planung, Bewirtschaftung und Beurteilung 
+    von Rein- und Mischbest&auml;nden einsetzen l&auml;&szlig;t. Es ist als Entscheidungshilfe 
+    bei der Bestandesbewertung und -behandlung gedacht. Auf der Basis der vorhandenen 
+    Versuchsfl&auml;chendaten, welche ganz Nordwestdeutschland abdecken, wurde 
+    ein positionsunabh&auml;ngiges Einzelbaumwachstumsmodell parametrisiert und 
+    f&uuml;r dessen praktische Anwendung das Computerprogramm BWIN entwickelt. 
+    Das Programm ist &uuml;ber das Internet abrufbar und wurde inzwischen von 
+    vielen Benutzern abgerufen. Seit der ersten Version 1995 wurde BWIN st&auml;ndig 
+    erweitert und hatte 1998 einen Umfang erreicht, der es notwendig machte das 
+    Programm in zwei Programme f&uuml;r die waldbauliche Simulation (BWINPRO) 
+    und f&uuml;r forstliche Inventuren (KSP) aufzuspalten. </p>
+    
+  <p align="left">2003 wurde das Projekt <a href="http://treegross.sourceforge.net">TreeGrOSS</a> 
+    (Tree Growth Open Source Software) von der Nordwestdeutsche Forstliche Versuchsanstalt 
+    mit dem Ziel gestartet, 1.) den Waldwachstumssimulator in die Programmiersprache 
+    Java zu &uuml;berf&uuml;hren und es damit unabh&auml;ngig vom Betriebssystem 
+    Windows zu machen; 2.) das Programm objektorientiert und modular zu struktuieren; 
+    3.) die internationale Zusammenarbeit durch Mehrsprachigkeit und englische 
+    Dokumentation des Quellcodes zu f&ouml;rdern; und 4.) durch die Einf&uuml;hrung 
+    eines Open Source Lizenzmodells Kooperationen mit anderen Forschungsanstalten 
+    zu erleichtern, die Verbreitung zu vereinfachen und den Anwendern Vertrauen 
+    durch Offenlegung des Quellcode zu geben und ihnen die M&ouml;glichkeit zu 
+    er&ouml;ffnen, das Programm f&uuml;r eigene Zwecke zu ver&auml;ndern bzw. 
+    Teile in eigene Software zu integrieren. Alle wichtigen Informationen und 
+    der aktuelle Programmcode des Projektes TreeGrOSS sind im Internet bei Sourceforge.net 
+    bzw. &uuml;ber die Seiten der Nordwestdeutsche Forstliche Versuchsanstalt 
+    zu finden.</p>
+    
+  <p align="left">Das Programm ForestSimulatorBWINPro baut auf dem Projekt TreeGrOSS 
+    auf. In der Defaulteinstellung ist der Waldwachstumssimulator f&uuml;r Nordwestdeutschland 
+    eingestellt. Ein Kurzbeschreibung finden Sie in der Datei <a href="bwinpro7.pdf">bwinpro7.pdf</a> 
+    .Der mitgelieferte nieders&auml;chische Baumartenschl&uuml;ssel und alle wichtigen 
+    Einstellungen zu den Baumarten k&ouml;nnen &uuml;ber eine spezielle Programmkomponente 
+    individuell ver&auml;ndert werden. Zur Zeit kann Programmoberfl&auml;chensprache 
+    zwischen Deutsch, Englisch und Spanischgew&auml;hlt werden.. Die Oberfl&auml;che 
+    des ForestSimulatorBWINPro l&auml;&szlig;t sich f&uuml;r weitere vorhandene 
+    Wachstumsmodelle umkonfiguieren. F&uuml;r die Schwarzerle in Nordostdeutschland 
+    und die Kiederw&auml;lder der Region von El Salto, Mexiko sind sogenannte 
+    Plugins vorhanden. </p>
+    <p align="left">&nbsp;</p>
+    </CENTER>
+<p></P>
+
+<P><B>Literature</B></P>
+
+<UL>
+  <LI>Nagel, J.; Gadow von, K. (Hrgs): <a href="http://wwwuser.gwdg.de/%7Ejnagel/cdft.html">Forest 
+    Tools</a> - Forstliche Software Sammlung. CD-ROM. Selbstverlag J. Nagel G&ouml;ttingen 
+    ISBN 3-00- 009223-4
+  <LI><B><FONT SIZE="-1">Nagel, J.; Schmidt, M. (2003) : The single tree model 
+    BWINPro, a keycomponent for silvicultural decision support . In Vacik H. et 
+    al [eds.]: Decision support for multiple purpose forestry. A transdisciplinary 
+    conference on the development and application of decision support tools for 
+    forest management, April 23-25, 2003, University of Natural Resources and 
+    Applied Life Sciences, Vienna, Austria, CD-Rom Proceedings, p. 1-9.</FONT></B>
+  <LI><B><FONT SIZE="-1">Nagel, J.; Albert, M.; Schmidt, M. (2002): Das waldbauliche 
+    Prognose- und Entscheidungsmodell BWINPro 6.1. Forst u. Holz 57, (15/16) 486-493</FONT></B> 
+  <LI><B><FONT SIZE="-1">Pretzsch, H.; Biber, P.; Dursky, J.; Gadow, K. von; Hasenauer, 
+    H.; K&auml;ndler, G.; Kenk, G.; Kublin, E.; Nagel, J.; Pukkala, T.; Skovsgaard, 
+    J.P.; Sodtke, R.; Sterba, H. (2002): Recommendations for Standradized Dokumentation 
+    and Further Development of Forest Growth Simulators. Forstw. Cbl. 121, 138-151<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J. (2002): Das Open Source Entwicklungsmodell 
+    - eine Chance f&uuml;r Waldwachstumssimulatoren. Deutscher Verband Forstlicher 
+    Forschungsanstalten - Sektion Ertragskunde, Jahrestagung Schwarzburg 13-15. 
+    Mai 2002, S. 1-6<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Guericke, M. (2001): Untersuchungen zur Wuchsdynamik 
+    von Mischbest&auml;nden aus Buche und Europ. L&auml;rche (Larix deciduda, 
+    Mill.) als Grundlage f&uuml;r ein abstandsabh&auml;ngiges Einzelbaumwachstumsmodell, 
+    Cuvillier Verlag G&ouml;ttingen, S.220 (<A HREF="http://%20webdoc.sub.gwdg.de/diss/2001/guericke/index.html">http:// 
+    webdoc.sub.gwdg.de/diss/2001/guericke/index.html</A>)<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Schmidt, M. (2001): Prognosemodelle f&uuml;r ausgew&auml;hlte 
+    Holzqualit&auml;tsmerkmale wichtiger Baumarten. Dissertation Univ. G&ouml;ttingen. 
+    S.302 (<A HREF="/%20/webdoc.sub.gwdg.de/diss/2002/schmidt/index.html">http:/ 
+    /webdoc.sub.gwdg.de/diss/2002/schmidt/index.html</A>)<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Schmidt, M.; Spellmann, H.; Nagel, J. (2001): Waldwachstumskundliche 
+    Entscheidungshilfen zur &Auml;stung der Douglasie. Allg.Forst- u. J.Ztg., 
+    172.Jg., (7) 126-136<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J. (2001): Zur Genauigkeit von Ertragstafeln und 
+    dem Einzelbaummodell BWINPro. In: Akca, A.; Hoffmann, B.; Schumann, K.; Staupendahl, 
+    K.: Waldinventur, Waldwachstum und Forstplanung, Festschrift zum 60. Geburtstag 
+    von Prof. Dr. K. von Gadow. Zohab-Verlag S.145-151.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J.; Albert, M.; Schmidt, M. (2000): BWINPro Programm 
+    zur Bestandesanalyse und Prognose. Handbuch zur Version 5.1. Nieders&auml;chsische 
+    Forstliche Versuchsanstalt G&ouml;ttingen<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Albert, M., (2000): Ein funktionalisierter H&ouml;henerg&auml;nzungsalgorithmus 
+    f&uuml;r Einzelbaumwachstumsmodelle. Jahrestagung des DVFFA -Sektion<BR>
+    Ertragskunde- in Kaiserslautern.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J. (1999): Konzeptionelle &Uuml;berlegungen zum 
+    schrittweisen Aufbau eines waldwachstumskundlichen Simulationssystems f&uuml;r 
+    Nordwestdeutschland. Schriften aus der Forstlichen Fakult&auml;t der Universit&auml;t 
+    G&ouml;ttingen und der Nieders. Forstl. Versuchsanstalt, Band 128, J.D. Sauerl&auml;nder's 
+    Verlag, Frankfurt a.M., S.122<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Spellmann, H.; Nagel, J.; B&ouml;ckmann, Th. (1999): 
+    Summarische Nutzungsplanung auf der Basis von Betriebsinventuren. Allg.Forst- 
+    u. J.Ztg., 170.Jg., (7) 122-128.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Albert, M. (1999): Analyse der eingriffsbedingten Strukturver&auml;nderung 
+    und Durchforstungsmodellierung in Mischbest&auml;nden. Hainholz Forstwissenschaften 
+    Band 6, Hainholzverlag G&ouml;ttingen, 181S.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Windhager (1999): Evaluierung von vier verschiedenen 
+    Waldwachstumssimulatoren. Dissertation Univ. f. Bodenkultur Wien. 217S.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Windhager (1999): Vergleich von distanzabh&auml;ngigen 
+    und unabh&auml;ngigen konkurrenzbeschreibenden Faktoren und ihre Auswirkung 
+    auf den Grundfl&auml;chenzuwachs. Allg. Forst- u. J. Ztg. 170 (7): 133-139<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">B&ouml;ckmann, Th.; Saborowski, J.; Dahm, St.; Nagel, 
+    J.; Spellmann, H. (1998): Die Weiterentwicklung der Betriebsinventur in Niedersachsen. 
+    Forst u. Holz 53 (8): 219- 226.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Westphal, B. (1998): Beschreibung und Modellierung des 
+    Wachstums von Japan-L&auml;rchen (Larix kaempferi) im Reinbestand. Dissertation 
+    Univ. G&ouml;ttingen<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J. (1998): Zur Auswertung und Zuwachsprognose 
+    von permanenten Stichprobeerhebungen. Forst u. Holz, 53 (7): 197- 198.<BR>
+    </FONT></B> 
+  <LI><B><FONT SIZE="-1">Nagel, J. 1996: Anwendungsprogramm zur Bestandesbewertung 
+    und zur Prognose der Bestandesentwicklung. Forst u. Holz, 51 (3): 76-78<BR>
+    </FONT></B> 
+</UL>
+
+</BODY>
+</HTML>

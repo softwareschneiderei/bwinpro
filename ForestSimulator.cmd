@@ -1,0 +1,1 @@
+start .\jre8\bin\javaw.exe -Xmx256m -jar ForestSimulator.jar

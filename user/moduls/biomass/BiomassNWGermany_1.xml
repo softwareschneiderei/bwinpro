@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="Biomass.xsl"?><NutrientBalanceSettings><Region>Nordwestdeutschland</Region><Lastchange>01.08.2010</Lastchange>
+
+
+
+<Species><Code>110</Code><Specieslist>110,111,112,113</Specieslist><TotalBM></TotalBM><LeafBM>0</LeafBM>
+<WoodDensity>0.579  /* NW-FVA 2012 */</WoodDensity>
+<WoodFacC>495 /* NW-FVA 2012 */</WoodFacC>
+<WoodFacN>1.99 /* NW-FVA 2012 */</WoodFacN>
+<WoodFacS>0.113 /* NW-FVA 2012 */</WoodFacS>
+<WoodFacP>0.115 /* NW-FVA 2012 */</WoodFacP>
+<WoodFacK>0.92 /* NW-FVA 2012 */</WoodFacK>
+<WoodFacCa>0.62 /* NW-FVA 2012 */</WoodFacCa>
+<WoodFacMg>0.12 /* NW-FVA 2012 */</WoodFacMg>
+<WoodFacMn>0.045 /* NW-FVA 2012 */</WoodFacMn>
+<WoodFacFe>0.012 /* NW-FVA 2012 */</WoodFacFe>
+<WoodFacBOup>0.055 /* NW-FVA 2012 */</WoodFacBOup>
+<WoodFacBNH4>0.197 /* NW-FVA 2012 */</WoodFacBNH4>
+<WoodFacBNO3>-0.087 /* NW-FVA 2012 */</WoodFacBNO3>
+
+<BarkDensity>0.446 /* NW-FVA 2012 */</BarkDensity>
+<BarkFacC>496 /* NW-FVA 2012 */</BarkFacC>
+<BarkFacN>6.88 /* NW-FVA 2012 */</BarkFacN>
+<BarkFacS>0.532 /* NW-FVA 2012 */</BarkFacS>
+<BarkFacP>0.325 /* NW-FVA 2012 */</BarkFacP>
+<BarkFacK>2.44 /* NW-FVA 2012 */</BarkFacK>
+<BarkFacCa>21.72 /* NW-FVA 2012 */</BarkFacCa>
+<BarkFacMg>0.84 /* NW-FVA 2012 */</BarkFacMg>
+<BarkFacMn>0.642 /* NW-FVA 2012 */</BarkFacMn>
+<BarkFacFe>0.057 /* NW-FVA 2012 */</BarkFacFe>
+<BarkFacBOup>1.197 /* NW-FVA 2012 */</BarkFacBOup>
+<BarkFacBNH4>1.688 /* NW-FVA 2012 */</BarkFacBNH4>
+<BarkFacBNO3>0.706 /* NW-FVA 2012 */</BarkFacBNO3>
+
+<BranchDensity>0.572 /* NW-FVA 2012 */</BranchDensity>
+<BranchFacC>493 /* NW-FVA 2012 */</BranchFacC>
+<BranchFacN>5.37 /* NW-FVA 2012 */</BranchFacN>
+<BranchFacS>0.336 /* NW-FVA 2012 */</BranchFacS>
+<BranchFacP>0.397 /* NW-FVA 2012 */</BranchFacP>
+<BranchFacK>1.85 /* NW-FVA 2012 */</BranchFacK>
+<BranchFacCa>4.63 /* NW-FVA 2012 */</BranchFacCa>
+<BranchFacMg>0.56 /* NW-FVA 2012 */</BranchFacMg>
+<BranchFacMn>0.292 /* NW-FVA 2012 */</BranchFacMn>
+<BranchFacFe>0.027 /* NW-FVA 2012 */</BranchFacFe>
+<BranchFacBOup>0.302 /* NW-FVA 2012 */</BranchFacBOup>
+<BranchFacBNH4>0.685 /* NW-FVA 2012 */</BranchFacBNH4>
+<BranchFacBNO3>-0.082 /* NW-FVA 2012 */</BranchFacBNO3>
+
+<ReisigFacC>503 /* NW-FVA 2012 */</ReisigFacC>
+<ReisigFacN>10.82 /* NW-FVA 2012 */</ReisigFacN>
+<ReisigFacS>0.678 /* NW-FVA 2012 */</ReisigFacS>
+<ReisigFacP>0.874 /* NW-FVA 2012 */</ReisigFacP>
+<ReisigFacK>2.97 /* NW-FVA 2012 */</ReisigFacK>
+<ReisigFacCa>6.3 /* NW-FVA 2012 */</ReisigFacCa>
+<ReisigFacMg>1.0 /* NW-FVA 2012 */</ReisigFacMg>
+<ReisigFacMn>0.745 /* NW-FVA 2012 */</ReisigFacMn>
+<ReisigFacFe>0.049 /* NW-FVA 2012 */</ReisigFacFe>
+<ReisigFacBOup>0.431 /* NW-FVA 2012 */</ReisigFacBOup>
+<ReisigFacBNH4>1.203 /* NW-FVA 2012 */</ReisigFacBNH4>
+<ReisigFacBNO3>-0.342 /* NW-FVA 2012 */</ReisigFacBNO3>
+
+<LeafFacC>0 /* NW-FVA 2012 */</LeafFacC>
+<LeafFacN>0 /* NW-FVA 2012 */</LeafFacN>
+<LeafFacS>0 /* NW-FVA 2012 */</LeafFacS>
+<LeafFacP>0 /* NW-FVA 2012 */</LeafFacP>
+<LeafFacK>0 /* NW-FVA 2012 */</LeafFacK>
+<LeafFacCa>0 /* NW-FVA 2012 */</LeafFacCa>
+<LeafFacMg>0 /* NW-FVA 2012 */</LeafFacMg>
+<LeafFacMn>0 /* NW-FVA 2012 */</LeafFacMn>
+<LeafFacFe>0 /* NW-FVA 2012 */</LeafFacFe>
+<LeafFacBOup>0 /* NW-FVA 2012 */</LeafFacBOup>
+<LeafFacBNH4>0 /* NW-FVA 2012 */</LeafFacBNH4>
+<LeafFacBNO3>0 /* NW-FVA 2012 */</LeafFacBNO3>
+
+<TaperClass>TaperFunctionBySchmidt</TaperClass><TaperFunctionNumber>1</TaperFunctionNumber>
+<StemVolume>3.141592*t.h*(t.d/200)^2*(0.4786-(1.011176/t.d)+(2.10428/t.h)-(203.1997/(t.d*t.h*t.h))) /*Eiche Derbholz (BERGEL 1974) */</StemVolume>
+<StemBMkg>exp(-5.825136+1.920523*ln(t.d)+1.679022*ln(t.h))   /* NW-FVA 2012*/</StemBMkg>
+<BarkBMkg>exp(-5.906065+1.602422*ln(t.d)+1.573465*ln(t.h))  /* NW-FVA 2012 */</BarkBMkg>
+<BranchBMkg>exp(-1.850638+1.78631*ln(t.d))  /* NW-FVA 2012 */</BranchBMkg>
+<ReisigBMkg>exp(-1.784272+1.214941*ln(t.d))  /* NW-FVA 2012 */</ReisigBMkg>
+</Species>
+
+
+<Species><Code>211</Code><Specieslist>211,221</Specieslist><TotalBM></TotalBM><LeafBM>0</LeafBM>
+<WoodDensity>0.588  /* NW-FVA 2012 */</WoodDensity>
+<WoodFacC>494 /* NW-FVA 2012 */</WoodFacC>
+<WoodFacN>1.59 /* NW-FVA 2012 */</WoodFacN>
+<WoodFacS>0.09 /* NW-FVA 2012 */</WoodFacS>
+<WoodFacP>0.090 /* NW-FVA 2012 */</WoodFacP>
+<WoodFacK>1.13 /* NW-FVA 2012 */</WoodFacK>
+<WoodFacCa>0.86 /* NW-FVA 2012 */</WoodFacCa>
+<WoodFacMg>0.27 /* NW-FVA 2012 */</WoodFacMg>
+<WoodFacMn>0.087 /* NW-FVA 2012 */</WoodFacMn>
+<WoodFacFe>0.011 /* NW-FVA 2012 */</WoodFacFe>
+<WoodFacBOup>0.089 /* NW-FVA 2012 */</WoodFacBOup>
+<WoodFacBNH4>0.203 /* NW-FVA 2012 */</WoodFacBNH4>
+<WoodFacBNO3>-0.025 /* NW-FVA 2012 */</WoodFacBNO3>
+
+<BarkDensity>0.643 /* NW-FVA 2012 */</BarkDensity>
+<BarkFacC>494 /* NW-FVA 2012 */</BarkFacC>
+<BarkFacN>7.35 /* NW-FVA 2012 */</BarkFacN>
+<BarkFacS>0.344 /* NW-FVA 2012 */</BarkFacS>
+<BarkFacP>0.367 /* NW-FVA 2012 */</BarkFacP>
+<BarkFacK>2.41 /* NW-FVA 2012 */</BarkFacK>
+<BarkFacCa>17.90 /* NW-FVA 2012 */</BarkFacCa>
+<BarkFacMg>0.62 /* NW-FVA 2012 */</BarkFacMg>
+<BarkFacMn>0.475 /* NW-FVA 2012 */</BarkFacMn>
+<BarkFacFe>0.040 /* NW-FVA 2012 */</BarkFacFe>
+<BarkFacBOup>0.991 /* NW-FVA 2012 */</BarkFacBOup>
+<BarkFacBNH4>1.516 /* NW-FVA 2012 */</BarkFacBNH4>
+<BarkFacBNO3>0.467 /* NW-FVA 2012 */</BarkFacBNO3>
+
+<BranchDensity>0.602 /* NW-FVA 2012 */</BranchDensity>
+<BranchFacC>495 /* NW-FVA 2012 */</BranchFacC>
+<BranchFacN>3.51 /* NW-FVA 2012 */</BranchFacN>
+<BranchFacS>0.170 /* NW-FVA 2012 */</BranchFacS>
+<BranchFacP>0.293 /* NW-FVA 2012 */</BranchFacP>
+<BranchFacK>1.56 /* NW-FVA 2012 */</BranchFacK>
+<BranchFacCa>2.71 /* NW-FVA 2012 */</BranchFacCa>
+<BranchFacMg>0.42 /* NW-FVA 2012 */</BranchFacMg>
+<BranchFacMn>0.156 /* NW-FVA 2012 */</BranchFacMn>
+<BranchFacFe>0.023 /* NW-FVA 2012 */</BranchFacFe>
+<BranchFacBOup>0.196 /* NW-FVA 2012 */</BranchFacBOup>
+<BranchFacBNH4>0.447 /* NW-FVA 2012 */</BranchFacBNH4>
+<BranchFacBNO3>-0.055 /* NW-FVA 2012 */</BranchFacBNO3>
+
+<ReisigFacC>509 /* NW-FVA 2012 */</ReisigFacC>
+<ReisigFacN>8.83 /* NW-FVA 2012 */</ReisigFacN>
+<ReisigFacS>0.482 /* NW-FVA 2012 */</ReisigFacS>
+<ReisigFacP>0.863 /* NW-FVA 2012 */</ReisigFacP>
+<ReisigFacK>2.92 /* NW-FVA 2012 */</ReisigFacK>
+<ReisigFacCa>5.23 /* NW-FVA 2012 */</ReisigFacCa>
+<ReisigFacMg>0.63 /* NW-FVA 2012 */</ReisigFacMg>
+<ReisigFacMn>0.317 /* NW-FVA 2012 */</ReisigFacMn>
+<ReisigFacFe>0.040 /* NW-FVA 2012 */</ReisigFacFe>
+<ReisigFacBOup>0.342 /* NW-FVA 2012 */</ReisigFacBOup>
+<ReisigFacBNH4>0.972 /* NW-FVA 2012 */</ReisigFacBNH4>
+<ReisigFacBNO3>-0.289 /* NW-FVA 2012 */</ReisigFacBNO3>
+
+<LeafFacC>0 /* NW-FVA 2012 */</LeafFacC>
+<LeafFacN>0 /* NW-FVA 2012 */</LeafFacN>
+<LeafFacS>0 /* NW-FVA 2012 */</LeafFacS>
+<LeafFacP>0 /* NW-FVA 2012 */</LeafFacP>
+<LeafFacK>0 /* NW-FVA 2012 */</LeafFacK>
+<LeafFacCa>0 /* NW-FVA 2012 */</LeafFacCa>
+<LeafFacMg>0 /* NW-FVA 2012 */</LeafFacMg>
+<LeafFacMn>0 /* NW-FVA 2012 */</LeafFacMn>
+<LeafFacFe>0 /* NW-FVA 2012 */</LeafFacFe>
+<LeafFacBOup>0 /* NW-FVA 2012 */</LeafFacBOup>
+<LeafFacBNH4>0 /* NW-FVA 2012 */</LeafFacBNH4>
+<LeafFacBNO3>0 /* NW-FVA 2012 */</LeafFacBNO3>
+
+<TaperClass>TaperFunctionBySchmidt</TaperClass><TaperFunctionNumber>0</TaperFunctionNumber>
+<StemVolume>3.141592*t.h*(t.d/200)^2*(0.4039+0.0017335*t.h+1.1267/t.h-118.188/(t.d*t.d*t.d)+0.0000042*t.d*t.d) /*Buche Derbholz (BERGEL 1973) */</StemVolume>
+<StemBMkg>exp(-4.497735+2.218938*ln(t.d)+0.975280*ln(t.h))   /* NW-FVA 2012 */</StemBMkg>
+<BarkBMkg>exp(-5.654878+1.958749*ln(t.d)+0.882996*ln(t.h))  /* NW-FVA 2012 */</BarkBMkg>
+<BranchBMkg>exp(-1.275220+1.622190*ln(t.d))  /* NW-FVA 2012 */</BranchBMkg>
+<ReisigBMkg>exp(-3.832933+1.861995*ln(t.d))  /* NW-FVA 2012 */</ReisigBMkg>
+</Species>
+
+
+<Species><Code>511</Code><Specieslist>511,811</Specieslist><TotalBM></TotalBM><LeafBM>0.6</LeafBM>
+<WoodDensity>0.384  /* NW-FVA 2012 */</WoodDensity>
+<WoodFacC>506 /* NW-FVA 2012 */</WoodFacC>
+<WoodFacN>0.62 /* NW-FVA 2012 */</WoodFacN>
+<WoodFacS>0.06 /* NW-FVA 2012 */</WoodFacS>
+<WoodFacP>0.080 /* NW-FVA 2012 */</WoodFacP>
+<WoodFacK>0.52 /* NW-FVA 2012 */</WoodFacK>
+<WoodFacCa>0.86 /* NW-FVA 2012 */</WoodFacCa>
+<WoodFacMg>0.14 /* NW-FVA 2012 */</WoodFacMg>
+<WoodFacMn>0.105 /* NW-FVA 2012 */</WoodFacMn>
+<WoodFacFe>0.009 /* NW-FVA 2012 */</WoodFacFe>
+<WoodFacBOup>0.066 /* NW-FVA 2012 */</WoodFacBOup>
+<WoodFacBNH4>0.110 /* NW-FVA 2012 */</WoodFacBNH4>
+<WoodFacBNO3>0.021 /* NW-FVA 2012 */</WoodFacBNO3>
+
+<BarkDensity>0.378 /* NW-FVA 2012 */</BarkDensity>
+<BarkFacC>516 /* NW-FVA 2012 */</BarkFacC>
+<BarkFacN>5.78 /* NW-FVA 2012 */</BarkFacN>
+<BarkFacS>0.38 /* NW-FVA 2012 */</BarkFacS>
+<BarkFacP>0.548 /* NW-FVA 2012 */</BarkFacP>
+<BarkFacK>2.58 /* NW-FVA 2012 */</BarkFacK>
+<BarkFacCa>8.74 /* NW-FVA 2012 */</BarkFacCa>
+<BarkFacMg>0.77 /* NW-FVA 2012 */</BarkFacMg>
+<BarkFacMn>0.597 /* NW-FVA 2012 */</BarkFacMn>
+<BarkFacFe>0.047 /* NW-FVA 2012 */</BarkFacFe>
+<BarkFacBOup>0.548 /* NW-FVA 2012 */</BarkFacBOup>
+<BarkFacBNH4>0.960 /* NW-FVA 2012 */</BarkFacBNH4>
+<BarkFacBNO3>0.135 /* NW-FVA 2012 */</BarkFacBNO3>
+
+<BranchDensity>0.372 /* NW-FVA 2012 */</BranchDensity>
+<BranchFacC>518 /* NW-FVA 2012 */</BranchFacC>
+<BranchFacN>2.92 /* NW-FVA 2012 */</BranchFacN>
+<BranchFacS>0.171 /* NW-FVA 2012 */</BranchFacS>
+<BranchFacP>0.213 /* NW-FVA 2012 */</BranchFacP>
+<BranchFacK>0.97 /* NW-FVA 2012 */</BranchFacK>
+<BranchFacCa>3.61 /* NW-FVA 2012 */</BranchFacCa>
+<BranchFacMg>0.37 /* NW-FVA 2012 */</BranchFacMg>
+<BranchFacMn>0.279 /* NW-FVA 2012 */</BranchFacMn>
+<BranchFacFe>0.034 /* NW-FVA 2012 */</BranchFacFe>
+<BranchFacBOup>0.230 /* NW-FVA 2012 */</BranchFacBOup>
+<BranchFacBNH4>0.438 /* NW-FVA 2012 */</BranchFacBNH4>
+<BranchFacBNO3>0.021 /* NW-FVA 2012 */</BranchFacBNO3>
+
+<ReisigFacC>529 /* NW-FVA 2012 */</ReisigFacC>
+<ReisigFacN>8.80 /* NW-FVA 2012 */</ReisigFacN>
+<ReisigFacS>0.588 /* NW-FVA 2012 */</ReisigFacS>
+<ReisigFacP>0.945 /* NW-FVA 2012 */</ReisigFacP>
+<ReisigFacK>3.97 /* NW-FVA 2012 */</ReisigFacK>
+<ReisigFacCa>4.48 /* NW-FVA 2012 */</ReisigFacCa>
+<ReisigFacMg>0.93/* NW-FVA 2012 */</ReisigFacMg>
+<ReisigFacMn>0.412 /* NW-FVA 2012 */</ReisigFacMn>
+<ReisigFacFe>0.134 /* NW-FVA 2012 */</ReisigFacFe>
+<ReisigFacBOup>0.355 /* NW-FVA 2012 */</ReisigFacBOup>
+<ReisigFacBNH4>0.984 /* NW-FVA 2012 */</ReisigFacBNH4>
+<ReisigFacBNO3>-0.273 /* NW-FVA 2012 */</ReisigFacBNO3>
+
+<LeafFacC>515 /* NW-FVA 2012 */</LeafFacC>
+<LeafFacN>14.63 /* NW-FVA 2012 */</LeafFacN>
+<LeafFacS>0.908 /* NW-FVA 2012 */</LeafFacS>
+<LeafFacP>1.263 /* NW-FVA 2012 */</LeafFacP>
+<LeafFacK>4.73 /* NW-FVA 2012 */</LeafFacK>
+<LeafFacCa>6.92 /* NW-FVA 2012 */</LeafFacCa>
+<LeafFacMg>1.11 /* NW-FVA 2012 */</LeafFacMg>
+<LeafFacMn>1.016 /* NW-FVA 2012 */</LeafFacMn>
+<LeafFacFe>0.084 /* NW-FVA 2012 */</LeafFacFe>
+<LeafFacBOup>0.500 /* NW-FVA 2012 */</LeafFacBOup>
+<LeafFacBNH4>1.544 /* NW-FVA 2012 */</LeafFacBNH4>
+<LeafFacBNO3>-0.544 /* NW-FVA 2012 */</LeafFacBNO3>
+
+<TaperClass>TaperFunctionBySchmidt</TaperClass><TaperFunctionNumber>2</TaperFunctionNumber>
+<StemVolume>3.141592*t.h*(t.d/200)^2*(0.04016-27.56211/(t.d*t.d)+1.36195/ln(t.d) +0.057654*t.h/t.d) /* Fichte Derbholz (BERGEL 1987)*/</StemVolume>
+<StemBMkg>exp(-3.989202+1.124427*ln((t.d^1.561215)*t.h))   /* NW-FVA 2012 */</StemBMkg>
+<BarkBMkg>exp(-5.463447+1.026013*ln((t.d^1.6285599)*t.h))  /* NW-FVA 2012 */</BarkBMkg>
+<BranchBMkg>exp(-3.191516+2.506105*ln(t.d)-0.569541*ln(t.h)+0.274572*ln(1.0-(t.h-t.cb)/t.h))</BranchBMkg>
+<ReisigBMkg>exp(-1.5655207+1.5048151*ln(t.d)+0.4059826*ln(1.0-(t.h-t.cb)/t.h))</ReisigBMkg>
+</Species>
+
+
+<Species><Code>611</Code><Specieslist>611</Specieslist><TotalBM></TotalBM><LeafBM>0.6</LeafBM>
+<WoodDensity>0.428  /* NW-FVA 2012 */</WoodDensity>
+<WoodFacC>507 /* NW-FVA 2012 */</WoodFacC>
+<WoodFacN>1.11 /* NW-FVA 2012 */</WoodFacN>
+<WoodFacS>0.059 /* NW-FVA 2012 */</WoodFacS>
+<WoodFacP>0.057 /* NW-FVA 2012 */</WoodFacP>
+<WoodFacK>0.30 /* NW-FVA 2012 */</WoodFacK>
+<WoodFacCa>0.39 /* NW-FVA 2012 */</WoodFacCa>
+<WoodFacMg>0.07 /* NW-FVA 2012 */</WoodFacMg>
+<WoodFacMn>0.016 /* NW-FVA 2012 */</WoodFacMn>
+<WoodFacFe>0.012 /* NW-FVA 2012 */</WoodFacFe>
+<WoodFacBOup>0.029 /* NW-FVA 2012 */</WoodFacBOup>
+<WoodFacBNH4>0.108 /* NW-FVA 2012 */</WoodFacBNH4>
+<WoodFacBNO3>-0.05 /* NW-FVA 2012 */</WoodFacBNO3>
+
+<BarkDensity>0.358 /* NW-FVA 2012 */</BarkDensity>
+<BarkFacC>537 /* NW-FVA 2012 */</BarkFacC>
+<BarkFacN>5.01 /* NW-FVA 2012 */</BarkFacN>
+<BarkFacS>0.324 /* NW-FVA 2012 */</BarkFacS>
+<BarkFacP>0.503 /* NW-FVA 2012 */</BarkFacP>
+<BarkFacK>2.20 /* NW-FVA 2012 */</BarkFacK>
+<BarkFacCa>3.87 /* NW-FVA 2012 */</BarkFacCa>
+<BarkFacMg>0.47 /* NW-FVA 2012 */</BarkFacMg>
+<BarkFacMn>0.107 /* NW-FVA 2012 */</BarkFacMn>
+<BarkFacFe>0.037 /* NW-FVA 2012 */</BarkFacFe>
+<BarkFacBOup>0.257 /* NW-FVA 2012 */</BarkFacBOup>
+<BarkFacBNH4>0.615 /* NW-FVA 2012 */</BarkFacBNH4>
+<BarkFacBNO3>-0.101 /* NW-FVA 2012 */</BarkFacBNO3>
+
+<BranchDensity>0.390 /* NW-FVA 2012 */</BranchDensity>
+<BranchFacC>514 /* NW-FVA 2012 */</BranchFacC>
+<BranchFacN>2.52 /* NW-FVA 2012 */</BranchFacN>
+<BranchFacS>0.152 /* NW-FVA 2012 */</BranchFacS>
+<BranchFacP>0.213 /* NW-FVA 2012 */</BranchFacP>
+<BranchFacK>0.9 /* NW-FVA 2012 */</BranchFacK>
+<BranchFacCa>2.57 /* NW-FVA 2012 */</BranchFacCa>
+<BranchFacMg>0.31 /* NW-FVA 2012 */</BranchFacMg>
+<BranchFacMn>0.065 /* NW-FVA 2012 */</BranchFacMn>
+<BranchFacFe>0.028 /* NW-FVA 2012 */</BranchFacFe>
+<BranchFacBOup>0.164 /* NW-FVA 2012 */</BranchFacBOup>
+<BranchFacBNH4>0.344 /* NW-FVA 2012 */</BranchFacBNH4>
+<BranchFacBNO3>-0.016 /* NW-FVA 2012 */</BranchFacBNO3>
+
+<ReisigFacC>525 /* NW-FVA 2012 */</ReisigFacC>
+<ReisigFacN>7.39 /* NW-FVA 2012 */</ReisigFacN>
+<ReisigFacS>0.547 /* NW-FVA 2012 */</ReisigFacS>
+<ReisigFacP>0.787 /* NW-FVA 2012 */</ReisigFacP>
+<ReisigFacK>3.17 /* NW-FVA 2012 */</ReisigFacK>
+<ReisigFacCa>6.05 /* NW-FVA 2012 */</ReisigFacCa>
+<ReisigFacMg>0.9 /* NW-FVA 2012 */</ReisigFacMg>
+<ReisigFacMn>0.149 /* NW-FVA 2012 */</ReisigFacMn>
+<ReisigFacFe>0.092 /* NW-FVA 2012 */</ReisigFacFe>
+<ReisigFacBOup>0.407 /* NW-FVA 2012 */</ReisigFacBOup>
+<ReisigFacBNH4>0.934 /* NW-FVA 2012 */</ReisigFacBNH4>
+<ReisigFacBNO3>-0.121 /* NW-FVA 2012 */</ReisigFacBNO3>
+
+<LeafFacC>527/* NW-FVA 2012 */</LeafFacC>
+<LeafFacN>18.09 /* NW-FVA 2012 */</LeafFacN>
+<LeafFacS>1.254 /* NW-FVA 2012 */</LeafFacS>
+<LeafFacP>1.113 /* NW-FVA 2012 */</LeafFacP>
+<LeafFacK>5.57 /* NW-FVA 2012 */</LeafFacK>
+<LeafFacCa>5.67 /* NW-FVA 2012 */</LeafFacCa>
+<LeafFacMg>1.58 /* NW-FVA 2012 */</LeafFacMg>
+<LeafFacMn>0.364 /* NW-FVA 2012 */</LeafFacMn>
+<LeafFacFe>0.082 /* NW-FVA 2012 */</LeafFacFe>
+<LeafFacBOup>0.456 /* NW-FVA 2012 */</LeafFacBOup>
+<LeafFacBNH4>1.748 /* NW-FVA 2012 */</LeafFacBNH4>
+<LeafFacBNO3>-0.835 /* NW-FVA 2012 */</LeafFacBNO3>
+
+<TaperClass>TaperFunctionBySchmidt</TaperClass><TaperFunctionNumber>4</TaperFunctionNumber>
+<StemVolume>3.141592*t.h*(t.d/200)^2*(-200.31914/(t.h*t.d*t.d)+0.8734/t.d-0.0052*ln(t.d)*ln(t.d)+7.3594/(t.h*t.d)+0.46155) /* Douglasie Derbholz (BERGEL 1987)*/</StemVolume>
+<StemBMkg>exp(-3.914685+1.932290*ln(t.d)+0.921343*ln(t.h))   /* NW-FVA 2012 */</StemBMkg>
+<BarkBMkg>exp(-6.164075+2.021304*ln(t.d)+0.903062*ln(t.h))  /* NW-FVA 2012 */</BarkBMkg>
+<BranchBMkg>12.360193-1.604953*(t.d)+0.079532*(t.d)^2.0 /* NW-FVA 2012 */</BranchBMkg>
+<ReisigBMkg>exp(-1.6643+1.5926*ln(t.d))  /* NW-FVA 2012 */</ReisigBMkg>
+</Species>
+
+<Species><Code>711</Code><Specieslist>711</Specieslist><TotalBM></TotalBM><LeafBM>0.5</LeafBM>
+<WoodDensity>0.413  /* NW-FVA 2012 */</WoodDensity>
+<WoodFacC>515 /* NW-FVA 2012 */</WoodFacC>
+<WoodFacN>1.11 /* NW-FVA 2012 */</WoodFacN>
+<WoodFacS>0.059 /* NW-FVA 2012 */</WoodFacS>
+<WoodFacP>0.054 /* NW-FVA 2012 */</WoodFacP>
+<WoodFacK>0.41 /* NW-FVA 2012 */</WoodFacK>
+<WoodFacCa>0.67 /* NW-FVA 2012 */</WoodFacCa>
+<WoodFacMg>0.17 /* NW-FVA 2012 */</WoodFacMg>
+<WoodFacMn>0.079 /* NW-FVA 2012 */</WoodFacMn>
+<WoodFacFe>0.007 /* NW-FVA 2012 */</WoodFacFe>
+<WoodFacBOup>0.056 /* NW-FVA 2012 */</WoodFacBOup>
+<WoodFacBNH4>0.136 /* NW-FVA 2012 */</WoodFacBNH4>
+<WoodFacBNO3>-0.023 /* NW-FVA 2012 */</WoodFacBNO3>
+
+<BarkDensity>0.362 /* NW-FVA 2012 */</BarkDensity>
+<BarkFacC>531 /* NW-FVA 2012 */</BarkFacC>
+<BarkFacN>4.81 /* NW-FVA 2012 */</BarkFacN>
+<BarkFacS>0.353 /* NW-FVA 2012 */</BarkFacS>
+<BarkFacP>0.408 /* NW-FVA 2012 */</BarkFacP>
+<BarkFacK>1.90 /* NW-FVA 2012 */</BarkFacK>
+<BarkFacCa>6.17 /* NW-FVA 2012 */</BarkFacCa>
+<BarkFacMg>0.65 /* NW-FVA 2012 */</BarkFacMg>
+<BarkFacMn>0.215 /* NW-FVA 2012 */</BarkFacMn>
+<BarkFacFe>0.036 /* NW-FVA 2012 */</BarkFacFe>
+<BarkFacBOup>0.384 /* NW-FVA 2012 */</BarkFacBOup>
+<BarkFacBNH4>0.727 /* NW-FVA 2012 */</BarkFacBNH4>
+<BarkFacBNO3>-0.040 /* NW-FVA 2012 */</BarkFacBNO3>
+
+<BranchDensity>0.402 /* NW-FVA 2012 */</BranchDensity>
+<BranchFacC>518 /* NW-FVA 2012 */</BranchFacC>
+<BranchFacN>2.55 /* NW-FVA 2012 */</BranchFacN>
+<BranchFacS>0.156 /* NW-FVA 2012 */</BranchFacS>
+<BranchFacP>0.196 /* NW-FVA 2012 */</BranchFacP>
+<BranchFacK>1.16 /* NW-FVA 2012 */</BranchFacK>
+<BranchFacCa>1.87 /* NW-FVA 2012 */</BranchFacCa>
+<BranchFacMg>0.37 /* NW-FVA 2012 */</BranchFacMg>
+<BranchFacMn>0.147 /* NW-FVA 2012 */</BranchFacMn>
+<BranchFacFe>0.014 /* NW-FVA 2012 */</BranchFacFe>
+<BranchFacBOup>0.143 /* NW-FVA 2012 */</BranchFacBOup>
+<BranchFacBNH4>0.325 /* NW-FVA 2012 */</BranchFacBNH4>
+<BranchFacBNO3>-0.039 /* NW-FVA 2012 */</BranchFacBNO3>
+
+<ReisigFacC>531 /* NW-FVA 2012 */</ReisigFacC>
+<ReisigFacN>8.05 /* NW-FVA 2012 */</ReisigFacN>
+<ReisigFacS>0.588 /* NW-FVA 2012 */</ReisigFacS>
+<ReisigFacP>0.786 /* NW-FVA 2012 */</ReisigFacP>
+<ReisigFacK>3.60 /* NW-FVA 2012 */</ReisigFacK>
+<ReisigFacCa>2.87 /* NW-FVA 2012 */</ReisigFacCa>
+<ReisigFacMg>0.69 /* NW-FVA 2012 */</ReisigFacMg>
+<ReisigFacMn>0.244 /* NW-FVA 2012 */</ReisigFacMn>
+<ReisigFacFe>0.086 /* NW-FVA 2012 */</ReisigFacFe>
+<ReisigFacBOup>0.242 /* NW-FVA 2012 */</ReisigFacBOup>
+<ReisigFacBNH4>0.817 /* NW-FVA 2012 */</ReisigFacBNH4>
+<ReisigFacBNO3>-0.333 /* NW-FVA 2012 */</ReisigFacBNO3>
+
+<LeafFacC>528/* NW-FVA 2012 */</LeafFacC>
+<LeafFacN>15.68 /* NW-FVA 2012 */</LeafFacN>
+<LeafFacS>1.0 /* NW-FVA 2012 */</LeafFacS>
+<LeafFacP>1.172 /* NW-FVA 2012 */</LeafFacP>
+<LeafFacK>4.11 /* NW-FVA 2012 */</LeafFacK>
+<LeafFacCa>3.73 /* NW-FVA 2012 */</LeafFacCa>
+<LeafFacMg>0.74 /* NW-FVA 2012 */</LeafFacMg>
+<LeafFacMn>0.682 /* NW-FVA 2012 */</LeafFacMn>
+<LeafFacFe>0.073 /* NW-FVA 2012 */</LeafFacFe>
+<LeafFacBOup>0.278 /* NW-FVA 2012 */</LeafFacBOup>
+<LeafFacBNH4>1.397 /* NW-FVA 2012 */</LeafFacBNH4>
+<LeafFacBNO3>-0.841 /* NW-FVA 2012 */</LeafFacBNO3>
+
+<TaperClass>TaperFunctionBySchmidt</TaperClass><TaperFunctionNumber>3</TaperFunctionNumber>
+<StemVolume>3.141592*t.h*(t.d/200)^2*(0.40804-318.3342/(t.h*t.d*t.d)+36.90522/(t.h*t.d)-4.05292/(t.d*t.d)) /* Kiefer Derbholz (BERGEL 1987)*/</StemVolume>
+<StemBMkg>(0.0188654*(t.d^2.0471628)*(t.h^0.8459379))   /* NW-FVA 2012 */</StemBMkg>
+<BarkBMkg>(0.0033733*(t.d^1.9572076)*(t.h^0.7913995))  /* NW-FVA 2012 */</BarkBMkg>
+<BranchBMkg>exp(-1.534695+1.47235*ln(t.d)) /* NW-FVA 2012 */</BranchBMkg>
+<ReisigBMkg>exp(-1.133089+1.115887*ln(t.d))  /* NW-FVA 2012 */</ReisigBMkg>
+</Species>
+  <Species>
+    <Code>411</Code>
+    <Specieslist>411,421</Specieslist>
+    <TotalBM></TotalBM>
+    <LeafBM>0</LeafBM>
+    <WoodDensity>0.482</WoodDensity>
+    <WoodFacC>506</WoodFacC>
+    <WoodFacN>1.82</WoodFacN>
+    <WoodFacS>0.08</WoodFacS>
+    <WoodFacP>0.11</WoodFacP>
+    <WoodFacK>0.63</WoodFacK>
+    <WoodFacCa>0.66</WoodFacCa>
+    <WoodFacMg>0.18</WoodFacMg>
+    <WoodFacMn>0.06</WoodFacMn>
+    <WoodFacFe>0.008</WoodFacFe>
+    <WoodFacBOup>0</WoodFacBOup>
+    <WoodFacBNH4>0</WoodFacBNH4>
+    <WoodFacBNO3>0</WoodFacBNO3>
+    <BarkDensity>0.650</BarkDensity>
+    <BarkFacC>550</BarkFacC>
+    <BarkFacN>6.13</BarkFacN>
+    <BarkFacS>0.31</BarkFacS>
+    <BarkFacP>0.32</BarkFacP>
+    <BarkFacK>1.27</BarkFacK>
+    <BarkFacCa>4.94</BarkFacCa>
+    <BarkFacMg>0.35</BarkFacMg>
+    <BarkFacMn>0.22</BarkFacMn>
+    <BarkFacFe>0.02</BarkFacFe>
+    <BarkFacBOup>0</BarkFacBOup>
+    <BarkFacBNH4>0</BarkFacBNH4>
+    <BarkFacBNO3>0</BarkFacBNO3>
+    <BranchDensity>0.52 /*Schaetzwert, da Astvolumen unbekannt*/</BranchDensity>
+    <BranchFacC>508</BranchFacC>
+    <BranchFacN>3.89</BranchFacN>
+    <BranchFacS>0.18</BranchFacS>
+    <BranchFacP>0.31</BranchFacP>
+    <BranchFacK>1.08</BranchFacK>
+    <BranchFacCa>2.21</BranchFacCa>
+    <BranchFacMg>0.34</BranchFacMg>
+    <BranchFacMn>0.11</BranchFacMn>
+    <BranchFacFe>0.01</BranchFacFe>
+    <BranchFacBOup>0</BranchFacBOup>
+    <BranchFacBNH4>0</BranchFacBNH4>
+    <BranchFacBNO3>0</BranchFacBNO3>
+    <ReisigFacC>531</ReisigFacC>
+    <ReisigFacN>13.9</ReisigFacN>
+    <ReisigFacS>0.76</ReisigFacS>
+    <ReisigFacP>1.13</ReisigFacP>
+    <ReisigFacK>2.88</ReisigFacK>
+    <ReisigFacCa>5.14</ReisigFacCa>
+    <ReisigFacMg>0.89</ReisigFacMg>
+    <ReisigFacMn>0.22</ReisigFacMn>
+    <ReisigFacFe>0.04</ReisigFacFe>
+    <ReisigFacBOup>0</ReisigFacBOup>
+    <ReisigFacBNH4>0</ReisigFacBNH4>
+    <ReisigFacBNO3>0</ReisigFacBNO3>
+    <LeafFacC>0 /* Meiwes */</LeafFacC>
+    <LeafFacN>0 /* Meiwes */</LeafFacN>
+    <LeafFacS>0 /* Meiwes */</LeafFacS>
+    <LeafFacP>0 /* Meiwes */</LeafFacP>
+    <LeafFacK>0 /* Meiwes */</LeafFacK>
+    <LeafFacCa>0 /* Meiwes */</LeafFacCa>
+    <LeafFacMg>0 /* Meiwes */</LeafFacMg>
+    <LeafFacMn>0 /* Meiwes */</LeafFacMn>
+    <LeafFacFe>0 /* Meiwes */</LeafFacFe>
+    <LeafFacBOup>0 /* Meiwes */</LeafFacBOup>
+    <LeafFacBNH4>0 /* Meiwes */</LeafFacBNH4>
+    <LeafFacBNO3>0 /* Meiwes */</LeafFacBNO3>
+    <TaperClass>TaperFunctionBySchmidt</TaperClass>
+    <TaperFunctionNumber>0</TaperFunctionNumber>
+    <StemVolume>0.88*((0.482*(t.h-1)+0.1145*t.h*(t.d-12)/(1.8*t.d-10)))*3.141593*(t.d/200)^2 /*Gerold*/ </StemVolume>
+    <StemBMkg>exp(-4.175+1.372*ln(t.d)+1.59*ln(t.h))</StemBMkg>
+    <BarkBMkg>exp(-5.299+1.37*ln(t.d)+1.594*ln(t.h))</BarkBMkg>
+    <BranchBMkg>exp(-1.692+1.562*ln(t.d))</BranchBMkg>
+    <ReisigBMkg>exp(1.54+0.04*ln(t.d))</ReisigBMkg>
+  </Species>
+  <Species>
+    <Code>421</Code>
+    <Specieslist>421,422,423</Specieslist>
+    <TotalBM></TotalBM>
+    <LeafBM>0</LeafBM>
+    <WoodDensity>0.457</WoodDensity>
+    <WoodFacC>500</WoodFacC>
+    <WoodFacN>2.47</WoodFacN>
+    <WoodFacS>0.14</WoodFacS>
+    <WoodFacP>0.15</WoodFacP>
+    <WoodFacK>0.79</WoodFacK>
+    <WoodFacCa>0.86</WoodFacCa>
+    <WoodFacMg>0.20</WoodFacMg>
+    <WoodFacMn>0.02</WoodFacMn>
+    <WoodFacFe>0.01</WoodFacFe>
+    <WoodFacBOup>0</WoodFacBOup>
+    <WoodFacBNH4>0</WoodFacBNH4>
+    <WoodFacBNO3>0</WoodFacBNO3>
+    <BarkDensity>0.416</BarkDensity>
+    <BarkFacC>536</BarkFacC>
+    <BarkFacN>11</BarkFacN>
+    <BarkFacS>0.65</BarkFacS>
+    <BarkFacP>0.41</BarkFacP>
+    <BarkFacK>2.03</BarkFacK>
+    <BarkFacCa>12.66</BarkFacCa>
+    <BarkFacMg>0.61</BarkFacMg>
+    <BarkFacMn>0.17</BarkFacMn>
+    <BarkFacFe>0.03</BarkFacFe>
+    <BarkFacBOup>0</BarkFacBOup>
+    <BarkFacBNH4>0</BarkFacBNH4>
+    <BarkFacBNO3>0</BarkFacBNO3>
+    <BranchDensity>0.5 /*Schaetzwert, da Astvolumen unbekannt*/</BranchDensity>
+    <BranchFacC>506</BranchFacC>
+    <BranchFacN>4.78</BranchFacN>
+    <BranchFacS>0.27</BranchFacS>
+    <BranchFacP>0.34</BranchFacP>
+    <BranchFacK>1.44</BranchFacK>
+    <BranchFacCa>3.14</BranchFacCa>
+    <BranchFacMg>0.40</BranchFacMg>
+    <BranchFacMn>0.1</BranchFacMn>
+    <BranchFacFe>0.026</BranchFacFe>
+    <BranchFacBOup>0</BranchFacBOup>
+    <BranchFacBNH4>0</BranchFacBNH4>
+    <BranchFacBNO3>0</BranchFacBNO3>
+    <ReisigFacC>532</ReisigFacC>
+    <ReisigFacN>13.5</ReisigFacN>
+    <ReisigFacS>0.78</ReisigFacS>
+    <ReisigFacP>1.04</ReisigFacP>
+    <ReisigFacK>3.11</ReisigFacK>
+    <ReisigFacCa>5.16</ReisigFacCa>
+    <ReisigFacMg>0.91</ReisigFacMg>
+    <ReisigFacMn>0.24</ReisigFacMn>
+    <ReisigFacFe>0.07</ReisigFacFe>
+    <ReisigFacBOup>0</ReisigFacBOup>
+    <ReisigFacBNH4>0</ReisigFacBNH4>
+    <ReisigFacBNO3>0</ReisigFacBNO3>
+    <LeafFacC>0 /* Meiwes */</LeafFacC>
+    <LeafFacN>0 /* Meiwes */</LeafFacN>
+    <LeafFacS>0 /* Meiwes */</LeafFacS>
+    <LeafFacP>0 /* Meiwes */</LeafFacP>
+    <LeafFacK>0 /* Meiwes */</LeafFacK>
+    <LeafFacCa>0 /* Meiwes */</LeafFacCa>
+    <LeafFacMg>0 /* Meiwes */</LeafFacMg>
+    <LeafFacMn>0 /* Meiwes */</LeafFacMn>
+    <LeafFacFe>0 /* Meiwes */</LeafFacFe>
+    <LeafFacBOup>0 /* Meiwes */</LeafFacBOup>
+    <LeafFacBNH4>0 /* Meiwes */</LeafFacBNH4>
+    <LeafFacBNO3>0 /* Meiwes */</LeafFacBNO3>
+    <TaperClass>TaperFunctionBySchmidt</TaperClass>
+    <TaperFunctionNumber>0</TaperFunctionNumber>
+    <StemVolume>exp(-10.262754+2.155525*ln(t.d) +0.976678* ln(t.h)-0.043148*(ln(t.d))^2 +0.010716 * (ln(t.h)) ^2) *(1.811999-7.382763*(1.0/t.d)- 0.032335*t.d+0.0005276708*t.d^2- 0.00000246995 *t.d^3.0) /*Schwarzerle LOCKOW (1994)*/</StemVolume>
+    <StemBMkg>exp(-1.964+2.164*ln(t.d))</StemBMkg>
+    <BarkBMkg>exp(-3.397+2.038*ln(t.d))</BarkBMkg>
+    <BranchBMkg>exp(-0.908+1.109*ln(t.d))</BranchBMkg>
+    <ReisigBMkg>exp(-0.82+0.73*ln(t.d))</ReisigBMkg>
+  </Species>
+</NutrientBalanceSettings>
+

@@ -1,0 +1,23 @@
+<HTML>
+<H2><P align=center>Simulator Species Definition</H2> 
+<P>
+<P><B>Baumart: 211 Buche  <a href=http://de.wikipedia.org/wiki/Rotbuche>Fagus sylvatica</a></B>
+<BR>   Kronenbreite [m] = (2.0837+0.15*t.d)*(1.0-exp(-exp(ln(t.d/5.7292)*1.3341))) /* Buche (DÖBBELER ET. AL. 2001) */
+<BR>   Kronenansatz [m] = t.h*(1.0-exp(-abs((0.25704+0.11819*t.h/t.d-0.002065*t.d+0.13831*ln(sp.h100))))) /* Buche (DÖBBELER ET. AL. 2001) */
+<BR>   Bonität      [m] = (sp.h100+75.65900-23.19200*ln(t.age)+1.46800*((ln(t.age))^2.0))/(0.00000+0.21520*ln(t.age)) /* Buche (NAGEL 1999) */
+<BR>   Potentielle Höhenzuwachs [%] = ((-75.65900+23.19200*ln(t.age+5)-1.46800*((ln(t.age+5))^2.0)+0.21520*t.si*(ln(t.age+5)))-(-75.65900+23.19200*ln(t.age)-1.46800*((ln(t.age))^2.0)+0.21520*t.si*(ln(t.age)))) /* Buche (NAGEL 1999) */
+<BR>   Höhenzuwachsmodulation [%] = t.h*((((-75.65900+23.19200*ln(t.age+5)-1.46800*((ln(t.age+5))^2.0)+0.21520*t.si*(ln(t.age+5)))-(-75.65900+23.19200*ln(t.age)-1.46800*((ln(t.age))^2.0)+0.21520*t.si*(ln(t.age))))/sp.h100)+(0.00159*(t.hinc^1.9086))) /* Buche (DÖBBELER ET. AL. 2001) */
+<BR>   Standardabweichung Höhenzuwachs [m] = 0.082
+<BR>   Grundflächenzuwachs [cm²] = ((exp(1.54416+0.97163*ln(3.14159265359*(t.cw/2.0)/(6.0*(t.h-t.cb)^2)*((4.0*(t.h-t.cb)^2 +(t.cw/2)^2)^1.5 - (t.cw/2)^3))-0.46761*ln(t.h)-0.39999*t.c66xy) )-20)/10000.0  /*Nagel FIBU 2014*/
+<BR>   Standardabweichung Grundflächenzuwachs [m²] = 0.762
+<BR>   Maximale Dichte [m²/ha] = if(t.h>=12.0,55.3420-127.0100*exp(-exp(-2.3140)*t.h^1.0250),19.40) /* Buche Nordwest (Woerdehoff 2013) */
+<BR>   Volumenfunktion [m³] = 3.141592*t.h*(t.d/200)^2*(0.4039+0.0017335*t.h+1.1267/t.h-118.188/(t.d*t.d*t.d)+0.0000042*t.d*t.d) /*Buche Derbholz (BERGEL 1973) */
+<BR>   Durchmesserverteilung : (-4.282+1.132*sp.dg)*(((6.9/(-4.282+1.132*sp.dg))^(4.518+0.317*sp.dg-0.200*dmax))-ln(1.0-random))^(1.0/(4.518+0.317*sp.dg-0.200*dmax)) /* Buche (NAGEL u. BIGING 1995) */
+<BR>   Höhenkurvenfunktion = 2
+<BR>   Einheitshöhenkurve [m] = 1.3+(sp.hg-1.3)*exp(0.20213328*(1.0-(sp.dg/t.d)))*exp(5.64023296*((1.0/sp.dg)-(1.0/t.d))) /*Buche (NAGEL 1999) */
+<BR>   Höhenkurvenvariation [m] = 1.1217150+0.2203473*ln(sp.BHD_STD) /* Buche (ALBERT 2000)*/
+<BR>   Totholzzerfall [%] = (1.0-(((1.0-exp(-0.0658*(t.age)))^2.2529 ))) /* Buche (MEYER 2009) */
+<BR>   Kronendarstellung = 0
+<BR>   Baumartenfarbe [RGB] = 28
+</TABLE>
+<br>created by ForestSimulatorBWINPro default</br></HTML>
