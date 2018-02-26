@@ -1,8 +1,8 @@
-/* http://www.nw-fva.de
+/** http://www.nw-fva.de
    Version 19-02-2009
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -15,16 +15,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
+
 import treegross.base.*;
 
+public class ForestSimulator {
 
-// Main program class to start the Programm
-public class ForestSimulator
-
-{	public static void main (String args[])
-	{    Stand st = new Stand();
-             new TgJFrame(st); //main GUI for the TreeGrOSS program
-	}
-        
+    public static void main(String args[]) {
+        Stand st = new Stand();
+        new TgJFrame(st); //main GUI for the TreeGrOSS program
+    }
 }
-

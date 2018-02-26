@@ -1,8 +1,8 @@
-/* http://www.nw-fva.de
+/** http://www.nw-fva.de
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -139,7 +139,7 @@ class TgUser
             boolean erg = false;
             URL url =null;
             String updateInternet=null;
-            String fname="http://www.nw-fva.de/~nagel/downloads/bwin7version.txt";
+            String fname="https://www.nw-fva.de/~nagel/downloads/bwin7version.txt";
 //            String fname="file:///W:/public_html/downloads/bwin7version.txt";
             try {
                  url = new URL(fname);
@@ -154,7 +154,7 @@ class TgUser
                  
             }
   
-            catch (java.io.IOException e){System.out.println("kein Internet Check möglich !"); }
+            catch (java.io.IOException e){System.out.println("kein Internet Check mÃ¶glich !"); }
             if (updateInternet != null){
                 int yearNet = Integer.parseInt(updateInternet.substring(6,10));
                 int monthNet = Integer.parseInt(updateInternet.substring(3,5));
