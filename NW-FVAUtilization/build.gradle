@@ -1,0 +1,10 @@
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
+dependencies {
+	compile project(':treegross')
+	compile name: 'jdom'
+}

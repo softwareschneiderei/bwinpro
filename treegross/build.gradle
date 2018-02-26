@@ -1,0 +1,10 @@
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
+dependencies {
+	compile name: 'jdom'
+	compile name: 'jep-2.4.1'
+}

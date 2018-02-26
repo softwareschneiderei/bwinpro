@@ -1,0 +1,5 @@
+rootProject.name = 'bwinpro'
+
+include 'ForestSimulator'
+include 'treegross'
+include 'NW-FVAUtilization'
