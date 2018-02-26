@@ -1,13 +1,3 @@
-/*
- * PackageInfo.java
- *
- * Created on 8. März 2006, 15:39
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.Stand3D;
 
 /**

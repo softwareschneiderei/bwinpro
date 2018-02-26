@@ -1,7 +1,7 @@
 /* 
  * @(#) stand.java  
  *  (c) 2002-2005 Juergen Nagel, Forest Research Station of  Lower Saxony, 
- *      Grätzelstr.2, 37079 Göttingen, Germany
+ *      GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
  *      E-Mail: Juergen.Nagel@nfv.gwdg.de
  *
  *  This program is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@
  *  
  *  http://treegross.sourceforge.net
  *  For more information see:
- *   NAGEL, J. (1999): Konzeptionelle Überlegungen zum schrittweisen Aufbau eines
- *      waldwachstumskundlichen Simulationssystems für Nordwestdeutschland.
- *      Schriften aus der Forstlichen Fakultät der Universität Göttingen und der
- *      Nieders. Forstl. Versuchsanstalt, Band 128, J.D. Sauerländer's Verlag,
+ *   NAGEL, J. (1999): Konzeptionelle Ãœberlegungen zum schrittweisen Aufbau eines
+ *      waldwachstumskundlichen Simulationssystems fÃ¼r Nordwestdeutschland.
+ *      Schriften aus der Forstlichen FakultÃ¤t der UniversitÃ¤t GÃ¶ttingen und der
+ *      Nieders. Forstl. Versuchsanstalt, Band 128, J.D. SauerlÃ¤nder's Verlag,
  *      Frankfurt a.M., S.122 
  *   or BWINPro User's Manual http://www.nfv.gwdg/nfvabw01.htm
  *

@@ -2,7 +2,7 @@
    Version 05-04-2013
 
    (c) 2002-12 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -385,7 +385,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
-                       // set Löwe default
+                       // set LÃ¶we default
 //                       Treatment te= new Treatment();
                        GenerateXY gxy =new GenerateXY();
                        gxy.zufall(st);
@@ -444,7 +444,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        
                        st.missingData();
                        st.descspecies();
-                       // set Löwe default
+                       // set LÃ¶we default
                        GenerateXY gxy =new GenerateXY();
                        gxy.zufall(st);
                        if (grafik3D) manager3d.setStand(st);
@@ -467,7 +467,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
-                       // set Löwe default
+                       // set LÃ¶we default
 //                       GenerateXY gxy =new GenerateXY();
 //                       gxy.zufall(st);
                        if (grafik3D) manager3d.setStand(st);
@@ -496,7 +496,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
-                       // set Löwe default
+                       // set LÃ¶we default
 //                       GenerateXY gxy =new GenerateXY();
 //                       gxy.zufall(st);
                        if (grafik3D) manager3d.setStand(st);
@@ -683,7 +683,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 
                 if(cmd.equals("About"))
                 {
-                    JTextArea about = new JTextArea("TreeGrOSS: ForestSimulation "+bwinproVersion+" \n http://www.nw-fva.de \n "+bwinproVersion+" \n (c) 2002-2015 Juergen Nagel, Northwest German Forest Research Station , \n Grätzelstr.2, 37079 Göttingen, Germany \n E-Mail: Juergen.Nagel@nw-fva.de");
+                    JTextArea about = new JTextArea("TreeGrOSS: ForestSimulation "+bwinproVersion+" \n http://www.nw-fva.de \n "+bwinproVersion+" \n (c) 2002-2015 Juergen Nagel, Northwest German Forest Research Station , \n GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany \n E-Mail: Juergen.Nagel@nw-fva.de");
                     about.setBackground(Color.LIGHT_GRAY);
                     JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -726,7 +726,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 treatmentMan3.loadSettingsToStandRule();
                 tl.executeManager2(st);
                 updatetp(false);
-		zf.neuzeichnen(); //Zeichenfläche neu zeichnen
+		zf.neuzeichnen(); //ZeichenflÃ¤che neu zeichnen
 //                pp.neuzeichnen();
                 gr.drawGraph();
                 repaint();

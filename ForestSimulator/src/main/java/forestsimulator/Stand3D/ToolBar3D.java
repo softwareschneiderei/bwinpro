@@ -1,13 +1,3 @@
-/*
- * ToolBar3D.java
- *
- * Created on 15. M‰rz 2006, 10:05
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.Stand3D;
 import java.awt.event.ActionListener;
 import java.net.*;
@@ -20,7 +10,6 @@ public class ToolBar3D extends javax.swing.JToolBar {
     private String path;
     public boolean isLeft=false;
 
-    /** Creates new form ToolBar3D */
     public ToolBar3D(ActionListener al, boolean textures, String iconpath) {
         path=iconpath;
         initComponents(al);
@@ -89,7 +78,7 @@ public class ToolBar3D extends javax.swing.JToolBar {
         add(jToggleButton1);
 
         jToggleButton2.setText("tote");
-        jToggleButton2.setToolTipText("tote B‰ume anzeigen");
+        jToggleButton2.setToolTipText("tote B√§ume anzeigen");
         jToggleButton2.setActionCommand("setdead");
         if(path!=null){
             try {
@@ -121,7 +110,7 @@ public class ToolBar3D extends javax.swing.JToolBar {
         add(jToggleButton3);
 
         jToggleButton4.setText("Arten");
-        jToggleButton4.setToolTipText("B‰ume nach Art einf‰rben");
+        jToggleButton4.setToolTipText("B√§ume nach Art einf√§rben");
         jToggleButton4.setActionCommand("setspecies");
         if(path!=null){
             try {
@@ -206,7 +195,7 @@ public class ToolBar3D extends javax.swing.JToolBar {
         add(jButton1);
 
         jButton2.setText("f\u00e4llen");
-        jButton2.setToolTipText("markierte B‰ume f‰llen");
+        jButton2.setToolTipText("markierte B√§ume f√§llen");
         jButton2.setActionCommand("harvest");
         if(path!=null){
             try {

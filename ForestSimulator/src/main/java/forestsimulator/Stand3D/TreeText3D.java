@@ -1,19 +1,8 @@
-/*
- * TreeText3D.java
- *
- * Created on 1. März 2006, 10:45
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.Stand3D;
+import java.awt.Font;
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import java.awt.Font;
 import treegross.base.Tree;
-import com.sun.j3d.utils.geometry.ColorCube;
 
 /**
  *

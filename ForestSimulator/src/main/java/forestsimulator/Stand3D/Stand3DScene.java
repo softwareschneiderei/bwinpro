@@ -420,7 +420,7 @@ public class Stand3DScene extends JPanel {
         }     
         if(tud!=null /*&& tud.standing*/){
             movePickMarker(-tud.x, base.getHeightAtPoint(-tud.x,tud.y, false)+tud.h+1.4, tud.y);
-            //if(showtreeinfo) hud3d.setText2D("Baum: "+tud.name.trim()+" BHD: "+Math.round(tud.dbh)+" Höhe: "+Math.round(tud.h));
+            //if(showtreeinfo) hud3d.setText2D("Baum: "+tud.name.trim()+" BHD: "+Math.round(tud.dbh)+" HÃ¶he: "+Math.round(tud.h));
             selectedTree=tud.name;
             if(showtreeinfo && e.getButton()==e.BUTTON1){                
                     TransparentWindow treeinfowindow= new TransparentWindow(tud, this, e.getX(), e.getY());

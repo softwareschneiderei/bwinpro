@@ -12,7 +12,7 @@ import java.net.*;
  *   http://www.nw-fva.de
  *
  *  (c) 2007 Juergen Nagel, Northwest German Forest Research Station, 
- *      Grätzelstr.2, 37079 Göttingen, Germany
+ *      GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
  *      E-Mail: Juergen.Nagel@nw-fva.de
  *
  *  This program is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ public class EditorPanel extends javax.swing.JPanel {
     javax.swing.table.DefaultTableModel data= new javax.swing.table.DefaultTableModel(
             new Object [][] {  },
             new String [] {
-               "Code", "Nr", "Alter", "BHD", "Höhe",  "Bon", "KA", "KB", "lebend", "Entnahme",
+               "Code", "Nr", "Alter", "BHD", "HÃ¶he",  "Bon", "KA", "KB", "lebend", "Entnahme",
                "x","y","z","ZBaum","Habitatb.","Fac","Bemerk","Layer"
             }
         );
@@ -298,7 +298,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel3.add(jButton2);
 
-        jButton7.setText("Maske löschen");
+        jButton7.setText("Maske lï¿½schen");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -331,7 +331,7 @@ public class EditorPanel extends javax.swing.JPanel {
         jTextField1.setPreferredSize(new java.awt.Dimension(200, 19));
         jPanel9.add(jTextField1);
 
-        jLabel2.setText("Bestandesgröße [ha]");
+        jLabel2.setText("Bestandesgrï¿½ï¿½e [ha]");
         jPanel9.add(jLabel2);
 
         jTextField2.setPreferredSize(new java.awt.Dimension(50, 19));
@@ -369,7 +369,7 @@ public class EditorPanel extends javax.swing.JPanel {
         jTextField6.setPreferredSize(new java.awt.Dimension(91, 19));
         jPanel10.add(jTextField6);
 
-        jLabel7.setText("Höhen überNN. [m]");
+        jLabel7.setText("Hï¿½hen ï¿½berNN. [m]");
         jPanel10.add(jLabel7);
 
         jTextField7.setPreferredSize(new java.awt.Dimension(91, 19));
@@ -425,7 +425,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel8.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jButton3.setText("Eckpunkt hinzufügen");
+        jButton3.setText("Eckpunkt hinzufï¿½gen");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -433,7 +433,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel6.add(jButton3);
 
-        jButton5.setText("Eckpunkt löschen");
+        jButton5.setText("Eckpunkt lï¿½schen");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -457,7 +457,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jButton1.setText("Leere Zeilen hinzufügen");
+        jButton1.setText("Leere Zeilen hinzufï¿½gen");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -465,7 +465,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel7.add(jButton1);
 
-        jButton4.setText("ausgewählten Baum löschen");
+        jButton4.setText("ausgewï¿½hlten Baum lï¿½schen");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -509,7 +509,7 @@ public class EditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-//  Maske löschen
+//  Maske lï¿½schen
         clearAll();
     }//GEN-LAST:event_jButton7ActionPerformed
 

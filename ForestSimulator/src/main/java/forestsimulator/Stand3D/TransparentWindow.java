@@ -1,13 +1,3 @@
-/*
- * TransparentWindow.java
- *
- * Created on 23. März 2006, 13:44
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.Stand3D;
 
 import java.awt.*;
@@ -134,7 +124,7 @@ public void paint(Graphics graphics){
     tempImgGraphics.drawString("Baum: "+u.name.trim(),5,textheight-2);
     tempImgGraphics.drawLine(0, textheight+2, getWidth()-1, textheight+2);
     tempImgGraphics.drawString("BHD "+Double.toString(Math.round(u.dbh)),5,textheight*2);
-    tempImgGraphics.drawString("Höhe "+Double.toString(Math.round(u.h)),5, (3*textheight));
+    tempImgGraphics.drawString("HÃ¶he "+Double.toString(Math.round(u.h)),5, (3*textheight));
     String t="Alter "+u.age;
     if(!u.living && u.standing) t="tot / stehend";
     if(!u.living && !u.standing) t="tot / entnommen";

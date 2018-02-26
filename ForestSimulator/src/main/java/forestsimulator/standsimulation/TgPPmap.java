@@ -4,7 +4,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -278,7 +278,7 @@ class TgPPmap extends JPanel implements MouseListener
  		              g.fillPolygon(xpoly,ypoly,4);
                         } 
                         
-// zeichnen der Kronen Dreieck für eine Fichte, Oval für Buche 
+// zeichnen der Kronen Dreieck fÃ¼r eine Fichte, Oval fÃ¼r Buche 
 			if (st.tr[i].sp.spDef.crownType>0 && (st.tr[i].out<0 || st.tr[i].outtype>1))  //conifer
 			{ 
                             xpoly[0]=(int)(xp); 

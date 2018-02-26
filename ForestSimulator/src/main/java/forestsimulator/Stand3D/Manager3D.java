@@ -2,7 +2,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -339,7 +339,7 @@ public class Manager3D implements ActionListener {
         int ok=JOptionPane.YES_OPTION;
         if  (file.exists()){
             System.out.println("file alrerady exists");
-            ok = JOptionPane.showConfirmDialog(home,"Die Datei existiert bereits! Überschreiben?","Speichern",JOptionPane.YES_NO_OPTION);                            
+            ok = JOptionPane.showConfirmDialog(home,"Die Datei existiert bereits! Ã¼berschreiben?","Speichern",JOptionPane.YES_NO_OPTION);                            
         }    
         if (ok == JOptionPane.YES_OPTION){
               try
@@ -399,7 +399,7 @@ public class Manager3D implements ActionListener {
             }
             else System.out.println( "Speichern abgebrochen" );
        }
-       else{JOptionPane.showMessageDialog(home,"Sie haben kein File geöffnet.","Speichern",JOptionPane.INFORMATION_MESSAGE);}
+       else{JOptionPane.showMessageDialog(home,"Sie haben kein File geÃ¶ffnet.","Speichern",JOptionPane.INFORMATION_MESSAGE);}
    }
         
     
