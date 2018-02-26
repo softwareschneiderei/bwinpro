@@ -1,2 +1,8 @@
+*.class
 /log.txt*
 /jre8/
+build/
+/.gradle/
+/gradle/caches/
+/gradle/daemon/
+/gradle/native/
