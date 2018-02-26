@@ -1,4 +1,5 @@
 apply plugin: 'application'
+version = '7.8.01'
 
 mainClassName = 'forestsimulator.standsimulation.ForestSimulator'
 
@@ -9,12 +10,23 @@ repositories {
 }
 
 dependencies {
-	compile project(':treegross')
-	compile project(':NW-FVAUtilization')
-	compile name: 'j3dcore-1.6.0'
-	compile name: 'j3dutils-1.6.0'
-	compile name: 'vecmath-1.6.0'
-	compile name: 'jfreechart-1.0.0-rc1'
-	compile name: 'jacksum'
-	compile name: 'swing-layout-1.0'
+    compile project(':treegross')
+    compile project(':NW-FVAUtilization')
+    compile name: 'j3dcore-1.6.0'
+    compile name: 'j3dutils-1.6.0'
+    compile name: 'vecmath-1.6.0'
+    compile name: 'jcommon-1.0.0-rc1'
+    compile name: 'jfreechart-1.0.0-rc1'
+    compile name: 'jacksum'
+    compile name: 'swing-layout-1.0'
+    compile name: 'jogamp-fat-2.3.2'
+}
+
+distZip {
+    into(project.name + '-' + project.version + '/bin') {
+        from '.'
+        include 'ForestSimulator.ini'
+        include 'user/**/*'
+        include 'data_standsimulation/**/*'
+    }
 }
