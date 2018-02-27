@@ -308,7 +308,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
                 "( "+standID+", '"+st.cpnt[i].no+"', "+st.cpnt[i].x+", "+st.cpnt[i].y+", "+st.cpnt[i].z+"  )";
              stm.execute(sqltxt);
              }
-//  alle Bäume speichern 
+//  alle BÃ¤ume speichern 
         for (int i=0;i<st.ntrees;i++){
              sqltxt = "INSERT INTO trees (standid,code,name,year,age,dbh,h,si,cb,cw,alive,status,x,y,z,crop,habitat,fac,remarks, layer) VALUES "+
                 "( "+standID+", "+st.tr[i].code+", '"+st.tr[i].no+"', "+st.year+", "+st.tr[i].age+", "+st.tr[i].d+", "+st.tr[i].h+", "+st.tr[i].si+

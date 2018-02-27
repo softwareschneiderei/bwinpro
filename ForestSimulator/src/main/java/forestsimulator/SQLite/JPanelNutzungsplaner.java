@@ -30,7 +30,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
      javax.swing.table.DefaultTableModel dataTable1= new javax.swing.table.DefaultTableModel(
             new Object [][] {  },
             new String [] {
-               "Name", "Art", "Schicht","Mischung", "Alter", "Höhe", "G/ha"
+               "Name", "Art", "Schicht","Mischung", "Alter", "HÃ¶he", "G/ha"
             }
         );
      Object[] rowData1={" "," "," "," "," "," "," "};
@@ -167,7 +167,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         });
         jPanel1.add(jButton3);
 
-        jButton4.setText("zurück");
+        jButton4.setText("zurÃ¼ck");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);

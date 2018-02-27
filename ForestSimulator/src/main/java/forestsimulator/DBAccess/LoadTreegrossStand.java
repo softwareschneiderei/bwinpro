@@ -1,14 +1,5 @@
-/*
- * LoadTreegrossStand.java
- *
- * Created on 15. Februar 2006, 14:12
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.DBAccess;
+
 import java.sql.*;
 import treegross.base.*;
 import treegross.treatment.*;
@@ -63,7 +54,7 @@ public class LoadTreegrossStand {
         stl.nspecies=0;
         stl.ncpnt=0;
         int ndh=0;
- // Bäume hinzufügen       
+ // BÃ¤ume hinzufÃ¼gen       
         try{          
            Statement stmt = dbconn.createStatement(); 
            ResultSet rs = stmt.executeQuery("select * from Baum where edvid = \'"+idx+"\' And auf = " + selectedAufn   );
@@ -124,7 +115,7 @@ public class LoadTreegrossStand {
              double fac = rs.getDouble("repfl");
               if (anzahl==0) {
                  anzahl=1; fac=0.0;}
-// Bäume mit höherem Repräsentationsfaktor als 1 klonen
+// BÃ¤ume mit hÃ¶herem ReprÃ¤sentationsfaktor als 1 klonen
 //
              if (fac >= 2.0){
                  int az = (int) fac;
@@ -147,7 +138,7 @@ public class LoadTreegrossStand {
              System.out.println("fertig");
   
 //
-//  koordinaten hinzufügen
+//  koordinaten hinzufÃ¼gen
 //        
            try{          
               Statement stmt = dbconn.createStatement(); 
@@ -167,7 +158,7 @@ public class LoadTreegrossStand {
              }
           }	catch (Exception e)  {	System.out.println(e); }	
 //
-//  Eckpunkte hinzufügen
+//  Eckpunkte hinzufÃ¼gen
 //
            try{
               Statement stmt = dbconn.createStatement();
@@ -198,8 +189,8 @@ public class LoadTreegrossStand {
                 else stl.tr[i].remarks=stl.tr[i].remarks+"x";
             }
  */
-// an dieser Stelle werden alle gemessenen Höhen nach hmeasured in Tree gespeichert.
-// Dadurch wird es möglich später verschiedene Höhenkurven zu erzeugen           
+// an dieser Stelle werden alle gemessenen HÃ¶hen nach hmeasured in Tree gespeichert.
+// Dadurch wird es mÃ¶glich spÃ¤ter verschiedene HÃ¶henkurven zu erzeugen           
 /*        for (int i=0;i<stl.ntrees;i++) if(stl.tr[i].h > 0) 
             stl.tr[i].hMeasuredValue=stl.tr[i].h; else stl.tr[i].hMeasuredValue=0.0;
        if (missingDataReplace)
@@ -464,7 +455,7 @@ public class LoadTreegrossStand {
                int art = st.sp[i].code;
                
                
-// SUMME Grundfläche und Volumen der Nutzung  
+// SUMME GrundflÃ¤che und Volumen der Nutzung  
                vvhaa =0.0;
                gghaa =0.0;
                nnhaa =0.0;
@@ -543,7 +534,7 @@ public class LoadTreegrossStand {
                Double vvhaa = st.getVhaTargetDiameter(0)+st.getVhaThinning(0);
                double vvhaaz = st.getVhaTargetDiameter(0);
                
-               // SUMME Grundfläche und Volumen der Nutzung  
+               // SUMME GrundflÃ¤che und Volumen der Nutzung  
                vvhaa =0.0;
                vvhaaz =0.0;
                gghaa =0.0;

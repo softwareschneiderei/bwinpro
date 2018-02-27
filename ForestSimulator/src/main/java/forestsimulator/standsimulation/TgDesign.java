@@ -2,7 +2,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -149,7 +149,7 @@ public class TgDesign extends javax.swing.JPanel {
         jPanel2.add(jLabel8);
         jLabel8.setBounds(20, 130, 80, 17);
 
-        jLabel9.setText("Basal Area[m²/ha]");
+        jLabel9.setText("Basal Area[mÂ²/ha]");
         jPanel2.add(jLabel9);
         jLabel9.setBounds(20, 190, 130, 17);
 
@@ -245,7 +245,7 @@ public class TgDesign extends javax.swing.JPanel {
         jPanel2.add(jTextField5);
         jTextField5.setBounds(210, 430, 40, 20);
 
-        jCheckBox1.setText("Erschließungslinien");
+        jCheckBox1.setText("ErschlieÃŸungslinien");
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jPanel2.add(jCheckBox1);
         jCheckBox1.setBounds(30, 460, 220, 20);
@@ -543,7 +543,7 @@ public class TgDesign extends javax.swing.JPanel {
            }
 //	
             
-//           System.out.println("Bäume:"+st.ntrees);
+//           System.out.println("BÃ¤ume:"+st.ntrees);
            frame.tfUpdateTrue=true;
            frame.updatetp(false);
 

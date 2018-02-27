@@ -283,7 +283,7 @@ public class JPanelPlots extends javax.swing.JPanel {
                   standID = rs.getInt("_id");
                }             
 //           System.out.println("Letzte Id: = "+standID);
-//  alle Bäume speichern 
+//  alle BÃ¤ume speichern 
         for (int i=0;i<st.ntrees;i++){
             int w = 0;
             double e = 0.0;

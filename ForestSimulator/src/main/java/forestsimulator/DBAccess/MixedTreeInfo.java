@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package forestsimulator.DBAccess;
 
 import java.sql.Connection;
@@ -119,10 +115,10 @@ public class MixedTreeInfo {
             //cri=0.0;
             // neighbours gehen nur max bis influienceZone ein vgl. stand
             // 2. Achtung wenn baum j mit seiner vollen kronenbreite in die influenzsZone ragt,
-            //    ist dies nicht für die Kronenbreite in h66 garantiert, dann kann
+            //    ist dies nicht fÃ¼r die Kronenbreite in h66 garantiert, dann kann
             //    es sein, dass overlap= 0 ist und getoverlapPerc NaN !!!!
             //    daher: vorher abfragen ob overlap >0
-            //    und methode overlap püfen, op überhaupt punkte im überlappungsbereich sind
+            //    und methode overlap pÃ¼fen, op Ã¼berhaupt punkte im Ã¼berlappungsbereich sind
             if (e<influenceZoneRadius+t.st.tr[j].cw/2.0 && t.st.tr[j].h>h66 && t.st.tr[j].out<0){
                 if (t.st.tr[j].cb >= h66)
                     cri= t.st.tr[j].cw/2.0;
@@ -130,7 +126,7 @@ public class MixedTreeInfo {
                     cri=t.st.tr[j].calculateCwAtHeight(h66)/2.0;
                 // reduce overlap area -> use only percentage inside the stand
                 overlap=overlap(cri,influenceZoneRadius,e);
-                //nur wenn überlappung c66xy erhöhen
+                //nur wenn Ã¼berlappung c66xy erhÃ¶hen
                 if(overlap>0){
                     percOverlapInStand=getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x,t.st.tr[j].y, t.st);
                     c66a+=t.st.tr[j].fac*(overlap * percOverlapInStand);
@@ -143,7 +139,7 @@ public class MixedTreeInfo {
                     cri=t.st.tr[j].calculateCwAtHeight(h66)/2.0;
                 // reduce overlap area -> use only percentage inside the stand
                 overlap=overlap(cri,influenceZoneRadius,e);
-                //nur wenn überlappung c66xy erhöhen
+                //nur wenn Ã¼berlappung c66xy erhÃ¶hen
                 if(overlap>0){
                     percOverlapInStand=getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x,t.st.tr[j].y, t.st);
                 }

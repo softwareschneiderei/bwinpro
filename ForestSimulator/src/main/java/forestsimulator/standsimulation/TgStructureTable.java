@@ -2,7 +2,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ class TgStructureTable {
 // Shannon Index Stammzahl        
          out.println("<TR><TD><FONT SIZE=2>"+messages.getString("shannon")+"_N "+
                      "<TD><FONT SIZE=2>"+f.format(struc.shannon_N(st))+ "</TR>");
-// Shannon Index Grundfläche        
+// Shannon Index GrundflÃ¤che        
          out.println("<TR><TD><FONT SIZE=2>"+messages.getString("shannon")+"_G "+
                      "<TD><FONT SIZE=2>"+f.format(struc.shannon_G(st))+ "</TR>");
 // Evenness Index Stammzahl 
@@ -83,7 +83,7 @@ class TgStructureTable {
          if (st.nspecies>1) e_N = struc.shannon_N(st)/Math.log(st.nspecies);
          out.println("<TR><TD><FONT SIZE=2>"+"Eveness_N "+
                      "<TD><FONT SIZE=2>"+f.format(e_N)+ "</TR>");
-// Evenness Index Grundfläche   
+// Evenness Index GrundflÃ¤che   
          double e_G = 0.0;
          if (st.nspecies>1) e_G = struc.shannon_G(st)/Math.log(st.nspecies);
          out.println("<TR><TD><FONT SIZE=2>"+"Eveness_G "+
@@ -100,9 +100,9 @@ class TgStructureTable {
 // Shannon Index         
          out.println("<TR><TD><FONT SIZE=2>"+messages.getString("tart")+
                      "<TD><FONT SIZE=2>"+f.format(struc.tart(st))+ "</TR>");
-//         out.println("<TR><TD><FONT SIZE=2>"+"Lichtkrone m²/ha"+
+//         out.println("<TR><TD><FONT SIZE=2>"+"Lichtkrone mÂ²/ha"+
 //                     "<TD><FONT SIZE=2>"+f.format(lightKMF)+ "</TR>");
-//         out.println("<TR><TD><FONT SIZE=2>"+"Kronenmantel m²/ha"+
+//         out.println("<TR><TD><FONT SIZE=2>"+"Kronenmantel mÂ²/ha"+
 //                     "<TD><FONT SIZE=2>"+f.format(sumKMF)+ "</TR>");
       out.println("</HR></TABLE>");
       

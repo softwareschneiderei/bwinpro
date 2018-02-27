@@ -1,7 +1,7 @@
 /*
 * @(#) Stand.java
 *  (c) 2002-2008 Juergen Nagel, Northwest German Research Station,
-*      Grätzelstr.2, 37079 Göttingen, Germany
+*      GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
 *      E-Mail: Juergen.Nagel@nw-fva.de
 *
 *  This program is free software; you can redistribute it and/or
