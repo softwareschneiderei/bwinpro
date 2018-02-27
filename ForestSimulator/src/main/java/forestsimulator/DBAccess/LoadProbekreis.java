@@ -1,8 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package forestsimulator.DBAccess;
+
 import java.sql.*;
 import treegross.base.*;
 
@@ -61,7 +58,7 @@ public class LoadProbekreis {
         st.center.x =radius;
         st.center.y =radius;
         st.center.z =0.0;
-// Bäume aufbauen
+// BÃ¤ume aufbauen
         try{
              Statement stmt = dbconn.createStatement();
              ResultSet rs = stmt.executeQuery("select * from tblDatPh2_Vorr where DatOrga_Key = \'"+idx+
@@ -117,7 +114,7 @@ public class LoadProbekreis {
                       }
                    }
 //
-// halben Durchmesserzuwachs für ausscheidenden Bestand
+// halben Durchmesserzuwachs fÃ¼r ausscheidenden Bestand
                    if (d > 0.3 && out > -1 && type == 3){
                    if (art > 100 && art <200) d = ( d + 2.438+1.128*d -0.001505*d*d)/2.0;
                    if (art > 200 && art <300) d = ( d + 1.011+1.187*d -0.002268*d*d)/2.0;
@@ -138,7 +135,7 @@ public class LoadProbekreis {
                    
 //
                    int anzahl=0;
-// Bäume mit höherem Repräsentationsfaktor als 1 klonen
+// BÃ¤ume mit hÃ¶herem ReprÃ¤sentationsfaktor als 1 klonen
 //
 /*                   if (fac >= 1.0){
                       int az = (int) fac;
@@ -176,7 +173,7 @@ public class LoadProbekreis {
     return st;
     }
 
-// Für ElSalto Gemacht: Probefläche mit 50 x 50m; Polar Grad
+// FÃ¼r ElSalto Gemacht: ProbeflÃ¤che mit 50 x 50m; Polar Grad
 public Stand loadFromElSalto(Connection dbconn, Stand st,  int kreis ){
         
         st.ntrees=0;
@@ -224,7 +221,7 @@ public Stand loadFromElSalto(Connection dbconn, Stand st,  int kreis ){
         st.center.z =0.0;        
         
         
-// Bäume aufbauen
+// BÃ¤ume aufbauen
         try{
              Statement stmt = dbconn.createStatement();
              ResultSet rs = stmt.executeQuery("select * from SPIS where Plot = "+kreis+" ");

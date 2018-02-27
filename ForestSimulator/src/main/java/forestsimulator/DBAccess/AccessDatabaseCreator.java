@@ -1,14 +1,5 @@
-/*
- * AccessDatabaseCreator.java
- *
- * Created on 10. Januar 2006, 11:05
- *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
- */
-
 package forestsimulator.DBAccess;
+
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -64,7 +55,7 @@ public class AccessDatabaseCreator extends DatabaseCreator {
     
     public boolean showFileSaveDialog(){
         boolean created=false;
-        // 1. eine leere Datenbank im gewünschten Verzeichnis erzeugen:
+        // 1. eine leere Datenbank im gewÃ¼nschten Verzeichnis erzeugen:
         JFileChooser fc = new JFileChooser();
         fc.setFileFilter( new FileFilter() {
           public boolean accept( File f ) {

@@ -1,7 +1,7 @@
 /*
 * @(#) DBAccessDialog.java
 *  (c) 2002-2010 Juergen Nagel, Northwest German Research Station,
-*      Grätzelstr.2, 37079 Göttingen, Germany
+*      GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
 *      E-Mail: Juergen.Nagel@nw-fva.de
 *
 *  This program is free software; you can redistribute it and/or
@@ -817,7 +817,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
              ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  "); 
              while (rs.next()){
                   int stj = rs.getInt("DatOrga_Stj");
-/** Änderung 2008 nach 2018*/                  
+/** Ã„nderung 2008 nach 2018*/                  
                   if (stj < 2018){
                     orga[norga]= rs.getString("DatOrga_Key");
                     norga=norga+1;
