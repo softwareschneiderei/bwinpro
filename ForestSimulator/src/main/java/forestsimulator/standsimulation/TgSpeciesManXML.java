@@ -2,7 +2,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -176,7 +176,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         jTextField5.setPreferredSize(new java.awt.Dimension(80, 20));
         jPanel8.add(jTextField5);
 
-        jLabel7.setText("Letzte Änderung:");
+        jLabel7.setText("Letzte Ã„nderung:");
+        jLabel7.setToolTipText("");
         jPanel8.add(jLabel7);
 
         jTextField6.setText("jTextField6");
@@ -230,7 +231,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("ausgewählte Art");
+        jLabel2.setText("ausgewÃ¤hlte Art");
         jPanel1.add(jLabel2, java.awt.BorderLayout.PAGE_START);
 
         jPanel5.setLayout(new java.awt.BorderLayout());
@@ -310,7 +311,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
             }
         });
 
-        jButton4.setText("Löschen");
+        jButton4.setText("LÃ¶schen");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -368,8 +369,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-1196)/2, (screenSize.height-820)/2, 1196, 820);
+        setSize(new java.awt.Dimension(1196, 820));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -742,7 +743,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         jTable1.setValueAt("Kleinwurzelbiomasse Funktion",34,0);
         jTable1.setValueAt("Feinwurzelbiomasse Funktion",35,0);
         jTable1.setValueAt("Gesamtwurzelbiomasse Funktion",36,0);
-        jTable1.setValueAt("Anzahl der Z-Bäume",37,0);
+        jTable1.setValueAt("Anzahl der Z-Bï¿½ume",37,0);
         jTable1.setValueAt(new Integer(spd[m].code).toString(),0,1);
         jTable1.setValueAt(spd[m].shortName,1,1);
         jTable1.setValueAt(spd[m].longName,2,1);

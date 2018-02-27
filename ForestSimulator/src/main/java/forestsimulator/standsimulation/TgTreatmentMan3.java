@@ -2,7 +2,7 @@
    Version 07-11-2008
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -247,7 +247,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel12.setText("Erschließung:  ");
+        jLabel12.setText("Erschlieï¿½ung:  ");
         jPanel6.add(jLabel12);
 
         jCheckBox3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
@@ -288,10 +288,10 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         });
         jPanel7.add(jComboBox1);
 
-        jLabel4.setText("Durchforstungsstärke:");
+        jLabel4.setText("Durchforstungsstï¿½rke:");
         jPanel7.add(jLabel4);
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "null", "schwach", "mäßig", "stark" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "null", "schwach", "mï¿½ï¿½ig", "stark" }));
         jPanel7.add(jComboBox4);
 
         jLabel8.setText("Durchforstungsmenge min.");
@@ -313,7 +313,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         });
         jPanel7.add(jTextField6);
 
-        jCheckBox4.setText("nur Z-Bäume freistellen");
+        jCheckBox4.setText("nur Z-Bï¿½ume freistellen");
         jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox4ActionPerformed(evt);
@@ -328,7 +328,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jLabel2.setText("Erntetyp:");
         jPanel8.add(jLabel2);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zielstärkennutzung", "Schirmschlag", "Kahlschlag" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zielstï¿½rkennutzung", "Schirmschlag", "Kahlschlag" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -355,7 +355,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         });
         jPanel8.add(jTextField4);
 
-        jLabel17.setText("Räumung bei <");
+        jLabel17.setText("Rï¿½umung bei <");
         jPanel8.add(jLabel17);
 
         jTextField8.setText("0.3");
@@ -369,7 +369,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jLabel3.setText("Naturschutz:");
         jPanel9.add(jLabel3);
 
-        jLabel18.setText("Habitatbäume [n/ha]");
+        jLabel18.setText("Habitatbï¿½ume [n/ha]");
         jPanel9.add(jLabel18);
 
         jTextField9.setText("0");
@@ -389,7 +389,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jTextField12.setPreferredSize(new java.awt.Dimension(26, 20));
         jPanel9.add(jTextField12);
 
-        jLabel22.setText("geschützt ab BHD ");
+        jLabel22.setText("geschï¿½tzt ab BHD ");
         jPanel9.add(jLabel22);
 
         jTextField13.setText("150");
@@ -413,7 +413,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jCheckBox7.setText("Unterstand entfernen ;");
         jPanel10.add(jCheckBox7);
 
-        jLabel19.setText("Pflanzen ab B°  <");
+        jLabel19.setText("Pflanzen ab Bï¿½  <");
         jPanel10.add(jLabel19);
 
         jTextField10.setText("0.1");

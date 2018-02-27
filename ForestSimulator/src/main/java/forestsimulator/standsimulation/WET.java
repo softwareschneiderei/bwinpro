@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package forestsimulator.standsimulation;
 
 import java.net.URL;
@@ -192,7 +188,7 @@ public class WET {
                 wttxt[15]=sortiment.getChild("Habitatbaumarten").getText().trim();
                 wttxt[16]=sortiment.getChild("Minderheit").getText().trim();
                 wttxt[17]=sortiment.getChild("ZielBHDZB").getText().trim();
-                wttxt[18]=sortiment.getChild("ZielZBäume").getText().trim();
+                wttxt[18]=sortiment.getChild("ZielZBÃ¤ume").getText().trim();
             }
          }
 
