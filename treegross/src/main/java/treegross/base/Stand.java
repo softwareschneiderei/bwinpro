@@ -15,6 +15,7 @@
  */
 package treegross.base;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.logging.Level;
@@ -67,7 +68,7 @@ public class Stand implements Cloneable {
     /**
      * Program Directory provides the Path to settings file
      */
-    public String programDir = "";
+    public File programDir;
     /**
      * added by jhansen pointer to extended HashMap with all SpeciesDefinitions
      */
@@ -444,7 +445,7 @@ public class Stand implements Cloneable {
      * circular plot you have to overwrite the cornerpoints, the stand.center
      * information.
      */
-    public void easyStart(String localPath, String xmlSettingsFile, String standname, double standsize, int year) {
+    public void easyStart(File localPath, String xmlSettingsFile, String standname, double standsize, int year) {
         SpeciesDefMap SDM = new SpeciesDefMap();
 
         LOGGER.log(Level.INFO, "SDM loaded from {0}\\{1}", new Object[]{localPath, xmlSettingsFile});
@@ -1878,7 +1879,7 @@ public class Stand implements Cloneable {
         return sp[merk];
     }
 
-    public void setProgramDir(String dir) {
+    public void setProgramDir(File dir) {
         programDir = dir;
     }
 

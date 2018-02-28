@@ -16,11 +16,15 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import java.io.IOException;
+import java.util.Locale;
 import treegross.base.*;
 
 public class ForestSimulator {
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
+//        System.getProperties().list(System.out);
+        System.out.println(Locale.getDefault());
         Stand st = new Stand();
         new TgJFrame(st); //main GUI for the TreeGrOSS program
     }

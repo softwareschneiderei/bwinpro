@@ -5,6 +5,6 @@ repositories {
 }
 
 dependencies {
-	compile project(':treegross')
-	compile name: 'jdom'
+    compile project(':treegross')
+    compile name: 'jdom'
 }

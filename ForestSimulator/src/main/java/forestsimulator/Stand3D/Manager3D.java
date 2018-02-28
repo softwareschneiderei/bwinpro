@@ -50,7 +50,7 @@ public class Manager3D implements ActionListener {
      private boolean showfog=true;
      private boolean showmesh=true;
      private int[] speciestoshow=null;
-     private String texpath=null;
+     private File texpath=null;
      //new swing components:
      private JPanel jPanel2;    
      private ToolBar3D toolbar3d;
@@ -63,10 +63,10 @@ public class Manager3D implements ActionListener {
      *  texturepath (String) the path to the textures for crowns etc
      *  if null the option texture will not be available
      */
-    public Manager3D(JPanel homepanel, String texturepath, boolean showtoolbar){
+    public Manager3D(JPanel homepanel, File texturepath, boolean showtoolbar){
         home=homepanel;
-        texpath=texturepath+tz+"3dtextures";
-        initSwing(texturepath+tz+"icons");
+        texpath = new File(texturepath, "3dtextures");
+        initSwing(new File(texturepath, "icons"));
         setToolbarVisible(showtoolbar);
         PackageInfo info3d=new PackageInfo();
         if(info3d.isJ3DInstalled()){
@@ -82,15 +82,18 @@ public class Manager3D implements ActionListener {
         if (showtoolbar) loadTextures();        
     }
     
-    private void initSwing(String iconpath){
+    private void initSwing(File iconpath){
         home.setLayout(new BorderLayout());
         home.setOpaque(false);
         jPanel2= new JPanel();
         jPanel2.setLayout(new BorderLayout());        
         home.add("Center", jPanel2);
         // ToolBar:
-        if(iconpath!=null) toolbar3d= new ToolBar3D(this,true, iconpath);
-        else toolbar3d= new ToolBar3D(this,false, iconpath);
+        if (iconpath != null) {
+            toolbar3d= new ToolBar3D(this,true, iconpath);
+        } else {
+            toolbar3d= new ToolBar3D(this,false, iconpath);
+        }
         home.add("North",toolbar3d);
     }
     
@@ -108,26 +111,23 @@ public class Manager3D implements ActionListener {
             URL url4 =null;
             URL url5 =null;
             URL url6 =null;
-            int m = texpath.toUpperCase().indexOf("FILE");
-            if ( m < 0 || m > 4) texpath="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
-                    +System.getProperty("file.separator")+texpath;
 //            System.out.println("Manager3D: URL: "+texpath);
-            String fname0=texpath+System.getProperty("file.separator")+"blcrown.jpg";
-            String fname1=texpath+System.getProperty("file.separator")+"blcrownblend.jpg";
-            String fname2=texpath+System.getProperty("file.separator")+"conicrown.jpg";
-            String fname3=texpath+System.getProperty("file.separator")+"conicrownbottom.jpg";
-            String fname4=texpath+System.getProperty("file.separator")+"standbase.jpg";
-            String fname5=texpath+System.getProperty("file.separator")+"bltrunk.jpg";
-            String fname6=texpath+System.getProperty("file.separator")+"crownshad1.JPG";
+            File fname0 = new File(texpath, "blcrown.jpg");
+            File fname1= new File(texpath, "blcrownblend.jpg");
+            File fname2= new File(texpath, "conicrown.jpg");
+            File fname3= new File(texpath, "conicrownbottom.jpg");
+            File fname4= new File(texpath, "standbase.jpg");
+            File fname5= new File(texpath, "bltrunk.jpg");
+            File fname6= new File(texpath, "crownshad1.JPG");
             try {
-                 url0 = new URL(fname0);
-                 url1 = new URL(fname1);
-                 url2 = new URL(fname2);
-                 url3 = new URL(fname3);
-                 url4 = new URL(fname4);
-                 url5 = new URL(fname5);
-                 url6 = new URL(fname6);}
-            catch (Exception e){ }
+                 url0 = fname0.toURI().toURL();
+                 url1 = fname1.toURI().toURL();
+                 url2 = fname2.toURI().toURL();
+                 url3 = fname3.toURI().toURL();
+                 url4 = fname4.toURI().toURL();
+                 url5 = fname5.toURI().toURL();
+                 url6 = fname6.toURI().toURL();
+            } catch (Exception e){ }
             try {
 
 //           System.out.println("Manager3D: URL: Ohne");

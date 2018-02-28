@@ -2,7 +2,7 @@
    Version 2013-01-11
 
    (c) 2013 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       Grï¿½tzelstr.2, 37079 Gï¿½ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -39,20 +39,20 @@ import treegross.base.TreegrossXML2;
 
 /**
  * Das Package dient zur Berechnung von Sortimenten und/oder Biomasse und
- * Nährstoffen und sofern Sortimente, Biomassen und Nährstoffeangaben vorliegen
+ * Nï¿½hrstoffen und sofern Sortimente, Biomassen und Nï¿½hrstoffeangaben vorliegen
  * in das Paket Forestsimulator integriert werden. Das Package greift auf die
- * Package TreeGrOSS zurück.
+ * Package TreeGrOSS zurï¿½ck.
  * 
  * In NWFVA_Nutzung ist eine Desktopanwendung, mit der sich Daten im TreeGrOSS XML auswerten lassen. 
  * Das Programm ist in zwei Stufen aufgebaut. Es kann nur zur Berechnung von Sortimenten
- * verwendet werden und sofern Biomassefunktionen und Nährstoffkonzentrationswerte vorliegen
- * auch zusätzlich für die Berechnung von Biomassen und Nähstoffen verwendet werden.
+ * verwendet werden und sofern Biomassefunktionen und Nï¿½hrstoffkonzentrationswerte vorliegen
+ * auch zusï¿½tzlich fï¿½r die Berechnung von Biomassen und Nï¿½hstoffen verwendet werden.
  * Voraussetzung ist, dass es im Programmverzeichnis ein Unterverzeichnis ./user gibt.
  * In diesem Unterverzeichnis muss 1.) das Unterverzeichnis user/models vorhanden sein,
- * in welchem die Baumarteneinstellungen für den ForestSimulator in einem XML File hinterlegt sind.
- * 2. wird das Unterzeichnis /user/moduls benötigt, welches wiederum die beiden Unter-
- * Verzeichnisse assortment mit der Standardeinstellung für die Sortimente (Assortments.xml) und
- * biomass mit den Biomassefunktionen und Nährstoffkonzentrationwerten (BiomassNWGermany.xml)
+ * in welchem die Baumarteneinstellungen fï¿½r den ForestSimulator in einem XML File hinterlegt sind.
+ * 2. wird das Unterzeichnis /user/moduls benï¿½tigt, welches wiederum die beiden Unter-
+ * Verzeichnisse assortment mit der Standardeinstellung fï¿½r die Sortimente (Assortments.xml) und
+ * biomass mit den Biomassefunktionen und Nï¿½hrstoffkonzentrationwerten (BiomassNWGermany.xml)
  * enthalten muss.
  * 
  * 
@@ -89,7 +89,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
         SpeciesDefMap SDM = new SpeciesDefMap();
         SDM.readFromPath(programDir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+st.FileXMLSettings);
         st.setSDM(SDM);
-        st.setProgramDir(programDir);
+        st.setProgramDir(new File(programDir));
         loadGeneralSettings(programDir);
          
     }
@@ -147,7 +147,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem2);
 
-        jMenuItem3.setText("Biomasse & Nährstoffe");
+        jMenuItem3.setText("Biomasse & Nï¿½hrstoffe");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -201,7 +201,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
             }
         catch (Exception e2){log.info( "File: "+fname+" nicht gefunden" );  }
  //
- // berechnung der Volumen wenn d und h bekannt, dies gilt für die ausgeschiedenen Bäume
+ // berechnung der Volumen wenn d und h bekannt, dies gilt fï¿½r die ausgeschiedenen Bï¿½ume
  //       
         for (int i=0;i<st.ntrees;i++){
             if (st.tr[i].d >= 7.0 && st.tr[i].h > 1.3 && st.tr[i].v <= 0.0){
@@ -232,10 +232,10 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
 /**
- * Lädt die generellen Modelleinstellungen aus der Datei mit den Baumarteneinstellungen für
+ * Lï¿½dt die generellen Modelleinstellungen aus der Datei mit den Baumarteneinstellungen fï¿½r
  * das TreeGrOSS Paket und den ForestSimulator.
  * @param Dir Verzeichnis in dem die XML Datei mit den Einstellungen zu finden ist. Diese Datei sollte
- * möglichst im Programmverzeichnis unter user/models/ForestSimulatorNWGermanyBC2.xml abgelegt sein.
+ * mï¿½glichst im Programmverzeichnis unter user/models/ForestSimulatorNWGermanyBC2.xml abgelegt sein.
  */    
     public void loadGeneralSettings(String Dir){
         java.io.File file;

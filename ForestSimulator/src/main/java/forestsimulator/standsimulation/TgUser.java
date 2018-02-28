@@ -18,21 +18,23 @@ package forestsimulator.standsimulation;
 
 import java.io.*;
 import java.net.*;
+import java.util.logging.Logger;
 
 class TgUser {
 
-    String workingDir = "";
-    String programDir = "";
-    String dataDir = "";
-    String workingDirIni = "";
-    String programDirIni = "";
-    String dataDirIni = "";
+    File workingDir;
+    File programDir;
+    File dataDir;
+    File workingDirIni;
+    File programDirIni;
+    File dataDirIni;
     String plugIn = "XML";
     String XMLSettings = "";
     String language = "en";
     int grafik3D = 0;
     String update = "01012007";
     String nwfva = null;
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     public TgUser() {
     }
@@ -41,66 +43,34 @@ class TgUser {
      * The user settings are load from a file TgUser.txt, which has to be in the
      * same directory
      */
-    public void loadSettings(String lpath) {
-        try {
-            String s;
-            BufferedReader in
-                    = new BufferedReader(new InputStreamReader(new FileInputStream(lpath + System.getProperty("file.separator") + "ForestSimulator.ini")));
-            String textf = ".";
-            programDir = in.readLine();
-            if (System.getProperty("file.separator").equals("/")) {
-                programDir = programDir.replaceAll("\\\\", "/");
-            }
-            programDirIni = programDir;
-            int m1 = programDir.indexOf(textf);
-            if (m1 == 0) {
-                programDir = lpath + System.getProperty("file.separator") + programDir.substring(2, programDir.length());
-            }
-            dataDir = in.readLine();
-            if (System.getProperty("file.separator").equals("/")) {
-                dataDir = dataDir.replaceAll("\\\\", "/");
-            }
-            dataDirIni = dataDir;
-            m1 = dataDir.indexOf(textf);
-            if (m1 == 0) {
-                dataDir = lpath + System.getProperty("file.separator") + dataDir.substring(2, dataDir.length());
-            }
-            workingDir = in.readLine();
-            if (System.getProperty("file.separator").equals("/")) {
-                workingDir = workingDir.replaceAll("\\\\", "/");
-            }
-            workingDirIni = workingDir;
-            m1 = workingDir.indexOf(textf);
-            if (m1 == 0) {
-                workingDir = lpath + System.getProperty("file.separator") + workingDir.substring(2, workingDir.length());
-            }
-            language = in.readLine();
-            XMLSettings = in.readLine();
-            plugIn = XMLSettings;
-            int m = XMLSettings.indexOf(" -");
-            if (m > 0) {
-                nwfva = XMLSettings.substring(m + 2);
-                XMLSettings = XMLSettings.substring(0, m);
-            }
-            grafik3D = Integer.parseInt(in.readLine());
-            in.close();
-        } catch (Exception e) {
-            System.out.println(e);
+    public void loadSettings(File baseDirectory) {
+        try (BufferedReader iniFile = iniFileReaderIn(baseDirectory)) {
+            loadSettings(iniFile, baseDirectory);
+        } catch (IOException | NumberFormatException e) {
+            logger.warning(e.getMessage());
         }
-
     }
 
-    public void currentDir() {
-        java.io.File f = new java.io.File("");
-        String localPath = "";
-        try {
-//           localPath=  f.getAbsolutePath();
-            localPath = f.getCanonicalPath();
-        } catch (Exception e) {
-        };
+    private static BufferedReader iniFileReaderIn(File baseDirectory) throws FileNotFoundException {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseDirectory, "ForestSimulator.ini"))));
+    }
 
-        System.out.println("Current dir : " + localPath);
-
+    void loadSettings(BufferedReader in, File baseDirectory) throws IOException, NumberFormatException {
+        programDirIni = new File(baseDirectory, in.readLine());
+        programDir = programDirIni.getCanonicalFile();
+        dataDirIni = new File(baseDirectory, in.readLine());
+        dataDir = dataDirIni.getCanonicalFile();
+        workingDirIni = new File(baseDirectory, in.readLine());
+        workingDir = workingDirIni.getCanonicalFile();
+        language = in.readLine();
+        XMLSettings = in.readLine();
+        plugIn = XMLSettings;
+        int m = XMLSettings.indexOf(" -");
+        if (m > 0) {
+            nwfva = XMLSettings.substring(m + 2);
+            XMLSettings = XMLSettings.substring(0, m);
+        }
+        grafik3D = Integer.parseInt(in.readLine());
     }
 
     public boolean fileExists(String fname) {
@@ -109,27 +79,27 @@ class TgUser {
         return f.exists();
     }
 
-    public String getWorkingDir() {
+    public File getWorkingDir() {
         return workingDir;
     }
 
-    public String getProgramDir() {
+    public File getProgramDir() {
         return programDir;
     }
 
-    public String getDataDir() {
+    public File getDataDir() {
         return dataDir;
     }
 
-    public String getWorkingDirIni() {
+    public File getWorkingDirIni() {
         return workingDirIni;
     }
 
-    public String getProgramDirIni() {
+    public File getProgramDirIni() {
         return programDirIni;
     }
 
-    public String getDataDirIni() {
+    public File getDataDirIni() {
         return dataDirIni;
     }
 
