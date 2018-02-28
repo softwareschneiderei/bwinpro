@@ -19,15 +19,16 @@ GNU General Public License for more details.
  * @author  sschimpf
  */
 package forestsimulator.standsimulation;
+import java.io.File;
 import java.util.*;
 import javax.swing.*;
 
 public class TgUserDialog extends javax.swing.JDialog {
-    String WorkingDir ="";
-    String ProgramDir ="";
-    String DataDir ="";
+    File WorkingDir;
+    File ProgramDir;
+    File DataDir;
     String Language = "";
-    String localPath="";
+    File localPath;
     String XMLSettings="";
     String plugIn="";
     java.io.File verzeichnis;
@@ -41,15 +42,13 @@ public class TgUserDialog extends javax.swing.JDialog {
     public TgUserDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        user.currentDir();
-        localPath="";
         f = new java.io.File("");
-        try{ localPath= f.getCanonicalPath();
+        try{ localPath= f.getCanonicalFile();
               } catch (Exception e){};
         System.out.println("User Setting Directory:" + user.fileExists("ForestSimulator.ini"));
         if (user.fileExists("ForestSimulator.ini")) {
             System.out.println("Settings laden ");
-            user.loadSettings(localPath);
+            user.loadSettings(f);
               
             ProgramDir=user.getProgramDirIni();
             WorkingDir=user.getWorkingDirIni();
@@ -59,9 +58,9 @@ public class TgUserDialog extends javax.swing.JDialog {
             loadModels();
         }
 
-        jTextField1.setText(ProgramDir);
-        jTextField2.setText(WorkingDir);
-        jTextField3.setText(DataDir);
+        jTextField1.setText(ProgramDir.getAbsolutePath());
+        jTextField2.setText(WorkingDir.getAbsolutePath());
+        jTextField3.setText(DataDir.getAbsolutePath());
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
         currentLocale = new Locale(user.getLanguageShort(), "");
@@ -230,12 +229,11 @@ public class TgUserDialog extends javax.swing.JDialog {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(new java.io.File(localPath));
+        jf.setCurrentDirectory(localPath);
         jf.setDialogTitle(messages.getString("choose_Data_Dir"));
         int k=jf.showOpenDialog(this);
-        java.io.File verzeichnis = jf.getSelectedFile();
-        DataDir = verzeichnis.getAbsolutePath();        
-        jTextField3.setText(DataDir);
+        DataDir = jf.getSelectedFile();        
+        jTextField3.setText(DataDir.getAbsolutePath());
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -243,12 +241,11 @@ public class TgUserDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(new java.io.File(localPath));
+        jf.setCurrentDirectory(localPath);
         jf.setDialogTitle(messages.getString("choose_Output_Dir"));
         int k=jf.showOpenDialog(this);
-        java.io.File verzeichnis = jf.getSelectedFile();
-        WorkingDir = verzeichnis.getAbsolutePath();        
-        jTextField2.setText(WorkingDir);
+        WorkingDir = jf.getSelectedFile();        
+        jTextField2.setText(WorkingDir.getAbsolutePath());
 
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -281,13 +278,12 @@ public class TgUserDialog extends javax.swing.JDialog {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
-        jf.setCurrentDirectory(new java.io.File(localPath));
+        jf.setCurrentDirectory(localPath);
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jf.setDialogTitle(messages.getString("choose_User_Dir"));
         int k=jf.showOpenDialog(this);
-        java.io.File verzeichnis = jf.getSelectedFile();
-        ProgramDir = verzeichnis.getAbsolutePath();        
-        jTextField1.setText(ProgramDir);
+        ProgramDir = jf.getSelectedFile();        
+        jTextField1.setText(ProgramDir.getAbsolutePath());
         loadModels();
     }//GEN-LAST:event_jButton1ActionPerformed
     

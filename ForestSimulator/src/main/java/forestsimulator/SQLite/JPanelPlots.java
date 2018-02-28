@@ -8,6 +8,7 @@ package forestsimulator.SQLite;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +26,7 @@ import treegross.base.Stand;
  */
 public class JPanelPlots extends javax.swing.JPanel {
      Stand st = null;
-     String dir = null;
+     File dir = null;
 
      String bestaende[] = new String[1000];
      String bestand = "";
@@ -36,19 +37,18 @@ public class JPanelPlots extends javax.swing.JPanel {
     /**
      * Creates new form JPanelDatabase
      */
-    public JPanelPlots(Stand stx, String dirx) {
+    public JPanelPlots(Stand stx, File dirx) throws IOException {
         initComponents();
         st = stx;
-        dir = dirx+System.getProperty("file.separator")+"fsplots.db";
+        dir = new File(dirx, "fsplots.db");
         String localPath="";
         java.io.File f1 = new java.io.File("");                    
         try{ 
            localPath= f1.getCanonicalPath();
           } catch (Exception e){ }
  
-        java.io.File f = new File(dir);
-        if ( f.exists()) {
-            jLabel1.setText(dir);
+        if (dir.exists()) {
+            jLabel1.setText(dir.getCanonicalPath());
         }
         else {
            JFileChooser fc = new JFileChooser();
@@ -56,9 +56,9 @@ public class JPanelPlots extends javax.swing.JPanel {
            txtFilter.setExtension("db");
            fc.addChoosableFileFilter(txtFilter);
            int auswahl = fc.showOpenDialog(this);
-           dir = fc.getSelectedFile().getPath();
+           dir = fc.getSelectedFile();
         }
-        jLabel1.setText(dir);
+        jLabel1.setText(dir.getCanonicalPath());
         setVisible(true);    
     }
 
@@ -249,12 +249,12 @@ public class JPanelPlots extends javax.swing.JPanel {
         fc.addChoosableFileFilter(dbFilter);
         fc.setFileFilter(dbFilter); 
         fc.setAcceptAllFileFilterUsed(true);
-        fc.setCurrentDirectory(new File(dir));
+        fc.setCurrentDirectory(dir);
                        
         int auswahl = fc.showOpenDialog(this);
         try {
-           dir = fc.getSelectedFile().getPath();
-           jLabel1.setText(dir);
+           dir = fc.getSelectedFile();
+           jLabel1.setText(dir.getCanonicalPath());
            setVisible(true);
 //           nBestaende=loadBestaende();
         }

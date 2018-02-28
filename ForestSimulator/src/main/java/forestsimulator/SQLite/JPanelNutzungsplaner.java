@@ -7,6 +7,7 @@ package forestsimulator.SQLite;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,7 +27,7 @@ import treegross.base.Tree;
  */
 public class JPanelNutzungsplaner extends javax.swing.JPanel {
      Stand st = null;
-     String dir = null;
+     File dir = null;
      javax.swing.table.DefaultTableModel dataTable1= new javax.swing.table.DefaultTableModel(
             new Object [][] {  },
             new String [] {
@@ -44,34 +45,27 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     /**
      * Creates new form JPanelNutzungsplaner
      */
-    public JPanelNutzungsplaner(Stand stx, String dirx) {
+    public JPanelNutzungsplaner(Stand stx, File dirx) throws IOException {
         initComponents();
         st = stx;
-        dir = dirx+System.getProperty("file.separator")+"nutzungsplaner.db";
+        dir = new File(dirx, "nutzungsplaner.db");
         String localPath="";
-        java.io.File f1 = new java.io.File("");                    
-        try{ 
-           localPath= f1.getCanonicalPath();
-          } catch (Exception e){ }
-        String finame = localPath+System.getProperty("file.separator")+"sqlnp.ini";
-        File fi = new File(finame);
-        if ( fi.exists()) {
+        File fi = new File("", "sqlnp.ini");
+        if (fi.exists()) {
             try 
               {  
                String s;
    	       BufferedReader in=
-	       new BufferedReader(new InputStreamReader(new FileInputStream(finame)));
-               dir=in.readLine();
+	       new BufferedReader(new InputStreamReader(new FileInputStream(fi)));
+               dir = new File(in.readLine());
                in.close();
                }
              catch (Exception e){ 
-                 dir = dirx+System.getProperty("file.separator")+"nutzungsplaner.db";
+                 dir = new File(dirx, "nutzungsplaner.db");
              }
-            
         }	
-        java.io.File f = new File(dir);
-        if ( f.exists()) {
-            jLabel1.setText(dir);
+        if (dir.exists()) {
+            jLabel1.setText(dir.getCanonicalPath());
         }
         else {
            JFileChooser fc = new JFileChooser();
@@ -79,9 +73,9 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
            txtFilter.setExtension("db");
            fc.addChoosableFileFilter(txtFilter);
            int auswahl = fc.showOpenDialog(this);
-           dir = fc.getSelectedFile().getPath();
+           dir = fc.getSelectedFile();
         }
-        jLabel1.setText(dir);
+        jLabel1.setText(dir.getCanonicalPath());
         setVisible(true);
         nBestaende=loadBestaende();
     }
@@ -233,12 +227,12 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         fc.addChoosableFileFilter(dbFilter);
         fc.setFileFilter(dbFilter); 
         fc.setAcceptAllFileFilterUsed(true);
-        fc.setCurrentDirectory(new File(dir));
+        fc.setCurrentDirectory(dir);
  
         int auswahl = fc.showOpenDialog(this);
         try {
-           dir = fc.getSelectedFile().getPath();
-           jLabel1.setText(dir);
+           dir = fc.getSelectedFile();
+           jLabel1.setText(dir.getCanonicalPath());
            setVisible(true);
            nBestaende=loadBestaende();
         }

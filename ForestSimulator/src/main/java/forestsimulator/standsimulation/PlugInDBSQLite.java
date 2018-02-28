@@ -16,6 +16,7 @@ http://www.nw-fva.de/~nagel/treegross/
 
 */
 package forestsimulator.standsimulation;
+import java.io.File;
 import treegross.base.*;
 /** This plug is for connectin an Access Database*/
 public interface PlugInDBSQLite 
@@ -23,6 +24,6 @@ public interface PlugInDBSQLite
 // Interfaces
 /** Interface to get the current competition index c66 of a tree.
     @param t Tree object*/
-  public void startDialog(java.awt.Frame frame, Stand st, String dir);
+  public void startDialog(java.awt.Frame frame, Stand st, File dir);
  
 }

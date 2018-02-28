@@ -1,4 +1,5 @@
 package forestsimulator.standsimulation;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -60,7 +61,7 @@ public class EditorPanel extends javax.swing.JPanel {
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
-        st.setProgramDir(urlcodebase.toString());
+        st.setProgramDir(new File(urlcodebase));
 //        System.out.println(urlcodebase);
         st.ntrees=0;
 	st.nspecies=0;
@@ -282,7 +283,8 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        jButton6.setText("Bestand lesen");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/standsimulation/Bundle"); // NOI18N
+        jButton6.setText(bundle.getString("EditorPanel.jButton6.text")); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
@@ -290,7 +292,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel3.add(jButton6);
 
-        jButton2.setText("Bestand Speichern");
+        jButton2.setText(bundle.getString("EditorPanel.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -298,7 +300,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel3.add(jButton2);
 
-        jButton7.setText("Maske l�schen");
+        jButton7.setText(bundle.getString("EditorPanel.jButton7.text")); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -306,7 +308,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel3.add(jButton7);
 
-        jButton8.setText("Polar - > xy");
+        jButton8.setText(bundle.getString("EditorPanel.jButton8.text")); // NOI18N
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
@@ -324,20 +326,20 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel1.setText("Bestand");
+        jLabel1.setText(bundle.getString("EditorPanel.jLabel1.text")); // NOI18N
         jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jPanel9.add(jLabel1);
 
         jTextField1.setPreferredSize(new java.awt.Dimension(200, 19));
         jPanel9.add(jTextField1);
 
-        jLabel2.setText("Bestandesgr��e [ha]");
+        jLabel2.setText(bundle.getString("EditorPanel.jLabel2.text")); // NOI18N
         jPanel9.add(jLabel2);
 
         jTextField2.setPreferredSize(new java.awt.Dimension(50, 19));
         jPanel9.add(jTextField2);
 
-        jLabel4.setText("Aufnahme Monat /J ahr");
+        jLabel4.setText(bundle.getString("EditorPanel.jLabel4.text")); // NOI18N
         jPanel14.add(jLabel4);
 
         jPanel9.add(jPanel14);
@@ -356,20 +358,20 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel10.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel5.setText("Lage: Rechtswert [m]");
+        jLabel5.setText(bundle.getString("EditorPanel.jLabel5.text")); // NOI18N
         jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         jPanel10.add(jLabel5);
 
         jTextField5.setPreferredSize(new java.awt.Dimension(91, 19));
         jPanel10.add(jTextField5);
 
-        jLabel6.setText("Hochwert [m]");
+        jLabel6.setText(bundle.getString("EditorPanel.jLabel6.text")); // NOI18N
         jPanel10.add(jLabel6);
 
         jTextField6.setPreferredSize(new java.awt.Dimension(91, 19));
         jPanel10.add(jTextField6);
 
-        jLabel7.setText("H�hen �berNN. [m]");
+        jLabel7.setText(bundle.getString("EditorPanel.jLabel7.text")); // NOI18N
         jPanel10.add(jLabel7);
 
         jTextField7.setPreferredSize(new java.awt.Dimension(91, 19));
@@ -379,19 +381,19 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel11.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel8.setText("Wuchsgebiet");
+        jLabel8.setText(bundle.getString("EditorPanel.jLabel8.text")); // NOI18N
         jPanel11.add(jLabel8);
 
         jTextField8.setPreferredSize(new java.awt.Dimension(91, 19));
         jPanel11.add(jTextField8);
 
-        jLabel9.setText("Wuchsbezirk");
+        jLabel9.setText(bundle.getString("EditorPanel.jLabel9.text")); // NOI18N
         jPanel11.add(jLabel9);
 
         jTextField9.setPreferredSize(new java.awt.Dimension(91, 19));
         jPanel11.add(jTextField9);
 
-        jLabel10.setText("Standort");
+        jLabel10.setText(bundle.getString("EditorPanel.jLabel10.text")); // NOI18N
         jPanel11.add(jLabel10);
 
         jTextField10.setPreferredSize(new java.awt.Dimension(91, 19));
@@ -401,15 +403,15 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel12.setLayout(new java.awt.GridLayout(1, 6));
 
-        jLabel11.setText("Exposition [Gon]");
+        jLabel11.setText(bundle.getString("EditorPanel.jLabel11.text")); // NOI18N
         jPanel12.add(jLabel11);
         jPanel12.add(jTextField11);
 
-        jLabel12.setText("Hangneigung [%]");
+        jLabel12.setText(bundle.getString("EditorPanel.jLabel12.text")); // NOI18N
         jPanel12.add(jLabel12);
         jPanel12.add(jTextField12);
 
-        jLabel13.setText("Standortskennziffer");
+        jLabel13.setText(bundle.getString("EditorPanel.jLabel13.text")); // NOI18N
         jPanel12.add(jLabel13);
         jPanel12.add(jTextField13);
 
@@ -425,7 +427,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel8.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jButton3.setText("Eckpunkt hinzuf�gen");
+        jButton3.setText(bundle.getString("EditorPanel.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -433,7 +435,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel6.add(jButton3);
 
-        jButton5.setText("Eckpunkt l�schen");
+        jButton5.setText(bundle.getString("EditorPanel.jButton5.text")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -457,7 +459,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jButton1.setText("Leere Zeilen hinzuf�gen");
+        jButton1.setText(bundle.getString("EditorPanel.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -465,7 +467,7 @@ public class EditorPanel extends javax.swing.JPanel {
         });
         jPanel7.add(jButton1);
 
-        jButton4.setText("ausgew�hlten Baum l�schen");
+        jButton4.setText(bundle.getString("EditorPanel.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -627,7 +629,7 @@ public class EditorPanel extends javax.swing.JPanel {
     public void setCodebase(String url){
         urlcodebase = url;
         System.out.println("Set url"+url);
-        st.setProgramDir(urlcodebase.toString());
+        st.setProgramDir(new File(urlcodebase));
     }
     
     public void setStand(Stand stand) {

@@ -49,7 +49,7 @@ import org.jdom.DocType;
  */
 public class TgJFrame extends JFrame implements ActionListener, ItemListener, StandChangeListener
 {	
-   private static final Logger log = Logger.getLogger( forestsimulator.standsimulation.TgJFrame.class.getName() );
+   private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
    FileHandler logHandler = null;
 
    String bwinproVersion="Version 7.8.01 XML";
@@ -57,7 +57,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    boolean accessInput = true;
    static Stand st = new Stand();
    SpeciesDefMap SDM = new SpeciesDefMap();
-   String currentFile="";
+   File currentFile;
    StringBuffer ColorInfo; 
    String seite;
 //   TgStandMap zf  = new TgStandMap(st, this); //add standmap class
@@ -94,9 +94,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    boolean grafik3D = false;
    boolean StandardColors = false;
    boolean tfUpdateTrue = true;
-   String programDir="";
-   String workingDir="";
-   String dataDir="";
+   File programDir;
+   File workingDir;
+   File dataDir;
    String plugIn="XML";
    String kspDataFile="";
    String kspNextPlot="";
@@ -104,15 +104,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    
    int kspTyp=0;
    
-	// Konstruktor of TgJFrame()
-	public TgJFrame(Stand stneu)
+	public TgJFrame(Stand stneu) throws IOException
 	{
 // Fehler logger bereitstellen
         try{
            logHandler = new FileHandler("log.txt");
            logHandler.setFormatter(new SimpleFormatter());
-           log.addHandler( logHandler );
-           log.info( "ForestSimulator Version: "+ bwinproVersion );
+           LOGGER.addHandler( logHandler );
+           LOGGER.info( "ForestSimulator Version: "+ bwinproVersion );
         }
         catch (Exception e){};
 
@@ -120,12 +119,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
            st.addStandChangeListener(this);
            scr= Toolkit.getDefaultToolkit().getScreenSize();                
            setSize(scr.width,(scr.height-(scr.height/50)));
-           java.io.File f = new java.io.File("");
-           String localPath=null;
-           try{ 
-               localPath= f.getCanonicalPath();
-              } catch (Exception e){};
-           if (user.fileExists(localPath+System.getProperty("file.separator")+"ForestSimulator.ini")==false) {
+           File workingDirectory = new java.io.File(".");
+           if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
                     JDialog settings = new TgUserDialog(this, true);
                     settings.setVisible(true);
                     JTextArea about = new JTextArea("Please restart program with new settings");
@@ -133,13 +128,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     System.exit(0);
             }
             else {System.out.println("Settings laden "); 
-                      log.info("TgJFrame local path : "+ localPath);
-                      user.loadSettings(localPath);
+                      LOGGER.info("TgJFrame local path : " + workingDirectory.getCanonicalPath());
+                      user.loadSettings(workingDirectory);
                       language=user.getLanguageShort();
                       plugIn=user.getPlugIn();
                       st.modelRegion=plugIn;
                       st.FileXMLSettings=user.XMLSettings;
-                      log.info("Modell :"+plugIn);
+                      LOGGER.info("Modell :"+plugIn);
             }
             setTitle(getTitle()+"Forest Simulator BWINPro 7 "+bwinproVersion+" - Modell: "+plugIn);
 //
@@ -165,11 +160,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 currentLocale = new Locale(language, "");
                 if (user.grafik3D==0 && available3d) grafik3D=true;
 
-                programDir=user.getProgramDir();
-                SDM.readFromPath(programDir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+st.FileXMLSettings);
+                programDir = user.getProgramDir();
+                SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings).getAbsolutePath());
                 st.setSDM(SDM);
-                workingDir=user.getWorkingDir();
-                currentFile=user.getDataDir();
+                workingDir = user.getWorkingDir();
+                currentFile = user.getDataDir();
                 st.setProgramDir(programDir);
                 
                 loadGenralSettings(programDir);
@@ -190,7 +185,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 // Simple parallel project  or 3D View of stand              
                 JPanel ppneu = new JPanel();
                if (grafik3D){
-                    manager3d =new Manager3D(new JPanel(),programDir, true);
+                    manager3d = new Manager3D(new JPanel(), programDir, true);
                     if (manager3d.get3DAvailable()){
                       ppneu.setPreferredSize(new Dimension((((scr.width-140)/2)-(scr.width/50)), (scr.height/2)-(scr.height/50)));                           
                       manager3d =new Manager3D(ppneu, programDir,true);
@@ -260,10 +255,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 menus.add(menubar); 
 		menus.add(Box.createRigidArea(new Dimension(20, 0)));
            //adding the toolbar
-                toolbar = new TgToolbar(this, programDir, language);
+                toolbar = new TgToolbar(this, programDir.getCanonicalPath(), language);
                 menus.add(toolbar);
            // adding screen toolbar
-                tgScreentoolbar = new TgScreentoolbar(this, programDir);
+                tgScreentoolbar = new TgScreentoolbar(this, programDir.getCanonicalPath());
                 menus.add(tgScreentoolbar);
                 getContentPane().add(menus, BorderLayout.NORTH);
                 
@@ -305,7 +300,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 		});
 		
                 // make TgJFrame visible
-                user.loadSettings(localPath);            
+                user.loadSettings(workingDirectory);            
                 setVisible(true);
                 zf.neuzeichnen();
                 pp.neuzeichnen();
@@ -356,7 +351,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        JFileChooser fc = new JFileChooser();
                        TxtFileFilter txtFilter = new TxtFileFilter();
                        fc.addChoosableFileFilter(txtFilter);
-                       fc.setCurrentDirectory(new File(user.getDataDir()));
+                       fc.setCurrentDirectory(user.getDataDir());
                        int auswahl = fc.showOpenDialog(owner);
                        String pa= fc.getSelectedFile().getPath();
                        String dn= fc.getSelectedFile().getName();
@@ -364,7 +359,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        st.setModelRegion(mo.getPlugInName(plugIn));
                                               
                        dataex.read(st,pa);
-                       log.info("File eingelesen:"+ pa);
+                       LOGGER.info("File eingelesen:"+ pa);
                        if (st.ntrees==0){
                            dataex.readOldFormat1(st,pa);
                        }
@@ -409,26 +404,21 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        TxtFileFilter txtFilter = new TxtFileFilter();
                        txtFilter.setExtension("xml");
                        fc.addChoosableFileFilter(txtFilter);
-                       fc.setCurrentDirectory(new File(user.getDataDir()));
+                       fc.setCurrentDirectory(user.getDataDir());
                        int auswahl = fc.showOpenDialog(owner);
-                       String pa= fc.getSelectedFile().getPath();
+                       File pa= fc.getSelectedFile();
                        currentFile = pa;
                        String dn= fc.getSelectedFile().getName();
                        Model mo =new Model();
                        st.setModelRegion(mo.getPlugInName(plugIn));
                        TreegrossXML2 treegrossXML2 = new TreegrossXML2();
                        URL url = null;
-                       String fname=pa;
-                       int m = pa.toUpperCase().indexOf("FILE");
-                       int m2 = pa.toUpperCase().indexOf("HTTP");
-                       if ( m < 0 && m2 <0 ) fname="file:"+System.getProperty("file.separator")
-                               +System.getProperty("file.separator")+System.getProperty("file.separator")+pa;
                        try {
-                          url = new URL(fname);  
+                          url = pa.toURI().toURL();  
                           st=treegrossXML2.readTreegrossStand(st,url);
                        }
-                       catch (Exception e2){log.info(e2.toString());  }
-                       log.info("File eingelesen:"+ pa);
+                       catch (Exception e2){LOGGER.info(e2.toString());  }
+                       LOGGER.info("File eingelesen:"+ pa);
 
                        if (st.getSpeciesDefinedTrue()==false) {
                            String text = st.getSpeciesUndefinedCode();
@@ -461,7 +451,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                  }
                 // open NutungsPlaner SQLite Database
                 if (cmd.equals("SQlite")){
-                   log.info("open NutzungsPlaner SQlite Database"); 
+                   LOGGER.info("open NutzungsPlaner SQlite Database"); 
                    try {
                        String modelPlugIn="forestsimulator.SQLite.SQLiteAccess";  
                        PlugInDBSQLite dialog = (PlugInDBSQLite)Class.forName(modelPlugIn).newInstance();  
@@ -484,13 +474,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        gr.starten();
                        showIframes();
                    }
-                   catch (Exception ex){log.info(ex.toString());log.info("Fehler SQLite "); }
+                   catch (Exception ex){LOGGER.info(ex.toString());LOGGER.info("Fehler SQLite "); }
 
-                   log.info("Open Access File"); 
+                   LOGGER.info("Open Access File"); 
                 }
                 // open Access File
                 if (cmd.equals("openAccess")){
-                   log.info("Open Access File"); 
+                   LOGGER.info("Open Access File"); 
                    try {
                        String modelPlugIn="forestsimulator.DBAccess.DBAccess";  
                        PlugInDBSQLite dialog = (PlugInDBSQLite)Class.forName(modelPlugIn).newInstance();  
@@ -513,9 +503,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        gr.starten();
                        showIframes();
                    }
-                   catch (Exception ex){log.info(ex.toString());log.info("kein Access Plugin Vorhanden "); }
+                   catch (Exception ex){LOGGER.info(ex.toString());LOGGER.info("kein Access Plugin Vorhanden "); }
 
-                   log.info("Open Access File"); 
+                   LOGGER.info("Open Access File"); 
                 }
                 
                 
@@ -534,7 +524,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 		    JFileChooser fc = new JFileChooser();
                     TxtFileFilter txtFilter = new TxtFileFilter();
                     fc.addChoosableFileFilter(txtFilter);
-                    fc.setCurrentDirectory(new File(user.getDataDir()));
+                    fc.setCurrentDirectory(user.getDataDir());
                     int auswahl = fc.showSaveDialog(owner);
                     String pa= fc.getSelectedFile().getPath();
                     String dn= fc.getSelectedFile().getName();    
@@ -547,7 +537,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     TxtFileFilter txtFilter = new TxtFileFilter();
                     txtFilter.setExtension("xml");
                     fc.addChoosableFileFilter(txtFilter);
-                    fc.setCurrentDirectory(new File(user.getDataDir()));
+                    fc.setCurrentDirectory(user.getDataDir());
                     int auswahl = fc.showSaveDialog(owner);
                     String pa= fc.getSelectedFile().getPath();
                     String dn= fc.getSelectedFile().getName();    
@@ -566,7 +556,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 if (cmd.equals("Tree values"))
 		  { 
                       TgHTMLsv sv= new TgHTMLsv(st);
-		      sv.newreport(st,workingDir,"treelist.html",language);
+		      sv.newreport(st,workingDir.getAbsolutePath(),"treelist.html",language);
 	              seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
                               +System.getProperty("file.separator")+sv.getFilename();
                       StartBrowser startBrowser = new StartBrowser(seite);   
@@ -579,7 +569,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                         st.sortbyd();
                         st.descspecies();
                         yt.enterStandDesc(st);
-                        yt.writeTable(st,workingDir,"standtable.html", language);
+                        yt.writeTable(st,workingDir.getAbsolutePath(),"standtable.html", language);
 	                    seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
                                 +System.getProperty("file.separator")+yt.getFilename();
                         StartBrowser startBrowser = new StartBrowser(seite);   
@@ -590,7 +580,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                         st.sortbyd();
                         st.descspecies();
                         TgStructureTable tgStructureTable = new TgStructureTable();
-                        tgStructureTable.writeTable(st,workingDir,"standstructure.html", language);
+                        tgStructureTable.writeTable(st,workingDir.getAbsolutePath(),"standstructure.html", language);
 	                seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
                                 +System.getProperty("file.separator")+tgStructureTable.getFilename();
                         StartBrowser startBrowser = new StartBrowser(seite);   
@@ -599,7 +589,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //
 		  if (cmd.equals("Definition"))  { 
                 try {
-                    st.getSDM().listCurrentSpeciesDefinition(st, workingDir, "speciesdefinition.html");
+                    st.getSDM().listCurrentSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciesdefinition.html");
                     seite = "file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+workingDir
                                 +System.getProperty("file.separator")+"speciesdefinition.html";
                     StartBrowser startBrowser = new StartBrowser(seite);
@@ -611,7 +601,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //
 		  if (cmd.equals("species_code"))  {
                 
-                    st.getSDM().listAllSpeciesDefinition(st, workingDir, "speciescode.html");
+                    st.getSDM().listAllSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciescode.html");
                     seite = "file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+workingDir
                                 +System.getProperty("file.separator")+"speciescode.html";
                     StartBrowser startBrowser = new StartBrowser(seite);
@@ -659,7 +649,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 // menu item exit
 		if (cmd.equals("exit")) 
                 {
-                    log.info("Programm beendet");
+                    LOGGER.info("Programm beendet");
                     System.exit(0); 
                 }                
                 
@@ -680,7 +670,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 
                   if(cmd.equals("Species Manager"))
                   {
-                    TgSpeciesManXML spman = new TgSpeciesManXML(this,true, programDir, st.FileXMLSettings);spman.setVisible(true);
+                    TgSpeciesManXML spman = new TgSpeciesManXML(this,true, programDir.getAbsolutePath(), st.FileXMLSettings);spman.setVisible(true);
                   }
               //Menu "Help"
                 
@@ -708,9 +698,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 st.sortbyd();
                 st.descspecies();
                 TreegrossXML2 treegrossXML2 = new TreegrossXML2();
-                if (currentFile.indexOf(".")< 12 ) currentFile=currentFile+System.getProperty("file.separator")+"temp.xml";
+                String currentFileName = currentFile.getName();
+                if (currentFileName.indexOf(".") < 12 ) {
+                    currentFileName = currentFileName+System.getProperty("file.separator")+"temp.xml";
+                }
                 Integer jj = st.year; 
-                String fname = currentFile.substring(0, currentFile.length()-4)+"_"+jj.toString()+".xml";
+                String fname = currentFileName.substring(0, currentFileName.length()-4)+"_"+jj.toString()+".xml";
                 treegrossXML2.saveAsXML(st,fname);
                 st.descspecies();
                 st.executeMortality();
@@ -748,7 +741,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             
             if(cmd.equals("Sorting"))
             {
-                    SortingDialog sorter = new SortingDialog(this, true, st, programDir, false, workingDir, language,logHandler);
+                    SortingDialog sorter = new SortingDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(), language,logHandler);
                     sorter.setVisible(true);
                     
             }
@@ -759,7 +752,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             }
             if(cmd.equals("NutrientBalance"))
             {
-                    BiomassDialog nutrientBalance = new BiomassDialog(this, true, st, programDir, false, workingDir,logHandler);
+                    BiomassDialog nutrientBalance = new BiomassDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(),logHandler);
                     nutrientBalance.setVisible(true);
 
             }
@@ -767,7 +760,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             if(cmd.equals("Roots"))
             {
                  RootBiomassReport rootBiomassReport = new RootBiomassReport();
-                 rootBiomassReport.report(st, programDir, workingDir);
+                 rootBiomassReport.report(st, programDir.getAbsolutePath(), workingDir.getAbsolutePath());
                     
             }
             if(cmd.equals("RootingDialog"))
@@ -879,7 +872,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 TxtFileFilter txtFilter = new TxtFileFilter();
                 txtFilter.setExtension("jpg");
                 fc.addChoosableFileFilter(txtFilter);
-                fc.setCurrentDirectory(new File(user.getWorkingDir()));
+                fc.setCurrentDirectory(user.getWorkingDir());
                 int auswahl = fc.showSaveDialog(owner);
                 String pa= fc.getSelectedFile().getPath();
                 zf.setJPGFilename(pa);
@@ -927,11 +920,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 TxtFileFilter txtFilter = new TxtFileFilter();
                 txtFilter.setExtension("jpg");
                 fc.addChoosableFileFilter(txtFilter);
-                fc.setCurrentDirectory(new File(user.getWorkingDir()));
+                fc.setCurrentDirectory(user.getWorkingDir());
                 int auswahl = fc.showSaveDialog(owner);
                 String pa= fc.getSelectedFile().getPath();
                 gr.setJPGFilename(pa);
-                gr.saveToJPEG(workingDir); }
+                gr.saveToJPEG(workingDir.getAbsolutePath()); }
 	}
         
         public void StandChanged(treegross.base.StandChangeEvent evt){
@@ -1019,21 +1012,18 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
         
         
-     public void loadGenralSettings(String Dir){
+     public void loadGenralSettings(File Dir){
         java.io.File file;
-        String fname="";
+        File fname = null;
         try {
             URL url =null;
-            int m = Dir.toUpperCase().indexOf("FILE");
-            int m2 = Dir.toUpperCase().indexOf("HTTP");
             String trenn =System.getProperty("file.separator");
-            fname=Dir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+st.FileXMLSettings;
-           if ( m < 0 && m2 <0 ) fname="file:"+trenn+trenn+trenn+fname;
-            System.out.println("SpeciesDef: URL: "+fname);
+            fname = new File(new File(Dir, "models"), st.FileXMLSettings);
+            System.out.println("SpeciesDef: URL: " + fname.toURI().toURL());
             try {
-                 url = new URL(fname);}
-            catch (Exception e){
-                    log.info(e.toString());
+                 url = fname.toURI().toURL();
+            } catch (Exception e){
+                    LOGGER.info(e.toString());
                     JTextArea about = new JTextArea("TgDesign Genral Settings: Url file not found: "+fname);
                     JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
             }
@@ -1070,10 +1060,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
          }
 
        } catch (Exception e) {
-               log.info(e.toString());
-               JTextArea about = new JTextArea("TgDesign file not found : "+fname);
+               LOGGER.info(e.toString());
+               JTextArea about = new JTextArea("TgDesign file not found : " + fname);
                JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
-               log.info("SpeciesDef General settings: File nicht gefunden: "+fname);
+               LOGGER.info("SpeciesDef General settings: File nicht gefunden: " + fname);
 
                }
            
@@ -1165,7 +1155,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 
             }
         
-        catch(java.io.IOException e){log.info(e.toString());}
+        catch(java.io.IOException e){LOGGER.info(e.toString());}
             
             return sbuffer;
         }

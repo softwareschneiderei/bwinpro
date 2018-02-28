@@ -4,6 +4,8 @@
  */
 package forestsimulator.SQLite;
 
+import java.io.File;
+import java.io.IOException;
 import treegross.base.Stand;
 
 /**
@@ -13,7 +15,7 @@ import treegross.base.Stand;
 public class SQLiteDialog extends javax.swing.JDialog {
     
     String pluginPanel=null;
-    String dir = "";
+    File dir;
     Stand st = null;
     JPanelNutzungsplaner jp = null;
     JPanelDatabase jpd = null;
@@ -21,7 +23,7 @@ public class SQLiteDialog extends javax.swing.JDialog {
     /**
      * Creates new form SQLiteDialog
      */
-    public SQLiteDialog(java.awt.Frame parent, boolean modal,Stand St, String Dir) {
+    public SQLiteDialog(java.awt.Frame parent, boolean modal,Stand St, File Dir) throws IOException {
         super(parent, modal);
         initComponents();
         st = St;

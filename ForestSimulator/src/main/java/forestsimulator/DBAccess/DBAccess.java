@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package forestsimulator.DBAccess;
+
 import forestsimulator.standsimulation.PlugInDBSQLite;
 import treegross.base.*;
-import java.awt.*;
+import java.io.File;
 
 /**
  *
@@ -14,10 +10,10 @@ import java.awt.*;
  */
 public class DBAccess implements PlugInDBSQLite {
     
-public void startDialog(java.awt.Frame frame, Stand st, String dirx){
-    String dir =dirx;
+@Override
+public void startDialog(java.awt.Frame frame, Stand st, File dirx){
     System.out.println("starte Dialog");
-    DBAccessDialog dialog = new DBAccessDialog(frame,true,st, dir);
+    DBAccessDialog dialog = new DBAccessDialog(frame,true,st, dirx);
     dialog.setVisible(true);
     
 }    

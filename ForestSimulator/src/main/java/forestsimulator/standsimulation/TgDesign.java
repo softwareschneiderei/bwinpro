@@ -20,6 +20,7 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -37,12 +38,12 @@ public class TgDesign extends javax.swing.JPanel {
     Stand st = new Stand();
     TgJFrame frame;
     ResourceBundle messages;
-    String programDir="";
-    /** Creates new form JPanel */
+    File programDir;
+
     public TgDesign(Stand st1, TgJFrame parent,String preferredLanguage) {
         st = st1;
         frame = parent;
-        programDir=parent.programDir;
+        programDir = parent.programDir;
         initComponents();
         jLabel3.setVisible(false);
         jTextField2.setVisible(false);
@@ -74,7 +75,7 @@ public class TgDesign extends javax.swing.JPanel {
         jLabel10.setText(messages.getString("skidtrailDistance"));
         jLabel11.setText(messages.getString("skidtrailWidth"));
         jLabel13.setText(messages.getString("layer"));
-        loadSpecies(programDir);
+        loadSpecies(programDir.getPath());
         setdbh();
      }
     

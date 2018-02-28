@@ -1,5 +1,6 @@
 package forestsimulator.Stand3D;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.net.*;
 
 /**
@@ -7,10 +8,10 @@ import java.net.*;
  * @author  jhansen
  */
 public class ToolBar3D extends javax.swing.JToolBar {
-    private String path;
+    private File path;
     public boolean isLeft=false;
 
-    public ToolBar3D(ActionListener al, boolean textures, String iconpath) {
+    public ToolBar3D(ActionListener al, boolean textures, File iconpath) {
         path=iconpath;
         initComponents(al);
         jToggleButton3.setEnabled(textures);        
@@ -51,13 +52,6 @@ public class ToolBar3D extends javax.swing.JToolBar {
         setRollover(true);
 //
         URL url =null;
-        int m = path.toUpperCase().indexOf("FILE");
-        int m2 = path.toUpperCase().indexOf("HTTP");
-        if ( m < 0 && m2 <0 ) path="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+path;
-//        System.out.println("ToolbarDef: URL: "+path);
-//            URL url = new URL(urlcodebase,fn);
-        
-//        
         javax.swing.ImageIcon icon;
         jToggleButton1.setSelected(true);
         jToggleButton1.setText("Status");
@@ -66,8 +60,9 @@ public class ToolBar3D extends javax.swing.JToolBar {
 //        System.out.println("ToolBar3D "+path);
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"status.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "status.jpg").toURI().toURL();
+            }
+            catch (MalformedURLException e){ }
 //            icon=new javax.swing.ImageIcon(path+"\\status.jpg");
             icon=new javax.swing.ImageIcon(url);
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -82,8 +77,9 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton2.setActionCommand("setdead");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"showdead.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "showdead.jpg").toURI().toURL();
+            }
+            catch (MalformedURLException e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\showdead.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -98,7 +94,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton3.setActionCommand("settexture");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"texture.jpg");}
+                 url = new File(path, "texture.jpg").toURI().toURL();
+            }
             catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\texture.jpg");
@@ -114,7 +111,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton4.setActionCommand("setspecies");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"speciescolor.jpg");}
+                 url = new File(path, "speciescolor.jpg").toURI().toURL();
+            }
             catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\speciescolor.jpg");
@@ -131,8 +129,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton5.setActionCommand("showinfo");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"info.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "info.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\info.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -149,8 +147,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton6.setActionCommand("showfog");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"showfog.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "showfog.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\showfog.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -167,8 +165,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jToggleButton7.setActionCommand("showmesh");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"showmesh.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "showmesh.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\showmesh.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -183,8 +181,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jButton1.setActionCommand("screenshot");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"sshot.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "sshot.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\sshot.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -199,8 +197,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jButton2.setActionCommand("harvest");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"harvest.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "harvest.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\harvest.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -215,8 +213,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jButton3.setActionCommand("goback");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"start.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "start.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\start.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){
@@ -231,8 +229,8 @@ public class ToolBar3D extends javax.swing.JToolBar {
         jButton4.setActionCommand("toolpos");
         if(path!=null){
             try {
-                 url = new URL(path+System.getProperty("file.separator")+"toolpos.jpg");}
-            catch (Exception e){ }
+                 url = new File(path, "toolpos.jpg").toURI().toURL();
+            } catch (Exception e){ }
             icon=new javax.swing.ImageIcon(url);
 //            icon=new javax.swing.ImageIcon(path+"\\toolpos.jpg");
             if(icon.getImageLoadStatus()==java.awt.MediaTracker.COMPLETE){

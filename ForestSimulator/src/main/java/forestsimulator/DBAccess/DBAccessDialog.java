@@ -14,6 +14,7 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.DBAccess;
+import java.io.File;
 import treegross.base.*;
 import treegross.treatment.*;
 import treegross.random.RandomNumber;
@@ -35,13 +36,13 @@ public class DBAccessDialog extends javax.swing.JDialog {
     int  growthCycles = 0;
     
     /** Creates new form DBAccessDialog */
-    public DBAccessDialog(java.awt.Frame parent, boolean modal,Stand stand, String dir) {
+    public DBAccessDialog(java.awt.Frame parent, boolean modal,Stand stand, File dir) {
         super(parent, modal);
         initComponents();
         st = stand;
         jComboBox1.removeAllItems();
 //        jTextField1.setText(dir+System.getProperty("file.separator")+"localdata.mdb");
-        jTextField1.setText(dir+System.getProperty("file.separator")+"localdata.mdb");
+        jTextField1.setText(new File(dir, "localdata.mdb").getPath());
         jPanel1.setVisible(true);
         jPanel2.setVisible(false);
         jButton3.setVisible(false);
