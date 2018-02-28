@@ -312,9 +312,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 gr.starten();
                 tfUpdateTrue=true;
                // sd.showdesigner(st); 
-                if(!available3d) JOptionPane.showMessageDialog(null,"Es ist keine Java3D-API installiert.","Java3D",JOptionPane.ERROR_MESSAGE);
-                if (user.needsUpdate(bwinproLastUpdate)) JOptionPane.showMessageDialog(null,"Es gibt eine neue Version auf http://www.nw-fva.de. update empfohlen","ForestSimulator BWINPro7 Update Check",JOptionPane.ERROR_MESSAGE);
-               
+                if (!available3d) {
+                    JOptionPane.showMessageDialog(null,"Es ist keine Java3D-API installiert.","Java3D",JOptionPane.ERROR_MESSAGE);
+                }
+                if (user.needsUpdate(bwinproLastUpdate)) {
+                    JOptionPane.showMessageDialog(null,"Es gibt eine neue Version auf http://www.nw-fva.de. update empfohlen","ForestSimulator BWINPro7 Update Check", JOptionPane.ERROR_MESSAGE);
+                }
 	}
         
 //-----------------------------------------------------------------------------	
