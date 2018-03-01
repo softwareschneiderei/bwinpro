@@ -19,8 +19,13 @@ GNU General Public License for more details.
  * @author  sschimpf
  */
 package forestsimulator.standsimulation;
+import java.awt.Frame;
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class TgUserDialog extends javax.swing.JDialog {
@@ -33,34 +38,35 @@ public class TgUserDialog extends javax.swing.JDialog {
     String plugIn="";
     java.io.File verzeichnis;
     java.io.File localF = null;
-    TgUser user = new TgUser();
+    private TgUser user = new TgUser(new File("."));
     ResourceBundle messages;
     Locale currentLocale;
-    java.io.File f = null;
    
     /** Creates new form JDialog */
-    public TgUserDialog(java.awt.Frame parent, boolean modal) {
+    public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        f = new java.io.File("");
-        try{ localPath= f.getCanonicalFile();
-              } catch (Exception e){};
-        System.out.println("User Setting Directory:" + user.fileExists("ForestSimulator.ini"));
+        File f = new File(".");
+        try {
+            localPath= f.getCanonicalFile();
+        } catch (IOException e) {
+            Logger.getLogger(TgUserDialog.class.getName()).log(Level.SEVERE, "Problem getting working directory: {0}", e.getMessage());
+        };
         if (user.fileExists("ForestSimulator.ini")) {
             System.out.println("Settings laden ");
-            user.loadSettings(f);
+            user.loadSettings();
               
-            ProgramDir=user.getProgramDirIni();
-            WorkingDir=user.getWorkingDirIni();
-            DataDir=user.getDataDirIni();
+            ProgramDir=user.getProgramDir();
+            WorkingDir=user.getWorkingDir();
+            DataDir=user.getDataDir();
             XMLSettings=user.getXMLSettings();
             plugIn = user.getPlugIn();
             loadModels();
         }
 
-        jTextField1.setText(ProgramDir.getAbsolutePath());
-        jTextField2.setText(WorkingDir.getAbsolutePath());
-        jTextField3.setText(DataDir.getAbsolutePath());
+        jTextField1.setText(ProgramDir.getName());
+        jTextField2.setText(WorkingDir.getName());
+        jTextField3.setText(DataDir.getName());
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
         currentLocale = new Locale(user.getLanguageShort(), "");
@@ -252,17 +258,8 @@ public class TgUserDialog extends javax.swing.JDialog {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try
         {
-            java.io.PrintWriter ausgabe = new java.io.PrintWriter(new java.io.FileWriter(localPath+System.getProperty("file.separator")+"ForestSimulator.ini"));
-            ausgabe.println(jTextField1.getText());
-            ausgabe.println(jTextField3.getText());
-            ausgabe.println(jTextField2.getText());
-            Language = (String)jComboBox1.getSelectedItem();
-            ausgabe.println(Language);
-            ausgabe.println(jComboBox2.getSelectedItem());
-            int g3D = 0;
-            if (jComboBox3.getSelectedIndex()>0) g3D=1;
-            ausgabe.println(g3D);
-            ausgabe.close();
+            saveSettings();
+            
             JTextArea about = new JTextArea("Please restart program with new settings");
             JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
@@ -271,6 +268,18 @@ public class TgUserDialog extends javax.swing.JDialog {
         }
         catch(java.io.IOException e){System.out.println("Error! writing File standsimulation.ini");}
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void saveSettings() throws IOException {
+        Language = (String)jComboBox1.getSelectedItem();
+        int g3D = 0;
+        if (jComboBox3.getSelectedIndex()>0) g3D=1;
+        user.saveSettings(jTextField1.getText(),
+                jTextField3.getText(),
+                jTextField2.getText(),
+                Language,
+                (String) jComboBox2.getSelectedItem(),
+                g3D);
+    }
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
@@ -289,9 +298,9 @@ public class TgUserDialog extends javax.swing.JDialog {
     
     private void loadModels(){
         jComboBox2.removeAllItems();
-        java.io.File verzeichnis = new java.io.File(ProgramDir+System.getProperty("file.separator")+"models");
+        File modelDirectory = new File(ProgramDir, "models");
 // Liste mit Dateien erstellen 
-        String entries[]=verzeichnis.list();
+        String entries[]=modelDirectory.list();
         for ( int i = 0; i < entries.length; i++ ) {
              if (entries[i].indexOf(".xml") >0) jComboBox2.addItem(entries[i]);
         }

@@ -84,7 +84,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    TgScreentoolbar tgScreentoolbar;
    TgInternalFrame[] iframe  = new TgInternalFrame[8];
    JDesktopPane dp = new JDesktopPane();
-   TgUser user= new TgUser();
+   TgUser user;
    private JFrame owner; 
    ResourceBundle messages;
    private Manager3D manager3d;
@@ -104,216 +104,217 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    
    int kspTyp=0;
    
-	public TgJFrame(Stand stneu) throws IOException
-	{
+    public TgJFrame(Stand stneu) throws IOException
+    {
 // Fehler logger bereitstellen
-        try{
-           logHandler = new FileHandler("log.txt");
-           logHandler.setFormatter(new SimpleFormatter());
-           LOGGER.addHandler( logHandler );
-           LOGGER.info( "ForestSimulator Version: "+ bwinproVersion );
-        }
-        catch (Exception e){};
+    try{
+       logHandler = new FileHandler("log.txt");
+       logHandler.setFormatter(new SimpleFormatter());
+       LOGGER.addHandler( logHandler );
+       LOGGER.info( "ForestSimulator Version: "+ bwinproVersion );
+    }
+    catch (Exception e){};
 
-           st=stneu;
-           st.addStandChangeListener(this);
-           scr= Toolkit.getDefaultToolkit().getScreenSize();                
-           setSize(scr.width,(scr.height-(scr.height/50)));
-           File workingDirectory = new java.io.File(".");
-           if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
-                    JDialog settings = new TgUserDialog(this, true);
-                    settings.setVisible(true);
-                    JTextArea about = new JTextArea("Please restart program with new settings");
-                    JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
-                    System.exit(0);
-            }
-            else {System.out.println("Settings laden "); 
-                      LOGGER.info("TgJFrame local path : " + workingDirectory.getCanonicalPath());
-                      user.loadSettings(workingDirectory);
-                      language=user.getLanguageShort();
-                      plugIn=user.getPlugIn();
-                      st.modelRegion=plugIn;
-                      st.FileXMLSettings=user.XMLSettings;
-                      LOGGER.info("Modell :"+plugIn);
-            }
-            setTitle(getTitle()+"Forest Simulator BWINPro 7 "+bwinproVersion+" - Modell: "+plugIn);
+       st=stneu;
+       st.addStandChangeListener(this);
+       scr= Toolkit.getDefaultToolkit().getScreenSize();                
+       setSize(scr.width,(scr.height-(scr.height/50)));
+       File workingDirectory = new java.io.File(".");
+       this.user = new TgUser(workingDirectory);
+       if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
+                JDialog settings = new TgUserDialog(this, true);
+                settings.setVisible(true);
+                JTextArea about = new JTextArea("Please restart program with new settings");
+                JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
+                System.exit(0);
+        }
+        else {System.out.println("Settings laden "); 
+                  LOGGER.info("TgJFrame local path : " + workingDirectory.getCanonicalPath());
+                  user.loadSettings();
+                  language=user.getLanguageShort();
+                  plugIn=user.getPlugIn();
+                  st.modelRegion=plugIn;
+                  st.FileXMLSettings=user.XMLSettings;
+                  LOGGER.info("Modell :"+plugIn);
+        }
+        setTitle(getTitle()+"Forest Simulator BWINPro 7 "+bwinproVersion+" - Modell: "+plugIn);
 //
-        boolean available3d = false;
-        PackageInfo info3d=new PackageInfo();
-        if(info3d.isJ3DInstalled()){
-            new Query3DProperties();
-            available3d=true;
-        } 
-            
-            
+    boolean available3d = false;
+    PackageInfo info3d=new PackageInfo();
+    if(info3d.isJ3DInstalled()){
+        new Query3DProperties();
+        available3d=true;
+    } 
+
+
 //
 //        accessInput = true;
 
-        if (plugIn.indexOf("nwfva") > 0) {
-            accessInput = true;
-        }
+    if (plugIn.indexOf("nwfva") > 0) {
+        accessInput = true;
+    }
 
-                zf  = new TgStandMap(st, this); //add standmap class
-                pp = new TgPPmap(st, this); //add prallel projection class
-                gr = new TgGrafik(st);    
-                Locale currentLocale;
-                currentLocale = new Locale(language, "");
-                if (user.grafik3D==0 && available3d) grafik3D=true;
+            zf  = new TgStandMap(st, this); //add standmap class
+            pp = new TgPPmap(st, this); //add prallel projection class
+            gr = new TgGrafik(st);    
+            Locale currentLocale;
+            currentLocale = new Locale(language, "");
+            if (user.grafik3D==0 && available3d) grafik3D=true;
 
-                programDir = user.getProgramDir();
-                SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings).getAbsolutePath());
-                st.setSDM(SDM);
-                workingDir = user.getWorkingDir();
-                currentFile = user.getDataDir();
-                st.setProgramDir(programDir);
-                
-                loadGenralSettings(programDir);
- 
-                messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-                 
-                JPanel zfneu = new JPanel();
-                zfneu.setLayout(new BorderLayout());
-                JPanel tgStandMapMenus = new JPanel();
-                tgStandMapMenus.setLayout(new BoxLayout(tgStandMapMenus, BoxLayout.X_AXIS));                
+            programDir = user.getProgramDir();
+            SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings).getAbsolutePath());
+            st.setSDM(SDM);
+            workingDir = user.getWorkingDir();
+            currentFile = user.getDataDir();
+            st.setProgramDir(programDir);
+
+            loadGenralSettings(programDir);
+
+            messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+
+            JPanel zfneu = new JPanel();
+            zfneu.setLayout(new BorderLayout());
+            JPanel tgStandMapMenus = new JPanel();
+            tgStandMapMenus.setLayout(new BoxLayout(tgStandMapMenus, BoxLayout.X_AXIS));                
 // adding the menu
-		tgStandMapMenu = new TgStandMapMenu(this, this, language);
-                tgStandMapMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
-                tgStandMapMenus.add(tgStandMapMenu); 
-                zfneu.add(tgStandMapMenus,BorderLayout.NORTH);
-                zfneu.add(zf,BorderLayout.CENTER);
+            tgStandMapMenu = new TgStandMapMenu(this, this, language);
+            tgStandMapMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
+            tgStandMapMenus.add(tgStandMapMenu); 
+            zfneu.add(tgStandMapMenus,BorderLayout.NORTH);
+            zfneu.add(zf,BorderLayout.CENTER);
 //
 // Simple parallel project  or 3D View of stand              
-                JPanel ppneu = new JPanel();
-               if (grafik3D){
-                    manager3d = new Manager3D(new JPanel(), programDir, true);
-                    if (manager3d.get3DAvailable()){
-                      ppneu.setPreferredSize(new Dimension((((scr.width-140)/2)-(scr.width/50)), (scr.height/2)-(scr.height/50)));                           
-                      manager3d =new Manager3D(ppneu, programDir,true);
-                      grafik3D = true;
-                    }
+            JPanel ppneu = new JPanel();
+           if (grafik3D){
+                manager3d = new Manager3D(new JPanel(), programDir, true);
+                if (manager3d.get3DAvailable()){
+                  ppneu.setPreferredSize(new Dimension((((scr.width-140)/2)-(scr.width/50)), (scr.height/2)-(scr.height/50)));                           
+                  manager3d =new Manager3D(ppneu, programDir,true);
+                  grafik3D = true;
                 }
-                else{
-                    ppneu.setLayout(new BorderLayout());
-                    JPanel tgPPMapMenus = new JPanel();
-                    tgPPMapMenus.setLayout(new BoxLayout(tgPPMapMenus, BoxLayout.X_AXIS));                
-           // adding the menu
-		    tgPPMapMenu = new TgPPMapMenu(this, this, language); 
-                    tgPPMapMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
-                    tgPPMapMenus.add(tgPPMapMenu); 
-                    ppneu.add(tgPPMapMenus,BorderLayout.NORTH);
-                    ppneu.add(pp,BorderLayout.CENTER);
-                    grafik3D = false;
-                }
+            }
+            else{
+                ppneu.setLayout(new BorderLayout());
+                JPanel tgPPMapMenus = new JPanel();
+                tgPPMapMenus.setLayout(new BoxLayout(tgPPMapMenus, BoxLayout.X_AXIS));                
+       // adding the menu
+                tgPPMapMenu = new TgPPMapMenu(this, this, language); 
+                tgPPMapMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
+                tgPPMapMenus.add(tgPPMapMenu); 
+                ppneu.add(tgPPMapMenus,BorderLayout.NORTH);
+                ppneu.add(pp,BorderLayout.CENTER);
+                grafik3D = false;
+            }
 
-         
+
 //                
-                tsi = new TgStandInfo(language);
+            tsi = new TgStandInfo(language);
 
 // Treatment Manager Window                
-                treatmentMan3 = new TgTreatmentMan3(st, this,language);
-                JPanel treatmentPanel = new JPanel();
-                treatmentPanel.setLayout(new BorderLayout());
-                JPanel tgTreatmentMenus = new JPanel();
-                tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));                
+            treatmentMan3 = new TgTreatmentMan3(st, this,language);
+            JPanel treatmentPanel = new JPanel();
+            treatmentPanel.setLayout(new BorderLayout());
+            JPanel tgTreatmentMenus = new JPanel();
+            tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));                
 //                tgTreatmentMan2Menu = new TgTreatmentMan2Menu(this,this, language);
 //                tgTreatmentMan2Menu.setAlignmentY(Component.CENTER_ALIGNMENT);
 //                tgTreatmentMenus.add(tgTreatmentMan2Menu);
-                treatmentPanel.add(tgTreatmentMenus,BorderLayout.NORTH); 
-                treatmentPanel.add(treatmentMan3,BorderLayout.CENTER); 
-                
-                sd = new TgDesign(st, this, language);
+            treatmentPanel.add(tgTreatmentMenus,BorderLayout.NORTH); 
+            treatmentPanel.add(treatmentMan3,BorderLayout.CENTER); 
+
+            sd = new TgDesign(st, this, language);
 // add Grafik Menu 
-                JPanel grWithMenu = new JPanel();
-                grWithMenu.setLayout(new BorderLayout());
-                JPanel tggrMenus = new JPanel();
-                tggrMenus.setLayout(new BoxLayout(tggrMenus, BoxLayout.X_AXIS));                
-		tgGrafikMenu = new TgGrafikMenu(this, this, language); 
-                tgGrafikMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
-                tggrMenus.add(tgGrafikMenu); 
-                grWithMenu.add(tggrMenus,BorderLayout.NORTH);
-                grWithMenu.add(gr,BorderLayout.CENTER);
-                
-                iframe[0] = new TgInternalFrame(zfneu, messages.getString("Standmap"));
-                iframe[1] = new TgInternalFrame(ppneu, messages.getString("Parallel_Projection"));
-            	iframe[2] = new TgInternalFrame(grWithMenu, messages.getString("Graphics"));
-                iframe[3] = new TgInternalFrame(sd, messages.getString("Add_Trees"));
-                iframe[4] = new TgInternalFrame(treatmentPanel, messages.getString("Simulation_Setting"));
-                iframe[5] = new TgInternalFrame(tsi,messages.getString("Stand_Info"));
-   
+            JPanel grWithMenu = new JPanel();
+            grWithMenu.setLayout(new BorderLayout());
+            JPanel tggrMenus = new JPanel();
+            tggrMenus.setLayout(new BoxLayout(tggrMenus, BoxLayout.X_AXIS));                
+            tgGrafikMenu = new TgGrafikMenu(this, this, language); 
+            tgGrafikMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
+            tggrMenus.add(tgGrafikMenu); 
+            grWithMenu.add(tggrMenus,BorderLayout.NORTH);
+            grWithMenu.add(gr,BorderLayout.CENTER);
+
+            iframe[0] = new TgInternalFrame(zfneu, messages.getString("Standmap"));
+            iframe[1] = new TgInternalFrame(ppneu, messages.getString("Parallel_Projection"));
+            iframe[2] = new TgInternalFrame(grWithMenu, messages.getString("Graphics"));
+            iframe[3] = new TgInternalFrame(sd, messages.getString("Add_Trees"));
+            iframe[4] = new TgInternalFrame(treatmentPanel, messages.getString("Simulation_Setting"));
+            iframe[5] = new TgInternalFrame(tsi,messages.getString("Stand_Info"));
+
 //                user.currentDir();
-                
-              
-                tgProgramInfo = new TgProgramInfo(this);
-                iframe[6] = new TgInternalFrame(tgProgramInfo,messages.getString("Program_Info"));
-              
-                
-                JPanel menus = new JPanel();
-                menus.setLayout(new BoxLayout(menus, BoxLayout.X_AXIS));                
-           // adding the menu
-	 	menubar = new MyMenubar(this, this, language, st, accessInput); 
-                menubar.setAlignmentY(Component.CENTER_ALIGNMENT);
-                menus.add(menubar); 
-		menus.add(Box.createRigidArea(new Dimension(20, 0)));
-           //adding the toolbar
-                toolbar = new TgToolbar(this, programDir.getCanonicalPath(), language);
-                menus.add(toolbar);
-           // adding screen toolbar
-                tgScreentoolbar = new TgScreentoolbar(this, programDir.getCanonicalPath());
-                menus.add(tgScreentoolbar);
-                getContentPane().add(menus, BorderLayout.NORTH);
-                
-                // Adding the InternalFrames
-                iframe[0].setLocation(155,0);
-                iframe[1].setLocation((140+(scr.width-140)/2),0);
-                iframe[2].setLocation(100,0);
-                iframe[0].setVisible(false);
-                iframe[1].setVisible(false);
-                iframe[2].setVisible(false);
-                iframe[3].setVisible(false);
-                iframe[4].setVisible(false);
-                iframe[5].setVisible(false);
-                iframe[3].setLocation(((scr.width-100)/2),0);
-                iframe[4].setLocation(0,0);              
-                iframe[5].setLocation(0,(scr.height/2+(scr.height/20)));
-                iframe[6].setLocation(0,0);              
-                iframe[6].setVisible(true);
-                
-                
-                
-                for(int i = 0; i<7; i++)
-                {
-                    iframe[i].addInternalFrameListener(new MyInternalFrameListener());
-                    dp.add(iframe[i]);
-                }
-                
-                getContentPane().add(dp, BorderLayout.CENTER);
-                
-		 
-		// add a windowListener for closing the window		
-		addWindowListener(
-			new WindowAdapter ()
-		{	public void windowClosing (WindowEvent e)
-			{	
-                            //writeFile(ColorInfo);
-                            dispose(); System.exit(0); 
-			}
-		});
-		
-                // make TgJFrame visible
-                user.loadSettings(workingDirectory);            
-                setVisible(true);
-                zf.neuzeichnen();
-                pp.neuzeichnen();
-                gr.starten();
-                tfUpdateTrue=true;
-               // sd.showdesigner(st); 
-                if (!available3d) {
-                    JOptionPane.showMessageDialog(null,"Es ist keine Java3D-API installiert.","Java3D",JOptionPane.ERROR_MESSAGE);
-                }
-                if (user.needsUpdate(bwinproLastUpdate)) {
-                    JOptionPane.showMessageDialog(null,"Es gibt eine neue Version auf http://www.nw-fva.de. update empfohlen","ForestSimulator BWINPro7 Update Check", JOptionPane.ERROR_MESSAGE);
-                }
-	}
+
+
+            tgProgramInfo = new TgProgramInfo(this);
+            iframe[6] = new TgInternalFrame(tgProgramInfo,messages.getString("Program_Info"));
+
+
+            JPanel menus = new JPanel();
+            menus.setLayout(new BoxLayout(menus, BoxLayout.X_AXIS));                
+       // adding the menu
+            menubar = new MyMenubar(this, this, language, st, accessInput); 
+            menubar.setAlignmentY(Component.CENTER_ALIGNMENT);
+            menus.add(menubar); 
+            menus.add(Box.createRigidArea(new Dimension(20, 0)));
+       //adding the toolbar
+            toolbar = new TgToolbar(this, programDir.getCanonicalPath(), language);
+            menus.add(toolbar);
+       // adding screen toolbar
+            tgScreentoolbar = new TgScreentoolbar(this, programDir.getCanonicalPath());
+            menus.add(tgScreentoolbar);
+            getContentPane().add(menus, BorderLayout.NORTH);
+
+            // Adding the InternalFrames
+            iframe[0].setLocation(155,0);
+            iframe[1].setLocation((140+(scr.width-140)/2),0);
+            iframe[2].setLocation(100,0);
+            iframe[0].setVisible(false);
+            iframe[1].setVisible(false);
+            iframe[2].setVisible(false);
+            iframe[3].setVisible(false);
+            iframe[4].setVisible(false);
+            iframe[5].setVisible(false);
+            iframe[3].setLocation(((scr.width-100)/2),0);
+            iframe[4].setLocation(0,0);              
+            iframe[5].setLocation(0,(scr.height/2+(scr.height/20)));
+            iframe[6].setLocation(0,0);              
+            iframe[6].setVisible(true);
+
+
+
+            for(int i = 0; i<7; i++)
+            {
+                iframe[i].addInternalFrameListener(new MyInternalFrameListener());
+                dp.add(iframe[i]);
+            }
+
+            getContentPane().add(dp, BorderLayout.CENTER);
+
+
+            // add a windowListener for closing the window		
+            addWindowListener(
+                    new WindowAdapter ()
+            {	public void windowClosing (WindowEvent e)
+                    {	
+                        //writeFile(ColorInfo);
+                        dispose(); System.exit(0); 
+                    }
+            });
+
+            // make TgJFrame visible
+            user.loadSettings();            
+            setVisible(true);
+            zf.neuzeichnen();
+            pp.neuzeichnen();
+            gr.starten();
+            tfUpdateTrue=true;
+           // sd.showdesigner(st); 
+            if (!available3d) {
+                JOptionPane.showMessageDialog(null,"Es ist keine Java3D-API installiert.","Java3D",JOptionPane.ERROR_MESSAGE);
+            }
+            if (user.needsUpdate(bwinproLastUpdate)) {
+                JOptionPane.showMessageDialog(null,"Es gibt eine neue Version auf http://www.nw-fva.de. update empfohlen","ForestSimulator BWINPro7 Update Check", JOptionPane.ERROR_MESSAGE);
+            }
+    }
         
 //-----------------------------------------------------------------------------	
         /** In case an action is performed */
@@ -619,27 +620,27 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //                
                   if (cmd.equals("Info page")){ 
                        seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
-                               +System.getProperty("file.separator")+user.programDir+System.getProperty("file.separator")+"index.html";
+                               +System.getProperty("file.separator")+user.getProgramDir()+System.getProperty("file.separator")+"index.html";
                        StartBrowser startBrowser = new StartBrowser(seite);   
                        startBrowser.start();
 		  } 
 //                
                   if (cmd.equals("License")){ 
                        seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
-                               +System.getProperty("file.separator")+user.programDir+System.getProperty("file.separator")+"gpl.html";
+                               +System.getProperty("file.separator")+user.getProgramDir()+System.getProperty("file.separator")+"gpl.html";
                        StartBrowser startBrowser = new StartBrowser(seite);   
                        startBrowser.start();
                   }
  //                
                   if (cmd.equals("Introduction")){ 
-                      String fileName=user.programDir+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"NWFVA11_TreeGrOSS.pdf";
+                      String fileName=user.getProgramDir()+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"NWFVA11_TreeGrOSS.pdf";
                       String seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+fileName;
                       StartBrowser startBrowser = new StartBrowser(seite);   
                       startBrowser.start();
 		  } 
  //                
                   if (cmd.equals("Changes")){ 
-                      String fileName=user.programDir+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"FSChanges.pdf";
+                      String fileName=user.getProgramDir()+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"FSChanges.pdf";
                       String seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+fileName;
                       StartBrowser startBrowser = new StartBrowser(seite);   
                       startBrowser.start();

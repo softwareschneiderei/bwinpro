@@ -22,12 +22,9 @@ import java.util.logging.Logger;
 
 class TgUser {
 
-    File workingDir;
-    File programDir;
-    File dataDir;
-    File workingDirIni;
-    File programDirIni;
-    File dataDirIni;
+    private File workingDir;
+    private File programDir;
+    private File dataDir;
     String plugIn = "XML";
     String XMLSettings = "";
     String language = "en";
@@ -35,33 +32,37 @@ class TgUser {
     String update = "01012007";
     String nwfva = null;
     private final Logger logger = Logger.getLogger(getClass().getName());
+    private final File baseDirectory;
 
-    public TgUser() {
+    public TgUser(File baseDirectory) {
+        super();
+        this.baseDirectory = baseDirectory;
     }
 
     /**
      * The user settings are load from a file TgUser.txt, which has to be in the
      * same directory
      */
-    public void loadSettings(File baseDirectory) {
-        try (BufferedReader iniFile = iniFileReaderIn(baseDirectory)) {
-            loadSettings(iniFile, baseDirectory);
+    public void loadSettings() {
+        try (BufferedReader iniFile = settingsFileReader()) {
+            loadSettings(iniFile);
         } catch (IOException | NumberFormatException e) {
             logger.warning(e.getMessage());
         }
     }
 
-    private static BufferedReader iniFileReaderIn(File baseDirectory) throws FileNotFoundException {
-        return new BufferedReader(new InputStreamReader(new FileInputStream(new File(baseDirectory, "ForestSimulator.ini"))));
+    private BufferedReader settingsFileReader() throws FileNotFoundException {
+        return new BufferedReader(new InputStreamReader(new FileInputStream(settingsFile())));
     }
 
-    void loadSettings(BufferedReader in, File baseDirectory) throws IOException, NumberFormatException {
-        programDirIni = new File(baseDirectory, readNormalizedPath(in));
-        programDir = programDirIni.getCanonicalFile();
-        dataDirIni = new File(baseDirectory, readNormalizedPath(in));
-        dataDir = dataDirIni.getCanonicalFile();
-        workingDirIni = new File(baseDirectory, readNormalizedPath(in));
-        workingDir = workingDirIni.getCanonicalFile();
+    private File settingsFile() {
+        return new File(baseDirectory, "ForestSimulator.ini");
+    }
+
+    void loadSettings(BufferedReader in) throws IOException, NumberFormatException {
+        programDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
+        dataDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
+        workingDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
         language = in.readLine();
         XMLSettings = in.readLine();
         plugIn = XMLSettings;
@@ -93,18 +94,6 @@ class TgUser {
 
     public File getDataDir() {
         return dataDir;
-    }
-
-    public File getWorkingDirIni() {
-        return workingDirIni;
-    }
-
-    public File getProgramDirIni() {
-        return programDirIni;
-    }
-
-    public File getDataDirIni() {
-        return dataDirIni;
     }
 
     public String getXMLSettings() {
@@ -139,7 +128,6 @@ class TgUser {
         URL url = null;
         String updateInternet = null;
         String fname = "https://www.nw-fva.de/~nagel/downloads/bwin7version.txt";
-//            String fname="file:///W:/public_html/downloads/bwin7version.txt";
         try {
             url = new URL(fname);
             URLConnection urlcon = url.openConnection();
@@ -167,5 +155,21 @@ class TgUser {
             }
         }
         return erg;
+    }
+
+    public void saveSettings(String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) throws IOException {
+        try (Writer ausgabe = new FileWriter(settingsFile())) {
+            saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, g3D);
+        }        
+    }
+
+    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) {
+        PrintWriter out = new PrintWriter(ausgabe);
+        out.println(programDir);
+        out.println(dataDir);
+        out.println(workingDir);
+        out.println(Language);
+        out.println(settingsFileName);
+        out.println(g3D);
     }
 }
