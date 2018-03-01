@@ -56,11 +56,11 @@ class TgUser {
     }
 
     void loadSettings(BufferedReader in, File baseDirectory) throws IOException, NumberFormatException {
-        programDirIni = new File(baseDirectory, in.readLine());
+        programDirIni = new File(baseDirectory, readNormalizedPath(in));
         programDir = programDirIni.getCanonicalFile();
-        dataDirIni = new File(baseDirectory, in.readLine());
+        dataDirIni = new File(baseDirectory, readNormalizedPath(in));
         dataDir = dataDirIni.getCanonicalFile();
-        workingDirIni = new File(baseDirectory, in.readLine());
+        workingDirIni = new File(baseDirectory, readNormalizedPath(in));
         workingDir = workingDirIni.getCanonicalFile();
         language = in.readLine();
         XMLSettings = in.readLine();
@@ -71,6 +71,10 @@ class TgUser {
             XMLSettings = XMLSettings.substring(0, m);
         }
         grafik3D = Integer.parseInt(in.readLine());
+    }
+
+    private static String readNormalizedPath(BufferedReader in) throws IOException {
+        return in.readLine().replace("\\", "/");
     }
 
     public boolean fileExists(String fname) {
