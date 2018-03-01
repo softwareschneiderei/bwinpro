@@ -22,12 +22,9 @@ import java.util.logging.Logger;
 
 class TgUser {
 
-    File workingDir;
-    File programDir;
-    File dataDir;
-    File workingDirIni;
-    File programDirIni;
-    File dataDirIni;
+    private File workingDir;
+    private File programDir;
+    private File dataDir;
     String plugIn = "XML";
     String XMLSettings = "";
     String language = "en";
@@ -56,12 +53,9 @@ class TgUser {
     }
 
     void loadSettings(BufferedReader in, File baseDirectory) throws IOException, NumberFormatException {
-        programDirIni = new File(baseDirectory, readNormalizedPath(in));
-        programDir = programDirIni.getCanonicalFile();
-        dataDirIni = new File(baseDirectory, readNormalizedPath(in));
-        dataDir = dataDirIni.getCanonicalFile();
-        workingDirIni = new File(baseDirectory, readNormalizedPath(in));
-        workingDir = workingDirIni.getCanonicalFile();
+        programDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
+        dataDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
+        workingDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
         language = in.readLine();
         XMLSettings = in.readLine();
         plugIn = XMLSettings;
@@ -93,18 +87,6 @@ class TgUser {
 
     public File getDataDir() {
         return dataDir;
-    }
-
-    public File getWorkingDirIni() {
-        return workingDirIni;
-    }
-
-    public File getProgramDirIni() {
-        return programDirIni;
-    }
-
-    public File getDataDirIni() {
-        return dataDirIni;
     }
 
     public String getXMLSettings() {

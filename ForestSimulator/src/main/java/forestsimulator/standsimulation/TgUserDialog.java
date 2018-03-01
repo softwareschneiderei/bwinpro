@@ -50,17 +50,17 @@ public class TgUserDialog extends javax.swing.JDialog {
             System.out.println("Settings laden ");
             user.loadSettings(f);
               
-            ProgramDir=user.getProgramDirIni();
-            WorkingDir=user.getWorkingDirIni();
-            DataDir=user.getDataDirIni();
+            ProgramDir=user.getProgramDir();
+            WorkingDir=user.getWorkingDir();
+            DataDir=user.getDataDir();
             XMLSettings=user.getXMLSettings();
             plugIn = user.getPlugIn();
             loadModels();
         }
 
-        jTextField1.setText(ProgramDir.getAbsolutePath());
-        jTextField2.setText(WorkingDir.getAbsolutePath());
-        jTextField3.setText(DataDir.getAbsolutePath());
+        jTextField1.setText(ProgramDir.getName());
+        jTextField2.setText(WorkingDir.getName());
+        jTextField3.setText(DataDir.getName());
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
         currentLocale = new Locale(user.getLanguageShort(), "");

@@ -619,27 +619,27 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //                
                   if (cmd.equals("Info page")){ 
                        seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
-                               +System.getProperty("file.separator")+user.programDir+System.getProperty("file.separator")+"index.html";
+                               +System.getProperty("file.separator")+user.getProgramDir()+System.getProperty("file.separator")+"index.html";
                        StartBrowser startBrowser = new StartBrowser(seite);   
                        startBrowser.start();
 		  } 
 //                
                   if (cmd.equals("License")){ 
                        seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
-                               +System.getProperty("file.separator")+user.programDir+System.getProperty("file.separator")+"gpl.html";
+                               +System.getProperty("file.separator")+user.getProgramDir()+System.getProperty("file.separator")+"gpl.html";
                        StartBrowser startBrowser = new StartBrowser(seite);   
                        startBrowser.start();
                   }
  //                
                   if (cmd.equals("Introduction")){ 
-                      String fileName=user.programDir+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"NWFVA11_TreeGrOSS.pdf";
+                      String fileName=user.getProgramDir()+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"NWFVA11_TreeGrOSS.pdf";
                       String seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+fileName;
                       StartBrowser startBrowser = new StartBrowser(seite);   
                       startBrowser.start();
 		  } 
  //                
                   if (cmd.equals("Changes")){ 
-                      String fileName=user.programDir+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"FSChanges.pdf";
+                      String fileName=user.getProgramDir()+System.getProperty("file.separator")+"help"+System.getProperty("file.separator")+"FSChanges.pdf";
                       String seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+fileName;
                       StartBrowser startBrowser = new StartBrowser(seite);   
                       startBrowser.start();
