@@ -6,10 +6,25 @@
  */
 
 allprojects {
-	apply plugin: 'java'
-	sourceCompatibility = 1.8
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    sourceCompatibility = 1.8
+    
+    jacoco {
+//        toolVersion = '0.8.0'
+    }
+
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+        }
+        jacocoClasspath = files('../lib/org.jacoco.core-0.7.9.jar',
+            '../lib/org.jacoco.report-0.7.9.jar',
+            '../lib/org.jacoco.ant-0.7.9.jar',
+            '../lib/asm-all-5.2.jar'
+            )
+    }
 }
 
 subprojects {
 }
- 
