@@ -21,6 +21,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
@@ -219,7 +220,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         // TODO add your handling code here:
-        SortingDialog dialog = new SortingDialog(this,true,st,programDir,false,localPath,"de", logHandler);
+        SortingDialog dialog = new SortingDialog(this,true,st,programDir,false,localPath, new Locale("de"), logHandler);
         dialog.setVisible(true);
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 

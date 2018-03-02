@@ -2,7 +2,7 @@
    Version 2013-01-13
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       Grï¿½tzelstr.2, 37079 Gï¿½ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -22,14 +22,15 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import javax.swing.JDialog;
 import treegross.base.*;
 
 /**
- * Sortierungsdialog für den ForestSimulator auf diesen kann das LoggingPanel
+ * Sortierungsdialog fï¿½r den ForestSimulator auf diesen kann das LoggingPanel
  * gelegt werden
  * @author  J. Nagel
  */
-public class SortingDialog extends javax.swing.JDialog {
+public class SortingDialog extends JDialog {
     private static final Logger log = Logger.getLogger( nwfva.assortment.NWFVA_Nutzung.class.getName() );
     Stand st = null;
     LoggingPanel lp = null;
@@ -37,7 +38,7 @@ public class SortingDialog extends javax.swing.JDialog {
     ResourceBundle messages;
     /** Creates new form SortingDialog */
     public SortingDialog(java.awt.Frame parent, boolean modal, Stand stand, String programDir, boolean interactive,
-        String workingDir , String preferredLanguage, FileHandler logHandler) {
+        String workingDir , Locale preferredLanguage, FileHandler logHandler) {
         super(parent, modal);
         initComponents();
         if (logHandler == null){
@@ -51,13 +52,12 @@ public class SortingDialog extends javax.swing.JDialog {
         }
         else log.addHandler(logHandler );
         log.info("Sorting - Dialog");
-        currentLocale = new Locale(preferredLanguage, "");
-        messages = ResourceBundle.getBundle("nwfva.assortment.SortingDialog",currentLocale);
+        messages = ResourceBundle.getBundle("nwfva.assortment.SortingDialog", preferredLanguage);
         jButton1.setText(messages.getString("startSorting"));
 
         st = stand;
         String Test = programDir;
-        lp = new LoggingPanel(st, programDir, interactive, workingDir,preferredLanguage);
+        lp = new LoggingPanel(st, programDir, interactive, workingDir, preferredLanguage);
 //        System.out.println(programDir+"  WD:"+workingDir);
         add(lp);
     }

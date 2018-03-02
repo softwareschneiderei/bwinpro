@@ -19,6 +19,7 @@ package forestsimulator.standsimulation;
 //import treegross.treatment.*;
 import java.text.*;
 import java.util.*;
+import javax.swing.JPanel;
 import treegross.base.*;
 import treegross.treatment.*;
 
@@ -27,24 +28,23 @@ import treegross.treatment.*;
  *
  * @author  nagel
  */
-public class TgTreatmentMan3 extends javax.swing.JPanel {
+public class TgTreatmentMan3 extends JPanel {
     Stand st = null;
     javax.swing.table.DefaultTableModel data= null;
     Object[] rowData={" "," "," "," "," "," "};
     NumberFormat f=NumberFormat.getInstance();
     ResourceBundle messages;
-    Locale currentLocale;
     TgYieldTable  yt  = null;
     Treatment2 treat = new Treatment2();
     
     /** Creates new form TgTreatmentMan3 */
-    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, String preferredLanguage) {
+    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, Locale preferredLanguage) {
         initComponents();
         st = stparent;
         Locale currentLocale;
         yt = frameparent.yt;
-        currentLocale = new Locale(preferredLanguage, "");
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+        currentLocale = preferredLanguage;
+        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
         jComboBox1.removeAllItems();
         jComboBox1.addItem(messages.getString("singleTreeSelection"));
         jComboBox1.addItem(messages.getString("thinningFromAbove"));

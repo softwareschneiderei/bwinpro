@@ -26,9 +26,7 @@ class TgStructureTable {
 
    void TgStructureTable() {
    }   
-   void writeTable(Stand st,String path, String fname, String preferredLanguage) {
-         Locale currentLocale;
-         
+   void writeTable(Stand st,String path, String fname, Locale preferredLanguage) {
 //         LightCrown lc = new LightCrown(st);
 //         lc.calcLightCrown();
          Double lightKMF = 0.0;
@@ -47,8 +45,7 @@ class TgStructureTable {
          
          
          StandStructure struc = new StandStructure();
-         currentLocale = new Locale(preferredLanguage, "");
-         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", preferredLanguage);
 	  try {
 		File file= new File(path, fname);
                 filename=file.getCanonicalPath();

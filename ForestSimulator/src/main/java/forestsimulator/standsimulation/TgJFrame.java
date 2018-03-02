@@ -73,7 +73,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    Treatment2 tl = new Treatment2();    
    TgTreatmentMan3 treatmentMan3;
    TgStandInfo tsi; 
-   String language="en";
+   Locale language = new Locale("en");
    
    MyMenubar menubar;
    TgStandMapMenu tgStandMapMenu;
@@ -158,7 +158,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             pp = new TgPPmap(st, this); //add prallel projection class
             gr = new TgGrafik(st);    
             Locale currentLocale;
-            currentLocale = new Locale(language, "");
+            currentLocale = language;
             if (user.grafik3D==0 && available3d) grafik3D=true;
 
             programDir = user.getProgramDir();
@@ -557,7 +557,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 if (cmd.equals("Tree values"))
 		  { 
                       TgHTMLsv sv= new TgHTMLsv(st);
-		      sv.newreport(st,workingDir.getAbsolutePath(),"treelist.html",language);
+		      sv.newreport(st,workingDir.getAbsolutePath(),"treelist.html", language);
 	              seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")
                               +System.getProperty("file.separator")+sv.getFilename();
                       StartBrowser startBrowser = new StartBrowser(seite);   
@@ -742,7 +742,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             
             if(cmd.equals("Sorting"))
             {
-                    SortingDialog sorter = new SortingDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(), language,logHandler);
+                    SortingDialog sorter = new SortingDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(), language, logHandler);
                     sorter.setVisible(true);
                     
             }

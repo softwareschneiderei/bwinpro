@@ -19,6 +19,7 @@ package forestsimulator.standsimulation;
 import forestsimulator.util.Settings;
 import java.io.*;
 import java.net.*;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -27,9 +28,9 @@ class TgUser {
     private File workingDir;
     private File programDir;
     private File dataDir;
+    private String language = "en";
     String plugIn = "XML";
     String XMLSettings = "";
-    String language = "en";
     int grafik3D = 0;
     String update = "01012007";
     String nwfva = null;
@@ -125,7 +126,7 @@ class TgUser {
         return grafik3D;
     }
 
-    public String getLanguageShort() {
+    public Locale getLanguageShort() {
         String languageShort = "";
         if (language.compareTo("Deutsch") == 0) {
             languageShort = "de";
@@ -136,7 +137,7 @@ class TgUser {
         if (language.compareTo("Polish") == 0) {
             languageShort = "pl";
         }
-        return languageShort;
+        return Locale.forLanguageTag(languageShort);
     }
 
     public boolean needsUpdate(String lastupdate) {

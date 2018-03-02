@@ -15,26 +15,26 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
-import static forestsimulator.standsimulation.TgJFrame.st;
 import treegross.base.*;
 import java.util.*;
+import javax.swing.JDialog;
 
 /**
  *
  * @author  nagel
  */
-public class TgEditTreegross extends javax.swing.JDialog {
+public class TgEditTreegross extends JDialog {
     Stand st;
     EditorPanel editorPanel = new EditorPanel();
     ResourceBundle messages;
         
     /** Creates new form TgEditTreegross */
-    public TgEditTreegross(java.awt.Frame parent, boolean modal, Stand stand,String preferredLanguage) {
+    public TgEditTreegross(java.awt.Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
         super(parent, modal);
         initComponents();
         st=stand;
         Locale currentLocale;
-        currentLocale = new Locale(preferredLanguage, "");
+        currentLocale = preferredLanguage;
         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
         jButton1.setText(messages.getString("acceptChanges"));
         editorPanel.setStand(st);

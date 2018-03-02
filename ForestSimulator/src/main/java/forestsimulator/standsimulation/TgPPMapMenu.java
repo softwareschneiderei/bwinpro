@@ -33,11 +33,11 @@ class TgPPMapMenu extends JMenuBar
     String country;
 
     
-    public TgPPMapMenu(ActionListener listener, ItemListener Ilistener,String preferredLanguage)
+    public TgPPMapMenu(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage)
 	{
                 Locale currentLocale;
                 ResourceBundle messages;
-                currentLocale = new Locale(preferredLanguage, "");
+                currentLocale = preferredLanguage;
                 messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
                 JMenu m; // Hauptmenupunkt
 		JMenuItem mi; //Untermenupunkt

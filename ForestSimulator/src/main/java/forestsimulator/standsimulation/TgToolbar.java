@@ -19,48 +19,41 @@ GNU General Public License for more details.
  * @author  sschimpf
  */
 package forestsimulator.standsimulation;
-import treegross.base.*;
-import java.awt.*;
+
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 
+public class TgToolbar extends JToolBar {
 
-
-public class TgToolbar extends JToolBar
-{
     JButton button;
-   
-    
-    /** Creates a new instance of tgtoolbar */
-    public TgToolbar(ActionListener listener, String path, String preferredLanguage) 
-    {
-       
-       Locale currentLocale;
-       ResourceBundle messages;
-       currentLocale = new Locale(preferredLanguage, "");
-       messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        button = new JButton(new ImageIcon(path+"//icons//userbaum1.jpg"));
+
+    public TgToolbar(ActionListener listener, String path, Locale preferredLanguage) {
+        Locale currentLocale;
+        ResourceBundle messages;
+        currentLocale = preferredLanguage;
+        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
+        button = new JButton(new ImageIcon(path + "//icons//userbaum1.jpg"));
         button.setRolloverEnabled(true);
         button.setToolTipText(messages.getString("Grow"));
-        button.setContentAreaFilled( false );
-        button.setBorderPainted( false );
-        button.setFocusPainted( false );
-        button.setActionCommand("Grow"); 
-        
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setActionCommand("Grow");
+
         button.addActionListener(listener);
         add(button);
-        
-        button = new JButton(new ImageIcon (path+"//icons//useraxt1.jpg"));       
+
+        button = new JButton(new ImageIcon(path + "//icons//useraxt1.jpg"));
         button.setToolTipText(messages.getString("Treatment"));
-        button.setContentAreaFilled( false );
-        button.setBorderPainted( false );  
-        button.setFocusPainted( false );
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
         button.setActionCommand("Treatment");
         button.addActionListener(listener);
         add(button);
-        
-/*        button = new JButton(new ImageIcon (path+"//icons//userlineal1.jpg"));
+
+        /*        button = new JButton(new ImageIcon (path+"//icons//userlineal1.jpg"));
         button.setToolTipText(messages.getString("Sorting"));
         button.setContentAreaFilled( false );
         button.setBorderPainted( false );   
@@ -68,10 +61,9 @@ public class TgToolbar extends JToolBar
         button.setActionCommand("Sorting");
         button.addActionListener(listener);
         add(button);
-*/        
+         */
         setFloatable(false);
 
     }
-    
-}
 
+}

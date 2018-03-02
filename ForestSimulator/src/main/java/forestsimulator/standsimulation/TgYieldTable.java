@@ -138,10 +138,8 @@ class TgYieldTable {
         
 	      }
 	}
-	void writeTable(Stand st,String path, String fname, String preferredLanguage) {
-         Locale currentLocale;
-         currentLocale = new Locale(preferredLanguage, "");
-         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+	void writeTable(Stand st,String path, String fname, Locale preferredLanguage) {
+         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",preferredLanguage);
 	  try {
 		File file= new File(path, fname);
                 filename=file.getCanonicalPath();

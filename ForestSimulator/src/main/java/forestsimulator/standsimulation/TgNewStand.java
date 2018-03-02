@@ -22,22 +22,23 @@ package forestsimulator.standsimulation;
 
 import treegross.base.*;
 import java.util.*;
+import javax.swing.JDialog;
 
 
-public class TgNewStand extends javax.swing.JDialog {
+public class TgNewStand extends JDialog {
     
     Stand st;
     TgJFrame frame;
     /** Creates new form TgNewStand */
     public TgNewStand(java.awt.Frame parent, boolean modal, Stand st1, TgJFrame owner, 
-                      String preferredLanguage) {
+                      Locale preferredLanguage) {
         super(parent, modal);
         st = st1;
         frame = owner;
         initComponents();
         Locale currentLocale;
         ResourceBundle messages;
-        currentLocale = new Locale(preferredLanguage, "");
+        currentLocale = preferredLanguage;
         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
         jButton1.setText(messages.getString("create_stand"));
         setTitle(messages.getString("new_Stand"));

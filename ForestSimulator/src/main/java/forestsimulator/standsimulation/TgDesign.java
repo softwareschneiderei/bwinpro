@@ -33,14 +33,14 @@ import java.net.*;
 
 import javax.swing.*;
 
-public class TgDesign extends javax.swing.JPanel {
+public class TgDesign extends JPanel {
     
     Stand st = new Stand();
     TgJFrame frame;
     ResourceBundle messages;
     File programDir;
 
-    public TgDesign(Stand st1, TgJFrame parent,String preferredLanguage) {
+    public TgDesign(Stand st1, TgJFrame parent, Locale preferredLanguage) {
         st = st1;
         frame = parent;
         programDir = parent.programDir;
@@ -52,7 +52,7 @@ public class TgDesign extends javax.swing.JPanel {
         jTextField4.setVisible(false);
         jTextField5.setVisible(false);
         Locale currentLocale;
-        currentLocale = new Locale(preferredLanguage, "");
+        currentLocale = preferredLanguage;
         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
         jLabel4.setText(messages.getString("Species_code"));
         jLabel5.setText(messages.getString("age"));

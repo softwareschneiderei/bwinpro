@@ -32,11 +32,11 @@ class TgGrafikMenu extends JMenuBar
     String country;
 
     
-    public TgGrafikMenu(ActionListener listener, ItemListener Ilistener,String preferredLanguage)
+    public TgGrafikMenu(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage)
 	{
                 Locale currentLocale;
                 ResourceBundle messages;
-                currentLocale = new Locale(preferredLanguage, "");
+                currentLocale = preferredLanguage;
                 messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
                 JMenu m; // Hauptmenupunkt
 		JMenuItem mi; //Untermenupunkt

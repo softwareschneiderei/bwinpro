@@ -31,11 +31,11 @@ class TgStandMapMenu extends JMenuBar
 //    JComboBox dbhFactor = new JComboBox();
     JComboBox dbhFactor= new JComboBox();
     
-    public TgStandMapMenu(ActionListener listener, ItemListener Ilistener,String preferredLanguage)
+    public TgStandMapMenu(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage)
 	{	
         Locale currentLocale;
         ResourceBundle messages;
-        currentLocale = new Locale(preferredLanguage, "");
+        currentLocale = preferredLanguage;
         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
         JMenu m; // Hauptmenupunkt
 		JMenuItem mi; //Untermenupunkt

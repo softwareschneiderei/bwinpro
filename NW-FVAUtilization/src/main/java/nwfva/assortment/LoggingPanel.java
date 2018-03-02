@@ -2,7 +2,7 @@
    Version 2013-01-11
 
    (c) 2013 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       Grï¿½tzelstr.2, 37079 Gï¿½ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ import treegross.base.*;
  * Der Dialog greift auf verschiedene Sprachfile zu
  * @author  J. Nagel
  */
-public class LoggingPanel extends javax.swing.JPanel {
+public class LoggingPanel extends JPanel {
 
     private static final Logger log = Logger.getLogger( nwfva.assortment.NWFVA_Nutzung.class.getName() );
 
@@ -62,7 +62,6 @@ public class LoggingPanel extends javax.swing.JPanel {
     String workDir = "";
     int timeframe = 0;
     double fellingHeight=0.3;
-    Locale currentLocale;
     ResourceBundle messages;
 
     
@@ -74,14 +73,13 @@ public class LoggingPanel extends javax.swing.JPanel {
      * @param workingDir Ausgabeverzeichnis
      * @param preferredLanguage Sprache
      */
-    public LoggingPanel(Stand stand, String programDir, boolean interActive, String workingDir, String preferredLanguage) {
+    public LoggingPanel(Stand stand, String programDir, boolean interActive, String workingDir, Locale preferredLanguage) {
         initComponents();
         dialogActive = interActive;
         jPanel8.setVisible(interActive);
         proDir=programDir+System.getProperty("file.separator")+"moduls"+System.getProperty("file.separator")+"assortment";
         workDir = workingDir;
-        currentLocale = new Locale(preferredLanguage, "");
-        messages = ResourceBundle.getBundle("nwfva.assortment.LoggingPanel",currentLocale);
+        messages = ResourceBundle.getBundle("nwfva.assortment.LoggingPanel", preferredLanguage);
         jLabel1.setText(messages.getString("name"));
         jLabel2.setText(messages.getString("speciesfrom"));
         jLabel3.setText(messages.getString("speciesto"));
@@ -228,7 +226,7 @@ public class LoggingPanel extends javax.swing.JPanel {
 
         jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setText("Einstellen und auswählen der Sortimente für folgende Jahre:");
+        jLabel14.setText("Einstellen und auswï¿½hlen der Sortimente fï¿½r folgende Jahre:");
         jPanel10.add(jLabel14);
 
         jTextField15.setText("all out");
@@ -240,7 +238,7 @@ public class LoggingPanel extends javax.swing.JPanel {
         });
         jPanel10.add(jTextField15);
 
-        jLabel16.setText("Fällschnitt [m]");
+        jLabel16.setText("Fï¿½llschnitt [m]");
         jPanel10.add(jLabel16);
 
         jTextField16.setText("0.3");
@@ -347,10 +345,10 @@ public class LoggingPanel extends javax.swing.JPanel {
         jLabel11.setText("Preis");
         jPanel6.add(jLabel11);
 
-        jLabel12.setText("Prozent der Bäume");
+        jLabel12.setText("Prozent der Bï¿½ume");
         jPanel6.add(jLabel12);
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "alle Bäume", "Z- Bäume" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "alle Bï¿½ume", "Z- Bï¿½ume" }));
         jPanel6.add(jComboBox3);
 
         jTextField11.setText("10.0");
@@ -395,7 +393,7 @@ public class LoggingPanel extends javax.swing.JPanel {
         });
         jPanel3.add(jButton2);
 
-        jButton4.setText("löschen");
+        jButton4.setText("lï¿½schen");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -518,7 +516,7 @@ public class LoggingPanel extends javax.swing.JPanel {
                     zb, mehrf , jCheckBox1.isSelected(), jCheckBox3.isSelected(), true,
                     nls  );
         nls = nls+1;
-        System.out.println("Array Länge "+ls.length);
+        System.out.println("Array Lï¿½nge "+ls.length);
         savels("C://Dokumente und Einstellungen//nagel//Eigene Dateien//jnProgramme//TreeGrOSSLogging//loggingSortiment.xml");
         try{
           URL url = new URL(urlString+"loggingSortiment.xml");
@@ -596,8 +594,8 @@ public class LoggingPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jComboBox5ActionPerformed
     
 /**
- * Speichern des Ergebnisberichts mit den Sortimenten und Einzelstücken 
- * @param Dateiname der XML Datei für den Bericht 
+ * Speichern des Ergebnisberichts mit den Sortimenten und Einzelstï¿½cken 
+ * @param Dateiname der XML Datei fï¿½r den Bericht 
  */
     public void savels(String fn){
 
@@ -689,7 +687,7 @@ public class LoggingPanel extends javax.swing.JPanel {
        }
         else
             pa = workDir+System.getProperty("file.separator")+"sortierung.xml";
-// ausgewählte markieren
+// ausgewï¿½hlte markieren
        for(int i=0; i<nlist; i++) ls[i].ausgewaehlt=false;
        int[] indices = jList1.getSelectedIndices(); //get Selected Assortments from list
        for(int i=0; i<indices.length; i++)ls[indices[i]].ausgewaehlt=true;
@@ -814,16 +812,16 @@ public class LoggingPanel extends javax.swing.JPanel {
                 else {
                    if (st.tr[i].outtype==1) volumenToth = volumenToth + vol;
                     else { // Sotierung
-// alle ausgewählten Sortimente durchlaufen
+// alle ausgewï¿½hlten Sortimente durchlaufen
                        splitter.splitTree(st.tr[i], fellingHeight);
                        tl = splitter.getTreeLogs();
                        ntl = splitter.getNumberOfLogs();
-// Prüfen , ob das Stück aus dem Wald genommen wird oder nicht
+// Prï¿½fen , ob das Stï¿½ck aus dem Wald genommen wird oder nicht
                        for (int jj=0; jj< ntl; jj++){
                            
                            if (tl[jj].removed) volumenEntn = volumenEntn + tl[jj].vol_mR;
                                else volumenToth = volumenToth + tl[jj].vol_mR;
-// Sortimentsstücke nach xml
+// Sortimentsstï¿½cke nach xml
 //
                            elt3 = new Element("Sortiment");
                            elt3 = addString(elt3, "Jahr",new Integer(st.tr[i].age).toString());
@@ -999,7 +997,7 @@ public class LoggingPanel extends javax.swing.JPanel {
     }
 
 /**
- * Lädt die XML-Datei mit Arbeitszeiten für die Aushaltung von Sortimenten
+ * Lï¿½dt die XML-Datei mit Arbeitszeiten fï¿½r die Aushaltung von Sortimenten
  * @param url Verzeichnis der XML Datei
  */
     public void loadtef(URL url){

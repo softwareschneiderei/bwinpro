@@ -21,8 +21,7 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 
-class TgStandInfo extends JPanel // implements ActionListener
-{     
+class TgStandInfo extends JPanel {     
       int nrow=0; 
       javax.swing.JTable jTable1 = new javax.swing.JTable();
       JCheckBox jCheckBox1 = new JCheckBox();
@@ -30,10 +29,10 @@ class TgStandInfo extends JPanel // implements ActionListener
       Object[] rowData={" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
       Stand st = null;
  
-   public TgStandInfo(String preferredLanguage) {
+   public TgStandInfo(Locale preferredLanguage) {
      Locale currentLocale;
      ResourceBundle messages;
-     currentLocale = new Locale(preferredLanguage, "");
+     currentLocale = preferredLanguage;
      messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
     
      yieldTable= new javax.swing.table.DefaultTableModel(

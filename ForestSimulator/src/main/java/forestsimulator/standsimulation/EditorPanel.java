@@ -635,9 +635,9 @@ public class EditorPanel extends javax.swing.JPanel {
     public void setStand(Stand stand) {
         st = stand;
     }
-    public void setLanguage(String language) {
+    public void setLanguage(Locale language) {
         Locale currentLocale;
-        currentLocale = new Locale(language, "");
+        currentLocale = language;
         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
         jLabel1.setText(messages.getString("standname"));
         jLabel2.setText(messages.getString("standsize"));
