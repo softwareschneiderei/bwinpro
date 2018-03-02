@@ -39,9 +39,9 @@ public class TgUserTest {
         StringWriter buffer = new StringWriter();
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
-        userSettings.saveSettingsTo(buffer, "program_dir", "data_dir", "output_dir", "language", "Settings.xml", 1);
+        userSettings.saveSettingsTo(buffer, "D:\\program_dir", "data_dir", "output_dir", "language", "Settings.xml", 1);
         assertThat(buffer.toString(), is(
-                "program.directory=program_dir" + LINE_SEP
+                "program.directory=D:\\program_dir" + LINE_SEP
                 + "data.directory=data_dir" + LINE_SEP
                 + "working.directory=output_dir" + LINE_SEP
                 + "language.code=language" + LINE_SEP

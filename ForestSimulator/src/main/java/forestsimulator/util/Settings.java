@@ -125,7 +125,7 @@ public class Settings extends Properties {
             if ((aChar > 61) && (aChar < 127)) {
                 if (aChar == '\\') {
                     outBuffer.append('\\');
-                    outBuffer.append('\\');
+//                    outBuffer.append('\\');
                     continue;
                 }
                 outBuffer.append(aChar);
@@ -155,7 +155,7 @@ public class Settings extends Properties {
                     outBuffer.append('f');
                     break;
                 case '=': // Fall through
-                case ':': // Fall through
+//                case ':': // Fall through
                 case '#': // Fall through
                 case '!':
                     outBuffer.append('\\');
