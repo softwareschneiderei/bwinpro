@@ -13,12 +13,12 @@ public class TgUserTest {
     private static final File BASE_DIRECTORY = new File("D:\\some\\base\\directory");
     private static final String LINE_SEP = System.getProperty("line.separator");
 
-    private static final String INI_FILE = ".\\user\n"
-            + ".\\data_standsimulation\n"
-            + ".\\output_standsimulation\n"
-            + "Deutsch\n"
-            + "ForestSimulatorSettingsBW.xml\n"
-            + "0\n";
+    private static final String INI_FILE = "program.directory=.\\user\n"
+            + "data.directory=.\\data_standsimulation\n"
+            + "working.directory=.\\output_standsimulation\n"
+            + "language.code=Deutsch\n"
+            + "settings.file=ForestSimulatorSettingsBW.xml\n"
+            + "graphics3d=0\n";
     
     @Test
     public void settingsParsedCorrectly() throws IOException {
@@ -37,19 +37,17 @@ public class TgUserTest {
     public void savingSettingsWorksCorrectly() throws IOException {
         StringWriter buffer = new StringWriter();
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
+        userSettings.loadSettings(iniContent());
         userSettings.saveSettingsTo(buffer, "program_dir", "data_dir", "output_dir", "language", "Settings.xml", 1);
         assertThat(buffer.toString(), is(
-                "program_dir" + LINE_SEP
-                + "data_dir" + LINE_SEP
-                + "output_dir" + LINE_SEP
-                + "language" + LINE_SEP
-                + "Settings.xml" + LINE_SEP
-                + "1" + LINE_SEP));
+                "program.directory=program_dir" + LINE_SEP
+                + "data.directory=data_dir" + LINE_SEP
+                + "working.directory=output_dir" + LINE_SEP
+                + "language.code=language" + LINE_SEP
+                + "settings.file=Settings.xml" + LINE_SEP
+                + "graphics3d=1" + LINE_SEP));
     }
-    private static File canonicalFileOf(File base, String subdirectory) throws IOException {
-        return new File(base, subdirectory).getCanonicalFile();
-    }
-
+    
     @Test
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
@@ -57,8 +55,11 @@ public class TgUserTest {
         assertThat(userSettings.getLanguageShort(), is("de"));
     } 
 
+    private static File canonicalFileOf(File base, String subdirectory) throws IOException {
+        return new File(base, subdirectory).getCanonicalFile();
+    }
+
     private static BufferedReader iniContent() {
         return new BufferedReader(new StringReader(INI_FILE));
     }
-    
 }

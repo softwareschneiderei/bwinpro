@@ -16,8 +16,10 @@
  */
 package forestsimulator.standsimulation;
 
+import forestsimulator.util.Settings;
 import java.io.*;
 import java.net.*;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 class TgUser {
@@ -31,12 +33,14 @@ class TgUser {
     int grafik3D = 0;
     String update = "01012007";
     String nwfva = null;
-    private final Logger logger = Logger.getLogger(getClass().getName());
+    private static final Logger logger = Logger.getLogger(TgUser.class.getName());
     private final File baseDirectory;
+    private final Properties settings;
 
     public TgUser(File baseDirectory) {
         super();
         this.baseDirectory = baseDirectory;
+        this.settings = new Settings();
     }
 
     /**
@@ -60,22 +64,30 @@ class TgUser {
     }
 
     void loadSettings(BufferedReader in) throws IOException, NumberFormatException {
-        programDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
-        dataDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
-        workingDir = new File(baseDirectory, readNormalizedPath(in)).getCanonicalFile();
-        language = in.readLine();
-        XMLSettings = in.readLine();
+        settings.load(in);
+        programDir = new File(baseDirectory, normalizePath(settings.getProperty("program.directory"))).getCanonicalFile();
+        dataDir = new File(baseDirectory, normalizePath(settings.getProperty("data.directory"))).getCanonicalFile();
+        workingDir = new File(baseDirectory, normalizePath(settings.getProperty("working.directory"))).getCanonicalFile();
+        language = settings.getProperty("language.code");
+        XMLSettings = settings.getProperty("settings.file");
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
         if (m > 0) {
             nwfva = XMLSettings.substring(m + 2);
             XMLSettings = XMLSettings.substring(0, m);
         }
-        grafik3D = Integer.parseInt(in.readLine());
+        grafik3D = Integer.parseInt(settings.getProperty("graphics3d"));
     }
 
     private static String readNormalizedPath(BufferedReader in) throws IOException {
-        return in.readLine().replace("\\", "/");
+        return normalizePath(in.readLine());
+    }
+    
+    private static String normalizePath(String path) {
+        if (path == null) {
+            return path;
+        }
+        return path.replace("\\", "/");
     }
 
     public boolean fileExists(String fname) {
@@ -163,13 +175,13 @@ class TgUser {
         }        
     }
 
-    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) {
-        PrintWriter out = new PrintWriter(ausgabe);
-        out.println(programDir);
-        out.println(dataDir);
-        out.println(workingDir);
-        out.println(Language);
-        out.println(settingsFileName);
-        out.println(g3D);
+    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) throws IOException {
+        settings.setProperty("program.directory", programDir);
+        settings.setProperty("data.directory", dataDir);
+        settings.setProperty("working.directory", workingDir);
+        settings.setProperty("language.code", Language);
+        settings.setProperty("settings.file", settingsFileName);
+        settings.setProperty("graphics3d", String.valueOf(g3D));
+        settings.store(ausgabe, null);
     }
 }
