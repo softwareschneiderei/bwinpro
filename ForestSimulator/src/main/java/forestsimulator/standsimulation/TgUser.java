@@ -48,44 +48,49 @@ class TgUser {
      * same directory
      */
     public void loadSettings() {
-        try (BufferedReader iniFile = settingsFileReader()) {
+        try (Reader iniFile = settingsFileReader()) {
             loadSettings(iniFile);
         } catch (IOException | NumberFormatException e) {
             logger.warning(e.getMessage());
         }
     }
 
-    private BufferedReader settingsFileReader() throws FileNotFoundException {
-        return new BufferedReader(new InputStreamReader(new FileInputStream(settingsFile())));
+    private Reader settingsFileReader() throws FileNotFoundException {
+        return new InputStreamReader(new FileInputStream(settingsFile()));
     }
 
     private File settingsFile() {
         return new File(baseDirectory, "ForestSimulator.ini");
     }
 
-    void loadSettings(BufferedReader in) throws IOException, NumberFormatException {
+    void loadSettings(Reader in) throws IOException, NumberFormatException {
         settings.load(in);
-        programDir = new File(baseDirectory, normalizePath(settings.getProperty("program.directory"))).getCanonicalFile();
-        dataDir = new File(baseDirectory, normalizePath(settings.getProperty("data.directory"))).getCanonicalFile();
-        workingDir = new File(baseDirectory, normalizePath(settings.getProperty("working.directory"))).getCanonicalFile();
-        language = settings.getProperty("language.code");
-        XMLSettings = settings.getProperty("settings.file");
+        programDir = parseToFile("program.directory").getCanonicalFile();
+        dataDir = parseToFile("data.directory").getCanonicalFile();
+        workingDir = parseToFile("working.directory").getCanonicalFile();
+        language = settings.getProperty("language.code", "");
+        XMLSettings = settings.getProperty("settings.file", "");
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
         if (m > 0) {
             nwfva = XMLSettings.substring(m + 2);
             XMLSettings = XMLSettings.substring(0, m);
         }
-        grafik3D = Integer.parseInt(settings.getProperty("graphics3d"));
+        grafik3D = Integer.parseInt(settings.getProperty("graphics3d", "0"));
     }
 
-    private static String readNormalizedPath(BufferedReader in) throws IOException {
-        return normalizePath(in.readLine());
+    private File parseToFile(String property) {
+        final String normalizedPath = normalizePath(settings.getProperty(property));
+        File f = new File(normalizedPath);
+        if (f.isAbsolute()) {
+            return f;
+        }
+        return new File(baseDirectory, normalizedPath);
     }
-    
+
     private static String normalizePath(String path) {
         if (path == null) {
-            return path;
+            return ".";
         }
         return path.replace("\\", "/");
     }
@@ -137,11 +142,10 @@ class TgUser {
     public boolean needsUpdate(String lastupdate) {
         update = lastupdate;
         boolean erg = false;
-        URL url = null;
         String updateInternet = null;
         String fname = "https://www.nw-fva.de/~nagel/downloads/bwin7version.txt";
         try {
-            url = new URL(fname);
+            URL url = new URL(fname);
             URLConnection urlcon = url.openConnection();
 
             urlcon.setReadTimeout(1000);
