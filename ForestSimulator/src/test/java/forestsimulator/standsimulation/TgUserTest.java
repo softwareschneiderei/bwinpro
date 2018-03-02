@@ -3,6 +3,7 @@ package forestsimulator.standsimulation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import static org.hamcrest.CoreMatchers.is;
@@ -49,17 +50,32 @@ public class TgUserTest {
     }
     
     @Test
+    public void loadingOfAbsoluteWindowsPath() throws IOException {
+        TgUser userSettings = new TgUser(BASE_DIRECTORY);
+        String absolutePath = makeAbsolute("D:\\some\\\\base");
+        userSettings.loadSettings(new StringReader("data.directory=" + absolutePath));
+        assertThat(userSettings.getDataDir(), is(new File(absolutePath).getCanonicalFile()));
+    }
+
+    @Test
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
         assertThat(userSettings.getLanguageShort(), is("de"));
     } 
 
+    private static String makeAbsolute(String absolutePath) {
+        if (new File(absolutePath).isAbsolute()) {
+            return absolutePath;
+        }
+        return "/" + absolutePath;
+    }
+    
     private static File canonicalFileOf(File base, String subdirectory) throws IOException {
         return new File(base, subdirectory).getCanonicalFile();
     }
 
-    private static BufferedReader iniContent() {
-        return new BufferedReader(new StringReader(INI_FILE));
+    private static Reader iniContent() {
+        return new StringReader(INI_FILE);
     }
 }
