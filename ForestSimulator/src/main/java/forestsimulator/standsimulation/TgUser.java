@@ -92,11 +92,7 @@ class TgUser {
         if (path == null) {
             return ".";
         }
-        String normalized = path;
-        while (normalized.contains("\\\\")) {
-            normalized = normalized.replace("\\\\", "\\");
-        }
-        return normalized;
+        return path;
     }
 
     public boolean fileExists(String fname) {
