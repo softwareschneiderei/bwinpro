@@ -14,9 +14,9 @@ public class TgUserTest {
     private static final File BASE_DIRECTORY = new File("D:\\some\\base\\directory");
     private static final String LINE_SEP = System.getProperty("line.separator");
 
-    private static final String INI_FILE = "program.directory=.\\user\n"
-            + "data.directory=.\\data_standsimulation\n"
-            + "working.directory=.\\output_standsimulation\n"
+    private static final String INI_FILE = "program.directory=user\n"
+            + "data.directory=data_standsimulation\n"
+            + "working.directory=output_standsimulation\n"
             + "language.code=Deutsch\n"
             + "settings.file=ForestSimulatorSettingsBW.xml\n"
             + "graphics3d=0\n";
