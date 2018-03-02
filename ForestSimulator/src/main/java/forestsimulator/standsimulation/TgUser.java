@@ -92,7 +92,7 @@ class TgUser {
         if (path == null) {
             return ".";
         }
-        return path.replace("\\", "/");
+        return path;
     }
 
     public boolean fileExists(String fname) {
