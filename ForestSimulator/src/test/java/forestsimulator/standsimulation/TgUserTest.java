@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Locale;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -28,7 +29,7 @@ public class TgUserTest {
         assertThat(userSettings.getProgramDir(), is(canonicalFileOf(BASE_DIRECTORY, "user")));
         assertThat(userSettings.getDataDir(), is(canonicalFileOf(BASE_DIRECTORY, "data_standsimulation")));
         assertThat(userSettings.getWorkingDir(), is(canonicalFileOf(BASE_DIRECTORY, "output_standsimulation")));
-        assertThat(userSettings.getLanguageShort(), is("de"));
+        assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
         assertThat(userSettings.getXMLSettings(), is("ForestSimulatorSettingsBW.xml"));
         assertThat(userSettings.getPlugIn(), is("ForestSimulatorSettingsBW.xml"));
         assertThat(userSettings.getGrafik3D(), is(0));
@@ -61,7 +62,7 @@ public class TgUserTest {
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
-        assertThat(userSettings.getLanguageShort(), is("de"));
+        assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
     } 
 
     private static String makeAbsolute(String absolutePath) {
