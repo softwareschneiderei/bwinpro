@@ -28,7 +28,7 @@ class TgUser {
     private File workingDir;
     private File programDir;
     private File dataDir;
-    private String language = "en";
+    private String languageCode = "en";
     String plugIn = "XML";
     String XMLSettings = "";
     int grafik3D = 0;
@@ -69,7 +69,7 @@ class TgUser {
         programDir = parseToFile("program.directory").getCanonicalFile();
         dataDir = parseToFile("data.directory").getCanonicalFile();
         workingDir = parseToFile("working.directory").getCanonicalFile();
-        language = settings.getProperty("language.code", "");
+        languageCode = settings.getProperty("language.code", "");
         XMLSettings = settings.getProperty("settings.file", "");
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
@@ -127,20 +127,10 @@ class TgUser {
     }
 
     public Locale getLanguageShort() {
-        if (language.isEmpty()) {
+        if (languageCode.isEmpty()) {
             return Locale.forLanguageTag(System.getProperty("user.language"));
         }
-        String languageShort = "";
-        if (language.compareTo("Deutsch") == 0) {
-            languageShort = "de";
-        }
-        if (language.compareTo("Espanol") == 0) {
-            languageShort = "es";
-        }
-        if (language.compareTo("Polish") == 0) {
-            languageShort = "pl";
-        }
-        return Locale.forLanguageTag(languageShort);
+        return Locale.forLanguageTag(languageCode);
     }
 
     public boolean needsUpdate(String lastupdate) {
@@ -177,17 +167,17 @@ class TgUser {
         return erg;
     }
 
-    public void saveSettings(String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) throws IOException {
+    public void saveSettings(String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
         try (Writer ausgabe = new FileWriter(settingsFile())) {
             saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, g3D);
         }        
     }
 
-    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, String Language, String settingsFileName, int g3D) throws IOException {
+    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
         settings.setProperty("program.directory", programDir);
         settings.setProperty("data.directory", dataDir);
         settings.setProperty("working.directory", workingDir);
-        settings.setProperty("language.code", Language);
+        settings.setProperty("language.code", Language.toString());
         settings.setProperty("settings.file", settingsFileName);
         settings.setProperty("graphics3d", String.valueOf(g3D));
         settings.store(ausgabe, null);

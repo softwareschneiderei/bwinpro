@@ -18,7 +18,7 @@ public class TgUserTest {
     private static final String INI_FILE = "program.directory=user\n"
             + "data.directory=data_standsimulation\n"
             + "working.directory=output_standsimulation\n"
-            + "language.code=Deutsch\n"
+            + "language.code=de\n"
             + "settings.file=ForestSimulatorSettingsBW.xml\n"
             + "graphics3d=0\n";
     
@@ -40,12 +40,12 @@ public class TgUserTest {
         StringWriter buffer = new StringWriter();
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
-        userSettings.saveSettingsTo(buffer, "D:\\program_dir", "data_dir", "output_dir", "language", "Settings.xml", 1);
+        userSettings.saveSettingsTo(buffer, "D:\\program_dir", "data_dir", "output_dir", Locale.forLanguageTag("en"), "Settings.xml", 1);
         assertThat(buffer.toString(), is(
                 "program.directory=D:\\program_dir" + LINE_SEP
                 + "data.directory=data_dir" + LINE_SEP
                 + "working.directory=output_dir" + LINE_SEP
-                + "language.code=language" + LINE_SEP
+                + "language.code=en" + LINE_SEP
                 + "settings.file=Settings.xml" + LINE_SEP
                 + "graphics3d=1" + LINE_SEP));
     }
@@ -61,8 +61,8 @@ public class TgUserTest {
     @Test
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
-        userSettings.loadSettings(new StringReader("language.code=Deutsch"));
-        assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
+        userSettings.loadSettings(new StringReader("language.code=es"));
+        assertThat(userSettings.getLanguageShort(), is(new Locale("es")));
     }
     
     @Test

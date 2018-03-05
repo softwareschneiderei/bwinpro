@@ -19,10 +19,10 @@ GNU General Public License for more details.
  * @author  sschimpf
  */
 package forestsimulator.standsimulation;
+import forestsimulator.language.UserLanguage;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +32,7 @@ public class TgUserDialog extends javax.swing.JDialog {
     File WorkingDir;
     File ProgramDir;
     File DataDir;
-    String Language = "";
+    UserLanguage Language;
     File localPath;
     String XMLSettings="";
     String plugIn="";
@@ -40,18 +40,10 @@ public class TgUserDialog extends javax.swing.JDialog {
     java.io.File localF = null;
     private TgUser user = new TgUser(new File("."));
     ResourceBundle messages;
-    Locale currentLocale;
    
     /** Creates new form JDialog */
     public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
-        initComponents();
-        File f = new File(".");
-        try {
-            localPath= f.getCanonicalFile();
-        } catch (IOException e) {
-            Logger.getLogger(TgUserDialog.class.getName()).log(Level.SEVERE, "Problem getting working directory: {0}", e.getMessage());
-        };
         if (user.fileExists("ForestSimulator.ini")) {
             System.out.println("Settings laden ");
             user.loadSettings();
@@ -61,17 +53,25 @@ public class TgUserDialog extends javax.swing.JDialog {
             DataDir=user.getDataDir();
             XMLSettings=user.getXMLSettings();
             plugIn = user.getPlugIn();
+        }
+        Language = UserLanguage.forLocale(user.getLanguageShort());
+        initComponents();
+        File f = new File(".");
+        try {
+            localPath= f.getCanonicalFile();
+        } catch (IOException e) {
+            Logger.getLogger(TgUserDialog.class.getName()).log(Level.SEVERE, "Problem getting working directory: {0}", e.getMessage());
+        }
+        if (user.getProgramDir().isDirectory()) {
             loadModels();
         }
-
         jTextField1.setText(ProgramDir.getName());
         jTextField2.setText(WorkingDir.getName());
         jTextField3.setText(DataDir.getName());
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
-        currentLocale = user.getLanguageShort();
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
-        jComboBox1.setSelectedItem(user.getLanguageShort().getDisplayCountry());
+        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", Language.locale());
+        languageSelector.setSelectedItem(Language);
         jComboBox3.setSelectedIndex(user.grafik3D);
         setTitle(messages.getString("TreeGrOSS_ForestSimulator"));
         jLabel1.setText(messages.getString("Language"));
@@ -84,7 +84,15 @@ public class TgUserDialog extends javax.swing.JDialog {
         jButton2.setText(messages.getString("OK"));
 
     }
+
+    private ComboBoxModel languageOptions() {
+        return new DefaultComboBoxModel(UserLanguage.entriesFor(Language.locale()));
+    }
     
+    private UserLanguage.LanguageEntry activeLanguage() {
+        return new UserLanguage.LanguageEntry(Language, Language.locale());
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -94,7 +102,7 @@ public class TgUserDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        languageSelector = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         // "vor"
@@ -121,15 +129,17 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(20, 20, 70, 14);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Deutsch", "Englisch", "Espanol", "Polish" }));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(100, 22));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        languageSelector.setModel(languageOptions());
+        languageSelector.setSelectedItem(activeLanguage());
+        languageSelector.setName("languageSelector"); // NOI18N
+        languageSelector.setPreferredSize(new java.awt.Dimension(100, 22));
+        languageSelector.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                languageSelectorActionPerformed(evt);
             }
         });
-        getContentPane().add(jComboBox1);
-        jComboBox1.setBounds(80, 20, 100, 22);
+        getContentPane().add(languageSelector);
+        languageSelector.setBounds(80, 20, 100, 22);
 
         jLabel2.setText("find directory \\user ");
         getContentPane().add(jLabel2);
@@ -220,17 +230,17 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(jComboBox2);
         jComboBox2.setBounds(20, 250, 450, 20);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-651)/2, (screenSize.height-377)/2, 651, 377);
+        setSize(new java.awt.Dimension(651, 377));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
 // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox3ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void languageSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_languageSelectorActionPerformed
 // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_languageSelectorActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
@@ -270,13 +280,13 @@ public class TgUserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void saveSettings() throws IOException {
-        Language = (String)jComboBox1.getSelectedItem();
+        UserLanguage.LanguageEntry selectedLanguage = (UserLanguage.LanguageEntry) languageSelector.getSelectedItem();
         int g3D = 0;
         if (jComboBox3.getSelectedIndex()>0) g3D=1;
         user.saveSettings(jTextField1.getText(),
                 jTextField3.getText(),
                 jTextField2.getText(),
-                Language,
+                selectedLanguage.language.locale(),
                 (String) jComboBox2.getSelectedItem(),
                 g3D);
     }
@@ -300,12 +310,10 @@ public class TgUserDialog extends javax.swing.JDialog {
         jComboBox2.removeAllItems();
         File modelDirectory = new File(ProgramDir, "models");
 // Liste mit Dateien erstellen 
-        String entries[]=modelDirectory.list();
+        String entries[] = modelDirectory.list();
         for ( int i = 0; i < entries.length; i++ ) {
              if (entries[i].indexOf(".xml") >0) jComboBox2.addItem(entries[i]);
         }
-
-        
     }
     
     /**
@@ -321,7 +329,6 @@ public class TgUserDialog extends javax.swing.JDialog {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JLabel jLabel1;
@@ -332,5 +339,7 @@ public class TgUserDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JComboBox languageSelector;
     // End of variables declaration//GEN-END:variables
+
 }
