@@ -40,20 +40,20 @@ import treegross.base.TreegrossXML2;
 
 /**
  * Das Package dient zur Berechnung von Sortimenten und/oder Biomasse und
- * N�hrstoffen und sofern Sortimente, Biomassen und N�hrstoffeangaben vorliegen
+ * Nährstoffen und sofern Sortimente, Biomassen und Nährstoffeangaben vorliegen
  * in das Paket Forestsimulator integriert werden. Das Package greift auf die
  * Package TreeGrOSS zur�ck.
  * 
  * In NWFVA_Nutzung ist eine Desktopanwendung, mit der sich Daten im TreeGrOSS XML auswerten lassen. 
  * Das Programm ist in zwei Stufen aufgebaut. Es kann nur zur Berechnung von Sortimenten
- * verwendet werden und sofern Biomassefunktionen und N�hrstoffkonzentrationswerte vorliegen
- * auch zus�tzlich f�r die Berechnung von Biomassen und N�hstoffen verwendet werden.
+ * verwendet werden und sofern Biomassefunktionen und Nährstoffkonzentrationswerte vorliegen
+ * auch zusätzlich für die Berechnung von Biomassen und Nähstoffen verwendet werden.
  * Voraussetzung ist, dass es im Programmverzeichnis ein Unterverzeichnis ./user gibt.
  * In diesem Unterverzeichnis muss 1.) das Unterverzeichnis user/models vorhanden sein,
- * in welchem die Baumarteneinstellungen f�r den ForestSimulator in einem XML File hinterlegt sind.
- * 2. wird das Unterzeichnis /user/moduls ben�tigt, welches wiederum die beiden Unter-
- * Verzeichnisse assortment mit der Standardeinstellung f�r die Sortimente (Assortments.xml) und
- * biomass mit den Biomassefunktionen und N�hrstoffkonzentrationwerten (BiomassNWGermany.xml)
+ * in welchem die Baumarteneinstellungen für den ForestSimulator in einem XML File hinterlegt sind.
+ * 2. wird das Unterzeichnis /user/moduls benötigt, welches wiederum die beiden Unter-
+ * Verzeichnisse assortment mit der Standardeinstellung für die Sortimente (Assortments.xml) und
+ * biomass mit den Biomassefunktionen und Nährstoffkonzentrationwerten (BiomassNWGermany.xml)
  * enthalten muss.
  * 
  * 
@@ -148,7 +148,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem2);
 
-        jMenuItem3.setText("Biomasse & N�hrstoffe");
+        jMenuItem3.setText("Biomasse & Nährstoffe");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);

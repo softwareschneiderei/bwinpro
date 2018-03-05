@@ -385,7 +385,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
                 Hilfshoehe = height;
             } else if ((testa0 == -6) && ((height / dbh) < 0.5548092 + 0.3495206 * Math.exp(Math.log(dbh) * (-0.06206942 * dbh)))) {
                 Hilfshoehe = (0.5548092 + 0.3495206 * Math.exp(Math.log(dbh) * (-0.06206942 * dbh))) * dbh;
-            } else if ((testa0 == -17) && ((height / dbh) >= 0.4276964 + 0.9883941 * Math.exp(Math.log(dbh) * (-0.02910625 * dbh)))) //9.10.01;Extremf�lle Kiefernkodierte abfangen}
+            } else if ((testa0 == -17) && ((height / dbh) >= 0.4276964 + 0.9883941 * Math.exp(Math.log(dbh) * (-0.02910625 * dbh)))) //9.10.01;Extremfälle Kiefernkodierte abfangen}
             {
                 Hilfshoehe = height;
             } else if ((testa0 == -17) && ((height / dbh) < 0.4276964 + 0.9883941 * Math.exp(Math.log(dbh) * (-0.02910625 * dbh)))) {
