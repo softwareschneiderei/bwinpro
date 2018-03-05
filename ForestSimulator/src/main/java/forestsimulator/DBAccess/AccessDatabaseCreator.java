@@ -6,127 +6,120 @@ import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.*;
 
-
 /**
  *
- * @author jhansen
- * this class extends the basis class DatabaseCreator
- * and overwrites its methods.
- * this technique makes it possible to implementate
+ * @author jhansen this class extends the basis class DatabaseCreator and
+ * overwrites its methods. this technique makes it possible to implementate
  * interfaces for other databases easily.
  */
 public class AccessDatabaseCreator extends DatabaseCreator {
-    
-    private String mdpath="";  // a destination where an empty access database exists 
- // private String newdbpath=""; // the path and name of the new database;  inherited from DatabaseCreator
-    
-    
-    /** Creates a new instance of AccessDatabaseCreator */
+
+    private String mdpath = "";  // a destination where an empty access database exists 
+    // private String newdbpath=""; // the path and name of the new database;  inherited from DatabaseCreator
+
+    /**
+     * Creates a new instance of AccessDatabaseCreator
+     */
     public AccessDatabaseCreator(String metadatapath) {
-        mdpath=metadatapath; 
-        type=1; //-> 1=ACCESS must be the same as in DBConn inherited static field from basis class DatabaseCreator
+        mdpath = metadatapath;
+        type = 1; //-> 1=ACCESS must be the same as in DBConn inherited static field from basis class DatabaseCreator
     }
-    
-    public AccessDatabaseCreator(String metadatapath, String newdatabasepath, boolean create ) {
-        type=1; // inherited static field from basis class DatabaseCreator
-        mdpath=metadatapath;
-        newdbpath=newdatabasepath;
+
+    public AccessDatabaseCreator(String metadatapath, String newdatabasepath, boolean create) {
+        type = 1; // inherited static field from basis class DatabaseCreator
+        mdpath = metadatapath;
+        newdbpath = newdatabasepath;
         // direct creation of the mdb within the construcor:
-        if (create){
+        if (create) {
             createNewDB(newdbpath);
         }
     }
-    
-    public void setMetadatapath(String path){
-        mdpath=path;
+
+    public void setMetadatapath(String path) {
+        mdpath = path;
     }
-    
-    public void setNewpath(String path){
-        newdbpath=path;
+
+    @Override
+    public void setNewpath(String path) {
+        newdbpath = path;
     }
-    
-    public String getMetadatapath(){
+
+    public String getMetadatapath() {
         return mdpath;
     }
-    
-    public String getNewpath(){
+
+    @Override
+    public String getNewpath() {
         return newdbpath;
     }
-    
-    public boolean showFileSaveDialog(){
-        boolean created=false;
+
+    @Override
+    public boolean showFileSaveDialog() {
+        boolean created = false;
         // 1. eine leere Datenbank im gewünschten Verzeichnis erzeugen:
         JFileChooser fc = new JFileChooser();
-        fc.setFileFilter( new FileFilter() {
-          public boolean accept( File f ) {
-            return f.isDirectory() ||
-                   f.getName().toLowerCase().endsWith(".mdb");
-          }
-          public String getDescription() {
-            return "Access Datenbank";
-          }
-        } );    
-        int returnVal = fc.showSaveDialog( null );    
-        if ( returnVal == JFileChooser.APPROVE_OPTION ){
+        fc.setFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                return f.isDirectory()
+                        || f.getName().toLowerCase().endsWith(".mdb");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Access Datenbank";
+            }
+        });
+        int returnVal = fc.showSaveDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            if  (file.exists()){
+            if (file.exists()) {
                 System.out.println("file already exists");
-                newdbpath=file.getAbsolutePath();
-                created=true;
+                newdbpath = file.getAbsolutePath();
+                created = true;
+            } else {
+                created = createNewDB(file.getAbsolutePath());
             }
-            else{
-                created=createNewDB(file.getAbsolutePath());                
-            }
-        }
-        else{
-            System.out.println( "Auswahl abgebrochen" );
-            created=false;
+        } else {
+            System.out.println("Auswahl abgebrochen");
+            created = false;
         }
         return created;
     }
-    
-    public boolean createNewDB(String newpath){
-        if(mdpath.compareTo("")!=0 && newpath.compareTo("")!=0){
-            String newdb=newpath;
-            if(newdb.endsWith(".mdb")==false){
-                newdb=newpath+".mdb";
+
+    public boolean createNewDB(String newpath) {
+        if (mdpath.compareTo("") != 0 && newpath.compareTo("") != 0) {
+            String newdb = newpath;
+            if (newdb.endsWith(".mdb") == false) {
+                newdb = newpath + ".mdb";
             }
             copyDB(newdb);
-            newdbpath=newdb;
+            newdbpath = newdb;
             File file = new File(newdb);
-            return file.exists(); 
-        }
-        else{
+            return file.exists();
+        } else {
             return false;
         }
     }
-    
+
     private void copyFile(String source, String destination) throws Exception {
-       FileInputStream fis;
-       BufferedInputStream bis;
-       FileOutputStream fos;
-       BufferedOutputStream bos;
-       byte[] b;
-       fis = new FileInputStream(source);
-       fos = new FileOutputStream(destination);
-       bis = new BufferedInputStream(fis);
-       bos = new BufferedOutputStream(fos);
-       try{
-           b = new byte[bis.available()];
-           bis.read(b);
-           bos.write(b);
-           bis.close();
-           bos.close();
-       }
-       catch (IOException eio){System.out.println(eio);}
+        byte[] b;
+        try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(source));
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destination))) {
+            b = new byte[bis.available()];
+            bis.read(b);
+            bos.write(b);
+        } catch (IOException eio) {
+            System.out.println(eio);
+        }
     }
-    
-    private void copyDB(String newdb){
-      String emptydb=mdpath+"empty.mdb";
-      try{
-          copyFile(emptydb,newdb);
-      }
-      catch (Exception e){JOptionPane.showMessageDialog(null,"Fehler beim Anlegen der neuen Datenbank","Projekt anlegen",JOptionPane.ERROR_MESSAGE);} 
+
+    private void copyDB(String newdb) {
+        String emptydb = mdpath + "empty.mdb";
+        try {
+            copyFile(emptydb, newdb);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Fehler beim Anlegen der neuen Datenbank", "Projekt anlegen", JOptionPane.ERROR_MESSAGE);
+        }
     }
-    
 }
