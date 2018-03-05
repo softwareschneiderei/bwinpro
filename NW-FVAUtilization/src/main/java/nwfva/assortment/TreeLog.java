@@ -2,7 +2,7 @@
    Version 2013-01-11
 
    (c) 2013 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ GNU General Public License for more details.
 package nwfva.assortment;
 
 /**
- * Hilfsklasse um ein Sortiment mit seinen Maßen zu speichern 
+ * Hilfsklasse um ein Sortiment mit seinen MaÃŸen zu speichern 
  * @author nagel
  */
 public class TreeLog {
@@ -40,12 +40,12 @@ public class TreeLog {
  * Konstruktor
  * @param sname Sortimentsname aus XML Datei
  * @param rem Sortiment wird entnommen, bzw. im Bestand gelassen
- * @param sHeight Starthöhe des Sortiments im Stamm [m]
- * @param len Länge ausgehaltenen Stammstücks [m]
- * @param vHmR Volumen nach Huber mit Rinde [m³]
- * @param vHoR Volumen nach Huber ohne Rinde [m³]
- * @param vmR Volumen nach Schaftformfunktion mit Rinde [m³]
- * @param voR Volumen nach Schaftformfunktion ohne Rinde [m³]
+ * @param sHeight StarthÃ¶he des Sortiments im Stamm [m]
+ * @param len LÃ¤nge ausgehaltenen StammstÃ¼cks [m]
+ * @param vHmR Volumen nach Huber mit Rinde [mÂ³]
+ * @param vHoR Volumen nach Huber ohne Rinde [mÂ³]
+ * @param vmR Volumen nach Schaftformfunktion mit Rinde [mÂ³]
+ * @param voR Volumen nach Schaftformfunktion ohne Rinde [mÂ³]
  * @param t Arbeitszeit [Minuten]
  * @param mD Mittendurchmesser [cm]
  */

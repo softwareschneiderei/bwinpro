@@ -2,7 +2,7 @@
    Version 2013-01-11
 
    (c) 2013 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -22,9 +22,9 @@ import treegross.base.Tree;
 
 
 /**
- * Der TreeSplitter kann dafür benutzt werden, einen Stamm in vorgegebene Sortimente
- * zu zerlegen. Die Sortimente müssen zuerst mit der Methode setAssortments übergeben werden.
- * Danach können die vorhandenen Sortimente mit ihren Maßen berechnet werden und mit der 
+ * Der TreeSplitter kann dafÃ¼r benutzt werden, einen Stamm in vorgegebene Sortimente
+ * zu zerlegen. Die Sortimente mÃ¼ssen zuerst mit der Methode setAssortments Ã¼bergeben werden.
+ * Danach kÃ¶nnen die vorhandenen Sortimente mit ihren MaÃŸen berechnet werden und mit der 
  * Methode getTreeLogs() und getNumberOfLogs aus der Klasse abgefragt werden. 
  * 
  * Summary: This class is for the calculation of given assortments in a tree trunc. 
@@ -45,7 +45,7 @@ public class TreeSplitter {
      int nausgewaehlt = 0;
 
 /**
- *  Einstellen der Sortimente, welche bei der Aushaltung berücksichtigt werden
+ *  Einstellen der Sortimente, welche bei der Aushaltung berÃ¼cksichtigt werden
  * @param lsx Array mit den Sortimenten
  * @param nls Anzahl der Sortimente
  */
@@ -77,9 +77,9 @@ public class TreeSplitter {
         }
      }
 /**
- * Methode um die Aushaltung für einen Baum und einen Fällhöhe auszuführen
+ * Methode um die Aushaltung fÃ¼r einen Baum und einen FÃ¤llhÃ¶he auszufÃ¼hren
  * @param tr  Baum aus dem TreeGrOSS package
- * @param fellingHeight Fällschnitt [m]
+ * @param fellingHeight FÃ¤llschnitt [m]
  */
      public void splitTree(Tree tr, double fellingHeight){
 //        log.info("Splitter Baum"+tr.no);        
@@ -96,7 +96,7 @@ public class TreeSplitter {
                 boolean logOk = true;
                 if (ls[j].nurZBaum && tr.crop == false) {logOk = false;}
                 while(logFound && logOk) {
-// Berechnung des Volumens mit Zugabe, dafür werden minH und maxH um die Zugabe erhöht
+// Berechnung des Volumens mit Zugabe, dafÃ¼r werden minH und maxH um die Zugabe erhÃ¶ht
                       double zugmin = 0.0;
                       if (ls[j].zugabeProzent > 0.0) zugmin = ls[j].minH * ls[j].zugabeProzent/100.0;
                       if (ls[j].zugabeCm > 0.0) zugmin = ls[j].zugabeCm/100.0;
@@ -138,14 +138,14 @@ public class TreeSplitter {
      }
 
 /**
- * Liefert die ausgehaltenen Sortimente zurück
- * @return Liefert einen Array mit den ausgehaltenen Stücken zurück.
+ * Liefert die ausgehaltenen Sortimente zurÃ¼ck
+ * @return Liefert einen Array mit den ausgehaltenen StÃ¼cken zurÃ¼ck.
  */     
      public TreeLog[] getTreeLogs(){
          return tl;
      }
 /**
- * Liefert die Anzahl der ausgehaltenen Stücke Abschnitte zurück
+ * Liefert die Anzahl der ausgehaltenen StÃ¼cke Abschnitte zurÃ¼ck
  * @return 
  */
      public int getNumberOfLogs(){

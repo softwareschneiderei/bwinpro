@@ -2,7 +2,7 @@
    Version 2013-01-11
 
    (c) 2013 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -25,15 +25,15 @@ import treegross.base.JSortiererNFV;
 import treegross.base.Tree;
 
 /**
- * Klasse zur Berechnung von Biomassen- und Nährstoffgehalten. Die Klasse benötigt
- * das Package assortments, um die Sortimente aus einem Baum schneiden zu können.
- * Die Sortimente müssen zuerst mit der Methode setAssortments übergeben werden. Darüber
- * hinaus müssen die Biomassefunktionen und Nährstoffkonzentrationen mit der Methode
- * setBiomassFunctions() übergeben werden. Erstdanach kann die Methode getTreesBiomass()
- * aufgerufen werden. Diese liefert die Ergebnisse als BiomassLine zurück.
- * Es ist mit dieser Methode auch möglich die Biomasse und die Nährstoffe für nur ein 
- * Sortiment zu berechnen. In diesem Fall darf nur ein Sortiment übergeben werden und
- * es müssen die Aushaltung von Brenn- und Restholz auf false gesetzt werden.
+ * Klasse zur Berechnung von Biomassen- und NÃ¤hrstoffgehalten. Die Klasse benÃ¶tigt
+ * das Package assortments, um die Sortimente aus einem Baum schneiden zu kÃ¶nnen.
+ * Die Sortimente mÃ¼ssen zuerst mit der Methode setAssortments Ã¼bergeben werden. DarÃ¼ber
+ * hinaus mÃ¼ssen die Biomassefunktionen und NÃ¤hrstoffkonzentrationen mit der Methode
+ * setBiomassFunctions() Ã¼bergeben werden. Erstdanach kann die Methode getTreesBiomass()
+ * aufgerufen werden. Diese liefert die Ergebnisse als BiomassLine zurÃ¼ck.
+ * Es ist mit dieser Methode auch mÃ¶glich die Biomasse und die NÃ¤hrstoffe fÃ¼r nur ein 
+ * Sortiment zu berechnen. In diesem Fall darf nur ein Sortiment Ã¼bergeben werden und
+ * es mÃ¼ssen die Aushaltung von Brenn- und Restholz auf false gesetzt werden.
  * 
  * @author nagel
  */
@@ -47,8 +47,8 @@ public class BiomassCalculation {
     int nls =0;
 
 /**
- * Übergabe der Biomassefunktionen und Nährstoffkonzentrationen
- * @param nbsx Array mit Biomasseeinstellungen für die Baumarten
+ * Ãœbergabe der Biomassefunktionen und NÃ¤hrstoffkonzentrationen
+ * @param nbsx Array mit Biomasseeinstellungen fÃ¼r die Baumarten
  * @param nnbsx Anzahl der Baumarten und Einstellungen
  */    
     public void setBiomassFunctions(BiomassSetting nbsx[], int nnbsx){
@@ -56,7 +56,7 @@ public class BiomassCalculation {
         nnbs = nnbsx;
     }
 /**
- * Übergabe der Standardsortimente
+ * Ãœbergabe der Standardsortimente
  * @param lsx Array mit der Definition der Sortimente
  * @param nlsx Anzahl der Definitionen
  */    
@@ -66,15 +66,15 @@ public class BiomassCalculation {
     }
 
 /**
- * Berechnung der Biomassen und Nährstoffe
- * Vorher müssen die beiden Settings durchgeführt werden: 
+ * Berechnung der Biomassen und NÃ¤hrstoffe
+ * Vorher mÃ¼ssen die beiden Settings durchgefÃ¼hrt werden: 
  * setBiomassFunctions
  * setAssortments
  * @param tr TreeGrOSS Baum
- * @param nblx Biomassenergebniszeile, diese enthält bereits die Einstellungen, 
+ * @param nblx Biomassenergebniszeile, diese enthÃ¤lt bereits die Einstellungen, 
  * wieviel Prozent der Nadelmasse und des Reisigs entnommen werden sowie, ob
  * Brennholz und Restholz ausgehalten wird.
- * @return nbl Biomassen und Nähstoffe
+ * @return nbl Biomassen und NÃ¤hstoffe
  */    
     public BiomassLine getTreesBiomass(Tree tr,BiomassLine nblx){
            nbl = nblx;
@@ -133,7 +133,7 @@ public class BiomassCalculation {
                  int ntl = 0;
                  tl = splitter.getTreeLogs();
                  ntl = splitter.getNumberOfLogs();
-// verarbeiten der entnommen Sortimentsstücke                 
+// verarbeiten der entnommen SortimentsstÃ¼cke                 
                  for (int jj=0; jj< ntl; jj++){
                      if (tl[jj].removed){
                          volSortimente = volSortimente+tl[jj].vol_oR;

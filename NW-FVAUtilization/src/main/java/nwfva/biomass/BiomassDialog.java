@@ -2,7 +2,7 @@
    Version 2013-01-13
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ import java.util.logging.SimpleFormatter;
 import treegross.base.*;
 
 /**
- * Biomassedialog für den ForestSimulator
+ * Biomassedialog fÃ¼r den ForestSimulator
  * @author J. Nagel
  */
 public class BiomassDialog extends javax.swing.JDialog {
@@ -39,7 +39,7 @@ public class BiomassDialog extends javax.swing.JDialog {
  * @param modal
  * @param stand TreeGrOSS Stand
  * @param programDir Programmverzeichnis
- * @param interactive Möglichkeit andere xml Files zu lesen
+ * @param interactive MÃ¶glichkeit andere xml Files zu lesen
  * @param workingDir Ausgabeverzeichnis
  */
     public BiomassDialog(java.awt.Frame parent, boolean modal, Stand stand, String programDir, boolean interactive,

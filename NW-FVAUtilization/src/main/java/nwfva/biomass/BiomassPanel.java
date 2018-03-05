@@ -2,7 +2,7 @@
    Version 2013-01-13
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ public class BiomassPanel extends javax.swing.JPanel {
  * Konstruktor
  * @param stand TreeGrOSS Bestand
  * @param programDir Programmverzeichnis
- * @param interActive Möglichkeit andere XML-Dateien einzulesen
+ * @param interActive MÃ¶glichkeit andere XML-Dateien einzulesen
  * @param workingDir Ausgabeverzeichnis
  */
     public BiomassPanel(Stand stand, String programDir, boolean interActive, String workingDir) {
@@ -214,7 +214,7 @@ public class BiomassPanel extends javax.swing.JPanel {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Auswahl", "Sortiment", "Arten", "min Zopf", "min Mitt.D", "max Länge"
+                "Auswahl", "Sortiment", "Arten", "min Zopf", "min Mitt.D", "max LÃ¤nge"
             }
         ) {
             Class[] types = new Class [] {
@@ -284,7 +284,7 @@ public class BiomassPanel extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Einschlag", "Laubholz m³/ha", "Nadelholz m³/ha", "Sortimente", "Brennholz", "Anteil %", "Restholz", "Anteil %", "Nadel %"
+                "Einschlag", "Laubholz mÂ³/ha", "Nadelholz mÂ³/ha", "Sortimente", "Brennholz", "Anteil %", "Restholz", "Anteil %", "Nadel %"
             }
         ) {
             Class[] types = new Class [] {
@@ -348,7 +348,7 @@ public class BiomassPanel extends javax.swing.JPanel {
                 {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Jahr", "Sortimente  t/ha", "Rinde t/ha", "Brennholz  t/ha", "Rinde t/ha", "Restholz  t/ha", "Rinde t/ha", "Reisig + Blätter t/ha", "Gesamt t/ha"
+                "Jahr", "Sortimente  t/ha", "Rinde t/ha", "Brennholz  t/ha", "Rinde t/ha", "Restholz  t/ha", "Rinde t/ha", "Reisig + BlÃ¤tter t/ha", "Gesamt t/ha"
             }
         ));
         jScrollPane4.setViewportView(jTable3);
@@ -383,7 +383,7 @@ public class BiomassPanel extends javax.swing.JPanel {
 
         jPanel2.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane1.addTab("Nährstoffbilanz", jPanel2);
+        jTabbedPane1.addTab("NÃ¤hrstoffbilanz", jPanel2);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -403,7 +403,7 @@ public class BiomassPanel extends javax.swing.JPanel {
 
 
 /**
- * Berechnung der Biomasse- und Nährstoffe. Das Ergebnis wird in Tabelle 4 des 
+ * Berechnung der Biomasse- und NÃ¤hrstoffe. Das Ergebnis wird in Tabelle 4 des 
  * Panels dargestellt
  */
     public void calculateNutrientBalance(){
@@ -578,7 +578,7 @@ public class BiomassPanel extends javax.swing.JPanel {
     }
 
 /**
- * Laden der XML-Datei mit den Biomassefunktionen und Nährstoffkonzentrationswerten
+ * Laden der XML-Datei mit den Biomassefunktionen und NÃ¤hrstoffkonzentrationswerten
  * @param url Url mit xml-Datei
  */
     public void loadnbs(URL url){

@@ -2,7 +2,7 @@
    Version 2013-01-13
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Grätzelstr.2, 37079 Göttingen, Germany
+       GrÃ¤tzelstr.2, 37079 GÃ¶ttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@ GNU General Public License for more details.
 package nwfva.biomass;
 
 /**
- * Hilfsklasse um die Biomassen- und Nährstoffwerte zu übergeben
+ * Hilfsklasse um die Biomassen- und NÃ¤hrstoffwerte zu Ã¼bergeben
  * @author J N.agel
  */
 public class BiomassLine {
