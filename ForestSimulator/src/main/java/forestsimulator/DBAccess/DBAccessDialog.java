@@ -495,22 +495,23 @@ public class DBAccessDialog extends javax.swing.JDialog {
               }
            catch (Exception e){  System.out.println("Problem: "+" "+e); }
         
-        for (int ii=0; ii < nauf; ii++){
-           String ids = ida[ii];
-           int aufs = aufa[ii];
-           int nwiederh=0;
+        for (int ii = 0; ii < nauf; ii++) {
+            String ids = ida[ii];
+            int aufs = aufa[ii];
+            int nwiederh = 0;
 //
-           try {
-               PreparedStatement stmt = con.prepareStatement("SELECT * FROM Vorschrift WHERE edvid=? AND auf = ? AND Szenario = ?");
-               stmt.setString(1, ids);
-               stmt.setInt(2, aufs);
-               stmt.setInt(3, scen[ii]);
-               ResultSet rs = stmt.executeQuery();
-               while (rs.next()){
-                     nwiederh=rs.getInt("wiederholung");
-               }
-              }
-           catch (Exception e){  System.out.println("Problem: "+" "+e); }
+            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM Vorschrift WHERE edvid = ? AND auf = ? AND Szenario = ?")) {
+                stmt.setString(1, ids);
+                stmt.setInt(2, aufs);
+                stmt.setInt(3, scen[ii]);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        nwiederh = rs.getInt("wiederholung");
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Problem: " + " " + e);
+            }
 //
           for (int iw=0; iw <nwiederh;iw++){
            st=lts.loadFromDB( con, st, ids, aufs , true, true);
@@ -835,13 +836,13 @@ public class DBAccessDialog extends javax.swing.JDialog {
         bi=orga[inventur];
         int kr[] = new int[90000];
         int nkr = 0;
-            try {
-                PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?");
+            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
                 stmt.setString(1, bi);
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    kr[nkr] = rs.getInt("DatPh2_KSPNr");
-                    nkr = nkr + 1;
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                        nkr = nkr + 1;
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Problem: " + " " + e);
@@ -953,16 +954,17 @@ public class DBAccessDialog extends javax.swing.JDialog {
         
         int kr[] = new int[10000];
         int nkr = 0;
-        try {
-             PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?");
-             stmt.setString(1, bi);
-             ResultSet rs = stmt.executeQuery(); 
-             while (rs.next()){
-                  kr[nkr]= rs.getInt("DatPh2_KSPNr");
-                  nkr=nkr+1;
-               }
-              }
-         catch (Exception e){  System.out.println("Problem: "+" "+e); }
+            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
+                stmt.setString(1, bi);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                        nkr = nkr + 1;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Problem: " + " " + e);
+            }
 
         for (int kreis =0; kreis < nkr; kreis++){
         
@@ -1181,9 +1183,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
                   }
               }
-               try {
+               try (PreparedStatement stmt = con.prepareStatement("INSERT INTO Produktivitaet ( Bestand, MixBu, V1Art1, V1Art2, V2Art1, V2Art2, c66xyArt1, c66xyArt2) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
                    int bum = i * 5;
-                   PreparedStatement stmt = con.prepareStatement("INSERT INTO Produktivitaet ( Bestand, MixBu, V1Art1, V1Art2, V2Art1, V2Art2, c66xyArt1, c66xyArt2) values (?, ?, ?, ?, ?, ?, ?, ?)");
                    stmt.setInt(1, bestand);
                    stmt.setInt(2, bum);
                    stmt.setDouble(3, v211B);
