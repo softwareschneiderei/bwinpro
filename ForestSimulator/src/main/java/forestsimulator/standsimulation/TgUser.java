@@ -127,6 +127,9 @@ class TgUser {
     }
 
     public Locale getLanguageShort() {
+        if (language.isEmpty()) {
+            return Locale.forLanguageTag(System.getProperty("user.language"));
+        }
         String languageShort = "";
         if (language.compareTo("Deutsch") == 0) {
             languageShort = "de";

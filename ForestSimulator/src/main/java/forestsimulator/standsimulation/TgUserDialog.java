@@ -70,7 +70,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
         currentLocale = user.getLanguageShort();
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
         jComboBox1.setSelectedItem(user.getLanguageShort().getDisplayCountry());
         jComboBox3.setSelectedIndex(user.grafik3D);
         setTitle(messages.getString("TreeGrOSS_ForestSimulator"));

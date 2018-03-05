@@ -61,9 +61,17 @@ public class TgUserTest {
     @Test
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
-        userSettings.loadSettings(iniContent());
+        userSettings.loadSettings(new StringReader("language.code=Deutsch"));
         assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
-    } 
+    }
+    
+    @Test
+    public void languageIsTakenFromEnvironment() throws IOException {
+        System.setProperty("user.language", "fr");
+        TgUser userSettings = new TgUser(BASE_DIRECTORY);
+        userSettings.loadSettings(new StringReader("language.code="));
+        assertThat(userSettings.getLanguageShort(), is(new Locale("fr")));
+   }
 
     private static String makeAbsolute(String absolutePath) {
         if (new File(absolutePath).isAbsolute()) {
