@@ -1,7 +1,8 @@
 package forestsimulator.DBAccess;
 
 import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import treegross.base.Stand;
 import treegross.base.Tree;
 
@@ -12,7 +13,7 @@ import treegross.base.Tree;
 public class MixedTreeInfo {
 
     public void saveTreeInfo(Connection dbconn, Stand st, String ids, int aufs) {
-        try (Statement stmt = dbconn.createStatement()) {
+        try (PreparedStatement stmt = prepareInsertStatement(dbconn)) {
             for (int i = 0; i < st.ntrees; i++) {
                 if (!st.tr[i].no.contains("_")) {
                     Double dd = st.tr[i].d;
@@ -51,22 +52,42 @@ public class MixedTreeInfo {
                       " )");               
                      */
                     System.out.println("Baum. " + st.tr[i].no + "'," + st.tr[i].code);
-                    stmt.execute("INSERT INTO MixTreeInfo (  edvid, auf, simschritt, nr, art, alt, aus, d, h, ka, kb, v, c66,c66c, c66xy, c66cxy, si,x,y, "
-                            + "c66art, c66noart,c66art2, c66noart2,c66artW, c66noartW, zb) "
-                            + "values (  '" + ids + "', " + aufs + ", " + st.year + ",'" + st.tr[i].no + "'," + st.tr[i].code + ", "
-                            + st.tr[i].age + " , " + st.tr[i].out + " , " + dd.toString() + " , " + hh.toString()
-                            + " , " + ka.toString() + " , " + kb.toString() + " , " + vv.toString()
-                            + " , " + cc66.toString() + " , " + cc66c.toString()
-                            + " , " + cc66xy.toString() + " , " + cc66cxy.toString() + " , " + ssi.toString() + " , " + xx.toString() + " , " + yy.toString()
-                            + " , " + c66art.toString() + " , " + c66noart.toString()
-                            + " , " + c66art2.toString() + " , " + c66noart2.toString()
-                            + " , " + c66artW.toString() + " , " + c66noartW.toString() + ", " + zbx + " )");
+                    stmt.setString(1, ids);
+                    stmt.setInt(2, aufs);
+                    stmt.setInt(3, st.year);
+                    stmt.setString(4, st.tr[i].no);
+                    stmt.setInt(5, st.tr[i].code);
+                    stmt.setInt(6, st.tr[i].age);
+                    stmt.setInt(7, st.tr[i].out);
+                    stmt.setDouble(8, dd);
+                    stmt.setDouble(9, hh);
+                    stmt.setDouble(10, ka);
+                    stmt.setDouble(11, kb);
+                    stmt.setDouble(12, vv);
+                    stmt.setDouble(13, cc66);
+                    stmt.setDouble(14, cc66c);
+                    stmt.setDouble(15, cc66xy);
+                    stmt.setDouble(16, cc66cxy);
+                    stmt.setDouble(17, ssi);
+                    stmt.setDouble(18, xx);
+                    stmt.setDouble(19, yy);
+                    stmt.setDouble(20, c66art);
+                    stmt.setDouble(21, c66noart);
+                    stmt.setDouble(22, c66art2);
+                    stmt.setDouble(23, c66noart2);
+                    stmt.setDouble(24, c66artW);
+                    stmt.setDouble(25, c66noartW);
+                    stmt.setInt(26, zbx);
+                    stmt.execute();
                 }
             }
-            stmt.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Datenbank Fehler MixTreeInfo :" + e);
         }
+    }
+
+    private PreparedStatement prepareInsertStatement(Connection dbconn) throws SQLException {
+        return dbconn.prepareStatement("INSERT INTO MixTreeInfo (edvid, auf, simschritt, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, c66art, c66noart, c66art2, c66noart2, c66artW, c66noartW, zb) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     }
 
     private double getc66byArt(Tree t, int artsoll, double fac) {
