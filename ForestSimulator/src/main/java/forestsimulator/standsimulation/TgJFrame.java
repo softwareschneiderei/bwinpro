@@ -117,6 +117,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         scr = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(scr.width, (scr.height - (scr.height / 50)));
         File workingDirectory = new java.io.File(".");
+        // TODO: move loading of settings and setting of the locale into ForestSimulator.main()
         this.user = new TgUser(workingDirectory);
         if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
             JDialog settings = new TgUserDialog(this, true);
@@ -129,6 +130,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             LOGGER.info("TgJFrame local path : " + workingDirectory.getCanonicalPath());
             user.loadSettings();
             language = UserLanguage.forLocale(user.getLanguageShort());
+            Locale.setDefault(language.locale());
             plugIn = user.getPlugIn();
             st.modelRegion = plugIn;
             st.FileXMLSettings = user.XMLSettings;
@@ -161,7 +163,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         st.setProgramDir(programDir);
         loadGenralSettings(programDir);
 
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", language.locale());
+        messages = ResourceBundle.getBundle("forestsimulator/gui");
 
         JPanel zfneu = new JPanel();
         zfneu.setLayout(new BorderLayout());

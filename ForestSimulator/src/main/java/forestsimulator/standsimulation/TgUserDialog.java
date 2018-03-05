@@ -39,7 +39,6 @@ public class TgUserDialog extends javax.swing.JDialog {
     java.io.File verzeichnis;
     java.io.File localF = null;
     private TgUser user = new TgUser(new File("."));
-    ResourceBundle messages;
    
     /** Creates new form JDialog */
     public TgUserDialog(Frame parent, boolean modal) {
@@ -70,18 +69,17 @@ public class TgUserDialog extends javax.swing.JDialog {
         jTextField3.setText(DataDir.getName());
         jComboBox2.setSelectedItem(plugIn);
 // PlugIn Model
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", Language.locale());
         languageSelector.setSelectedItem(Language);
         jComboBox3.setSelectedIndex(user.grafik3D);
-        setTitle(messages.getString("TreeGrOSS_ForestSimulator"));
-        jLabel1.setText(messages.getString("Language"));
-        jLabel2.setText(messages.getString("find_directory_user"));
-        jLabel3.setText(messages.getString("set_directory_output"));
-        jLabel5.setText(messages.getString("set_directory_input"));
-        jButton1.setText(messages.getString("search"));
-        jButton4.setText(messages.getString("search"));
-        jButton5.setText(messages.getString("search"));
-        jButton2.setText(messages.getString("OK"));
+//        setTitle(messages.getString("TreeGrOSS_ForestSimulator"));
+//        jLabel1.setText(messages.getString("Language"));
+//        jLabel2.setText(messages.getString("find_directory_user"));
+//        jLabel3.setText(messages.getString("set_directory_output"));
+//        jLabel5.setText(messages.getString("set_directory_input"));
+//        jButton1.setText(messages.getString("search"));
+//        jButton4.setText(messages.getString("search"));
+//        jButton5.setText(messages.getString("search"));
+//        jButton2.setText(messages.getString("OK"));
 
     }
 
@@ -120,12 +118,13 @@ public class TgUserDialog extends javax.swing.JDialog {
         jComboBox2 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("TreeGrOSS - ForestSimulator - General Program Settings");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgUserDialog.title")); // NOI18N
         setModal(true);
         setResizable(false);
         getContentPane().setLayout(null);
 
-        jLabel1.setText("Language");
+        jLabel1.setText(bundle.getString("TgUserDialog.jLabel1.text")); // NOI18N
         getContentPane().add(jLabel1);
         jLabel1.setBounds(20, 20, 70, 14);
 
@@ -141,7 +140,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(languageSelector);
         languageSelector.setBounds(80, 20, 100, 22);
 
-        jLabel2.setText("find directory \\user ");
+        jLabel2.setText(bundle.getString("TgUserDialog.jLabel2.text")); // NOI18N
         getContentPane().add(jLabel2);
         jLabel2.setBounds(20, 60, 390, 14);
 
@@ -155,7 +154,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         jTextField1.setBounds(20, 80, 450, 19);
 
         jButton1.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        jButton1.setText("Search");
+        jButton1.setText(bundle.getString("TgUserDialog.jButton1.text")); // NOI18N
         jButton1.setAlignmentY(0.0F);
         jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton1.setMinimumSize(new java.awt.Dimension(100, 25));
@@ -168,7 +167,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(jButton1);
         jButton1.setBounds(500, 80, 80, 25);
 
-        jButton2.setText("OK");
+        jButton2.setText(bundle.getString("TgUserDialog.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -182,7 +181,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         jTextField2.setBounds(20, 190, 450, 19);
 
         jButton4.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        jButton4.setText("Search");
+        jButton4.setText(bundle.getString("TgUserDialog.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -191,11 +190,11 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(jButton4);
         jButton4.setBounds(500, 190, 80, 21);
 
-        jLabel3.setText("Set directory for data output");
+        jLabel3.setText(bundle.getString("TgUserDialog.jLabel3.text")); // NOI18N
         getContentPane().add(jLabel3);
         jLabel3.setBounds(20, 170, 390, 14);
 
-        jLabel5.setText("set directory for input data");
+        jLabel5.setText(bundle.getString("TgUserDialog.jLabel5.text")); // NOI18N
         getContentPane().add(jLabel5);
         jLabel5.setBounds(20, 110, 240, 14);
 
@@ -204,14 +203,14 @@ public class TgUserDialog extends javax.swing.JDialog {
         jTextField3.setBounds(20, 130, 450, 20);
 
         jButton5.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        jButton5.setText("Search");
+        jButton5.setText(null);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(500, 130, 80, 21);
+        jButton5.setBounds(500, 130, 80, 9);
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stand graphic 3D", "Stand graphic 2D" }));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
@@ -222,7 +221,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         getContentPane().add(jComboBox3);
         jComboBox3.setBounds(360, 20, 150, 20);
 
-        jLabel6.setText("XML - File in directory \\user ");
+        jLabel6.setText(bundle.getString("TgUserDialog.jLabel6.text")); // NOI18N
         getContentPane().add(jLabel6);
         jLabel6.setBounds(20, 230, 140, 14);
 
@@ -246,7 +245,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jf.setCurrentDirectory(localPath);
-        jf.setDialogTitle(messages.getString("choose_Data_Dir"));
+//        jf.setDialogTitle(messages.getString("choose_Data_Dir"));
         int k=jf.showOpenDialog(this);
         DataDir = jf.getSelectedFile();        
         jTextField3.setText(DataDir.getAbsolutePath());
@@ -258,7 +257,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jf.setCurrentDirectory(localPath);
-        jf.setDialogTitle(messages.getString("choose_Output_Dir"));
+//        jf.setDialogTitle(messages.getString("choose_Output_Dir"));
         int k=jf.showOpenDialog(this);
         WorkingDir = jf.getSelectedFile();        
         jTextField2.setText(WorkingDir.getAbsolutePath());
@@ -299,7 +298,7 @@ public class TgUserDialog extends javax.swing.JDialog {
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setCurrentDirectory(localPath);
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        jf.setDialogTitle(messages.getString("choose_User_Dir"));
+//        jf.setDialogTitle(messages.getString("choose_User_Dir"));
         int k=jf.showOpenDialog(this);
         ProgramDir = jf.getSelectedFile();        
         jTextField1.setText(ProgramDir.getAbsolutePath());

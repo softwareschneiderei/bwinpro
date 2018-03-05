@@ -87,97 +87,98 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jButton1.setText("suchen");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        jButton1.setText(bundle.getString("DBAccessDialog.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jTextField1.setText("Select data base file");
+        jTextField1.setText(bundle.getString("DBAccessDialog.jTextField1.text")); // NOI18N
 
-        jTextField2.setText("test0001");
+        jTextField2.setText(bundle.getString("DBAccessDialog.jTextField2.text")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton2.setText("Bestand laden");
+        jButton2.setText(bundle.getString("DBAccessDialog.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jButton3.setText("Bestand rechnen");
+        jButton3.setText(bundle.getString("DBAccessDialog.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton4.setText("alle nach Vorschrift rechnen");
+        jButton4.setText(bundle.getString("DBAccessDialog.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
 
-        jButton5.setText("save Stand to db");
+        jButton5.setText(null);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
 
-        jButton11.setText("select file");
+        jButton11.setText(bundle.getString("DBAccessDialog.jButton11.text")); // NOI18N
         jButton11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton11ActionPerformed(evt);
             }
         });
 
-        jButton6.setText("Ertragstafelsimulation");
+        jButton6.setText(bundle.getString("DBAccessDialog.jButton6.text")); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Bi_daten");
+        jLabel1.setText(bundle.getString("DBAccessDialog.jLabel1.text")); // NOI18N
 
-        jButton7.setText("FE-Daten");
+        jButton7.setText(bundle.getString("DBAccessDialog.jButton7.text")); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
             }
         });
 
-        jTextField3.setText("179-2001-001");
+        jTextField3.setText(bundle.getString("DBAccessDialog.jTextField3.text")); // NOI18N
 
-        jTextField4.setText("4172");
+        jTextField4.setText(bundle.getString("DBAccessDialog.jTextField4.text")); // NOI18N
 
-        jTextField6.setText("179-2009-001");
+        jTextField6.setText(bundle.getString("DBAccessDialog.jTextField6.text")); // NOI18N
 
-        jButton8.setText("Kreisladen");
+        jButton8.setText(bundle.getString("DBAccessDialog.jButton8.text")); // NOI18N
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
             }
         });
 
-        jLabel2.setText("Jahre");
+        jLabel2.setText(bundle.getString("DBAccessDialog.jLabel2.text")); // NOI18N
 
-        jTextField5.setText("10");
+        jTextField5.setText(bundle.getString("DBAccessDialog.jTextField5.text")); // NOI18N
 
-        jButton9.setText("BI-fortschreiben");
+        jButton9.setText(bundle.getString("DBAccessDialog.jButton9.text")); // NOI18N
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
             }
         });
 
-        jCheckBox1.setText("Beginn");
+        jCheckBox1.setText(bundle.getString("DBAccessDialog.jCheckBox1.text")); // NOI18N
 
-        jButton10.setText("BI-PLOTinfo");
+        jButton10.setText(bundle.getString("DBAccessDialog.jButton10.text")); // NOI18N
         jButton10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton10ActionPerformed(evt);
@@ -248,16 +249,16 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton12.setText("SPIS Probekreis laden");
+        jButton12.setText(bundle.getString("DBAccessDialog.jButton12.text")); // NOI18N
         jButton12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton12ActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Plotnumber");
+        jLabel3.setText(bundle.getString("DBAccessDialog.jLabel3.text")); // NOI18N
 
-        jTextField7.setText("1");
+        jTextField7.setText(bundle.getString("DBAccessDialog.jTextField7.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -283,14 +284,14 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 .addContainerGap(51, Short.MAX_VALUE))
         );
 
-        jButton13.setText("Sonder Mischung");
+        jButton13.setText(bundle.getString("DBAccessDialog.jButton13.text")); // NOI18N
         jButton13.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton13ActionPerformed(evt);
             }
         });
 
-        jButton14.setText("jButton14");
+        jButton14.setText(bundle.getString("DBAccessDialog.jButton14.text")); // NOI18N
         jButton14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton14ActionPerformed(evt);

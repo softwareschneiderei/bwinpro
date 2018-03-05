@@ -20,6 +20,7 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import java.awt.Frame;
 import treegross.base.*;
 import java.util.*;
 import javax.swing.JDialog;
@@ -30,26 +31,22 @@ public class TgNewStand extends JDialog {
     Stand st;
     TgJFrame frame;
     /** Creates new form TgNewStand */
-    public TgNewStand(java.awt.Frame parent, boolean modal, Stand st1, TgJFrame owner, 
+    public TgNewStand(Frame parent, boolean modal, Stand st1, TgJFrame owner, 
                       Locale preferredLanguage) {
         super(parent, modal);
         st = st1;
         frame = owner;
         initComponents();
-        Locale currentLocale;
-        ResourceBundle messages;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        jButton1.setText(messages.getString("create_stand"));
-        setTitle(messages.getString("new_Stand"));
-        jLabel1.setText(messages.getString("IntroZeile"));
-        jLabel2.setText(messages.getString("Size"));
-        jLabel3.setText(messages.getString("standname"));
-        jButton1.setText(messages.getString("create_area"));
-        jComboBox1.removeAllItems();
-        jComboBox1.addItem(messages.getString("square"));
-        jComboBox1.addItem(messages.getString("circular"));
-
+//        jButton1.setText(messages.getString("create_stand"));
+//        setTitle(messages.getString("new_Stand"));
+//        jLabel1.setText(messages.getString("IntroZeile"));
+//        jLabel2.setText(messages.getString("Size"));
+//        jLabel3.setText(messages.getString("standname"));
+//        jButton1.setText(messages.getString("create_area"));
+//        jComboBox1.removeAllItems();
+//        jComboBox1.addItem(messages.getString("square"));
+//        jComboBox1.addItem(messages.getString("circular"));
+//
     }
     
     /** This method is called from within the constructor to
@@ -70,7 +67,8 @@ public class TgNewStand extends JDialog {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("New Stand");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgNewStand.title")); // NOI18N
         setModal(true);
 
         jPanel1.setBackground(new java.awt.Color(246, 188, 188));
@@ -78,14 +76,14 @@ public class TgNewStand extends JDialog {
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 250));
 
         jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jLabel1.setText("New Stand area. This deletes all existing information:");
+        jLabel1.setText(bundle.getString("TgNewStand.jLabel1.text")); // NOI18N
 
-        jLabel2.setText("Size [ha]:");
+        jLabel2.setText(bundle.getString("TgNewStand.jLabel2.text")); // NOI18N
 
-        tf0.setText("0.2");
+        tf0.setText(bundle.getString("TgNewStand.tf0.text")); // NOI18N
 
         jButton1.setBackground(new java.awt.Color(204, 0, 0));
-        jButton1.setText("Create area");
+        jButton1.setText(bundle.getString("TgNewStand.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -94,9 +92,9 @@ public class TgNewStand extends JDialog {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "square", "circular" }));
 
-        jTextField1.setText("Generated Stand");
+        jTextField1.setText(bundle.getString("TgNewStand.jTextField1.text")); // NOI18N
 
-        jLabel3.setText("Stand name:");
+        jLabel3.setText(bundle.getString("TgNewStand.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

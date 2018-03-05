@@ -110,14 +110,15 @@ public class JPanelDatabase extends javax.swing.JPanel {
         jButton8 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
 
-        jLabel4.setText("jLabel4");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        jLabel4.setText(bundle.getString("JPanelDatabase.jLabel4.text")); // NOI18N
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("jLabel1");
+        jLabel1.setText(bundle.getString("JPanelDatabase.jLabel1.text")); // NOI18N
         jPanel1.add(jLabel1);
 
-        jButton1.setText("change database file");
+        jButton1.setText(bundle.getString("JPanelDatabase.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -135,28 +136,28 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Stand ID");
+        jLabel3.setText(bundle.getString("JPanelDatabase.jLabel3.text")); // NOI18N
         jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel7.add(jLabel3);
 
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Standname");
+        jLabel5.setText(bundle.getString("JPanelDatabase.jLabel5.text")); // NOI18N
         jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel7.add(jLabel5);
 
         jLabel6.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Year");
+        jLabel6.setText(bundle.getString("JPanelDatabase.jLabel6.text")); // NOI18N
         jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel7.add(jLabel6);
 
         jLabel7.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Size [ha]");
+        jLabel7.setText(bundle.getString("JPanelDatabase.jLabel7.text")); // NOI18N
         jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jPanel7.add(jLabel7);
@@ -185,7 +186,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
         jPanel6.setLayout(new java.awt.GridLayout(1, 4));
 
-        jButton3.setText("|< first");
+        jButton3.setText(bundle.getString("JPanelDatabase.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -193,7 +194,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         });
         jPanel6.add(jButton3);
 
-        jButton4.setText("< back");
+        jButton4.setText(bundle.getString("JPanelDatabase.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -208,7 +209,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         });
         jPanel6.add(jTextField1);
 
-        jButton5.setText("search");
+        jButton5.setText(bundle.getString("JPanelDatabase.jButton5.text")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -217,7 +218,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         jPanel6.add(jButton5);
 
         jButton2.setBackground(new java.awt.Color(246, 187, 239));
-        jButton2.setText("save active  stand");
+        jButton2.setText(bundle.getString("JPanelDatabase.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -225,7 +226,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         });
         jPanel6.add(jButton2);
 
-        jButton7.setText("delete");
+        jButton7.setText(bundle.getString("JPanelDatabase.jButton7.text")); // NOI18N
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
@@ -233,7 +234,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         });
         jPanel6.add(jButton7);
 
-        jButton8.setText("next >");
+        jButton8.setText(bundle.getString("JPanelDatabase.jButton8.text")); // NOI18N
         jButton8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton8ActionPerformed(evt);
@@ -241,7 +242,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         });
         jPanel6.add(jButton8);
 
-        jButton6.setText("last >|");
+        jButton6.setText(bundle.getString("JPanelDatabase.jButton6.text")); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);

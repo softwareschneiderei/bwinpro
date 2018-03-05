@@ -15,6 +15,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
+import java.awt.Frame;
 import treegross.base.*;
 import java.util.*;
 import javax.swing.JDialog;
@@ -26,17 +27,12 @@ import javax.swing.JDialog;
 public class TgEditTreegross extends JDialog {
     Stand st;
     EditorPanel editorPanel = new EditorPanel();
-    ResourceBundle messages;
         
-    /** Creates new form TgEditTreegross */
-    public TgEditTreegross(java.awt.Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
+    public TgEditTreegross(Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
         super(parent, modal);
         initComponents();
         st=stand;
-        Locale currentLocale;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        jButton1.setText(messages.getString("acceptChanges"));
+//        jButton1.setText(messages.getString("acceptChanges"));
         editorPanel.setStand(st);
         editorPanel.setLanguage(preferredLanguage);
         editorPanel.loadStand();
@@ -54,14 +50,15 @@ public class TgEditTreegross extends JDialog {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("TreeGrOSS Editor");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgEditTreegross.title")); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
         });
 
-        jButton1.setText("Änderungen übernehmen");
+        jButton1.setText(bundle.getString("TgEditTreegross.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -69,8 +66,8 @@ public class TgEditTreegross extends JDialog {
         });
         getContentPane().add(jButton1, java.awt.BorderLayout.SOUTH);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-800)/2, (screenSize.height-600)/2, 800, 600);
+        setSize(new java.awt.Dimension(800, 600));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

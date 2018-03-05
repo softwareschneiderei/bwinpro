@@ -7,6 +7,7 @@ import java.text.*;
 import java.util.*;
 import javax.swing.*;
 import java.net.*;
+import javax.swing.table.DefaultTableModel;
 
 /**  EditorPanel  
  *
@@ -25,10 +26,10 @@ import java.net.*;
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  */
-public class EditorPanel extends javax.swing.JPanel {
+public class EditorPanel extends JPanel {
     String urlcodebase = "";
     Stand st = null;
-    javax.swing.table.DefaultTableModel data= new javax.swing.table.DefaultTableModel(
+    DefaultTableModel data= new DefaultTableModel(
             new Object [][] {  },
             new String [] {
                "Code", "Nr", "Alter", "BHD", "Höhe",  "Bon", "KA", "KB", "lebend", "Entnahme",
@@ -36,7 +37,7 @@ public class EditorPanel extends javax.swing.JPanel {
             }
         );
     Object[] rowData={" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    javax.swing.table.DefaultTableModel corners= new javax.swing.table.DefaultTableModel(
+    DefaultTableModel corners= new DefaultTableModel(
             new Object [][] {  },
             new String [] {
                "No", "x","y","z"
@@ -44,7 +45,6 @@ public class EditorPanel extends javax.swing.JPanel {
         );
     Object[] rowData2={" "," "," "," "};
     NumberFormat f=NumberFormat.getInstance();
-    ResourceBundle messages;
     boolean polar = false; 
 
     
@@ -236,7 +236,7 @@ public class EditorPanel extends javax.swing.JPanel {
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        standname = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
@@ -283,7 +283,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/standsimulation/Bundle"); // NOI18N
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
         jButton6.setText(bundle.getString("EditorPanel.jButton6.text")); // NOI18N
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -326,9 +326,9 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel1.setText(bundle.getString("EditorPanel.jLabel1.text")); // NOI18N
-        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jPanel9.add(jLabel1);
+        standname.setText(bundle.getString("EditorPanel.standname.text")); // NOI18N
+        standname.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jPanel9.add(standname);
 
         jTextField1.setPreferredSize(new java.awt.Dimension(200, 19));
         jPanel9.add(jTextField1);
@@ -635,30 +635,30 @@ public class EditorPanel extends javax.swing.JPanel {
     public void setStand(Stand stand) {
         st = stand;
     }
+    
     public void setLanguage(Locale language) {
         Locale currentLocale;
         currentLocale = language;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        jLabel1.setText(messages.getString("standname"));
-        jLabel2.setText(messages.getString("standsize"));
-        jLabel4.setText(messages.getString("monthYear"));
-        jLabel5.setText(messages.getString("coordRight"));
-        jLabel6.setText(messages.getString("coordHeight"));
-        jLabel7.setText(messages.getString("elevation"));
-        jLabel8.setText(messages.getString("region"));
-        jLabel9.setText(messages.getString("subregion"));
-        jLabel10.setText(messages.getString("sitetype"));
-        jLabel11.setText(messages.getString("exposition"));
-        jLabel12.setText(messages.getString("slope"));
-        jLabel13.setText(messages.getString("siteCode"));
-        jButton3.setText(messages.getString("addCornerPoint"));
-        jButton5.setText(messages.getString("delCornerPoint"));
-        jButton1.setText(messages.getString("addEmptyLines"));
-        jButton4.setText(messages.getString("delSelectedTree"));
-        jButton6.setText(messages.getString("readStand"));
-        jButton2.setText(messages.getString("saveStand"));
-        jButton7.setText(messages.getString("clearTable"));
-        jButton8.setText("xy2polar");
+//        standname.setText(messages.getString("standname"));
+//        jLabel2.setText(messages.getString("standsize"));
+//        jLabel4.setText(messages.getString("monthYear"));
+//        jLabel5.setText(messages.getString("coordRight"));
+//        jLabel6.setText(messages.getString("coordHeight"));
+//        jLabel7.setText(messages.getString("elevation"));
+//        jLabel8.setText(messages.getString("region"));
+//        jLabel9.setText(messages.getString("subregion"));
+//        jLabel10.setText(messages.getString("sitetype"));
+//        jLabel11.setText(messages.getString("exposition"));
+//        jLabel12.setText(messages.getString("slope"));
+//        jLabel13.setText(messages.getString("siteCode"));
+//        jButton3.setText(messages.getString("addCornerPoint"));
+//        jButton5.setText(messages.getString("delCornerPoint"));
+//        jButton1.setText(messages.getString("addEmptyLines"));
+//        jButton4.setText(messages.getString("delSelectedTree"));
+//        jButton6.setText(messages.getString("readStand"));
+//        jButton2.setText(messages.getString("saveStand"));
+//        jButton7.setText(messages.getString("clearTable"));
+//        jButton8.setText("xy2polar");
 
     }
     
@@ -723,7 +723,6 @@ public class EditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -766,6 +765,7 @@ public class EditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField7;
     private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
+    private javax.swing.JLabel standname;
     // End of variables declaration//GEN-END:variables
     
 }

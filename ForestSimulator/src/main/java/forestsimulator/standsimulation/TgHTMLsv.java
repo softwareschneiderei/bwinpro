@@ -31,7 +31,7 @@ class TgHTMLsv {
     }
 
     void newreport(Stand st, String path, String fname, Locale preferredLanguage) {
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", preferredLanguage);
+        messages = ResourceBundle.getBundle("forestsimulator/gui");
 
         try {
             int i, j, merk;

@@ -25,7 +25,6 @@ class TgYieldTable {
    int nyt;
    YieldTableLine yt[]=new YieldTableLine[nytmax]; // limited to 400 entries
    String filename ="standtable.html";
-   ResourceBundle messages;
 
    void TgYieldTable() {
      nyt=0;
@@ -139,7 +138,7 @@ class TgYieldTable {
 	      }
 	}
 	void writeTable(Stand st,String path, String fname, Locale preferredLanguage) {
-         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",preferredLanguage);
+         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
 	  try {
 		File file= new File(path, fname);
                 filename=file.getCanonicalPath();

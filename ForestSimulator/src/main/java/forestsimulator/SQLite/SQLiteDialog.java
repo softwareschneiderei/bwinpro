@@ -51,9 +51,10 @@ public class SQLiteDialog extends javax.swing.JDialog {
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("ForestSimulator SQLite Plugin");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("SQLiteDialog.title")); // NOI18N
 
-        jButton2.setText("load stand from database to ForestSimulator");
+        jButton2.setText(bundle.getString("SQLiteDialog.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

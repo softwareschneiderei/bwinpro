@@ -34,10 +34,11 @@ public class RootsDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Root Biomass Dialog");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("RootsDialog.title")); // NOI18N
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-683)/2, (screenSize.height-532)/2, 683, 532);
+        setSize(new java.awt.Dimension(683, 532));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
     
     /**

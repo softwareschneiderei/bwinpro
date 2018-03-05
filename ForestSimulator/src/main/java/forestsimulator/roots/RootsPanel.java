@@ -126,13 +126,14 @@ public class RootsPanel extends javax.swing.JPanel {
         jPanel8.setBackground(new java.awt.Color(255, 255, 204));
         jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel13.setText("TreeGrOSS xml Datei :");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        jLabel13.setText(bundle.getString("RootsPanel.jLabel13.text")); // NOI18N
         jPanel8.add(jLabel13);
 
         jTextField13.setPreferredSize(new java.awt.Dimension(511, 19));
         jPanel8.add(jTextField13);
 
-        jButton5.setText("load");
+        jButton5.setText(bundle.getString("RootsPanel.jButton5.text")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -142,7 +143,7 @@ public class RootsPanel extends javax.swing.JPanel {
 
         add(jPanel8, java.awt.BorderLayout.NORTH);
 
-        jButton1.setText("Calculate root biomass");
+        jButton1.setText(bundle.getString("RootsPanel.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -152,33 +153,33 @@ public class RootsPanel extends javax.swing.JPanel {
 
         jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setText("Choose species functions ");
+        jLabel14.setText(bundle.getString("RootsPanel.jLabel14.text")); // NOI18N
         jPanel10.add(jLabel14);
 
-        jLabel1.setText("Coarse Root Function");
+        jLabel1.setText(bundle.getString("RootsPanel.jLabel1.text")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel2.setText("Fine Root Function");
+        jLabel2.setText(bundle.getString("RootsPanel.jLabel2.text")); // NOI18N
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel3.setText("Small Root Function");
+        jLabel3.setText(bundle.getString("RootsPanel.jLabel3.text")); // NOI18N
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel4.setText("Total Root Function");
+        jLabel4.setText(bundle.getString("RootsPanel.jLabel4.text")); // NOI18N
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton2.setText("load Functions");
+        jButton2.setText(bundle.getString("RootsPanel.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jLabel5.setText("use  functions of other species with code:");
+        jLabel5.setText(bundle.getString("RootsPanel.jLabel5.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -226,7 +227,7 @@ public class RootsPanel extends javax.swing.JPanel {
                                 .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(jComboBox3, 0, 350, Short.MAX_VALUE)
+                                .add(jComboBox3, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .add(jComboBox2, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 593, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(375, Short.MAX_VALUE))
@@ -248,7 +249,7 @@ public class RootsPanel extends javax.swing.JPanel {
                     .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jComboBox4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .add(jComboBox4)
                     .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -268,7 +269,7 @@ public class RootsPanel extends javax.swing.JPanel {
 
         jPanel11.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jLabel15.setText("Species");
+        jLabel15.setText(bundle.getString("RootsPanel.jLabel15.text")); // NOI18N
         jPanel11.add(jLabel15, java.awt.BorderLayout.NORTH);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
@@ -278,6 +279,7 @@ public class RootsPanel extends javax.swing.JPanel {
             .add(jPanel10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 722, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
             .add(jPanel1Layout.createSequentialGroup()
                 .add(jPanel11, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(0, 0, 0)
                 .add(jPanel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(

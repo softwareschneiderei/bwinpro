@@ -98,10 +98,11 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("jLabel1");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        jLabel1.setText(bundle.getString("JPanelNutzungsplaner.jLabel1.text")); // NOI18N
         jPanel2.add(jLabel1);
 
-        jButton2.setText("andere Datenbank");
+        jButton2.setText(bundle.getString("JPanelNutzungsplaner.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -113,10 +114,10 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel2.setText("Suche Bestand");
+        jLabel2.setText(bundle.getString("JPanelNutzungsplaner.jLabel2.text")); // NOI18N
         jPanel1.add(jLabel2);
 
-        jTextField1.setText("name");
+        jTextField1.setText(bundle.getString("JPanelNutzungsplaner.jTextField1.text")); // NOI18N
         jTextField1.setPreferredSize(new java.awt.Dimension(232, 20));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,10 +126,10 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         });
         jPanel1.add(jTextField1);
 
-        jLabel3.setText("Flaeche ha");
+        jLabel3.setText(bundle.getString("JPanelNutzungsplaner.jLabel3.text")); // NOI18N
         jPanel1.add(jLabel3);
 
-        jTextField2.setText("1.0");
+        jTextField2.setText(bundle.getString("JPanelNutzungsplaner.jTextField2.text")); // NOI18N
         jTextField2.setMinimumSize(new java.awt.Dimension(26, 20));
         jTextField2.setPreferredSize(new java.awt.Dimension(42, 20));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
@@ -138,7 +139,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         });
         jPanel1.add(jTextField2);
 
-        jButton1.setText("find");
+        jButton1.setText(bundle.getString("JPanelNutzungsplaner.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -146,7 +147,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         });
         jPanel1.add(jButton1);
 
-        jButton3.setText("vor");
+        jButton3.setText(bundle.getString("JPanelNutzungsplaner.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -154,7 +155,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         });
         jPanel1.add(jButton3);
 
-        jButton4.setText("zurück");
+        jButton4.setText(bundle.getString("JPanelNutzungsplaner.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);

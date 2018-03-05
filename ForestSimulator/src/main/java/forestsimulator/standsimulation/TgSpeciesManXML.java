@@ -114,28 +114,29 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         jList1 = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Species Manager XML");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgSpeciesManXML.title")); // NOI18N
         setBackground(java.awt.Color.white);
 
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel3.setText("Allgemeine Einstellungen");
+        jLabel3.setText(bundle.getString("TgSpeciesManXML.jLabel3.text")); // NOI18N
         jPanel6.add(jLabel3);
 
-        jLabel4.setText("Modellregion: ");
+        jLabel4.setText(bundle.getString("TgSpeciesManXML.jLabel4.text")); // NOI18N
         jPanel6.add(jLabel4);
 
-        jTextField1.setText("jTextField1");
+        jTextField1.setText(bundle.getString("TgSpeciesManXML.jTextField1.text")); // NOI18N
         jTextField1.setPreferredSize(new java.awt.Dimension(259, 20));
         jPanel6.add(jTextField1);
 
         jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Zufallskomponente ");
+        jCheckBox1.setText(bundle.getString("TgSpeciesManXML.jCheckBox1.text")); // NOI18N
         jPanel6.add(jCheckBox1);
 
-        jCheckBox2.setText("Einwuchsmodell");
+        jCheckBox2.setText(bundle.getString("TgSpeciesManXML.jCheckBox2.text")); // NOI18N
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox2ActionPerformed(evt);
@@ -143,13 +144,13 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         });
         jPanel6.add(jCheckBox2);
 
-        jCheckBox3.setText("Totholzmodul");
+        jCheckBox3.setText(bundle.getString("TgSpeciesManXML.jCheckBox3.text")); // NOI18N
         jPanel6.add(jCheckBox3);
 
-        jLabel5.setText("TimeStep");
+        jLabel5.setText(bundle.getString("TgSpeciesManXML.jLabel5.text")); // NOI18N
         jPanel6.add(jLabel5);
 
-        jTextField2.setText("5");
+        jTextField2.setText(bundle.getString("TgSpeciesManXML.jTextField2.text")); // NOI18N
         jTextField2.setPreferredSize(new java.awt.Dimension(22, 20));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,23 +165,23 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jTextField4.setText("autor");
-        jTextField4.setToolTipText("author");
+        jTextField4.setText(bundle.getString("TgSpeciesManXML.jTextField4.text")); // NOI18N
+        jTextField4.setToolTipText(bundle.getString("TgSpeciesManXML.jTextField4.toolTipText")); // NOI18N
         jTextField4.setPreferredSize(new java.awt.Dimension(232, 20));
         jPanel8.add(jTextField4);
 
-        jLabel6.setText("Datum: ");
+        jLabel6.setText(bundle.getString("TgSpeciesManXML.jLabel6.text")); // NOI18N
         jPanel8.add(jLabel6);
 
-        jTextField5.setText("jTextField5");
+        jTextField5.setText(bundle.getString("TgSpeciesManXML.jTextField5.text")); // NOI18N
         jTextField5.setPreferredSize(new java.awt.Dimension(80, 20));
         jPanel8.add(jTextField5);
 
-        jLabel7.setText("Letzte Änderung:");
-        jLabel7.setToolTipText("");
+        jLabel7.setText(bundle.getString("TgSpeciesManXML.jLabel7.text")); // NOI18N
+        jLabel7.setToolTipText(bundle.getString("TgSpeciesManXML.jLabel7.toolTipText")); // NOI18N
         jPanel8.add(jLabel7);
 
-        jTextField6.setText("jTextField6");
+        jTextField6.setText(bundle.getString("TgSpeciesManXML.jTextField6.text")); // NOI18N
         jTextField6.setPreferredSize(new java.awt.Dimension(80, 20));
         jPanel8.add(jTextField6);
 
@@ -188,24 +189,24 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setToolTipText("description");
+        jTextArea1.setToolTipText(bundle.getString("TgSpeciesManXML.jTextArea1.toolTipText")); // NOI18N
         jTextArea1.setPreferredSize(new java.awt.Dimension(164, 74));
         jScrollPane4.setViewportView(jTextArea1);
 
         jPanel7.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
-        jTextField3.setText("Literature");
-        jTextField3.setToolTipText("Literature");
+        jTextField3.setText(bundle.getString("TgSpeciesManXML.jTextField3.text")); // NOI18N
+        jTextField3.setToolTipText(bundle.getString("TgSpeciesManXML.jTextField3.toolTipText")); // NOI18N
         jPanel7.add(jTextField3, java.awt.BorderLayout.PAGE_END);
 
         jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 6));
 
-        jLabel8.setText("Sortierungsmodul:");
+        jLabel8.setText(bundle.getString("TgSpeciesManXML.jLabel8.text")); // NOI18N
         jPanel9.add(jLabel8);
 
-        jTextField7.setText("none");
+        jTextField7.setText(bundle.getString("TgSpeciesManXML.jTextField7.text")); // NOI18N
         jTextField7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField7ActionPerformed(evt);
@@ -213,16 +214,16 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         });
         jPanel9.add(jTextField7);
 
-        jLabel9.setText("Biomassemodul:");
+        jLabel9.setText(bundle.getString("TgSpeciesManXML.jLabel9.text")); // NOI18N
         jPanel9.add(jLabel9);
 
-        jTextField8.setText("none");
+        jTextField8.setText(bundle.getString("TgSpeciesManXML.jTextField8.text")); // NOI18N
         jPanel9.add(jTextField8);
 
-        jLabel10.setText("Totholzmodul");
+        jLabel10.setText(bundle.getString("TgSpeciesManXML.jLabel10.text")); // NOI18N
         jPanel9.add(jLabel10);
 
-        jTextField9.setText("none");
+        jTextField9.setText(bundle.getString("TgSpeciesManXML.jTextField9.text")); // NOI18N
         jPanel9.add(jTextField9);
 
         jPanel4.add(jPanel9, java.awt.BorderLayout.SOUTH);
@@ -231,7 +232,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("ausgewählte Art");
+        jLabel2.setText(bundle.getString("TgSpeciesManXML.jLabel2.text")); // NOI18N
         jPanel1.add(jLabel2, java.awt.BorderLayout.PAGE_START);
 
         jPanel5.setLayout(new java.awt.BorderLayout());
@@ -290,28 +291,28 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.add(jPanel5, java.awt.BorderLayout.CENTER);
 
-        jButton1.setText("save");
+        jButton1.setText(bundle.getString("TgSpeciesManXML.jButton1.text")); // NOI18N
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Save as new species");
+        jButton2.setText(bundle.getString("TgSpeciesManXML.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
 
-        jButton3.setText("save settings to file");
+        jButton3.setText(bundle.getString("TgSpeciesManXML.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Löschen");
+        jButton4.setText(bundle.getString("TgSpeciesManXML.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -354,7 +355,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 600));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("Baumarten");
+        jLabel1.setText(bundle.getString("TgSpeciesManXML.jLabel1.text")); // NOI18N
         jPanel2.add(jLabel1, java.awt.BorderLayout.NORTH);
 
         jList1.setModel(listModel);
