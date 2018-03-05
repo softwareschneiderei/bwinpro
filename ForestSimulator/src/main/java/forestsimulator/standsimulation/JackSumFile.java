@@ -15,44 +15,36 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
+
 import java.io.*;
 import java.security.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jonelo.jacksum.*;
 import jonelo.jacksum.algorithm.*;
-   
+
 /**
  *
  * @author nagel
  */
 public class JackSumFile {
-    
-public void JackSumFile(){
-    
-}    
 
-public String getSum(String filename){
-     AbstractChecksum checksum = null;
-     String txt ="";
-   try {
-     // select an algorithm (md5 in this case)
-     checksum = JacksumAPI.getChecksumInstance("sha1");
-     // On some systems you get a better performance for particular
-     // algorithms if you select an alternate algorithm (see also option -A)
-     // checksum = JacksumAPI.getChecksumInstance("md5", true);
-   } catch (NoSuchAlgorithmException nsae) {
-     // algorithm doesn't exist
-   }
-
-   // updates the checksum with the content of a file
-   try {
-     checksum.readFile(filename);
-   } catch (IOException ioe) {
-     // ...
-   }
-   System.out.println(checksum); 
-   txt = checksum.toString();
-   return txt;
-}    
-    
-    
+    public String getSum(String filename) {
+        try {
+            // select an algorithm (md5 in this case)
+            AbstractChecksum checksum = JacksumAPI.getChecksumInstance("sha1");
+            // On some systems you get a better performance for particular
+            // algorithms if you select an alternate algorithm (see also option -A)
+            // checksum = JacksumAPI.getChecksumInstance("md5", true);
+            // updates the checksum with the content of a file
+            checksum.readFile(filename);
+            System.out.println(checksum);
+            return checksum.toString();
+        } catch (NoSuchAlgorithmException nsae) {
+            // algorithm doesn't exist
+        } catch (IOException ex) {
+            Logger.getLogger(JackSumFile.class.getName()).log(Level.SEVERE, "Problem reading checksum file", ex);
+        }
+        return "";
+    }
 }

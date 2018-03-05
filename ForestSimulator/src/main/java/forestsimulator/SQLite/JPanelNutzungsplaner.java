@@ -6,9 +6,8 @@ package forestsimulator.SQLite;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -52,18 +51,12 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         String localPath="";
         File fi = new File("", "sqlnp.ini");
         if (fi.exists()) {
-            try 
-              {  
-               String s;
-   	       BufferedReader in=
-	       new BufferedReader(new InputStreamReader(new FileInputStream(fi)));
-               dir = new File(in.readLine());
-               in.close();
-               }
-             catch (Exception e){ 
-                 dir = new File(dirx, "nutzungsplaner.db");
-             }
-        }	
+            try (BufferedReader in = new BufferedReader(new FileReader(fi))) {
+                dir = new File(in.readLine());
+            } catch (Exception e) {
+                dir = new File(dirx, "nutzungsplaner.db");
+            }
+        }
         if (dir.exists()) {
             jLabel1.setText(dir.getCanonicalPath());
         }

@@ -66,42 +66,71 @@ public class StandStructure {
        } 
       return h;
       }   
-   
-   
-// 
-/** calculates the A the species profile index by Pretzsch for class stand */       
-   public double a_index(Stand st)
-       { // get max. height of all trees
-         double hmax=-9999.9;double a=0.0;
-         int i,j ;
-         for (i=0;i<st.ntrees;i++)
-           if (st.tr[i].out < 0 && hmax < st.tr[i].h) hmax=st.tr[i].h;
-        System.out.println("hmax-wert: "+hmax);   
+
+    /**
+     * calculates the A the species profile index by Pretzsch for class stand
+     */
+    public double a_index(Stand st) { // get max. height of all trees
+        double hmax = -9999.9;
+        double a = 0.0;
+        int i, j;
+        for (i = 0; i < st.ntrees; i++) {
+            if (st.tr[i].out < 0 && hmax < st.tr[i].h) {
+                hmax = st.tr[i].h;
+            }
+        }
+        System.out.println("hmax-wert: " + hmax);
         // calculate shannon per height zone
-         double hzone1,hzone2,hzone3; hzone1=0; hzone2=0; hzone3=0;  
-         for (i=0;i<st.ntrees;i++)  // number of trees for each species
-            if (st.tr[i].out<0)
-              { if (st.tr[i].h>=hmax*0.8) hzone1=hzone1+1;
-                if (st.tr[i].h>=hmax*0.5 && st.tr[i].h<hmax*0.8) hzone2=hzone2+1;
-                if (st.tr[i].h<hmax*0.5 ) hzone3=hzone3+1;
-              }
-         // 
-         double n1,n2,n3;
-         for (j=0;j<st.nspecies;j++)
-          {  n1=0;n2=0;n3=0;
-             for (i=0;i<st.ntrees;i++)  
-               if (st.tr[i].out<0 && st.tr[i].code==st.sp[j].code)
-                 { if (st.tr[i].h>=hmax*0.8) n1=n1+1;
-                   if (st.tr[i].h>=hmax*0.5 && st.tr[i].h<hmax*0.8) n2=n2+1;
-                   if (st.tr[i].h<hmax*0.5 ) n3=n3+1;
-                 }
-             if (n1>0) a=a-(n1/hzone1)*Math.log(n1/hzone1);
-             if (n2>0) a=a-(n2/hzone2)*Math.log(n2/hzone2);
-             if (n3>0) a=a-(n3/hzone3)*Math.log(n3/hzone3);
-          } 
-       a=a/Math.log(3*st.nspecies);   
-       return a;
-       }      
+        double hzone1, hzone2, hzone3;
+        hzone1 = 0;
+        hzone2 = 0;
+        hzone3 = 0;
+        for (i = 0; i < st.ntrees; i++) // number of trees for each species
+        {
+            if (st.tr[i].out < 0) {
+                if (st.tr[i].h >= hmax * 0.8) {
+                    hzone1 = hzone1 + 1;
+                }
+                if (st.tr[i].h >= hmax * 0.5 && st.tr[i].h < hmax * 0.8) {
+                    hzone2 = hzone2 + 1;
+                }
+                if (st.tr[i].h < hmax * 0.5) {
+                    hzone3 = hzone3 + 1;
+                }
+            }
+        }
+        // 
+        double n1, n2, n3;
+        for (j = 0; j < st.nspecies; j++) {
+            n1 = 0;
+            n2 = 0;
+            n3 = 0;
+            for (i = 0; i < st.ntrees; i++) {
+                if (st.tr[i].out < 0 && st.tr[i].code == st.sp[j].code) {
+                    if (st.tr[i].h >= hmax * 0.8) {
+                        n1 = n1 + 1;
+                    }
+                    if (st.tr[i].h >= hmax * 0.5 && st.tr[i].h < hmax * 0.8) {
+                        n2 = n2 + 1;
+                    }
+                    if (st.tr[i].h < hmax * 0.5) {
+                        n3 = n3 + 1;
+                    }
+                }
+            }
+            if (n1 > 0) {
+                a = a - (n1 / hzone1) * Math.log(n1 / hzone1);
+            }
+            if (n2 > 0) {
+                a = a - (n2 / hzone2) * Math.log(n2 / hzone2);
+            }
+            if (n3 > 0) {
+                a = a - (n3 / hzone3) * Math.log(n3 / hzone3);
+            }
+        }
+        return a / Math.log((double) (3 * st.nspecies));
+    }
+
 //Ende Artprofil von Pretzsch  
 /** percentage of trees with a neighbour of a different species */
        public double neighbormix(Stand st)
@@ -192,11 +221,4 @@ public class StandStructure {
         return 100*value/anz;    
  
        }
-       
- 
-
-
-
-
-		
 }

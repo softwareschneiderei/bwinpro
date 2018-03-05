@@ -89,7 +89,7 @@ public class MixedTreeInfo {
         
         // 1. we check how many percent of the influence zone is in the
         // stand pologon. The percentage is stored in perc 
-        double perc=getPercCircleInStand(influenceZoneRadius, t.x, t.y, t.st);        
+        double perc = getPercCircleInStand(influenceZoneRadius, t.x, t.y, t.st);        
        
         // Now we check for each tree             
         // add trees own area
@@ -145,14 +145,12 @@ public class MixedTreeInfo {
                 }
             }
           }
-          
         }
-        
-        double div=perc*Math.PI*Math.pow(influenceZoneRadius,2.0);
-        c66a=c66a/div;
-        
-        
-        
+        double div = perc * Math.PI * Math.pow(influenceZoneRadius, 2.0);
+        if (div == 0d) {
+            return Double.NaN;
+        }
+        c66a = c66a / div;
         return c66a;
     }
     
@@ -193,27 +191,28 @@ public class MixedTreeInfo {
         return f;
     }
     
-    /** get percentage of influence zone area inside the stand*/
-    private double getPercCircleInStand(double radius, double x, double y, Stand st){      
-        int pan=0; // number of points inside influence zone total
-        int pani=0; //number of points inside influence zone and inside plot area
-        double xpx=x-radius+radius/20;
+    /**
+     * get percentage of influence zone area inside the stand
+     */
+    private double getPercCircleInStand(double radius, double x, double y, Stand st) {
+        int pan = 0; // number of points inside influence zone total
+        int pani = 0; //number of points inside influence zone and inside plot area
+        double xpx = x - radius + radius / 20;
         double ypy;
-        int in;
-        for(int k=0; k<10; k++){
-            ypy=y-radius+radius/20;
-            for(int kk=0; kk<10; kk++){
-                if (Math.sqrt(Math.pow(xpx-x,2.0)+Math.pow(ypy-y,2.0))<=radius){
+        for (int k = 0; k < 10; k++) {
+            ypy = y - radius + radius / 20;
+            for (int kk = 0; kk < 10; kk++) {
+                if (Math.sqrt(Math.pow(xpx - x, 2.0) + Math.pow(ypy - y, 2.0)) <= radius) {
                     pan++;
-                    in=pnpoly(xpx,ypy,st);
-                    if (in!=0)
+                    if (pnpoly(xpx, ypy, st) != 0) {
                         pani++;
-                } 
-                ypy+=2.0*radius/10.0;
+                    }
+                }
+                ypy += 2.0 * radius / 10.0;
             }
-            xpx+=2.0*radius/10.0;
+            xpx += 2.0 * radius / 10.0;
         }
-        return (double)(pani)/(double)(pan);
+        return pani / (double) (pan);
     }
     
     /** get percentage of overlap area inside the stand

@@ -92,11 +92,11 @@ public class Settings extends Properties {
             for (Map.Entry<String, String> entry : values.entrySet()) {
                 String key = entry.getKey();
                 String val = entry.getValue();
-                key = saveConvert(key, true, escUnicode);
+                key = saveWithConversion(key, true, escUnicode);
                 /* No need to escape embedded and trailing spaces for value, hence
                  * pass false to flag.
                  */
-                val = saveConvert(val, false, escUnicode);
+                val = saveWithConversion(val, false, escUnicode);
                 bw.write(key + "=" + val);
                 bw.newLine();
             }
@@ -108,7 +108,7 @@ public class Settings extends Properties {
      * Converts unicodes to encoded &#92;uxxxx and escapes
      * special characters with a preceding slash
      */
-    private String saveConvert(String theString,
+    private String saveWithConversion(String theString,
             boolean escapeSpace,
             boolean escapeUnicode) {
         int len = theString.length();
