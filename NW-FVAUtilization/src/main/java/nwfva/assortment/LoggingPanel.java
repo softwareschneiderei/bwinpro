@@ -997,7 +997,7 @@ public class LoggingPanel extends JPanel {
     }
 
 /**
- * L�dt die XML-Datei mit Arbeitszeiten f�r die Aushaltung von Sortimenten
+ * Lädt die XML-Datei mit Arbeitszeiten für die Aushaltung von Sortimenten
  * @param url Verzeichnis der XML Datei
  */
     public void loadtef(URL url){
