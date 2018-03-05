@@ -68,7 +68,7 @@ public class Stand implements Cloneable {
     /**
      * Program Directory provides the Path to settings file
      */
-    public File programDir;
+    private File programDir;
     /**
      * added by jhansen pointer to extended HashMap with all SpeciesDefinitions
      */
