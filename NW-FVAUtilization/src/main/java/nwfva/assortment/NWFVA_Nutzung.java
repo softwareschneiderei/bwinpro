@@ -202,7 +202,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
             }
         catch (Exception e2){log.info( "File: "+fname+" nicht gefunden" );  }
  //
- // berechnung der Volumen wenn d und h bekannt, dies gilt f�r die ausgeschiedenen B�ume
+ // berechnung der Volumen wenn d und h bekannt, dies gilt für die ausgeschiedenen Bäume
  //       
         for (int i=0;i<st.ntrees;i++){
             if (st.tr[i].d >= 7.0 && st.tr[i].h > 1.3 && st.tr[i].v <= 0.0){

@@ -594,8 +594,8 @@ public class LoggingPanel extends JPanel {
     }//GEN-LAST:event_jComboBox5ActionPerformed
     
 /**
- * Speichern des Ergebnisberichts mit den Sortimenten und Einzelst�cken 
- * @param Dateiname der XML Datei f�r den Bericht 
+ * Speichern des Ergebnisberichts mit den Sortimenten und Einzelstücken 
+ * @param Dateiname der XML Datei für den Bericht 
  */
     public void savels(String fn){
 
@@ -812,16 +812,16 @@ public class LoggingPanel extends JPanel {
                 else {
                    if (st.tr[i].outtype==1) volumenToth = volumenToth + vol;
                     else { // Sotierung
-// alle ausgew�hlten Sortimente durchlaufen
+// alle ausgewählten Sortimente durchlaufen
                        splitter.splitTree(st.tr[i], fellingHeight);
                        tl = splitter.getTreeLogs();
                        ntl = splitter.getNumberOfLogs();
-// Pr�fen , ob das St�ck aus dem Wald genommen wird oder nicht
+// Pr�fen , ob das Stück aus dem Wald genommen wird oder nicht
                        for (int jj=0; jj< ntl; jj++){
                            
                            if (tl[jj].removed) volumenEntn = volumenEntn + tl[jj].vol_mR;
                                else volumenToth = volumenToth + tl[jj].vol_mR;
-// Sortimentsst�cke nach xml
+// Sortimentsstücke nach xml
 //
                            elt3 = new Element("Sortiment");
                            elt3 = addString(elt3, "Jahr",new Integer(st.tr[i].age).toString());
