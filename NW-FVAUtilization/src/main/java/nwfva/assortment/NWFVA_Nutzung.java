@@ -42,7 +42,7 @@ import treegross.base.TreegrossXML2;
  * Das Package dient zur Berechnung von Sortimenten und/oder Biomasse und
  * Nährstoffen und sofern Sortimente, Biomassen und Nährstoffeangaben vorliegen
  * in das Paket Forestsimulator integriert werden. Das Package greift auf die
- * Package TreeGrOSS zur�ck.
+ * Package TreeGrOSS zurück.
  * 
  * In NWFVA_Nutzung ist eine Desktopanwendung, mit der sich Daten im TreeGrOSS XML auswerten lassen. 
  * Das Programm ist in zwei Stufen aufgebaut. Es kann nur zur Berechnung von Sortimenten

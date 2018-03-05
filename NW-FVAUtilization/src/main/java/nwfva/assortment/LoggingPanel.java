@@ -516,7 +516,7 @@ public class LoggingPanel extends JPanel {
                     zb, mehrf , jCheckBox1.isSelected(), jCheckBox3.isSelected(), true,
                     nls  );
         nls = nls+1;
-        System.out.println("Array L�nge "+ls.length);
+        System.out.println("Array Länge "+ls.length);
         savels("C://Dokumente und Einstellungen//nagel//Eigene Dateien//jnProgramme//TreeGrOSSLogging//loggingSortiment.xml");
         try{
           URL url = new URL(urlString+"loggingSortiment.xml");
