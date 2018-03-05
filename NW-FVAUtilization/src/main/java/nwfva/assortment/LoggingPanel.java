@@ -687,7 +687,7 @@ public class LoggingPanel extends JPanel {
        }
         else
             pa = workDir+System.getProperty("file.separator")+"sortierung.xml";
-// ausgew�hlte markieren
+// ausgewählte markieren
        for(int i=0; i<nlist; i++) ls[i].ausgewaehlt=false;
        int[] indices = jList1.getSelectedIndices(); //get Selected Assortments from list
        for(int i=0; i<indices.length; i++)ls[indices[i]].ausgewaehlt=true;
@@ -816,7 +816,7 @@ public class LoggingPanel extends JPanel {
                        splitter.splitTree(st.tr[i], fellingHeight);
                        tl = splitter.getTreeLogs();
                        ntl = splitter.getNumberOfLogs();
-// Pr�fen , ob das Stück aus dem Wald genommen wird oder nicht
+// Prüfen , ob das Stück aus dem Wald genommen wird oder nicht
                        for (int jj=0; jj< ntl; jj++){
                            
                            if (tl[jj].removed) volumenEntn = volumenEntn + tl[jj].vol_mR;

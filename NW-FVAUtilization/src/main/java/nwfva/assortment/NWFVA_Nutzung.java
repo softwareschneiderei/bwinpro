@@ -233,10 +233,10 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
 /**
- * L�dt die generellen Modelleinstellungen aus der Datei mit den Baumarteneinstellungen f�r
+ * Lädt die generellen Modelleinstellungen aus der Datei mit den Baumarteneinstellungen für
  * das TreeGrOSS Paket und den ForestSimulator.
  * @param Dir Verzeichnis in dem die XML Datei mit den Einstellungen zu finden ist. Diese Datei sollte
- * m�glichst im Programmverzeichnis unter user/models/ForestSimulatorNWGermanyBC2.xml abgelegt sein.
+ * möglichst im Programmverzeichnis unter user/models/ForestSimulatorNWGermanyBC2.xml abgelegt sein.
  */    
     public void loadGeneralSettings(String Dir){
         java.io.File file;
