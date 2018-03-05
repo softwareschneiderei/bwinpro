@@ -288,10 +288,10 @@ public class TgTreatmentMan3 extends JPanel {
         });
         jPanel7.add(jComboBox1);
 
-        jLabel4.setText("Durchforstungsst�rke:");
+        jLabel4.setText("Durchforstungsstärke:");
         jPanel7.add(jLabel4);
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "null", "schwach", "m��ig", "stark" }));
+        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "null", "schwach", "mäßig", "stark" }));
         jPanel7.add(jComboBox4);
 
         jLabel8.setText("Durchforstungsmenge min.");
@@ -313,7 +313,7 @@ public class TgTreatmentMan3 extends JPanel {
         });
         jPanel7.add(jTextField6);
 
-        jCheckBox4.setText("nur Z-B�ume freistellen");
+        jCheckBox4.setText("nur Z-Bäume freistellen");
         jCheckBox4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox4ActionPerformed(evt);
@@ -328,7 +328,7 @@ public class TgTreatmentMan3 extends JPanel {
         jLabel2.setText("Erntetyp:");
         jPanel8.add(jLabel2);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zielst�rkennutzung", "Schirmschlag", "Kahlschlag" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zielstärkennutzung", "Schirmschlag", "Kahlschlag" }));
         jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox2ActionPerformed(evt);
@@ -355,7 +355,7 @@ public class TgTreatmentMan3 extends JPanel {
         });
         jPanel8.add(jTextField4);
 
-        jLabel17.setText("R�umung bei <");
+        jLabel17.setText("Räumung bei <");
         jPanel8.add(jLabel17);
 
         jTextField8.setText("0.3");
@@ -369,7 +369,7 @@ public class TgTreatmentMan3 extends JPanel {
         jLabel3.setText("Naturschutz:");
         jPanel9.add(jLabel3);
 
-        jLabel18.setText("Habitatb�ume [n/ha]");
+        jLabel18.setText("Habitatbäume [n/ha]");
         jPanel9.add(jLabel18);
 
         jTextField9.setText("0");
@@ -389,7 +389,7 @@ public class TgTreatmentMan3 extends JPanel {
         jTextField12.setPreferredSize(new java.awt.Dimension(26, 20));
         jPanel9.add(jTextField12);
 
-        jLabel22.setText("gesch�tzt ab BHD ");
+        jLabel22.setText("geschützt ab BHD ");
         jPanel9.add(jLabel22);
 
         jTextField13.setText("150");
@@ -413,7 +413,7 @@ public class TgTreatmentMan3 extends JPanel {
         jCheckBox7.setText("Unterstand entfernen ;");
         jPanel10.add(jCheckBox7);
 
-        jLabel19.setText("Pflanzen ab B�  <");
+        jLabel19.setText("Pflanzen ab BÜ  <");
         jPanel10.add(jLabel19);
 
         jTextField10.setText("0.1");

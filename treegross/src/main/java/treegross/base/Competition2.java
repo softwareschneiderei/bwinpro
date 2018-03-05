@@ -104,10 +104,10 @@ public class Competition2 implements PlugInCompetition {
         for (int k=0; k<t.st.ntrees; k++){
             //int j = t.neighbor[k];
             j=k;
-            // Experimental: F�r Mischbest�nde die Gewichte festlegen
-            // Buche �berlappt von Buche gewicht=1.0;
-            // Buche �berlappt von Fichte gewicht=0.84;
-            // Fichte �berlappt von Buche gewicht=0.98;
+            // Experimental: Für Mischbestände die Gewichte festlegen
+            // Buche überlappt von Buche gewicht=1.0;
+            // Buche überlappt von Fichte gewicht=0.84;
+            // Fichte überlappt von Buche gewicht=0.98;
             double gewicht =1.0;
             if (t.code == 211 && t.st.tr[j].code == 511) gewicht=1.69;
             if (t.code == 511 && t.st.tr[j].code == 211) gewicht=0.64;
@@ -122,10 +122,10 @@ public class Competition2 implements PlugInCompetition {
             //cri=0.0;
             // neighbours gehen nur max bis influienceZone ein vgl. stand
             // 2. Achtung wenn baum j mit seiner vollen kronenbreite in die influenzsZone ragt,
-            //    ist dies nicht f�r die Kronenbreite in h66 garantiert, dann kann
+            //    ist dies nicht für die Kronenbreite in h66 garantiert, dann kann
             //    es sein, dass overlap= 0 ist und getoverlapPerc NaN !!!!
             //    daher: vorher abfragen ob overlap >0
-            //    und methode overlap p�fen, op �berhaupt punkte im �berlappungsbereich sind
+            //    und methode overlap prüfen, op überhaupt punkte im Überlappungsbereich sind
             if (e<influenceZoneRadius+t.st.tr[j].cw/2.0 && t.st.tr[j].h>h66 && t.st.tr[j].out<0){
                 if (t.st.tr[j].cb >= h66)
                     cri= t.st.tr[j].cw/2.0;
@@ -133,7 +133,7 @@ public class Competition2 implements PlugInCompetition {
                     cri=t.st.tr[j].calculateCwAtHeight(h66)/2.0;
                 // reduce overlap area -> use only percentage inside the stand
                 overlap=overlap(cri,influenceZoneRadius,e);
-                //nur wenn �berlappung c66xy erh�hen
+                //nur wenn Überlappung c66xy erhöhen
                 if(overlap>0){
                     percOverlapInStand=getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x,t.st.tr[j].y, t.st);
                     t.c66xy+=t.st.tr[j].fac*(overlap * percOverlapInStand)*gewicht;
@@ -146,7 +146,7 @@ public class Competition2 implements PlugInCompetition {
                     cri=t.st.tr[j].calculateCwAtHeight(h66)/2.0;
                 // reduce overlap area -> use only percentage inside the stand
                 overlap=overlap(cri,influenceZoneRadius,e);
-                //nur wenn �berlappung c66xy erh�hen
+                //nur wenn Überlappung c66xy erhöhen
                 if(overlap>0){
                     percOverlapInStand=getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x,t.st.tr[j].y, t.st);
                     t.c66cxy+=t.st.tr[j].fac*(overlap * percOverlapInStand)*gewicht;

@@ -342,7 +342,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
         loadParameter(funNo);
         h = new double[1000];
         testDurchmesser1 = 150;
-        double Length;//=0;                                         //Startabstand zwischen Vorgabe schaftd und imagin�rem Schaftdurchmesser}
+        double Length;//=0;                                         //Startabstand zwischen Vorgabe schaftd und imaginärem Schaftdurchmesser}
         if (hardwood) {
             i = a[0] * dbh / 2;
             u = i / (1 - Math.exp(a[2] * (1.3 - height))) + (dbh / 2 - i) * (1 - 1 / (1 - Math.exp(a[1] * (1.3 - height))));

@@ -26,7 +26,7 @@ import javax.swing.JDialog;
 import treegross.base.*;
 
 /**
- * Sortierungsdialog f�r den ForestSimulator auf diesen kann das LoggingPanel
+ * Sortierungsdialog für den ForestSimulator auf diesen kann das LoggingPanel
  * gelegt werden
  * @author  J. Nagel
  */

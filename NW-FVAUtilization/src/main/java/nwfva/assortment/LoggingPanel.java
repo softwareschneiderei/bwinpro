@@ -226,7 +226,7 @@ public class LoggingPanel extends JPanel {
 
         jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setText("Einstellen und ausw�hlen der Sortimente f�r folgende Jahre:");
+        jLabel14.setText("Einstellen und auswählen der Sortimente für folgende Jahre:");
         jPanel10.add(jLabel14);
 
         jTextField15.setText("all out");
@@ -238,7 +238,7 @@ public class LoggingPanel extends JPanel {
         });
         jPanel10.add(jTextField15);
 
-        jLabel16.setText("F�llschnitt [m]");
+        jLabel16.setText("Füllschnitt [m]");
         jPanel10.add(jLabel16);
 
         jTextField16.setText("0.3");
@@ -345,10 +345,10 @@ public class LoggingPanel extends JPanel {
         jLabel11.setText("Preis");
         jPanel6.add(jLabel11);
 
-        jLabel12.setText("Prozent der B�ume");
+        jLabel12.setText("Prozent der Bäume");
         jPanel6.add(jLabel12);
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "alle B�ume", "Z- B�ume" }));
+        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "alle Bäume", "Z- Bäume" }));
         jPanel6.add(jComboBox3);
 
         jTextField11.setText("10.0");
