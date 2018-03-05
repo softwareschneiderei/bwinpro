@@ -103,12 +103,12 @@ public class AccessDatabaseCreator extends DatabaseCreator {
     }
 
     private void copyFile(String source, String destination) throws Exception {
-        byte[] b;
+        byte[] b = new byte[8192];
         try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(source));
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(destination))) {
-            b = new byte[bis.available()];
-            bis.read(b);
-            bos.write(b);
+            while (bis.read(b) != -1) {
+                bos.write(b);
+            }
         } catch (IOException eio) {
             System.out.println(eio);
         }
