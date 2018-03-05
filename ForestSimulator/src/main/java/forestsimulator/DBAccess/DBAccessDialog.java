@@ -805,64 +805,63 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // 
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
+        LoadTreegrossStand lts = new LoadTreegrossStand();
         aktivesDatenfile = jTextField1.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con;
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        String bi = "179-2001-001";
-        String pk = "4172";
-        
-        String orga[]=new String[900];
-        int norga =0;
-        
-        try {
-             Statement stmt = con.createStatement(); 
-             ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  "); 
-             while (rs.next()){
-                  int stj = rs.getInt("DatOrga_Stj");
-/** Änderung 2008 nach 2018*/                  
-                  if (stj < 2018){
-                    orga[norga]= rs.getString("DatOrga_Key");
-                    norga=norga+1;
-                  }  
-               }
-              }
-         catch (Exception e){  System.out.println("Problem: "+" "+e); }
+        dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            String bi = "179-2001-001";
+            String pk = "4172";
 
-        for (int inventur =0; inventur < norga; inventur++){
+            String orga[] = new String[900];
+            int norga = 0;
 
-        bi=orga[inventur];
-        int kr[] = new int[90000];
-        int nkr = 0;
-            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
-                stmt.setString(1, bi);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
-                        nkr = nkr + 1;
+            try (Statement stmt = con.createStatement();
+                 ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ")) {
+                while (rs.next()) {
+                    int stj = rs.getInt("DatOrga_Stj");
+                    /**
+                     * Änderung 2008 nach 2018
+                     */
+                    if (stj < 2018) {
+                        orga[norga] = rs.getString("DatOrga_Key");
+                        norga = norga + 1;
                     }
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println("Problem: " + " " + e);
             }
 
-        for (int kreis =0; kreis < nkr; kreis++){
-        
-        
-        LoadProbekreis lpk = new LoadProbekreis();
-        
-        st = lpk.loadFromDB(con, st,bi , kr[kreis],"",1);
-        st.missingData();
-        GenerateXY gxy = new GenerateXY();
-        gxy.setGroupRadius(0.0);
-        gxy.zufall(st);
-        st.sortbyd();
-        st.descspecies();
-        
+            for (int inventur = 0; inventur < norga; inventur++) {
 
-/*        st.randomGrowthEffects=false;
+                bi = orga[inventur];
+                int kr[] = new int[90000];
+                int nkr = 0;
+                try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
+                    stmt.setString(1, bi);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        while (rs.next()) {
+                            kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                            nkr = nkr + 1;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Problem: " + " " + e);
+                }
+
+                for (int kreis = 0; kreis < nkr; kreis++) {
+
+                    LoadProbekreis lpk = new LoadProbekreis();
+
+                    st = lpk.loadFromDB(con, st, bi, kr[kreis], "", 1);
+                    st.missingData();
+                    GenerateXY gxy = new GenerateXY();
+                    gxy.setGroupRadius(0.0);
+                    gxy.zufall(st);
+                    st.sortbyd();
+                    st.descspecies();
+
+
+                    /*        st.randomGrowthEffects=false;
         st.ingrowthActive = false;
         st.riskActive = true;
         st.distanceDependent=true;
@@ -876,7 +875,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         treatment2.setNatureProtection(st, 0,0,false,0.1,200);
         treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
         treatment2.setThinningRegime(st, 0,1.0,10,60,false);
-*/ 
+                     */
 //        lts.saveStandV2(dbconnAC, st, bi , kr[kreis], 1, st.year, st.bt);
 //        lts.saveSpecies(dbconnAC, st, bi , kr[kreis], 1, st.year);
 /*        
@@ -888,21 +887,19 @@ public class DBAccessDialog extends javax.swing.JDialog {
                st.grow(5, false);
                st.descspecies();
         }
-*/
-        lts.saveStandV2(con, st, bi , kr[kreis], 1, st.year, st.bt);
+                     */
+                    lts.saveStandV2(con, st, bi, kr[kreis], 1, st.year, st.bt);
 //        lts.saveBaum(con, st, bi , kr[kreis], 1, st.year);
-        lts.saveSpeciesV2(con, st, bi , kr[kreis], 1, st.year);
-        System.out.println(inventur+" "+bi+" "+kreis+"  FERTIG PLOT: "+kr[kreis]);
-        
-        } // Kreise
-        
-        } // inventur
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+                    lts.saveSpeciesV2(con, st, bi, kr[kreis], 1, st.year);
+                    System.out.println(inventur + " " + bi + " " + kreis + "  FERTIG PLOT: " + kr[kreis]);
 
+                } // Kreise
+
+            } // inventur
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
         dispose();
-
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
