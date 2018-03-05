@@ -237,6 +237,9 @@ public class MixedTreeInfo {
             }
             xpx += 2.0 * radius / 10.0;
         }
+        if (pan == 0) {
+            return Double.NaN;
+        }
         return pani / (double) (pan);
     }
 
