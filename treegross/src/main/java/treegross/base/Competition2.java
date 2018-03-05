@@ -23,10 +23,10 @@ package treegross.base;
  *  @author	Juergen Nagel  
  * 
  *  For more information see:
- *  NAGEL, J. (1999): Konzeptionelle �berlegungen zum schrittweisen Aufbau eines
- *  waldwachstumskundlichen Simulationssystems f�r Nordwestdeutschland.
- *  Schriften aus der Forstlichen Fakult�t der Universit�t G�ttingen und der
- *  Nieders. Forstl. Versuchsanstalt, Band 128, J.D. Sauerl�nder's Verlag,
+ *  NAGEL, J. (1999): Konzeptionelle Überlegungen zum schrittweisen Aufbau eines
+ *  waldwachstumskundlichen Simulationssystems für Nordwestdeutschland.
+ *  Schriften aus der Forstlichen Fakultät der Universität Göttingen und der
+ *  Nieders. Forstl. Versuchsanstalt, Band 128, J.D. Sauerländer's Verlag,
  *  Frankfurt a.M., S.122
  *
  * or

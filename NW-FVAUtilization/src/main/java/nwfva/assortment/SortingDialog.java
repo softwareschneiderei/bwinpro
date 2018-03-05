@@ -2,7 +2,7 @@
    Version 2013-01-13
 
    (c) 2002 Juergen Nagel, Northwest German Forest Research Station, 
-       Gr�tzelstr.2, 37079 G�ttingen, Germany
+       Grätzelstr.2, 37079 Göttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
  
 This program is free software; you can redistribute it and/or

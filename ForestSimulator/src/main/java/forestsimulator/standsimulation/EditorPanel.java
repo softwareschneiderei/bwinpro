@@ -511,7 +511,7 @@ public class EditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-//  Maske l�schen
+//  Maske löschen
         clearAll();
     }//GEN-LAST:event_jButton7ActionPerformed
 

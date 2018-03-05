@@ -128,7 +128,7 @@ public class DataExchangeFormat {
             if (st.trule.thinAreaSpeciesDependent == true) {
                 pm = 1;
             }
-            out.println(pm + ";1-> Durchforstung der Zwischenräume entsprechend des Zieltyps an, 0-> Durchforstung der Zwischenräume entsprechend der Bedr�ngungssituation");
+            out.println(pm + ";1-> Durchforstung der Zwischenräume entsprechend des Zieltyps an, 0-> Durchforstung der Zwischenräume entsprechend der Bedrängungssituation");
             out.println(st.trule.thinningIntensityArea + ";Freistellungsgrad der Zwischenräume");
             out.println(st.trule.typeOfHarvest + ";Art der Endnutzung (0=Zielstärke, 1=Dg, 2=Alter");
             out.println(st.trule.lastTreatment + ";Die letzte Maßnahme wurde im Jahr X ausgeführt");

@@ -806,7 +806,7 @@ public class TreatmentElements2 {
                     break;
                 }
                 // bei nachbesserung die gew. art schützen, wenn sie kleiner
-                // als die definierte h�he ist
+                // als die definierte höhe ist
                 if (protect_spec > 0) {
                     if (st.tr[i].code == protect_spec && st.tr[i].h < prot_height) {
                         continue;

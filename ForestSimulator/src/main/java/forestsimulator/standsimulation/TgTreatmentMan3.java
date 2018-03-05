@@ -247,7 +247,7 @@ public class TgTreatmentMan3 extends JPanel {
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel12.setText("Erschlie�ung:  ");
+        jLabel12.setText("Erschließung:");
         jPanel6.add(jLabel12);
 
         jCheckBox3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));

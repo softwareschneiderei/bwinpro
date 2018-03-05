@@ -217,7 +217,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
          if ((spcode>=354) && (spcode<=356)) {bark= 4.05603+0.58080*D;}                  //Kirsche,(Wildapfel,Wildbirne,Speierling,                               
          if ((spcode>=358) && (spcode<=359)) {bark= 4.05603+0.58080*D;}                  //...
          if ((spcode>=364) && (spcode<=365)) {bark= 4.05603+0.58080*D;}                  //...
-         if ((spcode>=451) && (spcode<=452)) {bark= 4.05603+0.58080*D;}                  // Mehlbeere,Mispel,Wildzwetschge,Eberesche,Sp�tbl.Traubenkir.  
+         if ((spcode>=451) && (spcode<=452)) {bark= 4.05603+0.58080*D;}                  // Mehlbeere,Mispel,Wildzwetschge,Eberesche,Spätbl.Traubenkir.  
          if (spcode==323)                   {bark= 1.63138+0.78958*D;}                  //Feldahorn
          if ((spcode>=410) && (spcode<=413)) {bark= 1.63138+0.78958*D;}                  //Birke,Sandbirke,Moorbirke,(Japanische Birke)                              
          if (spcode==357)                   {bark=-1.26961+1.21661*D-0.00624*D*D;}      //Elsbeere

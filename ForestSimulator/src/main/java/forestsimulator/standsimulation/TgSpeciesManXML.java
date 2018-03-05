@@ -743,7 +743,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         jTable1.setValueAt("Kleinwurzelbiomasse Funktion",34,0);
         jTable1.setValueAt("Feinwurzelbiomasse Funktion",35,0);
         jTable1.setValueAt("Gesamtwurzelbiomasse Funktion",36,0);
-        jTable1.setValueAt("Anzahl der Z-B�ume",37,0);
+        jTable1.setValueAt("Anzahl der Z-Bäume",37,0);
         jTable1.setValueAt(new Integer(spd[m].code).toString(),0,1);
         jTable1.setValueAt(spd[m].shortName,1,1);
         jTable1.setValueAt(spd[m].longName,2,1);
