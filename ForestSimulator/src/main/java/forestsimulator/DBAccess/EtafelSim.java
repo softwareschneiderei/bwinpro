@@ -39,8 +39,10 @@ public class EtafelSim {
            double g =0.0;
            double h100 =0.0;
            try{          
-              Statement stmt = dbconn.createStatement(); 
-              ResultSet rs = stmt.executeQuery("select * from Startwerte where ( Art = "+art+" AND EKL = "+yc+" )");
+              PreparedStatement stmt = dbconn.prepareStatement("select * from Startwerte where ( Art = ? AND EKL = ?)");
+              stmt.setInt(1, art);
+              stmt.setInt(2, yc);
+              ResultSet rs = stmt.executeQuery();
               if (rs.next()) {
                  hg = Double.parseDouble(rs.getObject("Hg").toString());
                  dg = Double.parseDouble(rs.getObject("Dg").toString());
