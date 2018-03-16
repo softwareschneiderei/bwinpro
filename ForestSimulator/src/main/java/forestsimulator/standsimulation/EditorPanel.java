@@ -67,7 +67,7 @@ public class EditorPanel extends JPanel {
 	st.nspecies=0;
 	st.ncpnt=0;
 	st.year=2008;
-        jButton8.setText("xy2polar");
+        polarToXYButton.setText("xy2polar");
 
 //        ExcelAdapter myAd = new ExcelAdapter(jTable1);
 //        loadStand();
@@ -104,19 +104,19 @@ public class EditorPanel extends JPanel {
         st.nspecies=0;
         st.ncpnt=0;
 // save to class stand
-        st.standname=jTextField1.getText();
-        st.size=Double.parseDouble(jTextField2.getText());
-        st.year=Integer.parseInt(jTextField3.getText());
-        st.monat=Integer.parseInt(jTextField4.getText());
-        st.rechtswert_m =Double.parseDouble(jTextField5.getText());
-        st.hochwert_m =Double.parseDouble(jTextField6.getText());
-        st.hoehe_uNN_m =Double.parseDouble(jTextField7.getText());
-        st.wuchsgebiet=jTextField8.getText();
-        st.wuchsbezirk=jTextField9.getText();
-        st.standort=jTextField10.getText();
-        st.exposition_Gon=Integer.parseInt(jTextField11.getText());
-        st.hangneigungProzent =Double.parseDouble(jTextField12.getText());
-        st.standortsKennziffer=jTextField13.getText();
+        st.standname=standNameTextField.getText();
+        st.size=Double.parseDouble(standSizeTextField.getText());
+        st.year=Integer.parseInt(registrationDateYearTextField.getText());
+        st.monat=Integer.parseInt(registrationDateMonthTextField.getText());
+        st.rechtswert_m =Double.parseDouble(positionRightValueTextField.getText());
+        st.hochwert_m =Double.parseDouble(positionTopValueTextField.getText());
+        st.hoehe_uNN_m =Double.parseDouble(altitudeTextField.getText());
+        st.wuchsgebiet=regionTextField.getText();
+        st.wuchsbezirk=districtTextField.getText();
+        st.standort=locationTextField.getText();
+        st.exposition_Gon=Integer.parseInt(expositionTextField.getText());
+        st.hangneigungProzent =Double.parseDouble(gradientTextField.getText());
+        st.standortsKennziffer=locationCodeTextField.getText();
 //
         st.center.no=(String) jTable1.getValueAt(0,0);
         st.center.x =Double.parseDouble( (String) jTable1.getValueAt(0,1));
@@ -159,19 +159,19 @@ public class EditorPanel extends JPanel {
         // Stand in die Table1 einladen
     public void loadStand(){
 //        for (int j=st.ntrees; j>0; j--) data.removeRow(j-1);
-        jTextField1.setText(st.standname);
-        jTextField2.setText(new Double(st.size).toString());
-        jTextField3.setText(new Integer(st.year).toString());
-        jTextField4.setText(new Integer(st.monat).toString());
-        jTextField5.setText(new Double(st.rechtswert_m).toString());
-        jTextField6.setText(new Double(st.hochwert_m).toString());
-        jTextField7.setText(new Double(st.hoehe_uNN_m).toString());
-        jTextField8.setText(st.wuchsgebiet);
-        jTextField9.setText(st.wuchsbezirk);
-        jTextField10.setText(st.standort);
-        jTextField11.setText(new Integer(st.exposition_Gon).toString());
-        jTextField12.setText(new Double(st.hangneigungProzent).toString());
-        jTextField13.setText(st.standortsKennziffer);
+        standNameTextField.setText(st.standname);
+        standSizeTextField.setText(new Double(st.size).toString());
+        registrationDateYearTextField.setText(new Integer(st.year).toString());
+        registrationDateMonthTextField.setText(new Integer(st.monat).toString());
+        positionRightValueTextField.setText(new Double(st.rechtswert_m).toString());
+        positionTopValueTextField.setText(new Double(st.hochwert_m).toString());
+        altitudeTextField.setText(new Double(st.hoehe_uNN_m).toString());
+        regionTextField.setText(st.wuchsgebiet);
+        districtTextField.setText(st.wuchsbezirk);
+        locationTextField.setText(st.standort);
+        expositionTextField.setText(new Integer(st.exposition_Gon).toString());
+        gradientTextField.setText(new Double(st.hangneigungProzent).toString());
+        locationCodeTextField.setText(st.standortsKennziffer);
 // Center and corner points
            corners.addRow(rowData2);
            jTable1.setValueAt(st.center.no,0,0);
@@ -228,93 +228,93 @@ public class EditorPanel extends JPanel {
     private void initComponents() {
 
         jPanel3 = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
+        readStandButton = new javax.swing.JButton();
+        saveStandButton = new javax.swing.JButton();
+        clearFormButton = new javax.swing.JButton();
+        polarToXYButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
-        standname = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        standNameLabel = new javax.swing.JLabel();
+        standNameTextField = new javax.swing.JTextField();
+        standSizeLabel = new javax.swing.JLabel();
+        standSizeTextField = new javax.swing.JTextField();
         jPanel14 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        registrationDatelabel = new javax.swing.JLabel();
         jPanel13 = new javax.swing.JPanel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        registrationDateMonthTextField = new javax.swing.JTextField();
+        registrationDateYearTextField = new javax.swing.JTextField();
         jPanel10 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        positionRightValueLabel = new javax.swing.JLabel();
+        positionRightValueTextField = new javax.swing.JTextField();
+        positionTopValueLabel = new javax.swing.JLabel();
+        positionTopValueTextField = new javax.swing.JTextField();
+        altitudeLabel = new javax.swing.JLabel();
+        altitudeTextField = new javax.swing.JTextField();
         jPanel11 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField10 = new javax.swing.JTextField();
+        regionLabel = new javax.swing.JLabel();
+        regionTextField = new javax.swing.JTextField();
+        districtLabel = new javax.swing.JLabel();
+        districtTextField = new javax.swing.JTextField();
+        locationLabel = new javax.swing.JLabel();
+        locationTextField = new javax.swing.JTextField();
         jPanel12 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField11 = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jTextField12 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
+        expositionLabel = new javax.swing.JLabel();
+        expositionTextField = new javax.swing.JTextField();
+        gradientLabel = new javax.swing.JLabel();
+        gradientTextField = new javax.swing.JTextField();
+        locationCodeLabel = new javax.swing.JLabel();
+        locationCodeTextField = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel6 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        addCornerPointButton = new javax.swing.JButton();
+        deleteCornerPointButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        addEmptyLineButton = new javax.swing.JButton();
+        deleteTreeButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
         jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jButton6.setText(bundle.getString("EditorPanel.jButton6.text")); // NOI18N
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        readStandButton.setText(bundle.getString("EditorPanel.readStandButton.text")); // NOI18N
+        readStandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                readStandButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton6);
+        jPanel3.add(readStandButton);
 
-        jButton2.setText(bundle.getString("EditorPanel.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        saveStandButton.setText(bundle.getString("EditorPanel.saveStandButton.text")); // NOI18N
+        saveStandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                saveStandButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton2);
+        jPanel3.add(saveStandButton);
 
-        jButton7.setText(bundle.getString("EditorPanel.jButton7.text")); // NOI18N
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        clearFormButton.setText(bundle.getString("EditorPanel.clearFormButton.text")); // NOI18N
+        clearFormButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                clearFormButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton7);
+        jPanel3.add(clearFormButton);
 
-        jButton8.setText(bundle.getString("EditorPanel.jButton8.text")); // NOI18N
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        polarToXYButton.setText(bundle.getString("EditorPanel.polarToXYButton.text")); // NOI18N
+        polarToXYButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                polarToXYButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton8);
+        jPanel3.add(polarToXYButton);
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
 
@@ -326,31 +326,31 @@ public class EditorPanel extends JPanel {
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
-        standname.setText(bundle.getString("EditorPanel.standname.text")); // NOI18N
-        standname.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jPanel9.add(standname);
+        standNameLabel.setText(bundle.getString("EditorPanel.standNameLabel.text")); // NOI18N
+        standNameLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jPanel9.add(standNameLabel);
 
-        jTextField1.setPreferredSize(new java.awt.Dimension(200, 19));
-        jPanel9.add(jTextField1);
+        standNameTextField.setPreferredSize(new java.awt.Dimension(200, 19));
+        jPanel9.add(standNameTextField);
 
-        jLabel2.setText(bundle.getString("EditorPanel.jLabel2.text")); // NOI18N
-        jPanel9.add(jLabel2);
+        standSizeLabel.setText(bundle.getString("EditorPanel.standSizeLabel.text")); // NOI18N
+        jPanel9.add(standSizeLabel);
 
-        jTextField2.setPreferredSize(new java.awt.Dimension(50, 19));
-        jPanel9.add(jTextField2);
+        standSizeTextField.setPreferredSize(new java.awt.Dimension(50, 19));
+        jPanel9.add(standSizeTextField);
 
-        jLabel4.setText(bundle.getString("EditorPanel.jLabel4.text")); // NOI18N
-        jPanel14.add(jLabel4);
+        registrationDatelabel.setText(bundle.getString("EditorPanel.registrationDatelabel.text")); // NOI18N
+        jPanel14.add(registrationDatelabel);
 
         jPanel9.add(jPanel14);
 
         jPanel13.setLayout(new java.awt.GridLayout(1, 0));
 
-        jTextField4.setPreferredSize(new java.awt.Dimension(31, 19));
-        jPanel13.add(jTextField4);
+        registrationDateMonthTextField.setPreferredSize(new java.awt.Dimension(31, 19));
+        jPanel13.add(registrationDateMonthTextField);
 
-        jTextField3.setPreferredSize(new java.awt.Dimension(50, 19));
-        jPanel13.add(jTextField3);
+        registrationDateYearTextField.setPreferredSize(new java.awt.Dimension(50, 19));
+        jPanel13.add(registrationDateYearTextField);
 
         jPanel9.add(jPanel13);
 
@@ -358,62 +358,74 @@ public class EditorPanel extends JPanel {
 
         jPanel10.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel5.setText(bundle.getString("EditorPanel.jLabel5.text")); // NOI18N
-        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jPanel10.add(jLabel5);
+        positionRightValueLabel.setText(bundle.getString("EditorPanel.positionRightValueLabel.text")); // NOI18N
+        positionRightValueLabel.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        jPanel10.add(positionRightValueLabel);
 
-        jTextField5.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel10.add(jTextField5);
+        positionRightValueTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel10.add(positionRightValueTextField);
 
-        jLabel6.setText(bundle.getString("EditorPanel.jLabel6.text")); // NOI18N
-        jPanel10.add(jLabel6);
+        positionTopValueLabel.setText(bundle.getString("EditorPanel.positionTopValueLabel.text")); // NOI18N
+        jPanel10.add(positionTopValueLabel);
 
-        jTextField6.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel10.add(jTextField6);
+        positionTopValueTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel10.add(positionTopValueTextField);
 
-        jLabel7.setText(bundle.getString("EditorPanel.jLabel7.text")); // NOI18N
-        jPanel10.add(jLabel7);
+        altitudeLabel.setText(bundle.getString("EditorPanel.altitudeLabel.text")); // NOI18N
+        jPanel10.add(altitudeLabel);
 
-        jTextField7.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel10.add(jTextField7);
+        altitudeTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel10.add(altitudeTextField);
 
         jPanel1.add(jPanel10);
 
         jPanel11.setLayout(new java.awt.GridLayout(1, 0));
 
-        jLabel8.setText(bundle.getString("EditorPanel.jLabel8.text")); // NOI18N
-        jPanel11.add(jLabel8);
+        regionLabel.setText(bundle.getString("EditorPanel.regionLabel.text")); // NOI18N
+        jPanel11.add(regionLabel);
 
-        jTextField8.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel11.add(jTextField8);
+        regionTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel11.add(regionTextField);
 
-        jLabel9.setText(bundle.getString("EditorPanel.jLabel9.text")); // NOI18N
-        jPanel11.add(jLabel9);
+        districtLabel.setText(bundle.getString("EditorPanel.districtLabel.text")); // NOI18N
+        jPanel11.add(districtLabel);
 
-        jTextField9.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel11.add(jTextField9);
+        districtTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel11.add(districtTextField);
 
-        jLabel10.setText(bundle.getString("EditorPanel.jLabel10.text")); // NOI18N
-        jPanel11.add(jLabel10);
+        locationLabel.setText(bundle.getString("EditorPanel.locationLabel.text")); // NOI18N
+        jPanel11.add(locationLabel);
 
-        jTextField10.setPreferredSize(new java.awt.Dimension(91, 19));
-        jPanel11.add(jTextField10);
+        locationTextField.setPreferredSize(new java.awt.Dimension(91, 19));
+        jPanel11.add(locationTextField);
 
         jPanel1.add(jPanel11);
 
         jPanel12.setLayout(new java.awt.GridLayout(1, 6));
 
-        jLabel11.setText(bundle.getString("EditorPanel.jLabel11.text")); // NOI18N
-        jPanel12.add(jLabel11);
-        jPanel12.add(jTextField11);
+        expositionLabel.setText(bundle.getString("EditorPanel.expositionLabel.text")); // NOI18N
+        jPanel12.add(expositionLabel);
+        jPanel12.add(expositionTextField);
 
-        jLabel12.setText(bundle.getString("EditorPanel.jLabel12.text")); // NOI18N
-        jPanel12.add(jLabel12);
-        jPanel12.add(jTextField12);
+        gradientLabel.setText(bundle.getString("EditorPanel.gradientLabel.text")); // NOI18N
+        jPanel12.add(gradientLabel);
 
-        jLabel13.setText(bundle.getString("EditorPanel.jLabel13.text")); // NOI18N
-        jPanel12.add(jLabel13);
-        jPanel12.add(jTextField13);
+        gradientTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gradientTextFieldActionPerformed(evt);
+            }
+        });
+        jPanel12.add(gradientTextField);
+
+        locationCodeLabel.setText(bundle.getString("EditorPanel.locationCodeLabel.text")); // NOI18N
+        jPanel12.add(locationCodeLabel);
+
+        locationCodeTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                locationCodeTextFieldActionPerformed(evt);
+            }
+        });
+        jPanel12.add(locationCodeTextField);
 
         jPanel1.add(jPanel12);
 
@@ -427,21 +439,21 @@ public class EditorPanel extends JPanel {
 
         jPanel8.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        jButton3.setText(bundle.getString("EditorPanel.jButton3.text")); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        addCornerPointButton.setText(bundle.getString("EditorPanel.addCornerPointButton.text")); // NOI18N
+        addCornerPointButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                addCornerPointButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton3);
+        jPanel6.add(addCornerPointButton);
 
-        jButton5.setText(bundle.getString("EditorPanel.jButton5.text")); // NOI18N
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        deleteCornerPointButton.setText(bundle.getString("EditorPanel.deleteCornerPointButton.text")); // NOI18N
+        deleteCornerPointButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                deleteCornerPointButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton5);
+        jPanel6.add(deleteCornerPointButton);
 
         jPanel8.add(jPanel6, java.awt.BorderLayout.SOUTH);
 
@@ -459,21 +471,21 @@ public class EditorPanel extends JPanel {
 
         jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jButton1.setText(bundle.getString("EditorPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        addEmptyLineButton.setText(bundle.getString("EditorPanel.addEmptyLineButton.text")); // NOI18N
+        addEmptyLineButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addEmptyLineButtonActionPerformed(evt);
             }
         });
-        jPanel7.add(jButton1);
+        jPanel7.add(addEmptyLineButton);
 
-        jButton4.setText(bundle.getString("EditorPanel.jButton4.text")); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        deleteTreeButton.setText(bundle.getString("EditorPanel.deleteTreeButton.text")); // NOI18N
+        deleteTreeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                deleteTreeButtonActionPerformed(evt);
             }
         });
-        jPanel7.add(jButton4);
+        jPanel7.add(deleteTreeButton);
 
         jPanel5.add(jPanel7, java.awt.BorderLayout.SOUTH);
 
@@ -482,11 +494,11 @@ public class EditorPanel extends JPanel {
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void polarToXYButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polarToXYButtonActionPerformed
 
     if (polar){
         polar2xy();
-        jButton8.setText("xy2polar");
+        polarToXYButton.setText("xy2polar");
         jTable1.getColumnModel().getColumn(1).setHeaderValue("x");
         jTable1.getColumnModel().getColumn(2).setHeaderValue("y");
         jTable1.getTableHeader().resizeAndRepaint();
@@ -499,7 +511,7 @@ public class EditorPanel extends JPanel {
     else {
         xy2polar();
         polar=true;
-        jButton8.setText("polar2xy");
+        polarToXYButton.setText("polar2xy");
         jTable1.getColumnModel().getColumn(1).setHeaderValue("Dist");
         jTable1.getColumnModel().getColumn(2).setHeaderValue("Gon");
         jTable1.getTableHeader().resizeAndRepaint();
@@ -508,14 +520,14 @@ public class EditorPanel extends JPanel {
         jTable2.getTableHeader().resizeAndRepaint();
     }
         loadStand();
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_polarToXYButtonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void clearFormButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFormButtonActionPerformed
 //  Maske löschen
         clearAll();
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_clearFormButtonActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void readStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readStandButtonActionPerformed
 // read stand
       JFileChooser fc = new JFileChooser();
       TxtFileFilter txtFilter = new TxtFileFilter();
@@ -540,14 +552,14 @@ public class EditorPanel extends JPanel {
         
        loadStand();
         
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_readStandButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void addEmptyLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEmptyLineButtonActionPerformed
 // TODO add your handling code here:
                 for (int i=0; i<50; i++) data.addRow(rowData);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_addEmptyLineButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void saveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStandButtonActionPerformed
 // TODO add your handling code here:
       st.ntrees=0;
       st.nspecies=0;
@@ -578,14 +590,14 @@ public class EditorPanel extends JPanel {
 
 //
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_saveStandButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void addCornerPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCornerPointButtonActionPerformed
 // TODO add your handling code here:
                 corners.addRow(rowData2);
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_addCornerPointButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void deleteTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTreeButtonActionPerformed
         if (jTable2.getSelectedRowCount()>0) {
             int m[]=jTable2.getSelectedRows();
             for (int j=0;j<jTable2.getSelectedRowCount();j++)
@@ -593,9 +605,9 @@ public class EditorPanel extends JPanel {
         }
 
 // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_deleteTreeButtonActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void deleteCornerPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCornerPointButtonActionPerformed
         if (jTable1.getSelectedRowCount()>0) {
             int m[]=jTable1.getSelectedRows();
             for (int j=0;j<jTable1.getSelectedRowCount();j++)
@@ -603,22 +615,30 @@ public class EditorPanel extends JPanel {
         }
 
 // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_deleteCornerPointButtonActionPerformed
+
+    private void gradientTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gradientTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_gradientTextFieldActionPerformed
+
+    private void locationCodeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationCodeTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_locationCodeTextFieldActionPerformed
 
     private void clearAll(){
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField3.setText("");
-        jTextField4.setText("");
-        jTextField5.setText("");
-        jTextField6.setText("");
-        jTextField7.setText("");
-        jTextField8.setText("");
-        jTextField9.setText("");
-        jTextField10.setText("");
-        jTextField11.setText("");
-        jTextField12.setText("");
-        jTextField13.setText("");
+        standNameTextField.setText("");
+        standSizeTextField.setText("");
+        registrationDateYearTextField.setText("");
+        registrationDateMonthTextField.setText("");
+        positionRightValueTextField.setText("");
+        positionTopValueTextField.setText("");
+        altitudeTextField.setText("");
+        regionTextField.setText("");
+        districtTextField.setText("");
+        locationTextField.setText("");
+        expositionTextField.setText("");
+        gradientTextField.setText("");
+        locationCodeTextField.setText("");
         for (int j=0;j<jTable1.getRowCount();j++)
              for (int i=0;i<jTable1.getColumnCount();i++) jTable1.setValueAt("",j,i);
         for (int j=0;j<jTable2.getRowCount();j++)
@@ -715,25 +735,19 @@ public class EditorPanel extends JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton addCornerPointButton;
+    private javax.swing.JButton addEmptyLineButton;
+    private javax.swing.JLabel altitudeLabel;
+    private javax.swing.JTextField altitudeTextField;
+    private javax.swing.JButton clearFormButton;
+    private javax.swing.JButton deleteCornerPointButton;
+    private javax.swing.JButton deleteTreeButton;
+    private javax.swing.JLabel districtLabel;
+    private javax.swing.JTextField districtTextField;
+    private javax.swing.JLabel expositionLabel;
+    private javax.swing.JTextField expositionTextField;
+    private javax.swing.JLabel gradientLabel;
+    private javax.swing.JTextField gradientTextField;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
@@ -752,20 +766,26 @@ public class EditorPanel extends JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
-    private javax.swing.JLabel standname;
+    private javax.swing.JLabel locationCodeLabel;
+    private javax.swing.JTextField locationCodeTextField;
+    private javax.swing.JLabel locationLabel;
+    private javax.swing.JTextField locationTextField;
+    private javax.swing.JButton polarToXYButton;
+    private javax.swing.JLabel positionRightValueLabel;
+    private javax.swing.JTextField positionRightValueTextField;
+    private javax.swing.JLabel positionTopValueLabel;
+    private javax.swing.JTextField positionTopValueTextField;
+    private javax.swing.JButton readStandButton;
+    private javax.swing.JLabel regionLabel;
+    private javax.swing.JTextField regionTextField;
+    private javax.swing.JTextField registrationDateMonthTextField;
+    private javax.swing.JTextField registrationDateYearTextField;
+    private javax.swing.JLabel registrationDatelabel;
+    private javax.swing.JButton saveStandButton;
+    private javax.swing.JLabel standNameLabel;
+    private javax.swing.JTextField standNameTextField;
+    private javax.swing.JLabel standSizeLabel;
+    private javax.swing.JTextField standSizeTextField;
     // End of variables declaration//GEN-END:variables
     
 }

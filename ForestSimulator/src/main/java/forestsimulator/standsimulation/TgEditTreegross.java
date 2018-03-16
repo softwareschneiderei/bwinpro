@@ -47,7 +47,7 @@ public class TgEditTreegross extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        applyChangesButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
@@ -58,19 +58,19 @@ public class TgEditTreegross extends JDialog {
             }
         });
 
-        jButton1.setText(bundle.getString("TgEditTreegross.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        applyChangesButton.setText(bundle.getString("TgEditTreegross.applyChangesButton.text")); // NOI18N
+        applyChangesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                applyChangesButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(applyChangesButton, java.awt.BorderLayout.SOUTH);
 
         setSize(new java.awt.Dimension(800, 600));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void applyChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyChangesButtonActionPerformed
 // TODO add your handling code here:
         
         st = editorPanel.updateStand();
@@ -83,7 +83,7 @@ public class TgEditTreegross extends JDialog {
         editorPanel.setStand(st);
         editorPanel.loadStand();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_applyChangesButtonActionPerformed
 
 private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
 // TODO add your handling code here:
@@ -102,7 +102,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton applyChangesButton;
     // End of variables declaration//GEN-END:variables
     
 }

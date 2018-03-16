@@ -58,7 +58,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
             }
         }
         if (dir.exists()) {
-            jLabel1.setText(dir.getCanonicalPath());
+            filenameLabel.setText(dir.getCanonicalPath());
         }
         else {
            JFileChooser fc = new JFileChooser();
@@ -68,7 +68,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
            int auswahl = fc.showOpenDialog(this);
            dir = fc.getSelectedFile();
         }
-        jLabel1.setText(dir.getCanonicalPath());
+        filenameLabel.setText(dir.getCanonicalPath());
         setVisible(true);
         nBestaende=loadBestaende();
     }
@@ -83,85 +83,85 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
+        filenameLabel = new javax.swing.JLabel();
+        changeDatabaseButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        searchStandLabel = new javax.swing.JLabel();
+        standNameTextField = new javax.swing.JTextField();
+        areaLabel = new javax.swing.JLabel();
+        areaTextField = new javax.swing.JTextField();
+        findButton = new javax.swing.JButton();
+        forwardButton = new javax.swing.JButton();
+        backButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jLabel1.setText(bundle.getString("JPanelNutzungsplaner.jLabel1.text")); // NOI18N
-        jPanel2.add(jLabel1);
+        filenameLabel.setText(bundle.getString("JPanelNutzungsplaner.filenameLabel.text")); // NOI18N
+        jPanel2.add(filenameLabel);
 
-        jButton2.setText(bundle.getString("JPanelNutzungsplaner.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        changeDatabaseButton.setText(bundle.getString("JPanelNutzungsplaner.changeDatabaseButton.text")); // NOI18N
+        changeDatabaseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                changeDatabaseButtonActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2);
+        jPanel2.add(changeDatabaseButton);
 
         add(jPanel2, java.awt.BorderLayout.SOUTH);
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel2.setText(bundle.getString("JPanelNutzungsplaner.jLabel2.text")); // NOI18N
-        jPanel1.add(jLabel2);
+        searchStandLabel.setText(bundle.getString("JPanelNutzungsplaner.searchStandLabel.text")); // NOI18N
+        jPanel1.add(searchStandLabel);
 
-        jTextField1.setText(bundle.getString("JPanelNutzungsplaner.jTextField1.text")); // NOI18N
-        jTextField1.setPreferredSize(new java.awt.Dimension(232, 20));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        standNameTextField.setText(bundle.getString("JPanelNutzungsplaner.standNameTextField.text")); // NOI18N
+        standNameTextField.setPreferredSize(new java.awt.Dimension(232, 20));
+        standNameTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                standNameTextFieldActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField1);
+        jPanel1.add(standNameTextField);
 
-        jLabel3.setText(bundle.getString("JPanelNutzungsplaner.jLabel3.text")); // NOI18N
-        jPanel1.add(jLabel3);
+        areaLabel.setText(bundle.getString("JPanelNutzungsplaner.areaLabel.text")); // NOI18N
+        jPanel1.add(areaLabel);
 
-        jTextField2.setText(bundle.getString("JPanelNutzungsplaner.jTextField2.text")); // NOI18N
-        jTextField2.setMinimumSize(new java.awt.Dimension(26, 20));
-        jTextField2.setPreferredSize(new java.awt.Dimension(42, 20));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        areaTextField.setText(bundle.getString("JPanelNutzungsplaner.areaTextField.text")); // NOI18N
+        areaTextField.setMinimumSize(new java.awt.Dimension(26, 20));
+        areaTextField.setPreferredSize(new java.awt.Dimension(42, 20));
+        areaTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                areaTextFieldActionPerformed(evt);
             }
         });
-        jPanel1.add(jTextField2);
+        jPanel1.add(areaTextField);
 
-        jButton1.setText(bundle.getString("JPanelNutzungsplaner.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        findButton.setText(bundle.getString("JPanelNutzungsplaner.findButton.text")); // NOI18N
+        findButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                findButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(findButton);
 
-        jButton3.setText(bundle.getString("JPanelNutzungsplaner.jButton3.text")); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        forwardButton.setText(bundle.getString("JPanelNutzungsplaner.forwardButton.text")); // NOI18N
+        forwardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                forwardButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton3);
+        jPanel1.add(forwardButton);
 
-        jButton4.setText(bundle.getString("JPanelNutzungsplaner.jButton4.text")); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        backButton.setText(bundle.getString("JPanelNutzungsplaner.backButton.text")); // NOI18N
+        backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                backButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4);
+        jPanel1.add(backButton);
 
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
@@ -171,49 +171,49 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void standNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_standNameTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_standNameTextFieldActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         // In der Datenbank nach Namen suchen und Tabelle fuellen 
        loadBestand();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_findButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void forwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_forwardButtonActionPerformed
         // next Stand
         int merk =0;
         for (int i=0;i < nBestaende;i++){
-            if (bestaende[i].equals(jTextField1.getText())) { 
+            if (bestaende[i].equals(standNameTextField.getText())) { 
                 merk = i;
                 break;
             }
         }
         if ( merk < nBestaende-1) {
             merk = merk+1;
-            jTextField1.setText(bestaende[merk].toString());
+            standNameTextField.setText(bestaende[merk].toString());
         }
         loadBestand();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_forwardButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
         // back
                 // next Stand
         int merk =0;
         for (int i=0;i < nBestaende;i++){
-            if (bestaende[i].equals(jTextField1.getText())) { 
+            if (bestaende[i].equals(standNameTextField.getText())) { 
                 merk = i;
                 break;
             }
         }
         if ( merk > 0) {
             merk = merk-1;
-            jTextField1.setText(bestaende[merk].toString());
+            standNameTextField.setText(bestaende[merk].toString());
         }
         loadBestand();
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_backButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void changeDatabaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDatabaseButtonActionPerformed
         // TODO add your handling code here:
         JFileChooser fc = new JFileChooser();
         DBFileFilter dbFilter = new DBFileFilter();
@@ -226,17 +226,17 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         int auswahl = fc.showOpenDialog(this);
         try {
            dir = fc.getSelectedFile();
-           jLabel1.setText(dir.getCanonicalPath());
+           filenameLabel.setText(dir.getCanonicalPath());
            setVisible(true);
            nBestaende=loadBestaende();
         }
         catch (Exception eio){System.out.println(eio);}  
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_changeDatabaseButtonActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void areaTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_areaTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_areaTextFieldActionPerformed
 
     private double setdbh(int code, double a, double h){
         double dgx = 0.0;
@@ -311,7 +311,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  st = cn.createStatement();
 //        
-        String name =jTextField1.getText();
+        String name =standNameTextField.getText();
         String sqltxt = "SELECT * FROM Nutzungsplanung WHERE name = '"+name+"'";
         ResultSet rs = st.executeQuery(sqltxt);
         int m=0;
@@ -342,12 +342,12 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     public Stand createStand(){
         // Make stand
         
-        double size= Double.parseDouble(jTextField2.getText());
+        double size= Double.parseDouble(areaTextField.getText());
         st.ncpnt=0;
         st.nspecies=0;
         st.ntrees=0;
         st.addsize(size);
-        st.standname=jTextField1.getText();
+        st.standname=standNameTextField.getText();
         st.year=2015;
         double len = Math.sqrt(10000*st.size);  
         st.addcornerpoint("ECK1",0.0,0.0,0.0);
@@ -426,18 +426,18 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel areaLabel;
+    private javax.swing.JTextField areaTextField;
+    private javax.swing.JButton backButton;
+    private javax.swing.JButton changeDatabaseButton;
+    private javax.swing.JLabel filenameLabel;
+    private javax.swing.JButton findButton;
+    private javax.swing.JButton forwardButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel searchStandLabel;
+    private javax.swing.JTextField standNameTextField;
     // End of variables declaration//GEN-END:variables
 }

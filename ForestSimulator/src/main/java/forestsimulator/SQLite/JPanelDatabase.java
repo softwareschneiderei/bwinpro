@@ -62,7 +62,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         }
 */  
         if (dir.exists()) {
-            jLabel1.setText(dir.getCanonicalPath());
+            filenameLabel.setText(dir.getCanonicalPath());
         }
         else {
            JFileChooser fc = new JFileChooser();
@@ -72,7 +72,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
            int auswahl = fc.showOpenDialog(this);
            dir = fc.getSelectedFile();
         }
-        jLabel1.setText(dir.getCanonicalPath());
+        filenameLabel.setText(dir.getCanonicalPath());
         setVisible(true);    
     }
 
@@ -85,46 +85,43 @@ public class JPanelDatabase extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        filenameLabel = new javax.swing.JLabel();
+        changeDatabaseButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
+        standIdHeading = new javax.swing.JLabel();
+        standNameHeading = new javax.swing.JLabel();
+        yearHeading = new javax.swing.JLabel();
+        areaSizeHeading = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jLabel4.setText(bundle.getString("JPanelDatabase.jLabel4.text")); // NOI18N
+        navigateToFirstButton = new javax.swing.JButton();
+        navigateBackButton = new javax.swing.JButton();
+        searchTextField = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        saveActiveStandButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        navigateForwardButton = new javax.swing.JButton();
+        navigateToLastButton = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText(bundle.getString("JPanelDatabase.jLabel1.text")); // NOI18N
-        jPanel1.add(jLabel1);
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        filenameLabel.setText(bundle.getString("JPanelDatabase.filenameLabel.text")); // NOI18N
+        jPanel1.add(filenameLabel);
 
-        jButton1.setText(bundle.getString("JPanelDatabase.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        changeDatabaseButton.setText(bundle.getString("JPanelDatabase.changeDatabaseButton.text")); // NOI18N
+        changeDatabaseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                changeDatabaseButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
+        jPanel1.add(changeDatabaseButton);
 
         add(jPanel1, java.awt.BorderLayout.PAGE_END);
 
@@ -134,33 +131,33 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
         jPanel7.setLayout(new java.awt.GridLayout(2, 4));
 
-        jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText(bundle.getString("JPanelDatabase.jLabel3.text")); // NOI18N
-        jLabel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(jLabel3);
+        standIdHeading.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        standIdHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        standIdHeading.setText(bundle.getString("JPanelDatabase.standIdHeading.text")); // NOI18N
+        standIdHeading.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        standIdHeading.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel7.add(standIdHeading);
 
-        jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText(bundle.getString("JPanelDatabase.jLabel5.text")); // NOI18N
-        jLabel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(jLabel5);
+        standNameHeading.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        standNameHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        standNameHeading.setText(bundle.getString("JPanelDatabase.standNameHeading.text")); // NOI18N
+        standNameHeading.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        standNameHeading.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel7.add(standNameHeading);
 
-        jLabel6.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText(bundle.getString("JPanelDatabase.jLabel6.text")); // NOI18N
-        jLabel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(jLabel6);
+        yearHeading.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        yearHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        yearHeading.setText(bundle.getString("JPanelDatabase.yearHeading.text")); // NOI18N
+        yearHeading.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        yearHeading.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel7.add(yearHeading);
 
-        jLabel7.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText(bundle.getString("JPanelDatabase.jLabel7.text")); // NOI18N
-        jLabel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jPanel7.add(jLabel7);
+        areaSizeHeading.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        areaSizeHeading.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        areaSizeHeading.setText(bundle.getString("JPanelDatabase.areaSizeHeading.text")); // NOI18N
+        areaSizeHeading.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        areaSizeHeading.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jPanel7.add(areaSizeHeading);
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel8.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -186,69 +183,69 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
         jPanel6.setLayout(new java.awt.GridLayout(1, 4));
 
-        jButton3.setText(bundle.getString("JPanelDatabase.jButton3.text")); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        navigateToFirstButton.setText(bundle.getString("JPanelDatabase.navigateToFirstButton.text")); // NOI18N
+        navigateToFirstButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                navigateToFirstButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton3);
+        jPanel6.add(navigateToFirstButton);
 
-        jButton4.setText(bundle.getString("JPanelDatabase.jButton4.text")); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        navigateBackButton.setText(bundle.getString("JPanelDatabase.navigateBackButton.text")); // NOI18N
+        navigateBackButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                navigateBackButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton4);
+        jPanel6.add(navigateBackButton);
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        searchTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                searchTextFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(jTextField1);
+        jPanel6.add(searchTextField);
 
-        jButton5.setText(bundle.getString("JPanelDatabase.jButton5.text")); // NOI18N
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        searchButton.setText(bundle.getString("JPanelDatabase.searchButton.text")); // NOI18N
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                searchButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton5);
+        jPanel6.add(searchButton);
 
-        jButton2.setBackground(new java.awt.Color(246, 187, 239));
-        jButton2.setText(bundle.getString("JPanelDatabase.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        saveActiveStandButton.setBackground(new java.awt.Color(246, 187, 239));
+        saveActiveStandButton.setText(bundle.getString("JPanelDatabase.saveActiveStandButton.text")); // NOI18N
+        saveActiveStandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                saveActiveStandButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton2);
+        jPanel6.add(saveActiveStandButton);
 
-        jButton7.setText(bundle.getString("JPanelDatabase.jButton7.text")); // NOI18N
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        deleteButton.setText(bundle.getString("JPanelDatabase.deleteButton.text")); // NOI18N
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton7);
+        jPanel6.add(deleteButton);
 
-        jButton8.setText(bundle.getString("JPanelDatabase.jButton8.text")); // NOI18N
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        navigateForwardButton.setText(bundle.getString("JPanelDatabase.navigateForwardButton.text")); // NOI18N
+        navigateForwardButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                navigateForwardButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton8);
+        jPanel6.add(navigateForwardButton);
 
-        jButton6.setText(bundle.getString("JPanelDatabase.jButton6.text")); // NOI18N
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        navigateToLastButton.setText(bundle.getString("JPanelDatabase.navigateToLastButton.text")); // NOI18N
+        navigateToLastButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                navigateToLastButtonActionPerformed(evt);
             }
         });
-        jPanel6.add(jButton6);
+        jPanel6.add(navigateToLastButton);
 
         jPanel3.add(jPanel6, java.awt.BorderLayout.PAGE_END);
 
@@ -257,7 +254,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void changeDatabaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDatabaseButtonActionPerformed
         JFileChooser fc = new JFileChooser();
         DBFileFilter dbFilter = new DBFileFilter();
         dbFilter.setExtension("db");
@@ -269,14 +266,14 @@ public class JPanelDatabase extends javax.swing.JPanel {
         int auswahl = fc.showOpenDialog(this);
         try {
            dir = fc.getSelectedFile();
-           jLabel1.setText(dir.getCanonicalPath());
+           filenameLabel.setText(dir.getCanonicalPath());
            setVisible(true);
 //           nBestaende=loadBestaende();
         }
         catch (Exception eio){System.out.println(eio);}  
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_changeDatabaseButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void saveActiveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActiveStandButtonActionPerformed
         // save stand to database
         
          int m = 0;
@@ -325,20 +322,20 @@ public class JPanelDatabase extends javax.swing.JPanel {
        
         
         
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_saveActiveStandButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void navigateToFirstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToFirstButtonActionPerformed
         // find First
         firstDataset();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_navigateToFirstButtonActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void navigateToLastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToLastButtonActionPerformed
         // Find last record
        lastDataset();
 
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_navigateToLastButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void navigateBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateBackButtonActionPerformed
        try{
         Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
@@ -356,17 +353,17 @@ public class JPanelDatabase extends javax.swing.JPanel {
          } catch (Exception eio){System.out.println(eio);} 
         dispStandID();
         // Find next
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_navigateBackButtonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void navigateForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateForwardButtonActionPerformed
         // Next standid
         nextDataset();
         dispStandID();
         // Find next
  
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_navigateForwardButtonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // delete standID
                 try{
         Class.forName( "org.sqlite.JDBC" );
@@ -385,11 +382,11 @@ public class JPanelDatabase extends javax.swing.JPanel {
         dispStandID();
         // Find next
  
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         //search stand first by id then by name
-        String suche =jTextField1.getText();
+        String suche =searchTextField.getText();
         boolean found = false;
         try{
         Class.forName( "org.sqlite.JDBC" );
@@ -422,11 +419,11 @@ public class JPanelDatabase extends javax.swing.JPanel {
         
 
        
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_searchButtonActionPerformed
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_searchTextFieldActionPerformed
 
     private void dispStandID(){
         try{
@@ -601,22 +598,12 @@ public class JPanelDatabase extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel areaSizeHeading;
+    private javax.swing.JButton changeDatabaseButton;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JLabel filenameLabel;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -624,6 +611,15 @@ public class JPanelDatabase extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JButton navigateBackButton;
+    private javax.swing.JButton navigateForwardButton;
+    private javax.swing.JButton navigateToFirstButton;
+    private javax.swing.JButton navigateToLastButton;
+    private javax.swing.JButton saveActiveStandButton;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTextField;
+    private javax.swing.JLabel standIdHeading;
+    private javax.swing.JLabel standNameHeading;
+    private javax.swing.JLabel yearHeading;
     // End of variables declaration//GEN-END:variables
 }

@@ -94,30 +94,30 @@ public class RootsPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel8 = new javax.swing.JPanel();
-        jLabel13 = new javax.swing.JLabel();
-        jTextField13 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        treegrossFileLabel = new javax.swing.JLabel();
+        filenameTextField = new javax.swing.JTextField();
+        loadButton = new javax.swing.JButton();
+        calculateBiomassButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jPanel10 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
+        speciesFunctionsLabel = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        coarseRootFunctionLabel = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
+        fineRootFunctionLabel = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
+        smallRootFunctionLabel = new javax.swing.JLabel();
         jComboBox3 = new javax.swing.JComboBox();
-        jLabel4 = new javax.swing.JLabel();
+        totalRootFunctionLabel = new javax.swing.JLabel();
         jComboBox4 = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        loadFunctionsButton = new javax.swing.JButton();
+        speciesCodeFunctionLabel = new javax.swing.JLabel();
+        speciesCodeTextField = new javax.swing.JTextField();
         jPanel11 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
-        jLabel15 = new javax.swing.JLabel();
+        speciesLabel = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(608, 221));
         setRequestFocusEnabled(false);
@@ -127,59 +127,59 @@ public class RootsPanel extends javax.swing.JPanel {
         jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jLabel13.setText(bundle.getString("RootsPanel.jLabel13.text")); // NOI18N
-        jPanel8.add(jLabel13);
+        treegrossFileLabel.setText(bundle.getString("RootsPanel.treegrossFileLabel.text")); // NOI18N
+        jPanel8.add(treegrossFileLabel);
 
-        jTextField13.setPreferredSize(new java.awt.Dimension(511, 19));
-        jPanel8.add(jTextField13);
+        filenameTextField.setPreferredSize(new java.awt.Dimension(511, 19));
+        jPanel8.add(filenameTextField);
 
-        jButton5.setText(bundle.getString("RootsPanel.jButton5.text")); // NOI18N
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        loadButton.setText(bundle.getString("RootsPanel.loadButton.text")); // NOI18N
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                loadButtonActionPerformed(evt);
             }
         });
-        jPanel8.add(jButton5);
+        jPanel8.add(loadButton);
 
         add(jPanel8, java.awt.BorderLayout.NORTH);
 
-        jButton1.setText(bundle.getString("RootsPanel.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        calculateBiomassButton.setText(bundle.getString("RootsPanel.calculateBiomassButton.text")); // NOI18N
+        calculateBiomassButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                calculateBiomassButtonActionPerformed(evt);
             }
         });
-        add(jButton1, java.awt.BorderLayout.SOUTH);
+        add(calculateBiomassButton, java.awt.BorderLayout.SOUTH);
 
         jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setText(bundle.getString("RootsPanel.jLabel14.text")); // NOI18N
-        jPanel10.add(jLabel14);
+        speciesFunctionsLabel.setText(bundle.getString("RootsPanel.speciesFunctionsLabel.text")); // NOI18N
+        jPanel10.add(speciesFunctionsLabel);
 
-        jLabel1.setText(bundle.getString("RootsPanel.jLabel1.text")); // NOI18N
+        coarseRootFunctionLabel.setText(bundle.getString("RootsPanel.coarseRootFunctionLabel.text")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel2.setText(bundle.getString("RootsPanel.jLabel2.text")); // NOI18N
+        fineRootFunctionLabel.setText(bundle.getString("RootsPanel.fineRootFunctionLabel.text")); // NOI18N
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel3.setText(bundle.getString("RootsPanel.jLabel3.text")); // NOI18N
+        smallRootFunctionLabel.setText(bundle.getString("RootsPanel.smallRootFunctionLabel.text")); // NOI18N
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jLabel4.setText(bundle.getString("RootsPanel.jLabel4.text")); // NOI18N
+        totalRootFunctionLabel.setText(bundle.getString("RootsPanel.totalRootFunctionLabel.text")); // NOI18N
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton2.setText(bundle.getString("RootsPanel.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        loadFunctionsButton.setText(bundle.getString("RootsPanel.loadFunctionsButton.text")); // NOI18N
+        loadFunctionsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                loadFunctionsButtonActionPerformed(evt);
             }
         });
 
-        jLabel5.setText(bundle.getString("RootsPanel.jLabel5.text")); // NOI18N
+        speciesCodeFunctionLabel.setText(bundle.getString("RootsPanel.speciesCodeFunctionLabel.text")); // NOI18N
 
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -187,11 +187,11 @@ public class RootsPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
                 .add(19, 19, 19)
-                .add(jLabel5)
+                .add(speciesCodeFunctionLabel)
                 .add(55, 55, 55)
-                .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(speciesCodeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 60, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(29, 29, 29)
-                .add(jButton2)
+                .add(loadFunctionsButton)
                 .add(153, 153, 153))
         );
         jPanel3Layout.setVerticalGroup(
@@ -199,9 +199,9 @@ public class RootsPanel extends javax.swing.JPanel {
             .add(jPanel3Layout.createSequentialGroup()
                 .add(19, 19, 19)
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel5)
-                    .add(jButton2)
-                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(speciesCodeFunctionLabel)
+                    .add(loadFunctionsButton)
+                    .add(speciesCodeTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(67, Short.MAX_VALUE))
         );
 
@@ -214,17 +214,17 @@ public class RootsPanel extends javax.swing.JPanel {
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel2Layout.createSequentialGroup()
-                            .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(totalRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                             .add(jComboBox4, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel2Layout.createSequentialGroup()
-                            .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(coarseRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                             .add(jComboBox1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 364, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .add(org.jdesktop.layout.GroupLayout.LEADING, jPanel2Layout.createSequentialGroup()
                             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                                .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(fineRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .add(smallRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 194, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                             .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                                 .add(jComboBox3, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -237,20 +237,20 @@ public class RootsPanel extends javax.swing.JPanel {
             .add(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(coarseRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jComboBox1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 33, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(fineRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 30, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jComboBox2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 29, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jComboBox3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(smallRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel2Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jComboBox4)
-                    .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(totalRootFunctionLabel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 34, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .add(40, 40, 40))
@@ -269,8 +269,8 @@ public class RootsPanel extends javax.swing.JPanel {
 
         jPanel11.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        jLabel15.setText(bundle.getString("RootsPanel.jLabel15.text")); // NOI18N
-        jPanel11.add(jLabel15, java.awt.BorderLayout.NORTH);
+        speciesLabel.setText(bundle.getString("RootsPanel.speciesLabel.text")); // NOI18N
+        jPanel11.add(speciesLabel, java.awt.BorderLayout.NORTH);
 
         org.jdesktop.layout.GroupLayout jPanel1Layout = new org.jdesktop.layout.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -295,17 +295,17 @@ public class RootsPanel extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
        
 // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_loadButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
 // Chane of species List
        showFunctions();
     }//GEN-LAST:event_jList1ValueChanged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void calculateBiomassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBiomassButtonActionPerformed
   // Calculate and write xml
        String pa="";
        String dn="";
@@ -459,16 +459,16 @@ public class RootsPanel extends javax.swing.JPanel {
   
 
 // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_calculateBiomassButtonActionPerformed
 
-private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFunctionsButtonActionPerformed
 // Load alternative functions
-    int codex = Integer.parseInt(jTextField1.getText());
+    int codex = Integer.parseInt(speciesCodeTextField.getText());
     int m = jList1.getSelectedIndex();
     loadAlternativeCodeFunctions(urlRootFun, m, codex);
     showFunctions();
     
-}//GEN-LAST:event_jButton2ActionPerformed
+}//GEN-LAST:event_loadFunctionsButtonActionPerformed
     
     Element addString(Element elt, String variable, String text){
             Element var = new Element(variable);
@@ -579,21 +579,14 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
    }   
    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton calculateBiomassButton;
+    private javax.swing.JLabel coarseRootFunctionLabel;
+    private javax.swing.JTextField filenameTextField;
+    private javax.swing.JLabel fineRootFunctionLabel;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
@@ -602,8 +595,15 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField13;
+    private javax.swing.JButton loadButton;
+    private javax.swing.JButton loadFunctionsButton;
+    private javax.swing.JLabel smallRootFunctionLabel;
+    private javax.swing.JLabel speciesCodeFunctionLabel;
+    private javax.swing.JTextField speciesCodeTextField;
+    private javax.swing.JLabel speciesFunctionsLabel;
+    private javax.swing.JLabel speciesLabel;
+    private javax.swing.JLabel totalRootFunctionLabel;
+    private javax.swing.JLabel treegrossFileLabel;
     // End of variables declaration//GEN-END:variables
     
 }

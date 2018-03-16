@@ -45,12 +45,12 @@ public class TgDesign extends JPanel {
         frame = parent;
         programDir = parent.programDir;
         initComponents();
-        jLabel3.setVisible(false);
-        jTextField2.setVisible(false);
-        jTextField3.setVisible(false);
-        jLabel2.setVisible(false);
-        jTextField4.setVisible(false);
-        jTextField5.setVisible(false);
+        rasterLabel.setVisible(false);
+        rasterXTextField.setVisible(false);
+        rasterYTextField.setVisible(false);
+        startPositionLabel.setVisible(false);
+        startXTextField.setVisible(false);
+        startYTextField.setVisible(false);
 //        jLabel4.setText(messages.getString("Species_code"));
 //        jLabel5.setText(messages.getString("age"));
 //        jLabel6.setText(messages.getString("Dg"));
@@ -86,36 +86,36 @@ public class TgDesign extends JPanel {
 
         jPanel4 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        speciesCodeLabel = new javax.swing.JLabel();
+        ageLabel = new javax.swing.JLabel();
+        diameterLabel = new javax.swing.JLabel();
+        maxDiameterLabel = new javax.swing.JLabel();
+        heightLabel = new javax.swing.JLabel();
+        basalAreaLabel = new javax.swing.JLabel();
         td2 = new javax.swing.JTextField();
         td3 = new javax.swing.JTextField();
         td4 = new javax.swing.JTextField();
         td5 = new javax.swing.JTextField();
         td6 = new javax.swing.JTextField();
-        jComboBox3 = new javax.swing.JComboBox();
-        jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        speciesCodeComboBox = new javax.swing.JComboBox();
+        startButton = new javax.swing.JButton();
+        siteIndexLabel = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
+        rasterLabel = new javax.swing.JLabel();
+        typeComboBox = new javax.swing.JComboBox();
+        rasterXTextField = new javax.swing.JTextField();
+        rasterYTextField = new javax.swing.JTextField();
+        startPositionLabel = new javax.swing.JLabel();
+        startXTextField = new javax.swing.JTextField();
+        startYTextField = new javax.swing.JTextField();
+        developmentCheckBox = new javax.swing.JCheckBox();
+        distanceLabel = new javax.swing.JLabel();
+        distanceTextField = new javax.swing.JTextField();
+        widthLabel = new javax.swing.JLabel();
+        widthTextField = new javax.swing.JTextField();
         jComboBox4 = new javax.swing.JComboBox();
-        jLabel12 = new javax.swing.JLabel();
+        mixtureLabel = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jComboBox5 = new javax.swing.JComboBox();
 
@@ -128,29 +128,29 @@ public class TgDesign extends JPanel {
         jPanel2.setLayout(null);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jLabel4.setText(bundle.getString("TgDesign.jLabel4.text")); // NOI18N
-        jPanel2.add(jLabel4);
-        jLabel4.setBounds(20, 40, 140, 14);
+        speciesCodeLabel.setText(bundle.getString("TgDesign.speciesCodeLabel.text")); // NOI18N
+        jPanel2.add(speciesCodeLabel);
+        speciesCodeLabel.setBounds(20, 40, 140, 14);
 
-        jLabel5.setText(bundle.getString("TgDesign.jLabel5.text")); // NOI18N
-        jPanel2.add(jLabel5);
-        jLabel5.setBounds(20, 70, 60, 14);
+        ageLabel.setText(bundle.getString("TgDesign.ageLabel.text")); // NOI18N
+        jPanel2.add(ageLabel);
+        ageLabel.setBounds(20, 70, 60, 14);
 
-        jLabel6.setText(bundle.getString("TgDesign.jLabel6.text")); // NOI18N
-        jPanel2.add(jLabel6);
-        jLabel6.setBounds(20, 100, 70, 14);
+        diameterLabel.setText(bundle.getString("TgDesign.diameterLabel.text")); // NOI18N
+        jPanel2.add(diameterLabel);
+        diameterLabel.setBounds(20, 100, 70, 14);
 
-        jLabel7.setText(bundle.getString("TgDesign.jLabel7.text")); // NOI18N
-        jPanel2.add(jLabel7);
-        jLabel7.setBounds(20, 160, 80, 14);
+        maxDiameterLabel.setText(bundle.getString("TgDesign.maxDiameterLabel.text")); // NOI18N
+        jPanel2.add(maxDiameterLabel);
+        maxDiameterLabel.setBounds(20, 160, 80, 14);
 
-        jLabel8.setText(bundle.getString("TgDesign.jLabel8.text")); // NOI18N
-        jPanel2.add(jLabel8);
-        jLabel8.setBounds(20, 130, 80, 14);
+        heightLabel.setText(bundle.getString("TgDesign.heightLabel.text")); // NOI18N
+        jPanel2.add(heightLabel);
+        heightLabel.setBounds(20, 130, 80, 14);
 
-        jLabel9.setText(bundle.getString("TgDesign.jLabel9.text")); // NOI18N
-        jPanel2.add(jLabel9);
-        jLabel9.setBounds(20, 190, 130, 14);
+        basalAreaLabel.setText(bundle.getString("TgDesign.basalAreaLabel.text")); // NOI18N
+        jPanel2.add(basalAreaLabel);
+        basalAreaLabel.setBounds(20, 190, 130, 14);
 
         td2.setText(bundle.getString("TgDesign.td2.text")); // NOI18N
         td2.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -181,22 +181,22 @@ public class TgDesign extends JPanel {
         td6.setText(bundle.getString("TgDesign.td6.text")); // NOI18N
         jPanel2.add(td6);
         td6.setBounds(220, 190, 40, 20);
-        jPanel2.add(jComboBox3);
-        jComboBox3.setBounds(150, 40, 140, 20);
+        jPanel2.add(speciesCodeComboBox);
+        speciesCodeComboBox.setBounds(150, 40, 140, 20);
 
-        jButton2.setBackground(new java.awt.Color(51, 153, 255));
-        jButton2.setText(bundle.getString("TgDesign.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        startButton.setBackground(new java.awt.Color(51, 153, 255));
+        startButton.setText(bundle.getString("TgDesign.startButton.text")); // NOI18N
+        startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2);
-        jButton2.setBounds(20, 530, 230, 23);
+        jPanel2.add(startButton);
+        startButton.setBounds(20, 530, 230, 23);
 
-        jLabel1.setText(bundle.getString("TgDesign.jLabel1.text")); // NOI18N
-        jPanel2.add(jLabel1);
-        jLabel1.setBounds(20, 220, 140, 14);
+        siteIndexLabel.setText(bundle.getString("TgDesign.siteIndexLabel.text")); // NOI18N
+        jPanel2.add(siteIndexLabel);
+        siteIndexLabel.setBounds(20, 220, 140, 14);
 
         jTextField1.setText(bundle.getString("TgDesign.jTextField1.text")); // NOI18N
         jPanel2.add(jTextField1);
@@ -211,67 +211,67 @@ public class TgDesign extends JPanel {
         jPanel2.add(jComboBox1);
         jComboBox1.setBounds(30, 370, 230, 20);
 
-        jLabel3.setText(bundle.getString("TgDesign.jLabel3.text")); // NOI18N
-        jPanel2.add(jLabel3);
-        jLabel3.setBounds(30, 400, 120, 14);
+        rasterLabel.setText(bundle.getString("TgDesign.rasterLabel.text")); // NOI18N
+        jPanel2.add(rasterLabel);
+        rasterLabel.setBounds(30, 400, 120, 14);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "create distribution", "create tree(s)" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "create distribution", "create tree(s)" }));
+        typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                typeComboBoxActionPerformed(evt);
             }
         });
-        jPanel2.add(jComboBox2);
-        jComboBox2.setBounds(20, 10, 270, 20);
+        jPanel2.add(typeComboBox);
+        typeComboBox.setBounds(20, 10, 270, 20);
 
-        jTextField2.setText(bundle.getString("TgDesign.jTextField2.text")); // NOI18N
-        jPanel2.add(jTextField2);
-        jTextField2.setBounds(160, 400, 40, 20);
+        rasterXTextField.setText(bundle.getString("TgDesign.rasterXTextField.text")); // NOI18N
+        jPanel2.add(rasterXTextField);
+        rasterXTextField.setBounds(160, 400, 40, 20);
 
-        jTextField3.setText(bundle.getString("TgDesign.jTextField3.text")); // NOI18N
-        jPanel2.add(jTextField3);
-        jTextField3.setBounds(210, 400, 40, 20);
+        rasterYTextField.setText(bundle.getString("TgDesign.rasterYTextField.text")); // NOI18N
+        jPanel2.add(rasterYTextField);
+        rasterYTextField.setBounds(210, 400, 40, 20);
 
-        jLabel2.setText(bundle.getString("TgDesign.jLabel2.text")); // NOI18N
-        jPanel2.add(jLabel2);
-        jLabel2.setBounds(30, 430, 120, 14);
+        startPositionLabel.setText(bundle.getString("TgDesign.startPositionLabel.text")); // NOI18N
+        jPanel2.add(startPositionLabel);
+        startPositionLabel.setBounds(30, 430, 120, 14);
 
-        jTextField4.setText(bundle.getString("TgDesign.jTextField4.text")); // NOI18N
-        jPanel2.add(jTextField4);
-        jTextField4.setBounds(160, 430, 40, 20);
+        startXTextField.setText(bundle.getString("TgDesign.startXTextField.text")); // NOI18N
+        jPanel2.add(startXTextField);
+        startXTextField.setBounds(160, 430, 40, 20);
 
-        jTextField5.setText(bundle.getString("TgDesign.jTextField5.text")); // NOI18N
-        jPanel2.add(jTextField5);
-        jTextField5.setBounds(210, 430, 40, 20);
+        startYTextField.setText(bundle.getString("TgDesign.startYTextField.text")); // NOI18N
+        jPanel2.add(startYTextField);
+        startYTextField.setBounds(210, 430, 40, 20);
 
-        jCheckBox1.setText(bundle.getString("TgDesign.jCheckBox1.text")); // NOI18N
-        jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jPanel2.add(jCheckBox1);
-        jCheckBox1.setBounds(30, 460, 220, 15);
+        developmentCheckBox.setText(bundle.getString("TgDesign.developmentCheckBox.text")); // NOI18N
+        developmentCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        jPanel2.add(developmentCheckBox);
+        developmentCheckBox.setBounds(30, 460, 220, 15);
 
-        jLabel10.setText(bundle.getString("TgDesign.jLabel10.text")); // NOI18N
-        jPanel2.add(jLabel10);
-        jLabel10.setBounds(50, 490, 60, 14);
+        distanceLabel.setText(bundle.getString("TgDesign.distanceLabel.text")); // NOI18N
+        jPanel2.add(distanceLabel);
+        distanceLabel.setBounds(50, 490, 60, 14);
 
-        jTextField6.setText(bundle.getString("TgDesign.jTextField6.text")); // NOI18N
-        jPanel2.add(jTextField6);
-        jTextField6.setBounds(110, 490, 40, 20);
+        distanceTextField.setText(bundle.getString("TgDesign.distanceTextField.text")); // NOI18N
+        jPanel2.add(distanceTextField);
+        distanceTextField.setBounds(110, 490, 40, 20);
 
-        jLabel11.setText(bundle.getString("TgDesign.jLabel11.text")); // NOI18N
-        jPanel2.add(jLabel11);
-        jLabel11.setBounds(160, 490, 60, 14);
+        widthLabel.setText(bundle.getString("TgDesign.widthLabel.text")); // NOI18N
+        jPanel2.add(widthLabel);
+        widthLabel.setBounds(160, 490, 60, 14);
 
-        jTextField7.setText(bundle.getString("TgDesign.jTextField7.text")); // NOI18N
-        jPanel2.add(jTextField7);
-        jTextField7.setBounds(220, 490, 30, 20);
+        widthTextField.setText(bundle.getString("TgDesign.widthTextField.text")); // NOI18N
+        jPanel2.add(widthTextField);
+        widthTextField.setBounds(220, 490, 30, 20);
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Einzelstamm", "Trupp", "Gruppe", "Horst" }));
         jPanel2.add(jComboBox4);
         jComboBox4.setBounds(120, 320, 140, 20);
 
-        jLabel12.setText(bundle.getString("TgDesign.jLabel12.text")); // NOI18N
-        jPanel2.add(jLabel12);
-        jLabel12.setBounds(30, 320, 70, 14);
+        mixtureLabel.setText(bundle.getString("TgDesign.mixtureLabel.text")); // NOI18N
+        jPanel2.add(mixtureLabel);
+        mixtureLabel.setBounds(30, 320, 70, 14);
 
         jLabel13.setText(bundle.getString("TgDesign.jLabel13.text")); // NOI18N
         jPanel2.add(jLabel13);
@@ -295,27 +295,27 @@ public class TgDesign extends JPanel {
         add(jPanel4, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void typeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeComboBoxActionPerformed
         // TODO add your handling code here:
         td2.setText("50");
         td4.setText("25");
         td6.setText("18.0");
         td3.setVisible(true);
         jTextField1.setText("-9.0");
-        jLabel6.setVisible(true);
+        diameterLabel.setVisible(true);
         jComboBox4.setVisible(true);
-        jLabel12.setVisible(true);
+        mixtureLabel.setVisible(true);
         jComboBox1.setVisible(true);
-        jCheckBox1.setVisible(true);
-        jLabel10.setVisible(true);
-        jTextField6.setVisible(true);
-        jLabel11.setVisible(true);
-        jTextField7.setVisible(true);
-        if (jComboBox2.getSelectedIndex() == 0) {
+        developmentCheckBox.setVisible(true);
+        distanceLabel.setVisible(true);
+        distanceTextField.setVisible(true);
+        widthLabel.setVisible(true);
+        widthTextField.setVisible(true);
+        if (typeComboBox.getSelectedIndex() == 0) {
 //            jLabel6.setText(messages.getString("Dg"));
 //            jLabel8.setText(messages.getString("Hg"));
 //            jLabel9.setText(messages.getString("Basal_area"));
-            jLabel7.setVisible(true);
+            maxDiameterLabel.setVisible(true);
             td5.setVisible(true);
             td6.setText("18.0");
             td3.setVisible(true);
@@ -323,49 +323,49 @@ public class TgDesign extends JPanel {
 //            jLabel6.setText(messages.getString("dbh"));
 //            jLabel8.setText(messages.getString("height"));
 //            jLabel9.setText(messages.getString("number_of_trees"));
-            jLabel7.setVisible(false);
+            maxDiameterLabel.setVisible(false);
             td5.setVisible(false);
             td6.setText("1");
         }
-        if (jComboBox2.getSelectedIndex() == 2) {
+        if (typeComboBox.getSelectedIndex() == 2) {
             td2.setText("5");
             td4.setText("0.5");
             td6.setText("50.0");
             jTextField1.setText("30.0");
-            jLabel6.setVisible(false);
+            diameterLabel.setVisible(false);
             td3.setVisible(false);
-            jLabel7.setVisible(false);
+            maxDiameterLabel.setVisible(false);
             td5.setVisible(false);
 //            jLabel9.setText(messages.getString("coveragePercent"));
             jComboBox4.setVisible(false);
-            jLabel12.setVisible(false);
+            mixtureLabel.setVisible(false);
             jComboBox1.setVisible(false);
-            jCheckBox1.setVisible(false);
-            jLabel10.setVisible(false);
-            jTextField6.setVisible(false);
-            jLabel11.setVisible(false);
-            jTextField7.setVisible(false);
+            developmentCheckBox.setVisible(false);
+            distanceLabel.setVisible(false);
+            distanceTextField.setVisible(false);
+            widthLabel.setVisible(false);
+            widthTextField.setVisible(false);
             jComboBox5.setSelectedIndex(2);
 
         }
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_typeComboBoxActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
         if (jComboBox1.getSelectedIndex() == 1) {
-            jLabel3.setVisible(true);
-            jTextField2.setVisible(true);
-            jTextField3.setVisible(true);
-            jLabel2.setVisible(true);
-            jTextField4.setVisible(true);
-            jTextField5.setVisible(true);
+            rasterLabel.setVisible(true);
+            rasterXTextField.setVisible(true);
+            rasterYTextField.setVisible(true);
+            startPositionLabel.setVisible(true);
+            startXTextField.setVisible(true);
+            startYTextField.setVisible(true);
         } else {
-            jLabel3.setVisible(false);
-            jTextField2.setVisible(false);
-            jTextField3.setVisible(false);
-            jLabel2.setVisible(false);
-            jTextField4.setVisible(false);
-            jTextField5.setVisible(false);
+            rasterLabel.setVisible(false);
+            rasterXTextField.setVisible(false);
+            rasterYTextField.setVisible(false);
+            startPositionLabel.setVisible(false);
+            startXTextField.setVisible(false);
+            startYTextField.setVisible(false);
         }
 
     }//GEN-LAST:event_jComboBox1ActionPerformed
@@ -379,10 +379,10 @@ public class TgDesign extends JPanel {
 
             // generate diameter distribution
             if (cmd.equals("start creating")) {
-                if (jComboBox2.getSelectedIndex() == 0) {
+                if (typeComboBox.getSelectedIndex() == 0) {
                     try {
                         GenDistribution gdb = new GenDistribution();
-                        String codex = (String) (jComboBox3.getSelectedItem());
+                        String codex = (String) (speciesCodeComboBox.getSelectedItem());
                         int m = codex.indexOf(":");
                         codex = codex.substring(0, m);
                         int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
@@ -420,9 +420,9 @@ public class TgDesign extends JPanel {
                             st.tr[j].setMissingData();
                         }
                         GenerateXY gxy = null;
-                        if (jCheckBox1.isSelected()) {
-                            double dist = Double.parseDouble(jTextField6.getText());
-                            double br = Double.parseDouble(jTextField7.getText());
+                        if (developmentCheckBox.isSelected()) {
+                            double dist = Double.parseDouble(distanceTextField.getText());
+                            double br = Double.parseDouble(widthTextField.getText());
                             if (dist < 0.1) {
                                 dist = 20.0;
                             }
@@ -445,7 +445,7 @@ public class TgDesign extends JPanel {
                         if (jComboBox1.getSelectedIndex() == 0) {
                             gxy.zufall(st);
                         } else {
-                            gxy.raster(st, Double.parseDouble(jTextField2.getText()), Double.parseDouble(jTextField3.getText()), Double.parseDouble(jTextField4.getText()), Double.parseDouble(jTextField5.getText()));
+                            gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()), Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
                         }
                         st.sortbyd();
                         st.descspecies();
@@ -454,13 +454,13 @@ public class TgDesign extends JPanel {
                         Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (jComboBox2.getSelectedIndex() == 1) {
+                if (typeComboBox.getSelectedIndex() == 1) {
                     int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
                     for (int j = 0; j < Integer.parseInt(td6.getText()); j++) {
                         try {
                             Integer nox = st.ntrees + 1;
                             String nrAdd = nox.toString();
-                            String codex = (String) (jComboBox3.getSelectedItem());
+                            String codex = (String) (speciesCodeComboBox.getSelectedItem());
                             int m = codex.indexOf(":");
                             codex = codex.substring(0, m);
                             st.addtree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(jTextField1.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
@@ -476,14 +476,14 @@ public class TgDesign extends JPanel {
                     if (jComboBox1.getSelectedIndex() == 0) {
                         gxy.zufall(st);
                     } else {
-                        gxy.raster(st, Double.parseDouble(jTextField2.getText()), Double.parseDouble(jTextField3.getText()),
-                                Double.parseDouble(jTextField4.getText()), Double.parseDouble(jTextField5.getText()));
+                        gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()),
+                                Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
                     }
 
                 }
 
-                if (jComboBox2.getSelectedIndex() == 2) {
-                    String codex = (String) (jComboBox3.getSelectedItem());
+                if (typeComboBox.getSelectedIndex() == 2) {
+                    String codex = (String) (speciesCodeComboBox.getSelectedItem());
                     int m = codex.indexOf(":");
                     codex = codex.substring(0, m);
                     double bon = Double.parseDouble(jTextField1.getText());
@@ -598,7 +598,7 @@ public class TgDesign extends JPanel {
 
             while (i.hasNext()) {
                 Element sortiment = (Element) i.next();
-                jComboBox3.addItem(sortiment.getChild("Code").getText() + ":" + sortiment.getChild("ShortName").getText());
+                speciesCodeComboBox.addItem(sortiment.getChild("Code").getText() + ":" + sortiment.getChild("ShortName").getText());
             }
 
         } catch (Exception e) {
@@ -609,12 +609,12 @@ public class TgDesign extends JPanel {
 
         }
 
-        jComboBox3.setSelectedIndex(0);
+        speciesCodeComboBox.setSelectedIndex(0);
     }
 
     private double setho() {
         Double ho = 0.0;
-        String txt = jComboBox3.getSelectedItem().toString();
+        String txt = speciesCodeComboBox.getSelectedItem().toString();
         int m = txt.indexOf(":");
         int code = Integer.parseInt(txt.substring(0, m));
         int a = Integer.parseInt(td2.getText().trim());
@@ -657,7 +657,7 @@ public class TgDesign extends JPanel {
     private void setdbh() {
         Double dgx = 0.0;
         Double dgm = 0.0;
-        String txt = jComboBox3.getSelectedItem().toString();
+        String txt = speciesCodeComboBox.getSelectedItem().toString();
         int m = txt.indexOf(":");
         int code = Integer.parseInt(txt.substring(0, m));
         if (code != 111 && code != 511 && code != 711) {
@@ -727,40 +727,40 @@ public class TgDesign extends JPanel {
 	}*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JLabel ageLabel;
+    private javax.swing.JLabel basalAreaLabel;
+    private javax.swing.JCheckBox developmentCheckBox;
+    private javax.swing.JLabel diameterLabel;
+    private javax.swing.JLabel distanceLabel;
+    private javax.swing.JTextField distanceTextField;
+    private javax.swing.JLabel heightLabel;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JLabel maxDiameterLabel;
+    private javax.swing.JLabel mixtureLabel;
+    private javax.swing.JLabel rasterLabel;
+    private javax.swing.JTextField rasterXTextField;
+    private javax.swing.JTextField rasterYTextField;
+    private javax.swing.JLabel siteIndexLabel;
+    private javax.swing.JComboBox speciesCodeComboBox;
+    private javax.swing.JLabel speciesCodeLabel;
+    private javax.swing.JButton startButton;
+    private javax.swing.JLabel startPositionLabel;
+    private javax.swing.JTextField startXTextField;
+    private javax.swing.JTextField startYTextField;
     private javax.swing.JTextField td2;
     private javax.swing.JTextField td3;
     private javax.swing.JTextField td4;
     private javax.swing.JTextField td5;
     private javax.swing.JTextField td6;
+    private javax.swing.JComboBox typeComboBox;
+    private javax.swing.JLabel widthLabel;
+    private javax.swing.JTextField widthTextField;
     // End of variables declaration//GEN-END:variables
 
 }

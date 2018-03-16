@@ -42,10 +42,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
         st = stand;
         jComboBox1.removeAllItems();
 //        jTextField1.setText(dir+System.getProperty("file.separator")+"localdata.mdb");
-        jTextField1.setText(new File(dir, "localdata.mdb").getPath());
+        databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
         jPanel1.setVisible(true);
         jPanel2.setVisible(false);
-        jButton3.setVisible(false);
+        calculateStandButton.setVisible(false);
         if (st.FileXMLSettings.indexOf("ElSalto")>0) jPanel2.setVisible(true);
     }
     /** This method is called from within the constructor to
@@ -56,99 +56,99 @@ public class DBAccessDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
+        databaseFilenameTextField = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        loadStandButton = new javax.swing.JButton();
+        calculateStandButton = new javax.swing.JButton();
+        calculateAllButton = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        jButton11 = new javax.swing.JButton();
+        selectFileButton = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jButton6 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jButton7 = new javax.swing.JButton();
+        simulationButton = new javax.swing.JButton();
+        biDataLabel = new javax.swing.JLabel();
+        feDataButton = new javax.swing.JButton();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
-        jButton8 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jButton9 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jButton10 = new javax.swing.JButton();
+        loadCircleButton = new javax.swing.JButton();
+        yearsLabel = new javax.swing.JLabel();
+        yearsTextField = new javax.swing.JTextField();
+        biUpdateButton = new javax.swing.JButton();
+        beginCheckBox = new javax.swing.JCheckBox();
+        biPlotInfoButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jButton12 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jButton13 = new javax.swing.JButton();
+        loadSPISButton = new javax.swing.JButton();
+        plotNumberLabel = new javax.swing.JLabel();
+        plotNumberTextField = new javax.swing.JTextField();
+        specialMixtureButton = new javax.swing.JButton();
         jButton14 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
-        jButton1.setText(bundle.getString("DBAccessDialog.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        searchButton.setText(bundle.getString("DBAccessDialog.searchButton.text")); // NOI18N
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                searchButtonActionPerformed(evt);
             }
         });
 
-        jTextField1.setText(bundle.getString("DBAccessDialog.jTextField1.text")); // NOI18N
+        databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
 
         jTextField2.setText(bundle.getString("DBAccessDialog.jTextField2.text")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jButton2.setText(bundle.getString("DBAccessDialog.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        loadStandButton.setText(bundle.getString("DBAccessDialog.loadStandButton.text")); // NOI18N
+        loadStandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                loadStandButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText(bundle.getString("DBAccessDialog.jButton3.text")); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        calculateStandButton.setText(bundle.getString("DBAccessDialog.calculateStandButton.text")); // NOI18N
+        calculateStandButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                calculateStandButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText(bundle.getString("DBAccessDialog.jButton4.text")); // NOI18N
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        calculateAllButton.setText(bundle.getString("DBAccessDialog.calculateAllButton.text")); // NOI18N
+        calculateAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                calculateAllButtonActionPerformed(evt);
             }
         });
 
-        jButton5.setText(null);
+        jButton5.setText("null");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
 
-        jButton11.setText(bundle.getString("DBAccessDialog.jButton11.text")); // NOI18N
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
+        selectFileButton.setText(bundle.getString("DBAccessDialog.selectFileButton.text")); // NOI18N
+        selectFileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
+                selectFileButtonActionPerformed(evt);
             }
         });
 
-        jButton6.setText(bundle.getString("DBAccessDialog.jButton6.text")); // NOI18N
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        simulationButton.setText(bundle.getString("DBAccessDialog.simulationButton.text")); // NOI18N
+        simulationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                simulationButtonActionPerformed(evt);
             }
         });
 
-        jLabel1.setText(bundle.getString("DBAccessDialog.jLabel1.text")); // NOI18N
+        biDataLabel.setText(bundle.getString("DBAccessDialog.biDataLabel.text")); // NOI18N
 
-        jButton7.setText(bundle.getString("DBAccessDialog.jButton7.text")); // NOI18N
-        jButton7.addActionListener(new java.awt.event.ActionListener() {
+        feDataButton.setText(bundle.getString("DBAccessDialog.feDataButton.text")); // NOI18N
+        feDataButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton7ActionPerformed(evt);
+                feDataButtonActionPerformed(evt);
             }
         });
 
@@ -158,30 +158,35 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         jTextField6.setText(bundle.getString("DBAccessDialog.jTextField6.text")); // NOI18N
 
-        jButton8.setText(bundle.getString("DBAccessDialog.jButton8.text")); // NOI18N
-        jButton8.addActionListener(new java.awt.event.ActionListener() {
+        loadCircleButton.setText(bundle.getString("DBAccessDialog.loadCircleButton.text")); // NOI18N
+        loadCircleButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton8ActionPerformed(evt);
+                loadCircleButtonActionPerformed(evt);
             }
         });
 
-        jLabel2.setText(bundle.getString("DBAccessDialog.jLabel2.text")); // NOI18N
+        yearsLabel.setText(bundle.getString("DBAccessDialog.yearsLabel.text")); // NOI18N
 
-        jTextField5.setText(bundle.getString("DBAccessDialog.jTextField5.text")); // NOI18N
-
-        jButton9.setText(bundle.getString("DBAccessDialog.jButton9.text")); // NOI18N
-        jButton9.addActionListener(new java.awt.event.ActionListener() {
+        yearsTextField.setText(bundle.getString("DBAccessDialog.yearsTextField.text")); // NOI18N
+        yearsTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton9ActionPerformed(evt);
+                yearsTextFieldActionPerformed(evt);
             }
         });
 
-        jCheckBox1.setText(bundle.getString("DBAccessDialog.jCheckBox1.text")); // NOI18N
-
-        jButton10.setText(bundle.getString("DBAccessDialog.jButton10.text")); // NOI18N
-        jButton10.addActionListener(new java.awt.event.ActionListener() {
+        biUpdateButton.setText(bundle.getString("DBAccessDialog.biUpdateButton.text")); // NOI18N
+        biUpdateButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton10ActionPerformed(evt);
+                biUpdateButtonActionPerformed(evt);
+            }
+        });
+
+        beginCheckBox.setText(bundle.getString("DBAccessDialog.beginCheckBox.text")); // NOI18N
+
+        biPlotInfoButton.setText(bundle.getString("DBAccessDialog.biPlotInfoButton.text")); // NOI18N
+        biPlotInfoButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                biPlotInfoButtonActionPerformed(evt);
             }
         });
 
@@ -196,24 +201,24 @@ public class DBAccessDialog extends javax.swing.JDialog {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(213, 213, 213)
-                                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(simulationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(76, 76, 76)
-                                .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                                .addComponent(biUpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(beginCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(biPlotInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(feDataButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addContainerGap(215, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(biDataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(yearsLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
@@ -221,7 +226,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                         .addGap(29, 29, 29)
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(47, 47, 47)
-                        .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loadCircleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -233,32 +238,37 @@ public class DBAccessDialog extends javax.swing.JDialog {
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton8))
-                    .addComponent(jLabel1))
+                        .addComponent(loadCircleButton))
+                    .addComponent(biDataLabel))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton9)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton10))
+                    .addComponent(biUpdateButton)
+                    .addComponent(beginCheckBox)
+                    .addComponent(yearsLabel)
+                    .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(biPlotInfoButton))
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton7)
-                    .addComponent(jButton6))
+                    .addComponent(feDataButton)
+                    .addComponent(simulationButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton12.setText(bundle.getString("DBAccessDialog.jButton12.text")); // NOI18N
-        jButton12.addActionListener(new java.awt.event.ActionListener() {
+        loadSPISButton.setText(bundle.getString("DBAccessDialog.loadSPISButton.text")); // NOI18N
+        loadSPISButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton12ActionPerformed(evt);
+                loadSPISButtonActionPerformed(evt);
             }
         });
 
-        jLabel3.setText(bundle.getString("DBAccessDialog.jLabel3.text")); // NOI18N
+        plotNumberLabel.setText(bundle.getString("DBAccessDialog.plotNumberLabel.text")); // NOI18N
 
-        jTextField7.setText(bundle.getString("DBAccessDialog.jTextField7.text")); // NOI18N
+        plotNumberTextField.setText(bundle.getString("DBAccessDialog.plotNumberTextField.text")); // NOI18N
+        plotNumberTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plotNumberTextFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -266,11 +276,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(86, 86, 86)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plotNumberLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plotNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(45, 45, 45)
-                .addComponent(jButton12, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(loadSPISButton, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -278,16 +288,16 @@ public class DBAccessDialog extends javax.swing.JDialog {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton12)
-                    .addComponent(jLabel3)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(loadSPISButton)
+                    .addComponent(plotNumberLabel)
+                    .addComponent(plotNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(51, Short.MAX_VALUE))
         );
 
-        jButton13.setText(bundle.getString("DBAccessDialog.jButton13.text")); // NOI18N
-        jButton13.addActionListener(new java.awt.event.ActionListener() {
+        specialMixtureButton.setText(bundle.getString("DBAccessDialog.specialMixtureButton.text")); // NOI18N
+        specialMixtureButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton13ActionPerformed(evt);
+                specialMixtureButtonActionPerformed(evt);
             }
         });
 
@@ -308,16 +318,16 @@ public class DBAccessDialog extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(loadStandButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(calculateStandButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(calculateAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(485, 485, 485))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(databaseFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(15, 15, 15)
-                                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(selectFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                 .addGap(8, 8, 8)
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -332,7 +342,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                                 .addGap(30, 30, 30)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButton1)))
+                                .addComponent(searchButton)))
                         .addGap(67, 67, 67)))
                 .addContainerGap(21, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -343,30 +353,30 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton13, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(specialMixtureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(103, 103, 103))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton13)
+                    .addComponent(specialMixtureButton)
                     .addComponent(jButton14))
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton11))
+                    .addComponent(databaseFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(selectFileButton))
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(searchButton)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)
-                        .addComponent(jButton4))
+                        .addComponent(loadStandButton)
+                        .addComponent(calculateStandButton)
+                        .addComponent(calculateAllButton))
                     .addComponent(jButton5))
                 .addGap(9, 9, 9)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -378,8 +388,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        aktivesDatenfile = jTextField1.getText();
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
           try {
@@ -393,11 +403,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
            catch (Exception e){  System.out.println("Problem: "+" "+e); }
         
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_searchButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void loadStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStandButtonActionPerformed
 
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
@@ -435,10 +445,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         dispose();
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_loadStandButtonActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        aktivesDatenfile = jTextField1.getText();
+    private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         Treatment2 t2 = new Treatment2();
@@ -472,10 +482,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         dispose();
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_calculateStandButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        aktivesDatenfile = jTextField1.getText();
+    private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
@@ -575,10 +585,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
 
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_calculateAllButtonActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
@@ -591,7 +601,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
         // Yield table simulation
         aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
@@ -666,11 +676,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
         } catch (Exception e){  System.out.println("Problem: "+" "+e); }
 
         dispose();
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_simulationButtonActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+    private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
         // TFE Daten
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         
@@ -770,11 +780,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         dispose();
 
-    }//GEN-LAST:event_jButton7ActionPerformed
+    }//GEN-LAST:event_feDataButtonActionPerformed
 
-    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+    private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
         // BI Probekreis laden
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
         LoadProbekreis lpk = new LoadProbekreis();
@@ -803,11 +813,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
         dispose();
         
         
-    }//GEN-LAST:event_jButton8ActionPerformed
+    }//GEN-LAST:event_loadCircleButtonActionPerformed
 
-    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+    private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC = new ConnectionFactory();
         try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
             String bi = "179-2001-001";
@@ -901,14 +911,14 @@ public class DBAccessDialog extends javax.swing.JDialog {
             System.out.println("Problem: " + " " + e);
         }
         dispose();
-    }//GEN-LAST:event_jButton9ActionPerformed
+    }//GEN-LAST:event_biUpdateButtonActionPerformed
 
-    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+    private void biPlotInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biPlotInfoButtonActionPerformed
         // BI Plot Info
         boolean beginnPeriode = false;
-        if (jCheckBox1.isSelected()) beginnPeriode=true;
+        if (beginCheckBox.isSelected()) beginnPeriode=true;
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         String bi = "179-2001-001";
@@ -993,9 +1003,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         dispose();
 
-    }//GEN-LAST:event_jButton10ActionPerformed
+    }//GEN-LAST:event_biPlotInfoButtonActionPerformed
 
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+    private void selectFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileButtonActionPerformed
         // Select data base file
         java.io.File f = new java.io.File("");
         String localPath="";
@@ -1007,20 +1017,20 @@ public class DBAccessDialog extends javax.swing.JDialog {
         jf.setCurrentDirectory(new java.io.File(localPath));
         int k=jf.showOpenDialog(this);
         java.io.File verzeichnis = jf.getSelectedFile();
-        jTextField1.setText(verzeichnis.getAbsolutePath());        
+        databaseFilenameTextField.setText(verzeichnis.getAbsolutePath());        
 
 
 
         
-    }//GEN-LAST:event_jButton11ActionPerformed
+    }//GEN-LAST:event_selectFileButtonActionPerformed
 
-    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+    private void loadSPISButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSPISButtonActionPerformed
         // TODO add your handling code here:
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadProbekreis lpk = new LoadProbekreis();
-        int pl = Integer.parseInt(jTextField7.getText());
+        int pl = Integer.parseInt(plotNumberTextField.getText());
         st = lpk.loadFromElSalto(con, st,  pl );
         try{
           con.close();
@@ -1036,11 +1046,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         dispose();
 
-    }//GEN-LAST:event_jButton12ActionPerformed
+    }//GEN-LAST:event_loadSPISButtonActionPerformed
 
-    private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
+    private void specialMixtureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specialMixtureButtonActionPerformed
         // TODO add your handling code here:
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
@@ -1091,7 +1101,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
 // Daten speichern        
         
-        aktivesDatenfile = jTextField1.getText();
+        aktivesDatenfile = databaseFilenameTextField.getText();
         dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
         con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         MixedTreeInfo mti = new MixedTreeInfo();
@@ -1107,11 +1117,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
         
         dispose();
         
-    }//GEN-LAST:event_jButton13ActionPerformed
+    }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         // TODO add your handling code here:
-           aktivesDatenfile = jTextField1.getText();
+           aktivesDatenfile = databaseFilenameTextField.getText();
            dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
            con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
            LoadTreegrossStand lts = new  LoadTreegrossStand(); 
@@ -1210,6 +1220,14 @@ public class DBAccessDialog extends javax.swing.JDialog {
         
         
     }//GEN-LAST:event_jButton14ActionPerformed
+
+    private void plotNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotNumberTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_plotNumberTextFieldActionPerformed
+
+    private void yearsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearsTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_yearsTextFieldActionPerformed
  
     /** check if a point is in polygon , if return is 0 then outside*/
     private int pnpoly(double x, double y, Stand st){
@@ -1238,34 +1256,34 @@ public class DBAccessDialog extends javax.swing.JDialog {
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton11;
-    private javax.swing.JButton jButton12;
-    private javax.swing.JButton jButton13;
+    private javax.swing.JCheckBox beginCheckBox;
+    private javax.swing.JLabel biDataLabel;
+    private javax.swing.JButton biPlotInfoButton;
+    private javax.swing.JButton biUpdateButton;
+    private javax.swing.JButton calculateAllButton;
+    private javax.swing.JButton calculateStandButton;
+    private javax.swing.JTextField databaseFilenameTextField;
+    private javax.swing.JButton feDataButton;
     private javax.swing.JButton jButton14;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
+    private javax.swing.JButton loadCircleButton;
+    private javax.swing.JButton loadSPISButton;
+    private javax.swing.JButton loadStandButton;
+    private javax.swing.JLabel plotNumberLabel;
+    private javax.swing.JTextField plotNumberTextField;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JButton selectFileButton;
+    private javax.swing.JButton simulationButton;
+    private javax.swing.JButton specialMixtureButton;
+    private javax.swing.JLabel yearsLabel;
+    private javax.swing.JTextField yearsTextField;
     // End of variables declaration//GEN-END:variables
     
 }
