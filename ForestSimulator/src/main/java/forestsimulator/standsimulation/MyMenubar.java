@@ -32,10 +32,8 @@ class MyMenubar extends JMenuBar {
     String country;
 
     public MyMenubar(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage, Stand st, boolean accessInput) {
-        Locale currentLocale;
         ResourceBundle messages;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
+        messages = ResourceBundle.getBundle("forestsimulator/gui");
         JMenu m; // Hauptmenupunkt
         JMenuItem mi; //Untermenupunkt
         JMenu subm = new JMenu(messages.getString("show"));
@@ -133,13 +131,13 @@ class MyMenubar extends JMenuBar {
         cmi[2].addItemListener(Ilistener);
         m.add(cmi[2]);
 //3.4 Stand Info                
-        cmi[5] = new JCheckBoxMenuItem(java.util.ResourceBundle.getBundle("forestsimulator/standsimulation/TgJFrame").getString("Stand_Info"), true);
+        cmi[5] = new JCheckBoxMenuItem(java.util.ResourceBundle.getBundle("forestsimulator/gui").getString("Stand_Info"), true);
         cmi[5].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, Event.CTRL_MASK));
         cmi[5].addItemListener(Ilistener);
         m.add(cmi[5]);
 
 //3.5 Stand Info                
-        cmi[4] = new JCheckBoxMenuItem(java.util.ResourceBundle.getBundle("forestsimulator/standsimulation/TgJFrame").getString("Treatment_Info"), true);
+        cmi[4] = new JCheckBoxMenuItem(java.util.ResourceBundle.getBundle("forestsimulator/gui").getString("Treatment_Info"), true);
         cmi[4].setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, Event.CTRL_MASK));
         cmi[4].addItemListener(Ilistener);
         m.add(cmi[4]);

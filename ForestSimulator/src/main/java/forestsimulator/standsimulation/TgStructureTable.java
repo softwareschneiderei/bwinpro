@@ -45,7 +45,7 @@ class TgStructureTable {
          
          
          StandStructure struc = new StandStructure();
-         messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", preferredLanguage);
+         messages = ResourceBundle.getBundle("forestsimulator/gui");
 	  try {
 		File file= new File(path, fname);
                 filename=file.getCanonicalPath();

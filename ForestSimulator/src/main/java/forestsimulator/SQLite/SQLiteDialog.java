@@ -46,20 +46,21 @@ public class SQLiteDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton2 = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("ForestSimulator SQLite Plugin");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("SQLiteDialog.title")); // NOI18N
 
-        jButton2.setText("load stand from database to ForestSimulator");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        loadButton.setText(bundle.getString("SQLiteDialog.loadButton.text")); // NOI18N
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                loadButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, java.awt.BorderLayout.PAGE_END);
+        getContentPane().add(loadButton, java.awt.BorderLayout.PAGE_END);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         jPanel2.add(jTabbedPane1, java.awt.BorderLayout.CENTER);
@@ -69,13 +70,13 @@ public class SQLiteDialog extends javax.swing.JDialog {
         setBounds(0, 0, 1044, 658);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
         // TODO add your handling code here:
         if (jTabbedPane1.getSelectedIndex()==0) st=jpd.createStand();
         if (jTabbedPane1.getSelectedIndex()==1) st=jpp.createStand();
         if (jTabbedPane1.getSelectedIndex()==2) st=jp.createStand();
         dispose();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_loadButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -107,8 +108,8 @@ public class SQLiteDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JButton loadButton;
     // End of variables declaration//GEN-END:variables
 }

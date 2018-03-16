@@ -15,6 +15,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
+import java.awt.Frame;
 import treegross.base.*;
 import java.util.*;
 import javax.swing.JDialog;
@@ -26,17 +27,12 @@ import javax.swing.JDialog;
 public class TgEditTreegross extends JDialog {
     Stand st;
     EditorPanel editorPanel = new EditorPanel();
-    ResourceBundle messages;
         
-    /** Creates new form TgEditTreegross */
-    public TgEditTreegross(java.awt.Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
+    public TgEditTreegross(Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
         super(parent, modal);
         initComponents();
         st=stand;
-        Locale currentLocale;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        jButton1.setText(messages.getString("acceptChanges"));
+//        jButton1.setText(messages.getString("acceptChanges"));
         editorPanel.setStand(st);
         editorPanel.setLanguage(preferredLanguage);
         editorPanel.loadStand();
@@ -51,29 +47,30 @@ public class TgEditTreegross extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        applyChangesButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("TreeGrOSS Editor");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgEditTreegross.title")); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
         });
 
-        jButton1.setText("Änderungen übernehmen");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        applyChangesButton.setText(bundle.getString("TgEditTreegross.applyChangesButton.text")); // NOI18N
+        applyChangesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                applyChangesButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, java.awt.BorderLayout.SOUTH);
+        getContentPane().add(applyChangesButton, java.awt.BorderLayout.SOUTH);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-800)/2, (screenSize.height-600)/2, 800, 600);
+        setSize(new java.awt.Dimension(800, 600));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void applyChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyChangesButtonActionPerformed
 // TODO add your handling code here:
         
         st = editorPanel.updateStand();
@@ -86,7 +83,7 @@ public class TgEditTreegross extends JDialog {
         editorPanel.setStand(st);
         editorPanel.loadStand();
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_applyChangesButtonActionPerformed
 
 private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
 // TODO add your handling code here:
@@ -105,7 +102,7 @@ private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton applyChangesButton;
     // End of variables declaration//GEN-END:variables
     
 }

@@ -20,6 +20,7 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import java.awt.Frame;
 import treegross.base.*;
 import java.util.*;
 import javax.swing.JDialog;
@@ -30,26 +31,22 @@ public class TgNewStand extends JDialog {
     Stand st;
     TgJFrame frame;
     /** Creates new form TgNewStand */
-    public TgNewStand(java.awt.Frame parent, boolean modal, Stand st1, TgJFrame owner, 
+    public TgNewStand(Frame parent, boolean modal, Stand st1, TgJFrame owner, 
                       Locale preferredLanguage) {
         super(parent, modal);
         st = st1;
         frame = owner;
         initComponents();
-        Locale currentLocale;
-        ResourceBundle messages;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
-        jButton1.setText(messages.getString("create_stand"));
-        setTitle(messages.getString("new_Stand"));
-        jLabel1.setText(messages.getString("IntroZeile"));
-        jLabel2.setText(messages.getString("Size"));
-        jLabel3.setText(messages.getString("standname"));
-        jButton1.setText(messages.getString("create_area"));
-        jComboBox1.removeAllItems();
-        jComboBox1.addItem(messages.getString("square"));
-        jComboBox1.addItem(messages.getString("circular"));
-
+//        jButton1.setText(messages.getString("create_stand"));
+//        setTitle(messages.getString("new_Stand"));
+//        jLabel1.setText(messages.getString("IntroZeile"));
+//        jLabel2.setText(messages.getString("Size"));
+//        jLabel3.setText(messages.getString("standname"));
+//        jButton1.setText(messages.getString("create_area"));
+//        jComboBox1.removeAllItems();
+//        jComboBox1.addItem(messages.getString("square"));
+//        jComboBox1.addItem(messages.getString("circular"));
+//
     }
     
     /** This method is called from within the constructor to
@@ -61,42 +58,43 @@ public class TgNewStand extends JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        newStandInfoLabel = new javax.swing.JLabel();
+        areaSizeLabel = new javax.swing.JLabel();
         tf0 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
+        createAreaButton = new javax.swing.JButton();
+        areaShapeComboBox = new javax.swing.JComboBox();
+        standNameTextField = new javax.swing.JTextField();
+        standNameLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("New Stand");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgNewStand.title")); // NOI18N
         setModal(true);
 
         jPanel1.setBackground(new java.awt.Color(246, 188, 188));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 250));
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jLabel1.setText("New Stand area. This deletes all existing information:");
+        newStandInfoLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        newStandInfoLabel.setText(bundle.getString("TgNewStand.newStandInfoLabel.text")); // NOI18N
 
-        jLabel2.setText("Size [ha]:");
+        areaSizeLabel.setText(bundle.getString("TgNewStand.areaSizeLabel.text")); // NOI18N
 
-        tf0.setText("0.2");
+        tf0.setText(bundle.getString("TgNewStand.tf0.text")); // NOI18N
 
-        jButton1.setBackground(new java.awt.Color(204, 0, 0));
-        jButton1.setText("Create area");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        createAreaButton.setBackground(new java.awt.Color(204, 0, 0));
+        createAreaButton.setText(bundle.getString("TgNewStand.createAreaButton.text")); // NOI18N
+        createAreaButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                createAreaButtonActionPerformed(evt);
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "square", "circular" }));
+        areaShapeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "square", "circular" }));
 
-        jTextField1.setText("Generated Stand");
+        standNameTextField.setText(bundle.getString("TgNewStand.standNameTextField.text")); // NOI18N
 
-        jLabel3.setText("Stand name:");
+        standNameLabel.setText(bundle.getString("TgNewStand.standNameLabel.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -104,41 +102,41 @@ public class TgNewStand extends JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(newStandInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(standNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(areaSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(80, 80, 80)
                 .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(318, 318, 318)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(newStandInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(standNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
-                        .addComponent(jLabel2))
+                        .addComponent(areaSizeLabel))
                     .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -155,7 +153,7 @@ public class TgNewStand extends JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void createAreaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAreaButtonActionPerformed
         // TODO add your handling code here:
         System.out.println("Create area"+tf0.getText());
                  st.newStand();
@@ -163,10 +161,10 @@ public class TgNewStand extends JDialog {
                  st.nspecies=0;
                  st.ntrees=0;
                  st.addsize(Double.parseDouble(tf0.getText()));
-                 st.standname=jTextField1.getText();
+                 st.standname=standNameTextField.getText();
                  st.year=2008;
                  
-                 if (jComboBox1.getSelectedIndex()==0)
+                 if (areaShapeComboBox.getSelectedIndex()==0)
                  {
                    double len = Math.sqrt(10000*st.size);  
                    st.addcornerpoint("ECK1",0.0,0.0,0.0);
@@ -199,7 +197,7 @@ public class TgNewStand extends JDialog {
                  
                  frame.updatetp(false);
                  dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_createAreaButtonActionPerformed
     
     /**
      * @param args the command line arguments
@@ -207,13 +205,13 @@ public class TgNewStand extends JDialog {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JComboBox areaShapeComboBox;
+    private javax.swing.JLabel areaSizeLabel;
+    private javax.swing.JButton createAreaButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel newStandInfoLabel;
+    private javax.swing.JLabel standNameLabel;
+    private javax.swing.JTextField standNameTextField;
     private javax.swing.JTextField tf0;
     // End of variables declaration//GEN-END:variables
     

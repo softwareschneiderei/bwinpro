@@ -72,91 +72,92 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        generalSettingsLabel = new javax.swing.JLabel();
+        modelRegionLabel = new javax.swing.JLabel();
+        modelRegionTextField = new javax.swing.JTextField();
+        randomnessCheckBox = new javax.swing.JCheckBox();
+        ingrowthCheckBox = new javax.swing.JCheckBox();
+        deadWoodModuleCheckBox = new javax.swing.JCheckBox();
+        timeStepLabel = new javax.swing.JLabel();
+        timeStepTextField = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        authorTextField = new javax.swing.JTextField();
+        dateLabel = new javax.swing.JLabel();
+        dateTextField = new javax.swing.JTextField();
+        lastUpdateLabel = new javax.swing.JLabel();
+        lastUpdateTextField = new javax.swing.JTextField();
         jScrollPane4 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jTextField3 = new javax.swing.JTextField();
+        literatureTextField = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField7 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jTextField8 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jTextField9 = new javax.swing.JTextField();
+        sortingModuleLabel = new javax.swing.JLabel();
+        sortingModuleTextField = new javax.swing.JTextField();
+        biomassLabel = new javax.swing.JLabel();
+        biomassTextField = new javax.swing.JTextField();
+        deadWoodModuleLabel = new javax.swing.JLabel();
+        deadWoodModuleTextField = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
+        selectedSpeciesLabel = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
+        saveAsNewButton = new javax.swing.JButton();
+        saveSettingsButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        treeSpeciesLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Species Manager XML");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        setTitle(bundle.getString("TgSpeciesManXML.title")); // NOI18N
         setBackground(java.awt.Color.white);
 
         jPanel4.setLayout(new java.awt.BorderLayout());
 
         jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel3.setText("Allgemeine Einstellungen");
-        jPanel6.add(jLabel3);
+        generalSettingsLabel.setText(bundle.getString("TgSpeciesManXML.generalSettingsLabel.text")); // NOI18N
+        jPanel6.add(generalSettingsLabel);
 
-        jLabel4.setText("Modellregion: ");
-        jPanel6.add(jLabel4);
+        modelRegionLabel.setText(bundle.getString("TgSpeciesManXML.modelRegionLabel.text")); // NOI18N
+        jPanel6.add(modelRegionLabel);
 
-        jTextField1.setText("jTextField1");
-        jTextField1.setPreferredSize(new java.awt.Dimension(259, 20));
-        jPanel6.add(jTextField1);
+        modelRegionTextField.setText(bundle.getString("TgSpeciesManXML.modelRegionTextField.text")); // NOI18N
+        modelRegionTextField.setPreferredSize(new java.awt.Dimension(259, 20));
+        jPanel6.add(modelRegionTextField);
 
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Zufallskomponente ");
-        jPanel6.add(jCheckBox1);
+        randomnessCheckBox.setSelected(true);
+        randomnessCheckBox.setText(bundle.getString("TgSpeciesManXML.randomnessCheckBox.text")); // NOI18N
+        jPanel6.add(randomnessCheckBox);
 
-        jCheckBox2.setText("Einwuchsmodell");
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+        ingrowthCheckBox.setText(bundle.getString("TgSpeciesManXML.ingrowthCheckBox.text")); // NOI18N
+        ingrowthCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                ingrowthCheckBoxActionPerformed(evt);
             }
         });
-        jPanel6.add(jCheckBox2);
+        jPanel6.add(ingrowthCheckBox);
 
-        jCheckBox3.setText("Totholzmodul");
-        jPanel6.add(jCheckBox3);
+        deadWoodModuleCheckBox.setText(bundle.getString("TgSpeciesManXML.deadWoodModuleCheckBox.text")); // NOI18N
+        jPanel6.add(deadWoodModuleCheckBox);
 
-        jLabel5.setText("TimeStep");
-        jPanel6.add(jLabel5);
+        timeStepLabel.setText(bundle.getString("TgSpeciesManXML.timeStepLabel.text")); // NOI18N
+        jPanel6.add(timeStepLabel);
 
-        jTextField2.setText("5");
-        jTextField2.setPreferredSize(new java.awt.Dimension(22, 20));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        timeStepTextField.setText(bundle.getString("TgSpeciesManXML.timeStepTextField.text")); // NOI18N
+        timeStepTextField.setPreferredSize(new java.awt.Dimension(22, 20));
+        timeStepTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                timeStepTextFieldActionPerformed(evt);
             }
         });
-        jPanel6.add(jTextField2);
+        jPanel6.add(timeStepTextField);
 
         jPanel4.add(jPanel6, java.awt.BorderLayout.NORTH);
 
@@ -164,66 +165,71 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jTextField4.setText("autor");
-        jTextField4.setToolTipText("author");
-        jTextField4.setPreferredSize(new java.awt.Dimension(232, 20));
-        jPanel8.add(jTextField4);
+        authorTextField.setText(bundle.getString("TgSpeciesManXML.authorTextField.text")); // NOI18N
+        authorTextField.setToolTipText(bundle.getString("TgSpeciesManXML.authorTextField.toolTipText")); // NOI18N
+        authorTextField.setPreferredSize(new java.awt.Dimension(232, 20));
+        authorTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                authorTextFieldActionPerformed(evt);
+            }
+        });
+        jPanel8.add(authorTextField);
 
-        jLabel6.setText("Datum: ");
-        jPanel8.add(jLabel6);
+        dateLabel.setText(bundle.getString("TgSpeciesManXML.dateLabel.text")); // NOI18N
+        jPanel8.add(dateLabel);
 
-        jTextField5.setText("jTextField5");
-        jTextField5.setPreferredSize(new java.awt.Dimension(80, 20));
-        jPanel8.add(jTextField5);
+        dateTextField.setText(bundle.getString("TgSpeciesManXML.dateTextField.text")); // NOI18N
+        dateTextField.setPreferredSize(new java.awt.Dimension(80, 20));
+        jPanel8.add(dateTextField);
 
-        jLabel7.setText("Letzte Änderung:");
-        jLabel7.setToolTipText("");
-        jPanel8.add(jLabel7);
+        lastUpdateLabel.setText(bundle.getString("TgSpeciesManXML.lastUpdateLabel.text")); // NOI18N
+        lastUpdateLabel.setToolTipText(bundle.getString("TgSpeciesManXML.lastUpdateLabel.toolTipText")); // NOI18N
+        jPanel8.add(lastUpdateLabel);
 
-        jTextField6.setText("jTextField6");
-        jTextField6.setPreferredSize(new java.awt.Dimension(80, 20));
-        jPanel8.add(jTextField6);
+        lastUpdateTextField.setText(bundle.getString("TgSpeciesManXML.lastUpdateTextField.text")); // NOI18N
+        lastUpdateTextField.setPreferredSize(new java.awt.Dimension(80, 20));
+        jPanel8.add(lastUpdateTextField);
 
         jPanel7.add(jPanel8, java.awt.BorderLayout.NORTH);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
-        jTextArea1.setToolTipText("description");
+        jTextArea1.setToolTipText(bundle.getString("TgSpeciesManXML.jTextArea1.toolTipText")); // NOI18N
         jTextArea1.setPreferredSize(new java.awt.Dimension(164, 74));
         jScrollPane4.setViewportView(jTextArea1);
 
         jPanel7.add(jScrollPane4, java.awt.BorderLayout.CENTER);
 
-        jTextField3.setText("Literature");
-        jTextField3.setToolTipText("Literature");
-        jPanel7.add(jTextField3, java.awt.BorderLayout.PAGE_END);
+        literatureTextField.setText(bundle.getString("TgSpeciesManXML.literatureTextField.text")); // NOI18N
+        literatureTextField.setToolTipText(bundle.getString("TgSpeciesManXML.literatureTextField.toolTipText")); // NOI18N
+        jPanel7.add(literatureTextField, java.awt.BorderLayout.PAGE_END);
 
         jPanel4.add(jPanel7, java.awt.BorderLayout.CENTER);
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 6));
 
-        jLabel8.setText("Sortierungsmodul:");
-        jPanel9.add(jLabel8);
+        sortingModuleLabel.setText(bundle.getString("TgSpeciesManXML.sortingModuleLabel.text")); // NOI18N
+        jPanel9.add(sortingModuleLabel);
 
-        jTextField7.setText("none");
-        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+        sortingModuleTextField.setText(bundle.getString("TgSpeciesManXML.sortingModuleTextField.text")); // NOI18N
+        sortingModuleTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField7ActionPerformed(evt);
+                sortingModuleTextFieldActionPerformed(evt);
             }
         });
-        jPanel9.add(jTextField7);
+        jPanel9.add(sortingModuleTextField);
 
-        jLabel9.setText("Biomassemodul:");
-        jPanel9.add(jLabel9);
+        biomassLabel.setText(bundle.getString("TgSpeciesManXML.biomassLabel.text")); // NOI18N
+        jPanel9.add(biomassLabel);
 
-        jTextField8.setText("none");
-        jPanel9.add(jTextField8);
+        biomassTextField.setText(bundle.getString("TgSpeciesManXML.biomassTextField.text")); // NOI18N
+        jPanel9.add(biomassTextField);
 
-        jLabel10.setText("Totholzmodul");
-        jPanel9.add(jLabel10);
+        deadWoodModuleLabel.setText(bundle.getString("TgSpeciesManXML.deadWoodModuleLabel.text")); // NOI18N
+        jPanel9.add(deadWoodModuleLabel);
 
-        jTextField9.setText("none");
-        jPanel9.add(jTextField9);
+        deadWoodModuleTextField.setText(bundle.getString("TgSpeciesManXML.deadWoodModuleTextField.text")); // NOI18N
+        jPanel9.add(deadWoodModuleTextField);
 
         jPanel4.add(jPanel9, java.awt.BorderLayout.SOUTH);
 
@@ -231,8 +237,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jLabel2.setText("ausgewählte Art");
-        jPanel1.add(jLabel2, java.awt.BorderLayout.PAGE_START);
+        selectedSpeciesLabel.setText(bundle.getString("TgSpeciesManXML.selectedSpeciesLabel.text")); // NOI18N
+        jPanel1.add(selectedSpeciesLabel, java.awt.BorderLayout.PAGE_START);
 
         jPanel5.setLayout(new java.awt.BorderLayout());
 
@@ -290,31 +296,31 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.add(jPanel5, java.awt.BorderLayout.CENTER);
 
-        jButton1.setText("save");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        saveButton.setText(bundle.getString("TgSpeciesManXML.saveButton.text")); // NOI18N
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                saveButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Save as new species");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        saveAsNewButton.setText(bundle.getString("TgSpeciesManXML.saveAsNewButton.text")); // NOI18N
+        saveAsNewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                saveAsNewButtonActionPerformed(evt);
             }
         });
 
-        jButton3.setText("save settings to file");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        saveSettingsButton.setText(bundle.getString("TgSpeciesManXML.saveSettingsButton.text")); // NOI18N
+        saveSettingsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                saveSettingsButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Löschen");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        deleteButton.setText(bundle.getString("TgSpeciesManXML.deleteButton.text")); // NOI18N
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                deleteButtonActionPerformed(evt);
             }
         });
 
@@ -324,13 +330,13 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addComponent(jButton1)
+                .addComponent(saveButton)
                 .addGap(15, 15, 15)
-                .addComponent(jButton2)
+                .addComponent(saveAsNewButton)
                 .addGap(21, 21, 21)
-                .addComponent(jButton4)
+                .addComponent(deleteButton)
                 .addGap(16, 16, 16)
-                .addComponent(jButton3)
+                .addComponent(saveSettingsButton)
                 .addContainerGap(625, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -338,10 +344,10 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton4))
+                    .addComponent(saveSettingsButton)
+                    .addComponent(saveButton)
+                    .addComponent(saveAsNewButton)
+                    .addComponent(deleteButton))
                 .addGap(37, 37, 37))
         );
 
@@ -354,8 +360,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 600));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jLabel1.setText("Baumarten");
-        jPanel2.add(jLabel1, java.awt.BorderLayout.NORTH);
+        treeSpeciesLabel.setText(bundle.getString("TgSpeciesManXML.treeSpeciesLabel.text")); // NOI18N
+        jPanel2.add(treeSpeciesLabel, java.awt.BorderLayout.NORTH);
 
         jList1.setModel(listModel);
         jList1.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -373,7 +379,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
 // TODO add your handling code here:
         int m = jList1.getSelectedIndex();
        
@@ -383,14 +389,14 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         nspd = nspd -1;
        
 
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
 // TODO add your handling code here:
        int m = jList1.getSelectedIndex(); //get SelectedIndex from List
        saveTable(m);
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_saveButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
 // TODO add your handling code here:
@@ -399,32 +405,36 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
     }//GEN-LAST:event_jList1ValueChanged
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void saveSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSettingsButtonActionPerformed
 // TODO add your handling code here:
         saveXMLFile();
         dispose();
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_saveSettingsButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void saveAsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsNewButtonActionPerformed
 // TODO add your handling code here:
         spd[nspd] = new SpeciesDef();
         saveTable(nspd);
         nspd = nspd +1;
        
         renewList();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_saveAsNewButtonActionPerformed
 
-private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+private void ingrowthCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingrowthCheckBoxActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_jCheckBox2ActionPerformed
+}//GEN-LAST:event_ingrowthCheckBoxActionPerformed
 
-private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_timeStepTextFieldActionPerformed
     // TODO add your handling code here:
-}//GEN-LAST:event_jTextField2ActionPerformed
+}//GEN-LAST:event_timeStepTextFieldActionPerformed
 
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+    private void sortingModuleTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortingModuleTextFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
+    }//GEN-LAST:event_sortingModuleTextFieldActionPerformed
+
+    private void authorTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authorTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_authorTextFieldActionPerformed
 
     private void renewList(){
         listModel.removeAllElements();
@@ -572,30 +582,30 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
          
          while (k.hasNext()) {
             Element eingestellt = (Element) k.next();
-            jTextField1.setText(eingestellt.getChild("ModelRegion").getText());
-            jCheckBox1.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
-            jCheckBox2.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
-            jCheckBox3.setSelected(Boolean.parseBoolean(eingestellt.getChild("DeadwoodModul").getText()));
+            modelRegionTextField.setText(eingestellt.getChild("ModelRegion").getText());
+            randomnessCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
+            ingrowthCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
+            deadWoodModuleCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("DeadwoodModul").getText()));
             String ts = "5";
             try {  ts = eingestellt.getChild("TimeStep").getText();
                  } catch (Exception e){ ts = "5";}
-            jTextField2.setText(ts);
-            try {  jTextField4.setText(eingestellt.getChild("Author").getText());
-                 } catch (Exception e){ jTextField4.setText("add author");}
-            try {  jTextField5.setText(eingestellt.getChild("FirstDate").getText());
-                 } catch (Exception e){ jTextField5.setText("add date");}
-            try {  jTextField6.setText(eingestellt.getChild("LastChange").getText());
-                 } catch (Exception e){ jTextField6.setText("add date");}
-            try {  jTextField3.setText(eingestellt.getChild("Literature").getText());
-                 } catch (Exception e){ jTextField3.setText("add literature");}
+            timeStepTextField.setText(ts);
+            try {  authorTextField.setText(eingestellt.getChild("Author").getText());
+                 } catch (Exception e){ authorTextField.setText("add author");}
+            try {  dateTextField.setText(eingestellt.getChild("FirstDate").getText());
+                 } catch (Exception e){ dateTextField.setText("add date");}
+            try {  lastUpdateTextField.setText(eingestellt.getChild("LastChange").getText());
+                 } catch (Exception e){ lastUpdateTextField.setText("add date");}
+            try {  literatureTextField.setText(eingestellt.getChild("Literature").getText());
+                 } catch (Exception e){ literatureTextField.setText("add literature");}
             try {  jTextArea1.setText(eingestellt.getChild("Description").getText());
                  } catch (Exception e){ jTextArea1.setText("add model info");}
-            try {  jTextField7.setText(eingestellt.getChild("SortingModul").getText());
-                 } catch (Exception e){ jTextField7.setText("none");}
-            try {  jTextField8.setText(eingestellt.getChild("BiomassModul").getText());
-                 } catch (Exception e){ jTextField8.setText("none");}
-            try {  jTextField9.setText(eingestellt.getChild("DebriswoodModul").getText());
-                 } catch (Exception e){ jTextField9.setText("none");}
+            try {  sortingModuleTextField.setText(eingestellt.getChild("SortingModul").getText());
+                 } catch (Exception e){ sortingModuleTextField.setText("none");}
+            try {  biomassTextField.setText(eingestellt.getChild("BiomassModul").getText());
+                 } catch (Exception e){ biomassTextField.setText("none");}
+            try {  deadWoodModuleTextField.setText(eingestellt.getChild("DebriswoodModul").getText());
+                 } catch (Exception e){ deadWoodModuleTextField.setText("none");}
             break;
          }
 
@@ -622,19 +632,19 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
        doc.setRootElement(rootElt);
 //
        elt = new Element("GeneralSettings");
-       elt = addString(elt, "ModelRegion", jTextField1.getText());
-       elt = addString(elt, "ErrorComponent",new Boolean(jCheckBox1.isSelected()).toString());
-       elt = addString(elt, "IngrowthModul",new Boolean(jCheckBox2.isSelected()).toString());
-       elt = addString(elt, "DeadwoodModul",new Boolean(jCheckBox3.isSelected()).toString());
-       elt = addString(elt, "TimeStep",new Integer(jTextField2.getText().trim()).toString());
-       elt = addString(elt, "Author",jTextField4.getText());
-       elt = addString(elt, "FirstDate",jTextField5.getText());
-       elt = addString(elt, "LastChange",jTextField6.getText());
-       elt = addString(elt, "Literature",jTextField3.getText());
+       elt = addString(elt, "ModelRegion", modelRegionTextField.getText());
+       elt = addString(elt, "ErrorComponent",new Boolean(randomnessCheckBox.isSelected()).toString());
+       elt = addString(elt, "IngrowthModul",new Boolean(ingrowthCheckBox.isSelected()).toString());
+       elt = addString(elt, "DeadwoodModul",new Boolean(deadWoodModuleCheckBox.isSelected()).toString());
+       elt = addString(elt, "TimeStep",new Integer(timeStepTextField.getText().trim()).toString());
+       elt = addString(elt, "Author",authorTextField.getText());
+       elt = addString(elt, "FirstDate",dateTextField.getText());
+       elt = addString(elt, "LastChange",lastUpdateTextField.getText());
+       elt = addString(elt, "Literature",literatureTextField.getText());
        elt = addString(elt, "Description",jTextArea1.getText());
-       elt = addString(elt, "SortingModul",jTextField7.getText());
-       elt = addString(elt, "BiomassModul",jTextField8.getText());
-       elt = addString(elt, "DebriswoodModul",jTextField9.getText());
+       elt = addString(elt, "SortingModul",sortingModuleTextField.getText());
+       elt = addString(elt, "BiomassModul",biomassTextField.getText());
+       elt = addString(elt, "DebriswoodModul",deadWoodModuleTextField.getText());
        rootElt.addContent(elt);
  
 //         
@@ -793,23 +803,17 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField authorTextField;
+    private javax.swing.JLabel biomassLabel;
+    private javax.swing.JTextField biomassTextField;
+    private javax.swing.JLabel dateLabel;
+    private javax.swing.JTextField dateTextField;
+    private javax.swing.JCheckBox deadWoodModuleCheckBox;
+    private javax.swing.JLabel deadWoodModuleLabel;
+    private javax.swing.JTextField deadWoodModuleTextField;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JLabel generalSettingsLabel;
+    private javax.swing.JCheckBox ingrowthCheckBox;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -826,15 +830,21 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JLabel lastUpdateLabel;
+    private javax.swing.JTextField lastUpdateTextField;
+    private javax.swing.JTextField literatureTextField;
+    private javax.swing.JLabel modelRegionLabel;
+    private javax.swing.JTextField modelRegionTextField;
+    private javax.swing.JCheckBox randomnessCheckBox;
+    private javax.swing.JButton saveAsNewButton;
+    private javax.swing.JButton saveButton;
+    private javax.swing.JButton saveSettingsButton;
+    private javax.swing.JLabel selectedSpeciesLabel;
+    private javax.swing.JLabel sortingModuleLabel;
+    private javax.swing.JTextField sortingModuleTextField;
+    private javax.swing.JLabel timeStepLabel;
+    private javax.swing.JTextField timeStepTextField;
+    private javax.swing.JLabel treeSpeciesLabel;
     // End of variables declaration//GEN-END:variables
     
 }

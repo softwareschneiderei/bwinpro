@@ -29,10 +29,7 @@ public class TgToolbar extends JToolBar {
     JButton button;
 
     public TgToolbar(ActionListener listener, String path, Locale preferredLanguage) {
-        Locale currentLocale;
-        ResourceBundle messages;
-        currentLocale = preferredLanguage;
-        messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame", currentLocale);
+        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
         button = new JButton(new ImageIcon(path + "//icons//userbaum1.jpg"));
         button.setRolloverEnabled(true);
         button.setToolTipText(messages.getString("Grow"));
