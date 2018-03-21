@@ -294,7 +294,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             JOptionPane.showMessageDialog(null, "Es ist keine Java3D-API installiert.", "Java3D", JOptionPane.ERROR_MESSAGE);
         }
         if (user.needsUpdate(bwinproLastUpdate)) {
-            JOptionPane.showMessageDialog(null, "Es gibt eine neue Version auf http://www.nw-fva.de. update empfohlen", "ForestSimulator BWINPro7 Update Check", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    null,
+                    messages.getString("TgJFrame.updateCheck.message"),
+                    messages.getString("TgJFrame.updateCheck.title"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
