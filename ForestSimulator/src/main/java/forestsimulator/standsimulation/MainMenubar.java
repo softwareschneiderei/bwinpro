@@ -25,15 +25,14 @@ import java.util.*;
 import javax.swing.*;
 import treegross.base.Stand;
 
-class MyMenubar extends JMenuBar {
+class MainMenubar extends JMenuBar {
 
     JCheckBoxMenuItem[] cmi = new JCheckBoxMenuItem[7];
     String language = "en";
     String country;
 
-    public MyMenubar(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage, Stand st, boolean accessInput) {
-        ResourceBundle messages;
-        messages = ResourceBundle.getBundle("forestsimulator/gui");
+    public MainMenubar(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage, Stand st, boolean accessInput) {
+        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
         JMenu m; // Hauptmenupunkt
         JMenuItem mi; //Untermenupunkt
         JMenu subm = new JMenu(messages.getString("show"));
@@ -241,7 +240,7 @@ class MyMenubar extends JMenuBar {
         mi.addActionListener(listener);
         m.add(mi);
 //4.3 Species code                
-        mi = new JMenuItem(messages.getString("Species_code"));
+        mi = new JMenuItem(messages.getString("MainMenubar.species_code"));
         mi.setActionCommand("species_code");
         mi.addActionListener(listener);
         m.add(mi);

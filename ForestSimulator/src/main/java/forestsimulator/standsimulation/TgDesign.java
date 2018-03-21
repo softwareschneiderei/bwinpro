@@ -51,7 +51,6 @@ public class TgDesign extends JPanel {
         startPositionLabel.setVisible(false);
         startXTextField.setVisible(false);
         startYTextField.setVisible(false);
-//        jLabel4.setText(messages.getString("Species_code"));
 //        jLabel5.setText(messages.getString("age"));
 //        jLabel6.setText(messages.getString("Dg"));
 //        jLabel7.setText(messages.getString("Dmax"));
@@ -215,7 +214,7 @@ public class TgDesign extends JPanel {
         jPanel2.add(rasterLabel);
         rasterLabel.setBounds(30, 400, 120, 14);
 
-        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "create distribution", "create tree(s)" }));
+        typeComboBox.setModel(new DefaultComboBoxModel(CreationType.values()));
         typeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 typeComboBoxActionPerformed(evt);
@@ -565,7 +564,8 @@ public class TgDesign extends JPanel {
         }
 
     }//GEN-LAST:event_td4KeyPressed
-    public void loadSpecies(String Dir) {
+    
+    private void loadSpecies(String Dir) {
         java.io.File file;
         String fname = "";
         try {

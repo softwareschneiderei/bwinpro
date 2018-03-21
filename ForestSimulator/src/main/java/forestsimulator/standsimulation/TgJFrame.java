@@ -75,7 +75,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgStandInfo tsi;
     UserLanguage language;
 
-    MyMenubar menubar;
+    MainMenubar menubar;
     TgStandMapMenu tgStandMapMenu;
     TgPPMapMenu tgPPMapMenu;
 //   TgTreatmentMan2Menu tgTreatmentMan2Menu;
@@ -237,7 +237,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         JPanel menus = new JPanel();
         menus.setLayout(new BoxLayout(menus, BoxLayout.X_AXIS));
         // adding the menu
-        menubar = new MyMenubar(this, this, language.locale(), st, accessInput);
+        menubar = new MainMenubar(this, this, language.locale(), st, accessInput);
         menubar.setAlignmentY(Component.CENTER_ALIGNMENT);
         menus.add(menubar);
         menus.add(Box.createRigidArea(new Dimension(20, 0)));

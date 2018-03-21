@@ -280,11 +280,8 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="typeComboBox">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="create distribution"/>
-                    <StringItem index="1" value="create tree(s)"/>
-                  </StringArray>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultComboBoxModel(CreationType.values())" type="code"/>
                 </Property>
               </Properties>
               <Events>
