@@ -22,6 +22,7 @@ dependencies {
     compile name: 'jogamp-fat-2.3.2'
     testCompile name: 'junit-4.12'
     testCompile name: 'hamcrest-core-1.3'
+    runtime name: 'sqlitejdbc-v056'
 }
 
 distZip {
