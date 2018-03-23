@@ -40,56 +40,55 @@ public class TgTreatmentMan3 extends JPanel {
     public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, Locale preferredLanguage) {
         initComponents();
         st = stparent;
-        Locale currentLocale;
         yt = frameparent.yt;
-        currentLocale = preferredLanguage;
+        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
         jComboBox1.removeAllItems();
-//        jComboBox1.addItem(messages.getString("singleTreeSelection"));
-//        jComboBox1.addItem(messages.getString("thinningFromAbove"));
-//        jComboBox1.addItem(messages.getString("thinningFromBelow"));
-//        jComboBox1.addItem(messages.getString("thinningQD"));
+        jComboBox1.addItem(messages.getString("singleTreeSelection"));
+        jComboBox1.addItem(messages.getString("thinningFromAbove"));
+        jComboBox1.addItem(messages.getString("thinningFromBelow"));
+        jComboBox1.addItem(messages.getString("thinningQD"));
         jComboBox2.removeAllItems();
-//        jComboBox2.addItem(messages.getString("targetDiameter"));
-//        jComboBox2.addItem(messages.getString("shelter"));
-//        jComboBox2.addItem(messages.getString("clearCut"));
-//        jComboBox2.addItem(messages.getString("clearGaps"));
-//        jLabel1.setText(messages.getString("typeOfThinning"));
-//        jLabel2.setText(messages.getString("typeOfHarvest"));
-//        jLabel3.setText(messages.getString("protection"));
-//        jLabel4.setText(messages.getString("thinningIntensity"));
-//        jLabel5.setText(messages.getString("speciesSettings"));
-//        jLabel6.setText(messages.getString("skidtrailDistance"));
-//        jLabel7.setText(messages.getString("skidtrailWidth"));
-//        jLabel8.setText(messages.getString("maxThinning"));
-//        jLabel9.setText(messages.getString("maxHarvest"));
-//        jLabel10.setText(messages.getString("simulationtime"));
-//        jLabel14.setText(messages.getString("senario"));
-//        jLabel12.setText(messages.getString("skidtrails"));
-//        jLabel11.setText(messages.getString("years"));
-//        jLabel21.setText(messages.getString("minCover"));
-//        jLabel22.setText(messages.getString("protectDbh"));
-//        jLabel13.setText(messages.getString("planting"));
-//        jLabel20.setText(messages.getString("plantat"));
-//
-//        jCheckBox1.setText(messages.getString("randomEffects"));
-//        jCheckBox2.setText(messages.getString("ingrowthModell"));
-//        jCheckBox3.setText(messages.getString("skidtrails"));
-//        jCheckBox4.setText(messages.getString("releaseOnlyCropTrees"));
-//        jCheckBox5.setText(messages.getString("riskModel"));
-//        jCheckBox6.setText(messages.getString("minorities"));
-//        jCheckBox7.setText(messages.getString("removeunderstory"));
-//        jCheckBox8.setText(messages.getString("active"));
-//        jButton2.setText(messages.getString("startSimulation"));
+        jComboBox2.addItem(messages.getString("targetDiameter"));
+        jComboBox2.addItem(messages.getString("shelter"));
+        jComboBox2.addItem(messages.getString("clearCut"));
+        jComboBox2.addItem(messages.getString("clearGaps"));
+        jLabel1.setText(messages.getString("typeOfThinning"));
+        jLabel2.setText(messages.getString("typeOfHarvest"));
+        jLabel3.setText(messages.getString("protection"));
+        jLabel4.setText(messages.getString("thinningIntensity"));
+        jLabel5.setText(messages.getString("speciesSettings"));
+        jLabel6.setText(messages.getString("skidtrailDistance"));
+        jLabel7.setText(messages.getString("skidtrailWidth"));
+        jLabel8.setText(messages.getString("maxThinning"));
+        jLabel9.setText(messages.getString("maxHarvest"));
+        jLabel10.setText(messages.getString("simulationtime"));
+        jLabel14.setText(messages.getString("senario"));
+        jLabel12.setText(messages.getString("skidtrails"));
+        jLabel11.setText(messages.getString("years"));
+        jLabel21.setText(messages.getString("minCover"));
+        jLabel22.setText(messages.getString("protectDbh"));
+        jLabel13.setText(messages.getString("planting"));
+        jLabel20.setText(messages.getString("plantat"));
+
+        jCheckBox1.setText(messages.getString("randomEffects"));
+        jCheckBox2.setText(messages.getString("ingrowthModell"));
+        jCheckBox3.setText(messages.getString("skidtrails"));
+        jCheckBox4.setText(messages.getString("releaseOnlyCropTrees"));
+        jCheckBox5.setText(messages.getString("riskModel"));
+        jCheckBox6.setText(messages.getString("minorities"));
+        jCheckBox7.setText(messages.getString("removeunderstory"));
+        jCheckBox8.setText(messages.getString("active"));
+        jButton2.setText(messages.getString("startSimulation"));
         jComboBox3.removeAllItems();
-//        jComboBox3.addItem(messages.getString("hardwood"));
-//        jComboBox3.addItem(messages.getString("allhardwood"));
-//        jComboBox3.addItem(messages.getString("allspecies"));
+        jComboBox3.addItem(messages.getString("hardwood"));
+        jComboBox3.addItem(messages.getString("allhardwood"));
+        jComboBox3.addItem(messages.getString("allspecies"));
         jComboBox4.removeAllItems();
-//        jComboBox4.addItem("0.0 "+messages.getString("none"));
-//        jComboBox4.addItem("0.8 "+messages.getString("low"));
-//        jComboBox4.addItem("1.0 "+messages.getString("moderate"));
-//        jComboBox4.addItem("1.2 "+messages.getString("heavy"));
-//        jComboBox4.addItem("1.5 "+messages.getString("veryheavy"));
+        jComboBox4.addItem("0.0 "+messages.getString("none"));
+        jComboBox4.addItem("0.8 "+messages.getString("low"));
+        jComboBox4.addItem("1.0 "+messages.getString("moderate"));
+        jComboBox4.addItem("1.2 "+messages.getString("heavy"));
+        jComboBox4.addItem("1.5 "+messages.getString("veryheavy"));
         jComboBox4.addItem("0.9");
         jComboBox4.addItem("1.1");
         jComboBox4.addItem("1.3");
@@ -102,8 +101,8 @@ public class TgTreatmentMan3 extends JPanel {
         data= new javax.swing.table.DefaultTableModel(
             new Object [][] {  },
             new String [] {
-//               messages.getString("species"), messages.getString("code"), messages.getString("thinningHeight"),
-//                  messages.getString("targetD"), messages.getString("croptrees"), messages.getString("mixture")
+               messages.getString("species"), messages.getString("code"), messages.getString("thinningHeight"),
+                  messages.getString("targetD"), messages.getString("croptrees"), messages.getString("mixture")
             }
         );
         jTable1.setModel(data);
