@@ -35,10 +35,13 @@ import java.util.*;
 import java.net.*;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
 import org.jdom.DocType;
+
+
 
 
 
@@ -52,8 +55,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    private static final Logger log = Logger.getLogger( forestsimulator.standsimulation.TgJFrame.class.getName() );
    FileHandler logHandler = null;
 
-   String bwinproVersion="Version 7.8.01 XML";
-   String bwinproLastUpdate="15-09-2015";
+   String bwinproVersion="Version 7.9.02 XML";
+   String bwinproLastUpdate="17-03-2017";
    boolean accessInput = true;
    static Stand st = new Stand();
    SpeciesDefMap SDM = new SpeciesDefMap();
@@ -71,14 +74,17 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
    TgDesign sd;
    TgYieldTable yt = new TgYieldTable();
    Treatment2 tl = new Treatment2();    
-   TgTreatmentMan3 treatmentMan3;
+//   TgTreatmentMan3 treatmentMan3;
+   
+   TgTreatmentMan4 treatmentMan4;
+   
+   
    TgStandInfo tsi; 
    String language="en";
    
    MyMenubar menubar;
    TgStandMapMenu tgStandMapMenu;
    TgPPMapMenu tgPPMapMenu;
-//   TgTreatmentMan2Menu tgTreatmentMan2Menu;
    TgGrafikMenu tgGrafikMenu;
    TgToolbar toolbar;
    TgScreentoolbar tgScreentoolbar;
@@ -215,16 +221,21 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 tsi = new TgStandInfo(language);
 
 // Treatment Manager Window                
-                treatmentMan3 = new TgTreatmentMan3(st, this,language);
+/*                treatmentMan3 = new TgTreatmentMan3(st, this,language);
                 JPanel treatmentPanel = new JPanel();
                 treatmentPanel.setLayout(new BorderLayout());
                 JPanel tgTreatmentMenus = new JPanel();
                 tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));                
-//                tgTreatmentMan2Menu = new TgTreatmentMan2Menu(this,this, language);
-//                tgTreatmentMan2Menu.setAlignmentY(Component.CENTER_ALIGNMENT);
-//                tgTreatmentMenus.add(tgTreatmentMan2Menu);
                 treatmentPanel.add(tgTreatmentMenus,BorderLayout.NORTH); 
                 treatmentPanel.add(treatmentMan3,BorderLayout.CENTER); 
+*/
+                treatmentMan4 = new TgTreatmentMan4(st, this,language);
+                JPanel treatmentPanel = new JPanel();
+                treatmentPanel.setLayout(new BorderLayout());
+                JPanel tgTreatmentMenus = new JPanel();
+                tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));                
+                treatmentPanel.add(tgTreatmentMenus,BorderLayout.NORTH); 
+                treatmentPanel.add(treatmentMan4,BorderLayout.CENTER); 
                 
                 sd = new TgDesign(st, this, language);
 // add Grafik Menu 
@@ -381,7 +392,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                            st.ntrees=0;
                            st.nspecies=0;
                        }
-
+                       st.status=0;
+                       st.temp_Integer=0;
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
@@ -437,6 +449,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                            st.ntrees=0;
                            st.nspecies=0;
                        }
+                       st.status=0;
+                       st.temp_Integer=0;
                        st.sortbyd();
 // Test for grouping                       
 //                       Groups groups = new Groups(st);
@@ -458,12 +472,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                  }
                 // open NutungsPlaner SQLite Database
                 if (cmd.equals("SQlite")){
-                   log.info("open NutzungsPlaner SQlite Database"); 
+                   log.info("open NutzungsPlaner SQlite Database: "+user.getDataDir()); 
                    try {
                        String modelPlugIn="forestsimulator.SQLite.SQLiteAccess";  
                        PlugInDBSQLite dialog = (PlugInDBSQLite)Class.forName(modelPlugIn).newInstance();  
                        dialog.startDialog(this,st,user.getDataDir()); 
                        int nGrowingCycles=st.temp_Integer;
+                       st.status=0;
+                       st.temp_Integer=0;
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
@@ -493,6 +509,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                        PlugInDBSQLite dialog = (PlugInDBSQLite)Class.forName(modelPlugIn).newInstance();  
                        dialog.startDialog(this,st,user.getDataDir()); 
                        int nGrowingCycles=st.temp_Integer;
+                       st.status=0;
+                       st.temp_Integer=0;
                        st.sortbyd();
                        st.missingData();
                        st.descspecies();
@@ -719,12 +737,24 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 repaint();
             } 
             
+            if (cmd.equals("grow_back"))
+            {
+                st.sortbyd();
+                st.descspecies();
+                st.growBack(5,true);  //grow a 5-year cycle, means  ingrowth
+                updatetp(false);
+                gr.drawGraph();
+                repaint();
+            } 
+            
             if (cmd.equals("Treatment"))
             {
                 st.descspecies();
                 st.sortbyd();
-                treatmentMan3.loadSettingsToStandRule();
-                tl.executeManager2(st);
+//                treatmentMan3.loadSettingsToStandRule();
+                  treatmentMan4.executeTreatment(st);
+
+//                tl.executeManager2(st);
                 updatetp(false);
 		zf.neuzeichnen(); //Zeichenfläche neu zeichnen
 //                pp.neuzeichnen();
@@ -732,16 +762,54 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 repaint();
 
             } 
-            if (cmd.equals("grow_back"))
+            if (cmd.equals("select_crop_trees"))
             {
-                st.sortbyd();
                 st.descspecies();
-                st.growBack(st.timeStep, true);  //grow a 5-year cycle, means  ingrowth
+                st.sortbyd();
+//                treatmentMan3.loadSettingsToStandRule();
+//                treatmentMan3.selectCropTrees();
                 updatetp(false);
                 gr.drawGraph();
                 repaint();
             }
 
+            if (cmd.equals("deselect_crop_trees"))
+            {
+               st.descspecies();
+               tl.resetAllCropTrees(st);
+               updatetp(false);
+               zf.neuzeichnen(); //Zeichenfläche neu zeichnen
+               gr.drawGraph();
+               repaint();
+            }
+            
+            
+            if (cmd.equals("thin_by_list"))
+            {
+               st.descspecies();
+//               JOptionPane.showMessageDialog(frame,"Geben Sie die Baumnummern ein","Liste",JOptionPane.ERROR_MESSAGE);
+               String s = (String)JOptionPane.showInputDialog(
+                    this,messages.getString("thin_by_list_mess")+" 1,4,7,18",messages.getString("thin_by_list"),
+                    JOptionPane.PLAIN_MESSAGE,null,null,"");
+                if (s.length() > 2) {
+                    String[] sList = s.split(",");
+                    for (int iik = 0; iik < sList.length; iik++) {
+                        for (int jk = 0; jk < st.ntrees; jk++) {
+                            if (st.tr[jk].no.equals(sList[iik])) {
+                                st.tr[jk].out = st.year;
+                                st.tr[jk].outtype = 2;
+                            }
+                        }
+                    }
+                }
+               st.descspecies();
+               updatetp(false);
+               zf.neuzeichnen(); //Zeichenfläche neu zeichnen
+               gr.drawGraph();
+ //              showIframes();
+ 
+               repaint();
+            }
             
             if(cmd.equals("Sorting"))
             {
@@ -754,14 +822,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //                    DeadwoodDialog sorter = new DeadwoodDialog(this, true, st, programDir, false, workingDir);
 //                    sorter.setVisible(true);
             }
-            if(cmd.equals("NutrientBalance"))
-            {
-                    BiomassDialog nutrientBalance = new BiomassDialog(this, true, st, programDir, false, workingDir,logHandler);
-                    nutrientBalance.setVisible(true);
+            if (cmd.equals("NutrientBalance")) {
+
+                   BiomassDialog nutrientBalance = new BiomassDialog(this, true, st, programDir, false, workingDir,logHandler);
+                   nutrientBalance.setVisible(true);
 
             }
 
-            if(cmd.equals("Roots"))
+            if (cmd.equals("Roots"))
             {
                  RootBiomassReport rootBiomassReport = new RootBiomassReport();
                  rootBiomassReport.report(st, programDir, workingDir);
@@ -1053,6 +1121,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                }
             else st.random.setRandomType(treegross.random.RandomNumber.OFF);
             st.ingrowthActive=Boolean.parseBoolean(setting.getChild("IngrowthModul").getText());
+            try { st.riskActive=Boolean.parseBoolean(setting.getChild("RiskModul").getText());
+                 } catch (Exception e){ st.riskActive=false;}
             st.deadwoodModulName=setting.getChild("DeadwoodModul").getText();
             try { st.deadwoodModulName=setting.getChild("DebriswoodModul").getText();
                  } catch (Exception e){ st.deadwoodModulName="none";}
@@ -1094,7 +1164,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             if (grafik3D && !from3D) manager3d.refreshStand();
             else {pp.neuzeichnen();st.sortbyd();st.descspecies();}
             tsi.formUpdate(st);
-            if (tfUpdateTrue==true) {treatmentMan3.formUpdate(st);tfUpdateTrue=false;}
+//            if (tfUpdateTrue==true) {treatmentMan3.formUpdate(st);tfUpdateTrue=false;}
+            treatmentMan4.setStand(st);
             if (iframe[2].isVisible()==true){
                 iframe[2].setVisible(false);
                 iframe[2].setVisible(true);

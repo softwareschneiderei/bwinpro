@@ -222,6 +222,24 @@ public class TreatmentRuleStand implements Cloneable {
      * 2nd Period cut Stand to 0.4, then 0.2 and then remove the rest
      */
     public String regenerationProcess = "";
+    /**
+     * limitation of basla area reduction in thinning methods
+     * 1: index of step in spDef.moderateThinning: 0,3,6,..
+     * 2: threshold (degree of stocking) for basla area reduction in thinning methods
+     */
+    private int indexModerateThinning = 3;
+    public double degreeOfStokingToLimitThinning = 1.2;
+    
+    public void setIndexModerateThinning(int index) {
+        if(index % 3 == 0) {
+            indexModerateThinning = index;
+        } else {            
+        }
+    }
+    
+    public int getIndexModerateThinning(){
+        return indexModerateThinning;
+    }    
 
     // max percentage of harvested/thinned wood has to be added
     // added by jhansen
@@ -262,6 +280,8 @@ public class TreatmentRuleStand implements Cloneable {
         clone.plantingString = this.plantingString;
         clone.regenerationProcess = this.regenerationProcess;
         clone.standTypeAtStatus1 = this.standTypeAtStatus1;
+        clone.indexModerateThinning = this.indexModerateThinning;
+        clone.degreeOfStokingToLimitThinning = this.degreeOfStokingToLimitThinning;
         return clone;
     }
 }

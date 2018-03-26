@@ -50,6 +50,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jComboBox1.addItem(messages.getString("thinningFromAbove"));
         jComboBox1.addItem(messages.getString("thinningFromBelow"));
         jComboBox1.addItem(messages.getString("thinningQD"));
+        jComboBox1.addItem(messages.getString("thinningCM"));
         jComboBox2.removeAllItems();
         jComboBox2.addItem(messages.getString("targetDiameter"));
         jComboBox2.addItem(messages.getString("shelter"));
@@ -191,7 +192,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setText("Simulation: Dauer");
         jPanel1.add(jLabel10);
 
@@ -210,13 +211,11 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jCheckBox1.setSelected(true);
         jCheckBox1.setText("Zufallseffekte nutzen");
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel1.add(jCheckBox1);
 
         jCheckBox2.setSelected(true);
         jCheckBox2.setText("Einwuchsmodell aktivieren");
         jCheckBox2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jCheckBox2.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel1.add(jCheckBox2);
 
         jCheckBox5.setSelected(true);
@@ -239,7 +238,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
 
         jPanel11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel14.setText("Szenarioeinstellungen");
         jPanel11.add(jLabel14);
 
@@ -251,7 +250,6 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jPanel6.add(jLabel12);
 
         jCheckBox3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jCheckBox3.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jCheckBox3ActionPerformed(evt);
@@ -455,7 +453,7 @@ public class TgTreatmentMan3 extends javax.swing.JPanel {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 856, Short.MAX_VALUE)
+            .add(0, 1069, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -479,7 +477,9 @@ private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
 private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     // TODO add your handling code here:
+    if (st.trule.lastTreatment>= st.year) st.trule.lastTreatment=0; 
     loadSettingsToStandRule();
+   
 
 //    HessRied_Steuerung hrs = new HessRied_Steuerung() ;
 //    hrs.setTreatment(st, 1, 1);
@@ -488,6 +488,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     int simTime = Integer.parseInt(jTextField5.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(jTextField5.getText())/st.timeStep);
     for (int i=0;i<nSimSteps;i++){
+//        System.out.println("St.status+ harvesttype:"+st.status+"  "+st.trule.typeOfHarvest+" "+st.trule.lastTreatment);
         st.descspecies();
         st.executeMortality();
 
@@ -564,7 +565,7 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         f.setMaximumFractionDigits(0);
         f.setMinimumFractionDigits(0);
         f.setGroupingUsed(false);
-         for (int i=data.getRowCount(); i>0 ; i=i-1){
+        for (int i=data.getRowCount(); i>0 ; i=i-1){
             data.removeRow(i-1);
         }
         String pflArten ="";
@@ -658,7 +659,14 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         dist_ct=atree.calculateCw();
 //Number of crop trees dependent on calcualted distance and actual mixture percent
         return  (int)((10000.0/((Math.PI*Math.pow(dist_ct,2.0))/4))*percentage/100.0);            
-    }    
+    } 
+    
+    public void selectCropTrees(){
+        loadSettingsToStandRule();
+        TreatmentElements2 te2 =new TreatmentElements2();
+        te2.selectNCropTrees(st);
+        
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;

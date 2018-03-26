@@ -451,6 +451,8 @@ public class TgDesign extends javax.swing.JPanel {
                             gxy.raster(st, Double.parseDouble(jTextField2.getText()), Double.parseDouble(jTextField3.getText()), Double.parseDouble(jTextField4.getText()), Double.parseDouble(jTextField5.getText()));
                         }
                         st.sortbyd();
+                        st.bt=-999;
+                        st.trule.standType=0;                       
                         st.descspecies();
                         frame.tfUpdateTrue = true;
                     } catch (Exception ex) {

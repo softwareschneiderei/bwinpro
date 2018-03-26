@@ -39,6 +39,7 @@ public class Treatment2 {
     public static final int TT_FROM_ABOVE = 1;
     public static final int TT_FROM_BELOW = 2;
     public static final int TT_QD = 3;
+    public static final int TT_Crop_Tree_MIX = 4;
     public static final int TT_CLEAR_CUT = 9;
 
     TreatmentElements2 te = new TreatmentElements2();
@@ -193,6 +194,12 @@ public class Treatment2 {
             if (st.trule.typeOfThinning == Treatment2.TT_QD) {
                 te.thinByQD(st);
             }
+            // Thinning by crop tree release and thinning rest to mixture
+            // beide Routinen werden Baumarten und Grundflächen bezogen ausgeführt
+            if (st.trule.typeOfThinning == Treatment2.TT_Crop_Tree_MIX) {
+                te.thinCropTreeCompetition2(st); //neu
+                te.thinCompetitionFromAbove2(st);  //neu
+            }
 
             //if thinning amount was not high enough: set thinned trees alive
             te.checkMinThinningVolume(st);
@@ -311,6 +318,19 @@ public class Treatment2 {
             if (croptreesOnly) {
                 st.trule.thinArea = false; // oder doch true
             }
+            st.trule.selectCropTrees = true;
+            st.trule.reselectCropTrees = true;
+            st.trule.selectCropTreesOfAllSpecies = false;
+            st.trule.releaseCropTrees = true;
+            st.trule.cutCompetingCropTrees = true;
+            st.trule.releaseCropTreesSpeciesDependent = true;
+        }
+        if (type == 4) {
+            st.trule.typeOfThinning = Treatment2.TT_Crop_Tree_MIX;
+            st.trule.thinArea = true;
+            if (croptreesOnly) {
+                st.trule.thinArea = false;
+    }
             st.trule.selectCropTrees = true;
             st.trule.reselectCropTrees = true;
             st.trule.selectCropTreesOfAllSpecies = false;

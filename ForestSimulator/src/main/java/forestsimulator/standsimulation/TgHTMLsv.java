@@ -98,13 +98,10 @@ class TgHTMLsv
                        "<TD><FONT SIZE=2>"+f.format(st.tr[i].si));
             }  
 	  }  
-          int jz=-5;
-          while (jz<100)
-          {  
-            jz=jz+5;
+ 
             for (i=0;i<st.ntrees;i++)
 	    { 
-              if (st.tr[i].year==st.tr[i].out-jz) 
+              if (st.tr[i].out>0) 
               {        
 	        out.println("<TR><TD><FONT SIZE=2>"+st.tr[i].no+"<TD><FONT SIZE=2>"+st.tr[i].code+"<TD><FONT SIZE=2>"+st.tr[i].age+
 		               "<TD><FONT SIZE=2>"+f.format(st.tr[i].d)+"<TD><FONT SIZE=2>"+f.format(st.tr[i].h)+
@@ -122,7 +119,7 @@ class TgHTMLsv
                        "<TD><FONT SIZE=2>"+f.format(st.tr[i].si));
 		 }  
             } 
-          }
+       
         
               
 //Ende der Änderung Brandenburg                     

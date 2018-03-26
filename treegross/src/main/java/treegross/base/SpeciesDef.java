@@ -38,8 +38,9 @@ public class SpeciesDef implements Comparable, Cloneable {
     public double diameterIncrementError = 0.0;
     public double heightIncrementError = 0.0;
     public String moderateThinning = "";
-    public String colorXML = "100,200,300";
+    public String colorXML = "";
     public String competitionXML = "";
+    public String mortalityXML = "";
     public String ingrowthXML = "";
     public String taperFunctionXML = "";
     public String coarseRootBiomass = "";
@@ -98,6 +99,7 @@ public class SpeciesDef implements Comparable, Cloneable {
         clone.moderateThinning = this.moderateThinning;
         clone.colorXML = this.colorXML;
         clone.competitionXML = this.competitionXML;
+        clone.mortalityXML = this.mortalityXML;
         clone.ingrowthXML = this.ingrowthXML;
         clone.taperFunctionXML = this.taperFunctionXML;
         clone.coarseRootBiomass = this.coarseRootBiomass;

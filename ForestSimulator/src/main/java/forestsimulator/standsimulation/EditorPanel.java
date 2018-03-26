@@ -116,6 +116,10 @@ public class EditorPanel extends javax.swing.JPanel {
         st.exposition_Gon=Integer.parseInt(jTextField11.getText());
         st.hangneigungProzent =Double.parseDouble(jTextField12.getText());
         st.standortsKennziffer=jTextField13.getText();
+        st.bt=Integer.parseInt(jTextField14.getText());
+        st.wet=Integer.parseInt(jTextField15.getText());
+
+
 //
         st.center.no=(String) jTable1.getValueAt(0,0);
         st.center.x =Double.parseDouble( (String) jTable1.getValueAt(0,1));
@@ -171,6 +175,8 @@ public class EditorPanel extends javax.swing.JPanel {
         jTextField11.setText(new Integer(st.exposition_Gon).toString());
         jTextField12.setText(new Double(st.hangneigungProzent).toString());
         jTextField13.setText(st.standortsKennziffer);
+        jTextField14.setText(new Integer(st.bt).toString());
+        jTextField15.setText(new Integer(st.wet).toString());
 // Center and corner points
            corners.addRow(rowData2);
            jTable1.setValueAt(st.center.no,0,0);
@@ -265,6 +271,13 @@ public class EditorPanel extends javax.swing.JPanel {
         jTextField12 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jTextField13 = new javax.swing.JTextField();
+        jPanel15 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        jTextField14 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jTextField15 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -320,7 +333,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel4.setLayout(new java.awt.GridLayout(2, 0));
 
-        jPanel1.setLayout(new java.awt.GridLayout(4, 0));
+        jPanel1.setLayout(new java.awt.GridLayout(5, 0));
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 0));
 
@@ -399,7 +412,7 @@ public class EditorPanel extends javax.swing.JPanel {
 
         jPanel1.add(jPanel11);
 
-        jPanel12.setLayout(new java.awt.GridLayout(1, 6));
+        jPanel12.setLayout(new java.awt.GridLayout());
 
         jLabel11.setText("Exposition [Gon]");
         jPanel12.add(jLabel11);
@@ -414,6 +427,24 @@ public class EditorPanel extends javax.swing.JPanel {
         jPanel12.add(jTextField13);
 
         jPanel1.add(jPanel12);
+
+        jPanel15.setLayout(new java.awt.GridLayout(1, 6));
+
+        jLabel14.setText("BT");
+        jPanel15.add(jLabel14);
+
+        jTextField14.setText("jTextField14");
+        jPanel15.add(jTextField14);
+
+        jLabel3.setText("WET");
+        jPanel15.add(jLabel3);
+
+        jTextField15.setText("jTextField15");
+        jPanel15.add(jTextField15);
+        jPanel15.add(jLabel15);
+        jPanel15.add(jLabel16);
+
+        jPanel1.add(jPanel15);
 
         jPanel4.add(jPanel1);
 
@@ -617,6 +648,8 @@ public class EditorPanel extends javax.swing.JPanel {
         jTextField11.setText("");
         jTextField12.setText("");
         jTextField13.setText("");
+        jTextField14.setText("");
+        jTextField15.setText("");
         for (int j=0;j<jTable1.getRowCount();j++)
              for (int i=0;i<jTable1.getColumnCount();i++) jTable1.setValueAt("",j,i);
         for (int j=0;j<jTable2.getRowCount();j++)
@@ -726,7 +759,11 @@ public class EditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -739,6 +776,7 @@ public class EditorPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
+    private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -756,6 +794,8 @@ public class EditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
+    private javax.swing.JTextField jTextField14;
+    private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;

@@ -11,6 +11,6 @@ package treegross.meta;
 public class VersionInfo {
 
     public static String getVersion() {
-        return "treegross 15.09 build 04.09.2015";
+        return "treegross 15.09 build 01.12.2015";
     }
 }

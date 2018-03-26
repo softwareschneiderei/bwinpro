@@ -59,6 +59,8 @@ public class LoadTreegrossStand {
               stl.addsize(rs.getDouble("flha"));
            }
        	}	catch (Exception e)  {	System.out.println(e); }	
+        stl.status=0;
+
         stl.ntrees=0;
         stl.nspecies=0;
         stl.ncpnt=0;

@@ -21,7 +21,6 @@ import java.text.*;
 import java.util.*;
 import java.util.logging.Logger;
 import javax.swing.*;
-import nwfva.biomass.BiomassSetting;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -40,7 +39,6 @@ public class LoggingPanel extends javax.swing.JPanel {
 
     private static final Logger log = Logger.getLogger( nwfva.assortment.NWFVA_Nutzung.class.getName() );
 
-    BiomassSetting nbs[] = new BiomassSetting[50];
     LoggingSortiment ls[] = new LoggingSortiment[500];
     TimeEstimateFunction tef[] = new TimeEstimateFunction[150];
     int nnbs=0;
@@ -88,9 +86,7 @@ public class LoggingPanel extends javax.swing.JPanel {
         jLabel10.setText(messages.getString("wertigkeit"));
         jLabel11.setText(messages.getString("preis"));
         jLabel12.setText(messages.getString("percentageoftrees"));
-        jLabel14.setText(messages.getString("einstellen"));
         jLabel15.setText(messages.getString("sortimente"));
-        jLabel16.setText(messages.getString("fellcut"));
         jCheckBox1.setText(messages.getString("entnahme"));
         jCheckBox3.setText(messages.getString("toCB"));
         jComboBox1.removeAllItems();
@@ -146,11 +142,6 @@ public class LoggingPanel extends javax.swing.JPanel {
         jTextField13 = new javax.swing.JTextField();
         jButton5 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
-        jPanel10 = new javax.swing.JPanel();
-        jLabel14 = new javax.swing.JLabel();
-        jTextField15 = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
-        jTextField16 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel9 = new javax.swing.JPanel();
@@ -226,29 +217,6 @@ public class LoggingPanel extends javax.swing.JPanel {
 
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        jLabel14.setText("Einstellen und auswählen der Sortimente für folgende Jahre:");
-        jPanel10.add(jLabel14);
-
-        jTextField15.setText("all out");
-        jTextField15.setPreferredSize(new java.awt.Dimension(60, 20));
-        jTextField15.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField15ActionPerformed(evt);
-            }
-        });
-        jPanel10.add(jTextField15);
-
-        jLabel16.setText("Fällschnitt [m]");
-        jPanel10.add(jLabel16);
-
-        jTextField16.setText("0.3");
-        jTextField16.setPreferredSize(new java.awt.Dimension(50, 20));
-        jPanel10.add(jTextField16);
-
-        jPanel1.add(jPanel10, java.awt.BorderLayout.NORTH);
-
         jPanel2.setLayout(new java.awt.GridLayout(5, 0));
 
         jPanel4.setLayout(new java.awt.GridLayout(2, 1));
@@ -280,7 +248,6 @@ public class LoggingPanel extends javax.swing.JPanel {
         jCheckBox1.setSelected(true);
         jCheckBox1.setText("Entnahme, wenn nein dann Totholz");
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel12.add(jCheckBox1);
 
         jPanel4.add(jPanel12);
@@ -334,7 +301,6 @@ public class LoggingPanel extends javax.swing.JPanel {
 
         jCheckBox3.setText("bisKA");
         jCheckBox3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        jCheckBox3.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel5.add(jCheckBox3);
 
         jPanel2.add(jPanel5);
@@ -565,10 +531,6 @@ public class LoggingPanel extends javax.swing.JPanel {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField15ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField15ActionPerformed
-
     private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox2ActionPerformed
@@ -669,6 +631,176 @@ public class LoggingPanel extends javax.swing.JPanel {
 /**
  *  Berechnung der Sortimente
  */    
+     public void calculate2(){
+         TreeLog tl[] = new TreeLog[100];
+         int ntl = 0;
+
+         String pa = "";
+         String dn = "";
+
+
+// set felling height usually 0.3m
+         fellingHeight = 0.0;
+         if (dialogActive) {
+             JFileChooser fc = new JFileChooser();
+             int auswahl = fc.showOpenDialog(this);
+             pa = fc.getSelectedFile().getPath();
+             dn = fc.getSelectedFile().getName();
+         } else {
+             pa = workDir + System.getProperty("file.separator") + "assortmentlist.xml";
+         }
+// set Stubben und Restholz auf ausgewählt
+// ausgewählte markieren
+         for (int i = 0; i < nlist; i++) {
+             ls[i].ausgewaehlt = false;
+             if ( ls[i].name.indexOf("Stubben")> -1) ls[i].ausgewaehlt=true;
+             if ( ls[i].name.indexOf("Restholz")> -1) ls[i].ausgewaehlt=true;
+         }
+         int[] indices = jList1.getSelectedIndices(); //get Selected Assortments from list
+         for (int i = 0; i < indices.length; i++) {
+             ls[indices[i]].ausgewaehlt = true;
+         }
+//
+         NumberFormat f = NumberFormat.getInstance();
+         f = NumberFormat.getInstance(new Locale("en", "US"));
+         f.setMaximumFractionDigits(4);
+         f.setMinimumFractionDigits(4);
+         f.setGroupingUsed(false);
+         Element elt;
+         Element elt2;
+         Element elt3;
+         Element elt4;
+         /**
+          * Creates an Treegross xml
+          */
+         Document doc = new Document();
+         rootElt = new Element("Sortierung");
+         ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
+                 "type=\"text/xsl\" href=\"assortmentlist.xsl\"");
+         doc.addContent(pi);
+         doc.setRootElement(rootElt);
+//
+//	    System.out.println("Neuen Bericht erzeugen nach try");
+         /**
+          * all data is writen in File info/treelist.html
+          */
+         try {
+
+// Sortimente nach xml
+             for (int j = 0; j < nls; j++) {
+                 if (ls[j].ausgewaehlt) {
+                     elt = new Element("Sortiment_gesucht");
+                     elt = addString(elt, "Code", ls[j].name);
+                     elt = addString(elt, "Art_von", new Integer(ls[j].artvon).toString());
+                     elt = addString(elt, "Art_bis", new Integer(ls[j].artbis).toString());
+                     elt = addString(elt, "L_min", f.format(ls[j].minH));
+                     elt = addString(elt, "L_min", f.format(ls[j].minH));
+                     elt = addString(elt, "L_max", f.format(ls[j].maxH));
+                     elt = addString(elt, "D_min", f.format(ls[j].minD));
+                     elt = addString(elt, "D_max", f.format(ls[j].maxD));
+                     elt = addString(elt, "T_min", f.format(ls[j].minTop));
+                     elt = addString(elt, "T_max", f.format(ls[j].maxTop));
+                     elt = addString(elt, "ZugP", f.format(ls[j].zugabeProzent));
+                     elt = addString(elt, "ZugCm", f.format(ls[j].zugabeCm));
+                     rootElt.addContent(elt);
+
+                 }
+             }
+
+// Sortierung
+             TreeSplitter splitter = new TreeSplitter();
+             splitter.setAssortments(ls, nls);
+
+             for (int i = 0; i < st.ntrees; i++) {
+// alle ausgewählten Sortimente durchlaufen
+                 splitter.splitTree(st.tr[i], fellingHeight);
+                 tl = splitter.getTreeLogs();
+                 ntl = splitter.getNumberOfLogs();
+// Prüfen , ob das Stück aus dem Wald genommen wird oder nicht
+/*                 elt2 = new Element("Baum");
+                 elt2 = addString(elt2, "Nr", st.tr[i].no);
+                 elt2 = addString(elt2, "Baumart", new Integer(st.tr[i].code).toString());
+                 elt2 = addString(elt2, "Alter", new Integer(st.tr[i].age).toString());
+                 elt2 = addString(elt2, "Aus", new Integer(st.tr[i].out).toString());
+                 elt2 = addString(elt2, "Austyp", new Integer(st.tr[i].outtype).toString());
+                 elt2 = addString(elt2, "BHD", f.format(st.tr[i].d));
+                 elt2 = addString(elt2, "Hoehe", f.format(st.tr[i].h));
+                 elt2 = addString(elt2, "KA", f.format(st.tr[i].cb));
+                 elt2 = addString(elt2, "Vol", f.format(st.tr[i].v));
+                 elt2 = addString(elt2, "Factor", f.format(st.tr[i].fac / st.size));
+*/
+                 double sumvol_mR = 0.0;
+                 double sumvol_oR = 0.0;
+                 for (int jj = 0; jj < ntl; jj++) {
+                     sumvol_mR = sumvol_mR + tl[jj].vol_mR ;
+                     sumvol_oR = sumvol_oR + tl[jj].vol_oR ;
+                }
+                 
+                 
+                 for (int jj = 0; jj < ntl; jj++) {
+
+// Sortimentsstücke nach xml
+//
+                     
+                     elt3 = new Element("Sortiment");
+                     elt3 = addString(elt3, "Jahr", new Integer(st.tr[i].age).toString());
+                     elt3 = addString(elt3, "Art", new Integer(st.tr[i].code).toString());
+                     elt3 = addString(elt3, "Baum_Nr", st.tr[i].no);
+                     elt3 = addString(elt3, "BHD", f.format(st.tr[i].d));
+                     elt3 = addString(elt3, "Hoehe", f.format(st.tr[i].h));
+                     elt3 = addString(elt3, "VsmR", f.format(sumvol_mR));
+                     elt3 = addString(elt3, "VsoR", f.format(sumvol_oR));
+                     elt3 = addString(elt3, "fac_ha", f.format(st.tr[i].fac/st.size));
+                     elt3 = addString(elt3, "Name", tl[jj].sortName);
+                     int entn = 0;
+                     if (tl[jj].removed && st.tr[i].out >0 ) entn=1;
+                     elt3 = addString(elt3, "Entnahme", new Integer(entn).toString());
+                     elt3 = addString(elt3, "Entnahmejahr", new Integer(st.tr[i].out).toString());
+                     elt3 = addString(elt3, "Entnahmetyp", new Integer(st.tr[i].outtype).toString());
+                     elt3 = addString(elt3, "Starthoehe", f.format(tl[jj].startHeight));
+                     elt3 = addString(elt3, "Laenge", f.format(tl[jj].length));
+                     elt3 = addString(elt3, "Vol_mR", f.format(tl[jj].vol_mR ));
+                     elt3 = addString(elt3, "Vol_oR", f.format(tl[jj].vol_oR ));
+                     elt3 = addString(elt3, "D_mR", f.format(tl[jj].meanD));
+                     rootElt.addContent(elt3);
+                 }
+
+             }
+
+         } catch (Exception e) {
+             System.out.println(e);
+         }
+
+         try {
+             File file = new File(pa);
+             FileOutputStream result = new FileOutputStream(file);
+             XMLOutputter outputter = new XMLOutputter();
+//            outputter.setNewlines(true);
+//            outputter.setIndent("  ");
+             outputter.output(doc, result);
+//
+//
+             if (dialogActive == false) {
+                 String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                         + System.getProperty("file.separator") + pa;
+                 StartBrowser startBrowser = new StartBrowser(seite);
+                 startBrowser.start();
+             }
+
+             
+
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+
+
+    }
+     
+     
+     
+/**
+ *  Berechnung der Sortimente
+ */    
      public void calculate(){
        TreeLog tl[] = new TreeLog[100];
        int ntl = 0;
@@ -676,11 +808,10 @@ public class LoggingPanel extends javax.swing.JPanel {
        String pa="";
        String dn="";
 // set Time frame
-       if (jTextField15.getText().indexOf("all")>-1) timeframe = -9999;
-       else timeframe = Integer.parseInt(jTextField15.getText());
+       timeframe = -9999;
 //       if (jTextField15.getText().indexOf("all out")>-1) timeframe = 0;
 // set felling height usually 0.3m
-       fellingHeight=Double.parseDouble(jTextField16.getText());
+       fellingHeight=0.0;
        if (dialogActive){
            JFileChooser fc = new JFileChooser();
            int auswahl = fc.showOpenDialog(this);
@@ -830,6 +961,7 @@ public class LoggingPanel extends javax.swing.JPanel {
                            elt3 = addString(elt3, "Art",new Integer(st.tr[i].code).toString());
                            elt3 = addString(elt3, "Baum_Nr",st.tr[i].no);
                            elt3 = addString(elt3, "BHD",f.format(st.tr[i].d));
+                           elt3 = addString(elt3, "Hoehe",f.format(st.tr[i].h));
                            elt3 = addString(elt3, "Name",tl[jj].sortName);
                            elt3 = addString(elt3, "Entnahmejahr",new Integer(st.tr[i].out).toString());
                            elt3 = addString(elt3, "Entnahmetyp",new Integer(st.tr[i].outtype).toString());
@@ -962,7 +1094,7 @@ public class LoggingPanel extends javax.swing.JPanel {
         int m = 0;
         if (entries != null) m= entries.length;
         for ( int i = 0; i < m; i++ ) {
-             if (entries[i].indexOf(".xml") >0) jComboBox5.addItem(entries[i]);
+             if (entries[i].indexOf(".xml") >0 && entries[i].indexOf("sortment") >0) jComboBox5.addItem(entries[i]);
         }
 
         
@@ -1054,9 +1186,7 @@ public class LoggingPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1067,7 +1197,6 @@ public class LoggingPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
@@ -1087,8 +1216,6 @@ public class LoggingPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
     private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
-    private javax.swing.JTextField jTextField16;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;

@@ -268,7 +268,7 @@ public class GenerateXY {
     /**
      * check if a point is in polygon , if return is 0 then outside
      */
-    int pnpoly(double x, double y, Stand st) {
+    public int pnpoly(double x, double y, Stand st) {
         int i, j, c, m;
         c = 0;
         m = st.ncpnt;

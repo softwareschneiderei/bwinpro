@@ -821,23 +821,29 @@ public class TreatmentElements2 {
         st.trule.standTypeAtStatus1 = -1;
     }
     
+    /**
+     * Abpuffern der Eingriffsstärke im Rahmen von Durchforstungen. 25.11.2015
+     * jhansen: Dynamisierung -> Ermöglicht die Einstellung von "außen"
+     * maxBa is target basal area calculated with maximum basal area and thinning factor
+     */
     private double reduceBaOut(Stand st, double maxBa) {
         double maxBasalAreaOut = st.bha - maxBa;
+
         double baFac = st.bha / maxBa;
-        
+
         String[] heightStartReducingA = st.sp[0].spDef.moderateThinning.split(";");
         double heightStartReducing = Double.POSITIVE_INFINITY;
-        if(heightStartReducingA.length>2){
-            heightStartReducing = Double.parseDouble(heightStartReducingA[2]);
+        if (heightStartReducingA.length > st.trule.getIndexModerateThinning()) {
+            heightStartReducing = Double.parseDouble(heightStartReducingA[st.trule.getIndexModerateThinning()]);
         }
-        
-        boolean reduce =  st.sp[0].h100  >= heightStartReducing;
-        
-        if (baFac > 1.2 && reduce) {
-            maxBasalAreaOut = maxBasalAreaOut * (1.2 / baFac);
+
+        boolean reduce = st.sp[0].h100 >= heightStartReducing;
+
+        if (baFac > st.trule.degreeOfStokingToLimitThinning && reduce) {
+            maxBasalAreaOut = maxBasalAreaOut * (st.trule.degreeOfStokingToLimitThinning / baFac);
         }
         return maxBasalAreaOut;
-    }    
+    }
 
     /**
      * Returns maximum basal area for a treegross stand <code>Stand</code>. If
@@ -869,6 +875,33 @@ public class TreatmentElements2 {
                 maxBA += atree.calculateMaxBasalArea() * (st.sp[i].percCSA / 100.0);
             }
         }
+        return maxBA;
+    }
+    
+        public double getMaxSpeciesBasalArea(Stand st, Species sp, boolean withModerateThinningFactor) {
+        double maxBA = 0.0;
+        Tree atree = new Tree();
+        atree.sp = sp;
+        atree.st = st;
+        if (sp.h100 > 10.0){
+           atree.d = sp.d100;
+           atree.h = sp.h100;
+        }
+        else {
+           atree.d = sp.dg;
+           atree.h = sp.hg;
+        }    
+        atree.age = (int) Math.round(sp.h100age);
+        atree.cw = atree.calculateCw();
+        atree.code = sp.code;
+            //bei allen Durchforstungen:
+        if (withModerateThinningFactor) {
+            maxBA = atree.calculateMaxBasalArea() * atree.getModerateThinningFactor()
+                        * (sp.trule.targetCrownPercent / 100.0);
+            } else {
+            maxBA = atree.calculateMaxBasalArea() * (sp.trule.targetCrownPercent / 100.0);
+        }
+        
         return maxBA;
     }
 
@@ -994,6 +1027,147 @@ public class TreatmentElements2 {
         }
     }
 
+    /**
+     * This method will thin the crop trees considering the desired mixture of the species. This means
+     * that competitor tree will be taken out, only if there is an overlap in crown competition
+     *
+     * @param st stand object
+     */
+    public void thinCropTreeCompetition2(Stand st) {
+    
+        //set max thinning volume (vmaxthinning) if outaken amount (vout) 
+        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
+        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
+
+        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
+        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
+        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
+            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
+        }
+
+        if (vmaxthinning > 0) {
+            // Thinning is done iteratively tree by tree
+            // 1. Calculate the overlap of all crop trees
+            // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
+            //    Heidi Doebbeler and crown width functions
+            // 3. Find tree with the highest differenz in overlap - tolerable overlap
+            // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
+            // 5. Start with 1. again
+            
+
+            double intensity = 2.0 - st.trule.thinningIntensity;
+            if (intensity == 0.0) {
+                intensity = 1.0;
+            }
+            //Festlegen der Grundflächenansenkung
+            double maxStandBasalArea = getMaxStandBasalArea(st, true);
+
+            if (st.trule.thinningIntensity == 0.0) {
+                maxStandBasalArea = maxStandBasalArea * 100.0;
+            } else {
+                maxStandBasalArea = maxStandBasalArea * (2.0 - st.trule.thinningIntensity);
+            }
+            
+            // NEU: Stelle die Z-Bäume frei, aber durchforste nur, wenn die angestrebte Grundfläche
+            // ueberschritten ist oder der Baum ein extremer Bedränger ist
+            
+            for (int iik =0; iik < st.nspecies; iik++){
+
+                double baIst = 0.0;
+                for (int jjk=0; jjk < st.ntrees; jjk++)
+                    if (st.sp[iik].code==st.tr[jjk].code && st.tr[jjk].out < 0 && st.tr[jjk].d >= 7.0){
+                        baIst += Math.PI*Math.pow((st.tr[jjk].d/200.0),2.0)*st.tr[jjk].fac;
+                    }
+                baIst = baIst /st.size;
+                double maxBasalAreaOut = baIst -getMaxSpeciesBasalArea(st, st.sp[iik], true);
+                  
+                boolean doNotEndThinning = true;
+                if (maxBasalAreaOut <= 0.0) {
+                     doNotEndThinning = false;
+                } else {
+                   do {
+// update competition overlap for crop trees 
+                    for (int i = 0; i < st.ntrees; i++) {
+                        if (st.tr[i].out < 0 && st.tr[i].crop) {
+                            st.tr[i].updateCompetition();
+                        }
+                    }
+// find crop with most competition, defined as that tree with greates ratio of
+// actual c66xy devided by maximum c66
+                    int indexOfCroptree = -9;
+                    double maxCompetition = -99999.9;
+                    for (int i = 0; i < st.ntrees; i++) {
+                        if (st.tr[i].out < 0 && st.tr[i].crop) {
+                            // calculate maxc66
+                            double maxBasalArea = st.tr[i].calculateMaxBasalArea() * st.tr[i].getModerateThinningFactor();
+                            if (st.trule.thinningIntensity == 0.0) {
+                                maxBasalArea = maxBasalArea * 100.0;
+                            } else {
+                                maxBasalArea = maxBasalArea * (2.0 - st.trule.thinningIntensity);
+                            }
+                            double maxN = maxBasalArea / (Math.PI * Math.pow((st.tr[i].d / 200.0), 2.0));
+                            double maxC66 = maxN * Math.PI * Math.pow((st.tr[i].cw / 2.0), 2.0) / 10000.0;
+                            double c66Ratio = st.tr[i].c66xy / maxC66;
+                            // remember tree if c66Ratio is greater than maxCompetition
+                            if (c66Ratio > maxCompetition) {
+                                indexOfCroptree = i;
+                                maxCompetition = c66Ratio;
+                            }
+                        }
+                    }
+// release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
+// crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
+// into the limit of twice the crown radius of the crop tree size 
+//                 
+// Find neighbor who comes closest , but species 
+                    if (indexOfCroptree < 0) {
+                        doNotEndThinning = false;
+                    } else {
+                        double flprozent=0.0;
+                        double flpromax=-99.9;
+                        int merk = -9;
+                        double h66 = st.tr[indexOfCroptree].h - 0.667*(st.tr[indexOfCroptree].h-st.tr[indexOfCroptree].cb);
+                        double r1 = st.tr[indexOfCroptree].cw/2.0;
+                        for (int i = 0; i < st.tr[indexOfCroptree].nNeighbor; i++) {
+                            if (st.tr[st.tr[indexOfCroptree].neighbor[i]].d > 7
+                                    && st.tr[st.tr[indexOfCroptree].neighbor[i]].out < 0
+                                    && (st.trule.cutCompetingCropTrees || st.tr[st.tr[indexOfCroptree].neighbor[i]].crop == false)
+                                    && st.tr[st.tr[indexOfCroptree].neighbor[i]].habitat == false
+                                    && st.tr[st.tr[indexOfCroptree].neighbor[i]].code == st.sp[iik].code) {
+                                double radius = st.tr[st.tr[indexOfCroptree].neighbor[i]].calculateCwAtHeight(h66) / 2.0;
+                                if (radius > 0.0){
+                                    double ent = Math.sqrt(Math.pow(st.tr[indexOfCroptree].x - st.tr[st.tr[indexOfCroptree].neighbor[i]].x, 2.0)
+                                        + Math.pow(st.tr[indexOfCroptree].y - st.tr[st.tr[indexOfCroptree].neighbor[i]].y, 2.0));
+                                    flprozent = overlap(r1,radius,ent)/(Math.PI*Math.pow(r1, 2.0)); 
+                                }
+            // Merken wenn das Flächenprozent größer ist
+
+                                if (flpromax < flprozent) {
+                                    merk = st.tr[indexOfCroptree].neighbor[i];
+                                    flpromax = flprozent;
+                                }
+                            }
+                        }
+                        // if merk > 9 then cut tree else stop crop tree release
+                        if (merk == -9) {
+                            doNotEndThinning = false;
+                        } else {
+                            st.tr[merk].out = st.year;
+                            st.tr[merk].outtype = 2;
+                            thinned += (st.tr[merk].fac * st.tr[merk].v);
+                            maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
+                            if (maxBasalAreaOut <= 0.0) {
+                                doNotEndThinning = false;
+                            }
+                        }
+                    }
+                } //stop if max thinning amount is reached or all competitors are taken out
+                while (thinned < vmaxthinning && doNotEndThinning);
+            }
+        }  // Ende des Baumartendurchlaufes
+        }    
+    }
+    
     
     /**
      * Thinning by Q-D-Rule is a specail thinning from Rheinland-Pfalz The
@@ -1369,6 +1543,135 @@ public class TreatmentElements2 {
         }
     }
 
+    public void thinCompetitionFromAbove2(Stand st) {
+        //set max thinning volume (vmaxthinning) if outaken amount (vout)
+        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
+        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
+
+        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
+        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
+        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
+            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
+        }
+
+        if (vmaxthinning > 0) {
+            // Thinning is done iteratively tree by tree
+            // 1. Calculate the overlap of all crop trees
+            // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
+            //    Heidi Doebbeler and crown width functions
+            // 3. Find tree with the highest differenz in overlap - tolerable overlap
+            // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
+            // 5. Start with 1. again
+
+            // Festlegen der Grundflächenabsenkung
+            st.bha = 0.0;
+            for (int i = 0; i < st.ntrees; i++) {
+                if (st.tr[i].out == -1) {
+                    st.bha += Math.PI * Math.pow(st.tr[i].d / 200.0, 2.0) * st.tr[i].fac;
+                }
+            }
+            st.bha = st.bha / st.size;
+
+            double maxStandBasalArea = getMaxStandBasalArea(st, true);
+
+            if (st.trule.thinningIntensity == 0.0) {
+                maxStandBasalArea = maxStandBasalArea * 100.0;
+            } else {
+                maxStandBasalArea = maxStandBasalArea * (2.0 - st.trule.thinningIntensity);
+            }
+            
+            // NEU: Stelle die Z-Bäume frei, aber durchforste nur, wenn die angestrebte Grundfläche
+            // ueberschritten ist oder der Baum ein extremer Bedränger ist
+            
+            for (int iik =0; iik < st.nspecies; iik++){
+
+                double baIst = 0.0;
+                for (int jjk=0; jjk < st.ntrees; jjk++)
+                    if (st.sp[iik].code==st.tr[jjk].code && st.tr[jjk].out < 0 && st.tr[jjk].d >= 7.0){
+                        baIst += Math.PI*Math.pow((st.tr[jjk].d/200.0),2.0)*st.tr[jjk].fac;
+                    }
+                baIst = baIst /st.size;
+                double maxBasalAreaOut = baIst -getMaxSpeciesBasalArea(st, st.sp[iik], true);
+
+                boolean doNotEndThinning = true;
+                if (maxBasalAreaOut <= 0.0) {
+                    doNotEndThinning = false;
+                } else {
+                    do {
+                    // find non crop tree with most competition to other trees, defined as that the maximum overlap area for neighbor trees
+                        int indextree = -9;
+                        double maxOverlap = -99999.9;
+                        for (int i = 0; i < st.ntrees; i++) {
+                            if (st.tr[i].d > 7 && st.tr[i].out < 0 && st.tr[i].crop == false && st.tr[i].tempcrop == false 
+                                    && st.tr[i].habitat == false && st.tr[i].code == st.sp[iik].code) {
+                                double ovlp = 0.0;
+                                double ri = st.tr[i].cw / 2.0;
+                                double distance = 0.0;
+                                double rj =0.0;
+                                for (int j = 0; j < st.ntrees; j++) {
+                                    if (i != j && st.tr[j].out < 0){
+                                       distance = Math.sqrt(Math.pow(st.tr[i].x - st.tr[j].x, 2.0)
+                                        + Math.pow(st.tr[i].y - st.tr[j].y, 2.0));
+                                       rj = st.tr[j].cw / 2.0;
+                                    }
+                                 // only if there is an overlap and ri > rj
+                                    if (ri + rj > distance && ri > rj) {
+                                        ovlp += overlap(rj, ri, distance);
+                                    }
+                                }
+                                if (ovlp > maxOverlap) {
+                                    maxOverlap = ovlp;
+                                    indextree = i;
+                                }
+                            }
+                        }
+
+                    // Cut indexOfCropTree a
+                    // if merk > 9 then cut tree else stop crop tree release
+                        if (indextree == -9) {
+                        doNotEndThinning = false;
+                        } else {
+                            st.tr[indextree].out = st.year;
+                            st.tr[indextree].outtype = 2;
+                            thinned = thinned + (st.tr[indextree].fac * st.tr[indextree].v);
+                            maxBasalAreaOut = maxBasalAreaOut - (st.tr[indextree].fac * Math.PI * Math.pow(st.tr[indextree].d / 200.0, 2.0)) / st.size;
+                            if (maxBasalAreaOut <= 0.0) {
+                                doNotEndThinning = false;
+                            }
+                        }
+                    } //stop if max thinning amount is reached or all competitors are taken out
+                    while (thinned < vmaxthinning && doNotEndThinning);
+                }
+            }
+            
+        }
+        
+    for (int iik =0; iik < st.nspecies; iik++){
+        double baIst = 0.0;
+        for (int jjk=0; jjk < st.ntrees; jjk++)
+            if (st.sp[iik].code==st.tr[jjk].code && st.tr[jjk].out < 0 && st.tr[jjk].d >= 7.0){
+                baIst += Math.PI*Math.pow((st.tr[jjk].d/200.0),2.0)*st.tr[jjk].fac;
+            }
+        baIst = baIst /st.size;
+        if( baIst/getMaxSpeciesBasalArea(st, st.sp[iik], true) < 0.8) {
+            double hbon = 25.0;
+            boolean suchboni = true;
+            int mm= 0;
+            while (suchboni || mm < st.ntrees){
+                if (st.sp[iik].code == st.tr[mm].code) {
+                    hbon = st.tr[mm].si;
+                    suchboni = false;
+                }
+                mm=mm+1;
+            }
+            
+            plantGap(st.sp[iik].code,hbon,15.0,st);
+        }
+    }
+        
+    }
+    
+    
     public void thinFromBelow(Stand st) {
         //Max. Harvestvolume is defined
         //set max thinning volume (vmaxthinning) if outaken amount (vout) 
@@ -1584,7 +1887,7 @@ public class TreatmentElements2 {
     /**
      * calculate overlap area of two circle only if they overlap
      */
-    private double overlap(double r1, double r2, double e) {
+    public double overlap(double r1, double r2, double e) {
         double x, y, f;
         f = 0.0;
         //r1 should always be the smaller radius
@@ -1864,4 +2167,61 @@ public class TreatmentElements2 {
             xy.zufall(st);
         }
     }
+    
+       
+    public int plantGap(int code, double siteindex, double gapsize, Stand st) {
+        int n =0;
+        double radius =0.0;
+        if (gapsize > 0.0) radius = Math.sqrt(gapsize/Math.PI);
+// Create a grid
+        double xmin = 999999.0;
+        double xmax = 0.0;
+        double ymin = 999999.0;
+        double ymax = 0.0;
+        for (int i=0; i < st.ncpnt;i++){
+            if ( st.cpnt[i].x < xmin) xmin = st.cpnt[i].x;
+            if ( st.cpnt[i].y < ymin) ymin = st.cpnt[i].y;
+            if ( st.cpnt[i].x > xmax) xmax = st.cpnt[i].x;
+            if ( st.cpnt[i].y > ymax) ymax = st.cpnt[i].y;
+        }
+        int nx = (int) Math.round((xmax-xmin)/(0.5*radius));
+        int ny = (int) Math.round((ymax-ymin)/(0.5*radius)); 
+        double xpos =0.0;
+        double ypos =0.0;
+        GenerateXY genxy = new GenerateXY();
+        for (int i=0; i < nx; i++){
+            xpos = (i+1)*0.5*radius;
+            for (int j=0; j < ny; j++){
+                ypos = (j+1)*0.5*radius;
+                double fl =0.0;
+                for (int k=0; k < st.ntrees; k++){
+                    if (st.tr[k].out < 0){
+                    double r2 = st.tr[k].cw/2.0;
+                    double dist= Math.sqrt(Math.pow(xpos - st.tr[k].x, 2.0)
+                                         + Math.pow(ypos - st.tr[k].y, 2.0));
+                    fl+= overlap(radius, r2 ,dist);
+                }
+                }
+                if (fl < 0.1*gapsize){  //plant
+                try {
+                    double xra = 0.5-st.random.nextNormal()*0.5*radius;
+                    double yra = 0.5-st.random.nextNormal()*0.5*radius;
+                    if (genxy.pnpoly(xpos+xra,ypos+yra,st) == 0){
+                       xra = 0.0;
+                       yra = 0.0;
+                    }
+                     st.addTreeFromPlanting(code, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 1.0, 0.1, 2.52, siteindex, xpos+xra, ypos+yra, 0, 0, 0, 0);
+                    } catch (SpeciesNotDefinedException ex) {
+                        LOGGER.log(Level.SEVERE, "treegross", ex);
+                    }
+                }
+                
+            }
+        }
+        
+        
+
+        return n;
+    }
+
 }

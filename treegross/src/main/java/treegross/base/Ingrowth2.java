@@ -40,7 +40,7 @@ public class Ingrowth2 implements PlugInIngrowth {
         411, 412, 421, 422, 430, 431, 441, 451, 452,
         511, 512, 513, 521, 525,/*531,*/ 611, 711, 731, 811, 812, 999};
 
-    ArrayList<Integer> existingSpecies = new ArrayList<Integer>();
+    ArrayList<Integer> existingSpecies = new ArrayList<>();
 
     int nExistingSpecies = 0;
 

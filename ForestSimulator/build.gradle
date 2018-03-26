@@ -1,5 +1,5 @@
 apply plugin: 'application'
-version = '7.8.01'
+version = '7.9.02'
 
 mainClassName = 'forestsimulator.standsimulation.ForestSimulator'
 
@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compile project(':treegross')
     compile project(':NW-FVAUtilization')
+    compile project(':silviculture')
     compile name: 'j3dcore-1.6.0'
     compile name: 'j3dutils-1.6.0'
     compile name: 'vecmath-1.6.0'

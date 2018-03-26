@@ -77,6 +77,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         jTextField1 = new javax.swing.JTextField();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
@@ -142,6 +143,9 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
             }
         });
         jPanel6.add(jCheckBox2);
+
+        jCheckBox4.setText("Riskmodel");
+        jPanel6.add(jCheckBox4);
 
         jCheckBox3.setText("Totholzmodul");
         jPanel6.add(jCheckBox3);
@@ -277,6 +281,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
                 {null, null},
                 {null, null},
                 {null, null},
+                {null, null},
                 {null, null}
             },
             new String [] {
@@ -368,8 +373,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-1196)/2, (screenSize.height-820)/2, 1196, 820);
+        setSize(new java.awt.Dimension(1196, 820));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -466,11 +471,12 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         spd[m].moderateThinning = (String) jTable1.getValueAt(29,1);
         spd[m].colorXML = (String) jTable1.getValueAt(30,1);
         spd[m].competitionXML = (String) jTable1.getValueAt(31,1);
-        spd[m].taperFunctionXML = (String) jTable1.getValueAt(32,1);
-        spd[m].coarseRootBiomass = (String) jTable1.getValueAt(33,1);
-        spd[m].smallRootBiomass = (String) jTable1.getValueAt(34,1);
-        spd[m].fineRootBiomass = (String) jTable1.getValueAt(35,1);
-        spd[m].totalRootBiomass = (String) jTable1.getValueAt(36,1);
+        spd[m].mortalityXML = (String) jTable1.getValueAt(32,1);
+        spd[m].taperFunctionXML = (String) jTable1.getValueAt(33,1);
+        spd[m].coarseRootBiomass = (String) jTable1.getValueAt(34,1);
+        spd[m].smallRootBiomass = (String) jTable1.getValueAt(35,1);
+        spd[m].fineRootBiomass = (String) jTable1.getValueAt(36,1);
+        spd[m].totalRootBiomass = (String) jTable1.getValueAt(37,1);
         
     }
     
@@ -554,6 +560,8 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             spd[nspd].moderateThinning = sortiment.getChild("ModerateThinning").getText();
             spd[nspd].colorXML = sortiment.getChild("Color").getText();
             spd[nspd].competitionXML = sortiment.getChild("Competition").getText();
+            try {  spd[nspd].mortalityXML = sortiment.getChild("Mortality").getText();
+                 } catch (Exception e){ spd[nspd].mortalityXML="treegross.base.Mortality";}
             spd[nspd].taperFunctionXML = sortiment.getChild("TaperFunction").getText();
             try {  spd[nspd].stemVolumeFunctionXML = sortiment.getChild("StemVolumeFunction").getText();
                  } catch (Exception e){ System.out.println("Schaftholz ist nicht definiert: ");}
@@ -575,6 +583,8 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             jCheckBox1.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
             jCheckBox2.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
             jCheckBox3.setSelected(Boolean.parseBoolean(eingestellt.getChild("DeadwoodModul").getText()));
+            try {  jCheckBox4.setSelected(Boolean.parseBoolean(eingestellt.getChild("RiskModul").getText()));
+                 } catch (Exception e){  jCheckBox4.setSelected(false);}
             String ts = "5";
             try {  ts = eingestellt.getChild("TimeStep").getText();
                  } catch (Exception e){ ts = "5";}
@@ -625,6 +635,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
        elt = addString(elt, "ErrorComponent",new Boolean(jCheckBox1.isSelected()).toString());
        elt = addString(elt, "IngrowthModul",new Boolean(jCheckBox2.isSelected()).toString());
        elt = addString(elt, "DeadwoodModul",new Boolean(jCheckBox3.isSelected()).toString());
+       elt = addString(elt, "RiskModul",new Boolean(jCheckBox4.isSelected()).toString());
        elt = addString(elt, "TimeStep",new Integer(jTextField2.getText().trim()).toString());
        elt = addString(elt, "Author",jTextField4.getText());
        elt = addString(elt, "FirstDate",jTextField5.getText());
@@ -672,6 +683,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
             elt = addString(elt, "ModerateThinning", spd[i].moderateThinning.toString());
             elt = addString(elt, "Color",spd[i].colorXML);
             elt = addString(elt, "Competition",spd[i].competitionXML);
+            elt = addString(elt, "Mortality",spd[i].mortalityXML);
             elt = addString(elt, "TaperFunction",spd[i].taperFunctionXML);
             elt = addString(elt, "CoarseRootBiomass",spd[i].coarseRootBiomass);
             elt = addString(elt, "SmallRootBiomass",spd[i].smallRootBiomass);
@@ -737,12 +749,13 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         jTable1.setValueAt("Moderate Thinning Factor",29,0);
         jTable1.setValueAt("Color",30,0);
         jTable1.setValueAt("Plugin Competition",31,0);
-        jTable1.setValueAt("Plugin Taper Fuction",32,0);
-        jTable1.setValueAt("Grobwurzelbiomasse Funktion",33,0);
-        jTable1.setValueAt("Kleinwurzelbiomasse Funktion",34,0);
-        jTable1.setValueAt("Feinwurzelbiomasse Funktion",35,0);
-        jTable1.setValueAt("Gesamtwurzelbiomasse Funktion",36,0);
-        jTable1.setValueAt("Anzahl der Z-Bäume",37,0);
+        jTable1.setValueAt("Plugin Mortality",32,0);
+        jTable1.setValueAt("Plugin Taper Fuction",33,0);
+        jTable1.setValueAt("Grobwurzelbiomasse Funktion",34,0);
+        jTable1.setValueAt("Kleinwurzelbiomasse Funktion",35,0);
+        jTable1.setValueAt("Feinwurzelbiomasse Funktion",36,0);
+        jTable1.setValueAt("Gesamtwurzelbiomasse Funktion",37,0);
+        jTable1.setValueAt("Anzahl der Z-Bäume",38,0);
         jTable1.setValueAt(new Integer(spd[m].code).toString(),0,1);
         jTable1.setValueAt(spd[m].shortName,1,1);
         jTable1.setValueAt(spd[m].longName,2,1);
@@ -775,12 +788,13 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         jTable1.setValueAt(spd[m].moderateThinning,29,1);
         jTable1.setValueAt(spd[m].colorXML,30,1);
         jTable1.setValueAt(spd[m].competitionXML,31,1);
-        jTable1.setValueAt(spd[m].taperFunctionXML,32,1);
-        jTable1.setValueAt(spd[m].coarseRootBiomass,33,1);
-        jTable1.setValueAt(spd[m].smallRootBiomass,34,1);
-        jTable1.setValueAt(spd[m].fineRootBiomass,35,1);
-        jTable1.setValueAt(spd[m].totalRootBiomass,36,1);
-        jTable1.setValueAt(new Integer(spd[m].cropTreeNumber).toString(),37,1);
+        jTable1.setValueAt(spd[m].mortalityXML,32,1);
+        jTable1.setValueAt(spd[m].taperFunctionXML,33,1);
+        jTable1.setValueAt(spd[m].coarseRootBiomass,34,1);
+        jTable1.setValueAt(spd[m].smallRootBiomass,35,1);
+        jTable1.setValueAt(spd[m].fineRootBiomass,36,1);
+        jTable1.setValueAt(spd[m].totalRootBiomass,37,1);
+        jTable1.setValueAt(new Integer(spd[m].cropTreeNumber).toString(),38,1);
       }
         
     }    
@@ -799,6 +813,7 @@ private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;

@@ -4,6 +4,7 @@
  */
 package forestsimulator.SQLite;
 
+import forestsimulator.standsimulation.StartBrowser;
 import treegross.base.Stand;
 
 /**
@@ -44,7 +45,9 @@ public class SQLiteDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
 
@@ -57,7 +60,18 @@ public class SQLiteDialog extends javax.swing.JDialog {
                 jButton2ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton2, java.awt.BorderLayout.PAGE_END);
+        jPanel1.add(jButton2);
+
+        jButton1.setText("?");
+        jButton1.setToolTipText("Help");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(jButton1);
+
+        getContentPane().add(jPanel1, java.awt.BorderLayout.SOUTH);
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         jPanel2.add(jTabbedPane1, java.awt.BorderLayout.CENTER);
@@ -69,11 +83,21 @@ public class SQLiteDialog extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        st.newStand();
         if (jTabbedPane1.getSelectedIndex()==0) st=jpd.createStand();
         if (jTabbedPane1.getSelectedIndex()==1) st=jpp.createStand();
         if (jTabbedPane1.getSelectedIndex()==2) st=jp.createStand();
+        st.status=0;
         dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String fileName = st.programDir + System.getProperty("file.separator") + "help" + System.getProperty("file.separator") + "FSSQLite.pdf";
+        String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + fileName;
+        StartBrowser startBrowser = new StartBrowser(seite);
+        startBrowser.start();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -105,7 +129,9 @@ public class SQLiteDialog extends javax.swing.JDialog {
         /* Create and display the dialog */
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables

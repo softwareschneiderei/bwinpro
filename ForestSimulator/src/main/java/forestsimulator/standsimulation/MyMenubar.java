@@ -178,7 +178,28 @@ class MyMenubar extends JMenuBar
         	mi.setActionCommand("specialTreatment"); 
                 mi.addActionListener(listener);
                 m.add(mi);
-*/          
+*/
+        //4.4 select crop tree 
+        if (accessInput) {
+                mi = new JMenuItem(messages.getString("select_crop_trees"));
+        	mi.setActionCommand("select_crop_trees");
+		mi.addActionListener(listener);
+                m.add(mi);
+        }
+        //4.5 deselect crop trees
+        if (accessInput) {
+                mi = new JMenuItem(messages.getString("deselect_crop_trees"));
+        	mi.setActionCommand("deselect_crop_trees");
+		mi.addActionListener(listener);
+                m.add(mi);
+        }
+                //4.6 thin by list
+        if (accessInput) {
+                mi = new JMenuItem(messages.getString("thin_by_list"));
+        	mi.setActionCommand("thin_by_list");
+		mi.addActionListener(listener);
+                m.add(mi);
+        }
                 add(m);
                 
 //1.5 save HTML-Reports                

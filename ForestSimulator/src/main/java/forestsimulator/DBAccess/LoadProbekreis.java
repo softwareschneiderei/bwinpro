@@ -14,6 +14,7 @@ public class LoadProbekreis {
     
     public Stand loadFromDB(Connection dbconn, Stand st, String idx, int kreis, String idx2, int type  ){
         
+        st.status=0;
         st.ntrees=0;
         st.nspecies=0;
         st.ncpnt=0;
@@ -179,6 +180,7 @@ public class LoadProbekreis {
 // Für ElSalto Gemacht: Probefläche mit 50 x 50m; Polar Grad
 public Stand loadFromElSalto(Connection dbconn, Stand st,  int kreis ){
         
+        st.status=0;
         st.ntrees=0;
         st.nspecies=0;
         st.ncpnt=0;

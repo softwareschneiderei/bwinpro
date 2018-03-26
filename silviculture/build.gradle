@@ -1,0 +1,9 @@
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
+dependencies {
+    compile project(':treegross')
+}

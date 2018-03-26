@@ -121,9 +121,9 @@ public class Groups {
                     hg = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
             }
             else {
-                int ncurve = Integer.parseInt(st.sp[merk].heightcurveUsed.substring(0, 1));
-                hg = hc.getHeight(ncurve, dg, st.sp[merk].heightcurveUsedP0, st.sp[merk].heightcurveUsedP1, st.sp[merk].heightcurveUsedP2);
-            }
+            int ncurve = Integer.parseInt(st.sp[merk].heightcurveUsed.substring(0, 1));
+            hg = hc.getHeight(ncurve, dg, st.sp[merk].heightcurveUsedP0, st.sp[merk].heightcurveUsedP1, st.sp[merk].heightcurveUsedP2);
+        }
         }
         return hg;
     }
@@ -155,7 +155,7 @@ public class Groups {
         vha = vha / st.size;
         return vha;
     }
-    
+
     public double getNaus(int gr, int typ, int fromYear) {
         double nha = 0.0;
         for (int i = 0; i < st.ntrees; i++) {

@@ -550,11 +550,7 @@ public class DataExchangeFormat {
 
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }
@@ -813,11 +809,7 @@ public class DataExchangeFormat {
 
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }
@@ -1027,11 +1019,7 @@ public class DataExchangeFormat {
                     }
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }
@@ -1101,16 +1089,19 @@ public class DataExchangeFormat {
                 double z = Double.parseDouble(stx.nextToken());
                 int zb = Integer.parseInt(stx.nextToken());
                 int ntimes = (int) numberoftrees;
+                if (out < 0) outtype=0;
 
                 // Check if weighted tree or single trees; weighted trees are i.e. from inventory plots
                 // with concentric circles or from gaugle sampling
                 if ((numberoftrees - ntimes) > 1) {
                     st.addtreefac(code, no, age, out, dbh, height, crbase, crwidth,
                             site, x, y, z, zb, 0, 0, numberoftrees);
+                    st.tr[st.ntrees-1].outtype = outtype;
                 } else {
                     for (int i = 0; i < numberoftrees; i++) {
                         st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
                                 site, x, y, z, zb, 0, 0);
+                    st.tr[st.ntrees-1].outtype = outtype;
                     }
                 }
 
@@ -1120,11 +1111,7 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, 0, 0);
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }

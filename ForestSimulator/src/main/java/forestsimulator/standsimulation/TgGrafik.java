@@ -33,8 +33,10 @@ import java.io.*;
 
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import javax.swing.*;
 import java.util.*;
+import org.jfree.chart.title.LegendTitle;
 
 /** draws a stand map and allows thinning by mouse click */
 class TgGrafik extends JPanel 
@@ -118,7 +120,10 @@ class TgGrafik extends JPanel
         File fn= new File(jpgFilename);
         ChartUtilities ut = null;
         try{
-            ut.saveChartAsJPEG(fn ,jfreeChart,  600, 400);
+//            ut.saveChartAsJPEG(fn ,jfreeChart,  600, 400);
+
+            ut.saveChartAsJPEG(fn ,jfreeChart,  1200, 800);
+
         }
       	catch (Exception e){	System.out.println(e); } 
 
@@ -155,10 +160,14 @@ class TgGrafik extends JPanel
         true, // tooltips?
         false // URLs?
        );
+     Font font3 = new Font("Dialog", Font.PLAIN, 15); 
+
        PiePlot piePlot = (PiePlot) chart.getPlot();
        for (int i=0;i<st.nspecies;i++){
           piePlot.setSectionPaint(i, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue));
      }
+     chart.getLegend().setItemFont(font3); 
+
      return chart;
      
 	} 
@@ -219,6 +228,127 @@ class TgGrafik extends JPanel
                   dataset.addValue(anz/st.size, st.sp[j].spDef.shortName, m.toString());
                  
              }
+ 
+             
+         }
+     }
+     
+      for (int i=0;i< 25;i++){
+         for (int j=0;j<st.nspecies;j++){
+             double anz=0;
+             for (int k=0;k<st.ntrees;k++){
+                 if ((st.tr[k].d > i*5) && (st.tr[k].d <= (i+1)*5) && (st.tr[k].out == st.year) 
+                     && st.tr[k].code==st.sp[j].code) anz= anz+st.tr[k].fac;
+                 
+             }
+             if (anz >= 0 && i>=minBar && i <= maxBar ){
+                  Integer m = (5*i)+2;
+                  dataset.addValue(anz/st.size, st.sp[j].spDef.shortName+"_D", m.toString());
+                 
+             }
+
+             
+         }
+     }
+     
+//     
+     JFreeChart chart = ChartFactory.createStackedBarChart(
+        messages.getString("diameterDistribution"), // chart title
+        messages.getString("dbhClass"), // domain axis label
+        messages.getString("numberOfStems"), // range axis label
+        dataset, // data
+        PlotOrientation.VERTICAL, // orientation
+        true, // include legend
+        true, // tooltips?
+        false // URLs?
+       );
+
+     CategoryPlot plot = chart.getCategoryPlot();
+     Font font3 = new Font("Dialog", Font.PLAIN, 15); 
+     plot.getDomainAxis().setLabelFont(font3);
+     plot.getDomainAxis().setTickLabelFont(font3);
+     plot.getRangeAxis().setLabelFont(font3);
+     plot.getRangeAxis().setTickLabelFont(font3);
+//     plot.setBackgroundPaint(Color.lightGray);
+//     plot.setDomainGridlinePaint(Color.white);
+//     plot.setDomainGridlinesVisible(true);
+//     plot.setRangeGridlinePaint(Color.white);
+ 
+// reenderer
+     StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
+     renderer.setDrawBarOutline(false);
+//     renderer.setsetItemLabelFont(font3);
+
+// set up gradient paints for series...
+     for (int i=0;i<st.nspecies;i++){
+//          renderer.setSeriesStroke(i,new BasicStroke(1.5f));
+            GradientPaint gp1 = new GradientPaint(
+                    5, 5, Color.black,
+                    10, 10, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue),
+                    true
+                        );
+          int mm = i+st.nspecies;
+          renderer.setSeriesPaint(i, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue));
+          renderer.setSeriesPaint(mm, gp1);
+//          renderer.setSeriesPaint(mm, gp2);
+     }
+     chart.getLegend().setItemFont(font3); 
+     return chart;
+	} 
+  
+  public void redraw(){
+ //     repaint();
+  } 
+   }
+
+//------------------------------------------------------ 
+ class GraphicDiameterDistributionA {
+   JFreeChart chart;
+   ResourceBundle messages;
+
+   public GraphicDiameterDistributionA(String preferredLanguage)
+  {   Locale currentLocale;
+      currentLocale = new Locale(preferredLanguage, "");
+      messages = ResourceBundle.getBundle("forestsimulator.standsimulation.TgJFrame",currentLocale);
+  }  
+  public JFreeChart getChart(){
+      return chart;
+  }
+  
+   
+  public JFreeChart createChart(Stand st) {
+
+
+// create the dataset...
+     DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+// Start and end of classes      
+      int minBar=24;
+      int maxBar=0;
+      for (int i=0;i< 25;i++){
+          double anz2=0;
+             for (int k=1;k<st.ntrees;k++){
+                 if ((st.tr[k].d > i*5) && (st.tr[k].d <= (i+1)*5) && (st.tr[k].out < 0) 
+                     ) anz2= anz2+st.tr[k].fac;
+             }
+             if (anz2 > 0 ){
+                if (minBar > i) minBar=i;
+                if (maxBar < i) maxBar=i;
+             }
+     }
+     
+     for (int i=0;i< 25;i++){
+         for (int j=0;j<st.nspecies;j++){
+             double anz=0;
+             for (int k=0;k<st.ntrees;k++){
+                 if ((st.tr[k].d > i*5) && (st.tr[k].d <= (i+1)*5) && (st.tr[k].out < 0) 
+                     && st.tr[k].code==st.sp[j].code) anz= anz+st.tr[k].fac;
+                 
+             }
+             if (anz >= 0 && i>=minBar && i <= maxBar ){
+                  Integer m = (5*i)+2;
+                  dataset.addValue(anz/st.size, st.sp[j].spDef.shortName, m.toString());
+                 
+             }
          }
      }
 //     
@@ -232,14 +362,23 @@ class TgGrafik extends JPanel
         true, // tooltips?
         false // URLs?
        );
+
      CategoryPlot plot = chart.getCategoryPlot();
+     Font font3 = new Font("Dialog", Font.PLAIN, 15); 
+     plot.getDomainAxis().setLabelFont(font3);
+     plot.getDomainAxis().setTickLabelFont(font3);
+     plot.getRangeAxis().setLabelFont(font3);
+     plot.getRangeAxis().setTickLabelFont(font3);
 //     plot.setBackgroundPaint(Color.lightGray);
 //     plot.setDomainGridlinePaint(Color.white);
 //     plot.setDomainGridlinesVisible(true);
 //     plot.setRangeGridlinePaint(Color.white);
+ 
 // reenderer
      StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
      renderer.setDrawBarOutline(false);
+//     renderer.setsetItemLabelFont(font3);
+
 // set up gradient paints for series...
      for (int i=0;i<st.nspecies;i++){
 //          renderer.setSeriesStroke(i,new BasicStroke(1.5f));
@@ -249,6 +388,7 @@ class TgGrafik extends JPanel
           renderer.setSeriesPaint(i, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue));
 //          renderer.setSeriesPaint(i, gp2);
      }
+     chart.getLegend().setItemFont(font3); 
      return chart;
 	} 
   
@@ -256,6 +396,7 @@ class TgGrafik extends JPanel
  //     repaint();
   } 
    }
+
  
 // -------------------------------------------------------
   class GraphicDiameterDistributionCT {
@@ -319,6 +460,11 @@ class TgGrafik extends JPanel
      plot.setDomainGridlinePaint(Color.white);
      plot.setDomainGridlinesVisible(true);
      plot.setRangeGridlinePaint(Color.white);
+     Font font3 = new Font("Dialog", Font.PLAIN, 15); 
+     plot.getDomainAxis().setLabelFont(font3);
+     plot.getDomainAxis().setTickLabelFont(font3);
+     plot.getRangeAxis().setLabelFont(font3);
+     plot.getRangeAxis().setTickLabelFont(font3);
 // reenderer
      StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
      renderer.setDrawBarOutline(false);
@@ -327,9 +473,10 @@ class TgGrafik extends JPanel
           renderer.setSeriesPaint(i, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue));
      }
 
+     chart.getLegend().setItemFont(font3); 
       
      return chart;
-	} 
+} 
   
   public void redraw(){
  //     repaint();
@@ -375,16 +522,23 @@ class TgGrafik extends JPanel
      XYPlot plot = chart.getXYPlot();
      plot.setDomainCrosshairVisible(true);
      plot.setRangeCrosshairVisible(true);  
+          Font font3 = new Font("Dialog", Font.PLAIN, 15); 
+     plot.getDomainAxis().setLabelFont(font3);
+     plot.getDomainAxis().setTickLabelFont(font3);
+     plot.getRangeAxis().setLabelFont(font3);
+     plot.getRangeAxis().setTickLabelFont(font3);
 //
 //         XYPlot plot = chart.getXYPlot();
      XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
      for (int i=0;i<st.nspecies;i++){
          renderer.setSeriesLinesVisible(i, false);
          renderer.setSeriesPaint(i, new Color(st.sp[i].spDef.colorRed,st.sp[i].spDef.colorGreen,st.sp[i].spDef.colorBlue));
+//         renderer.setSeriesShapesVisible( i, true );
+//         renderer.setSeriesShape( i, new Rectangle2D.Double( -20.0, -20.0, 20.0, 20.0 ) );
      }
          plot.setRenderer(renderer);
 
-      
+     chart.getLegend().setItemFont(font3);   
      return chart;
 	} 
   

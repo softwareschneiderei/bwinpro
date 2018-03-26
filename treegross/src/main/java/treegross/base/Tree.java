@@ -215,6 +215,7 @@ public class Tree implements Cloneable{
             this.d = dmerk;
             this.h = hmerk;
             this.cb = cbmerk;
+            cwerg = 2.52;
         }
         if (cwerg > 50) {
             LOGGER.log(Level.SEVERE,
@@ -415,6 +416,7 @@ public class Tree implements Cloneable{
         if (d < 7) {
             double jh1;
             double jh2;
+            double c66m =2.0;
             Tree atree = new Tree();
             atree.sp = sp;
             atree.code = sp.code;
@@ -433,22 +435,41 @@ public class Tree implements Cloneable{
             double dneu;
             if (sp.code < 200) {
                 hd = 1.28;
+                c66m = 1.2;
             } else if (sp.code >= 200 && sp.code < 300) {
                 hd = 1.40;
+                c66m = 2.2;
             } else if (sp.code >= 300 && sp.code < 400) {
                 hd = 1.80;
+                c66m = 1.5;
             } else if (sp.code >= 400 && sp.code < 500) {
                 hd = 1.20;
+                c66m = 1.2;
             } else if (sp.code >= 500 && sp.code < 600) {
                 hd = 0.95;
+                c66m = 1.8;
             } else if (sp.code >= 600 && sp.code < 700) {
-                hd = 0.85;
+                hd = 0.70;
+                c66m = 1.9;
             } else if (sp.code >= 700 && sp.code < 800) {
                 hd = 1.1;
+                c66m = 1.2;
             } else if (sp.code >= 800 && sp.code < 900) {
                 hd = 0.95;
+                c66m = 1.0;
             }
-            dneu = (h + (years * hinc / 5.0)) / hd;
+            // The height growth is reduced for tree with high c66xy
+            // 20 % des Zuwachs durch Zufall
+            double hmod = c66xy/c66m;
+            if (hmod > 1.0) hmod = 0.999;
+            if (hmod < 0.0) hmod = 0.0;
+            hmod = 1.0- (hmod*hmod);
+            if (rn.randomOn) {
+                double eff = 0.2 * hinc;
+                hinc = 0.9 * hinc + eff * rn.nextNormal(1);
+            }
+
+            dneu = (h + (years * hmod * hinc / 5.0)) / hd;
             if (dneu > d) {
                 d = dneu;
             }
@@ -599,7 +620,7 @@ public class Tree implements Cloneable{
     public void updateCompetition() {
         if (sp.spDef.competitionXML.length() > 1) {
             try {
-                String modelPlugIn = "treegross.base." + sp.spDef.competitionXML;
+                String modelPlugIn = /*"treegross.base." + */sp.spDef.competitionXML;
                 PlugInCompetition comp = (PlugInCompetition) Class.forName(modelPlugIn).newInstance();
                 if (fac > 0.0 && out < 1) {
                     c66 = comp.getc66(this);
@@ -611,11 +632,7 @@ public class Tree implements Cloneable{
                     c66xy = -99;
                     c66cxy = -99;
                 }
-            } catch (ClassNotFoundException e) {
-                LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
-            } catch (IllegalAccessException e) {
-                LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
-            } catch (InstantiationException e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
             }
         }

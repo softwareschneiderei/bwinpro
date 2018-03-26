@@ -4,10 +4,7 @@
  */
 package forestsimulator.SQLite;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -37,6 +34,9 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
      String bestaende[] = new String[1000];
      String bestand = "";
      int nBestaende =0;
+     double lat = -99.0;
+     double lon = -99.0;
+     String date = "";
 
      
      
@@ -53,7 +53,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         try{ 
            localPath= f1.getCanonicalPath();
           } catch (Exception e){ }
-        String finame = localPath+System.getProperty("file.separator")+"sqlnp.ini";
+/*        String finame = localPath+System.getProperty("file.separator")+"sqlnp.ini";
         File fi = new File(finame);
         if ( fi.exists()) {
             try 
@@ -69,6 +69,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
              }
             
         }	
+*/        
         java.io.File f = new File(dir);
         if ( f.exists()) {
             jLabel1.setText(dir);
@@ -343,7 +344,16 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
               String hoehe = rs.getString("hoehe").toString();
               jTable1.setValueAt(hoehe,m,5);     
               String gha= rs.getString("gha").toString();
-              jTable1.setValueAt(gha,m,6);  
+              jTable1.setValueAt(gha,m,6);
+              lat = 0.0;
+              try{
+                  lat = Double.parseDouble(rs.getString("lat").toString());
+              }catch (Exception e) {lat = -99.0;}
+              try{
+                  lon = Double.parseDouble(rs.getString("lon").toString());
+              }catch (Exception e) {lon = -99.0;}
+              date = rs.getString("datum").toString();
+              
               m=m+1;
             }             
          cn.close();     
@@ -355,12 +365,30 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         // Make stand
         
         double size= Double.parseDouble(jTextField2.getText());
+        size = 0.3;
         st.ncpnt=0;
         st.nspecies=0;
         st.ntrees=0;
         st.addsize(size);
         st.standname=jTextField1.getText();
-        st.year=2015;
+        if (date.indexOf("-") >=0){
+           date = date.substring(date.indexOf("-")+1);
+        }   
+        if (date.indexOf("-") >=0){
+            int m = date.indexOf("-");
+            String txt = date.substring(0, m);
+            date = date.substring(date.indexOf("-")+1);
+            try{
+                   st.monat = Integer.parseInt(txt);
+            }catch (Exception e) { st.monat = 0;}
+        }
+        if (date.length() >0){
+            try{
+                   st.year = Integer.parseInt(date.substring(0,4));
+            }catch (Exception e) { st.year = 2017;}
+        }
+        st.hochwert_m = lat;
+        st.rechtswert_m = lon;
         double len = Math.sqrt(10000*st.size);  
         st.addcornerpoint("ECK1",0.0,0.0,0.0);
         st.addcornerpoint("ECK2",0.0,len,0.0);

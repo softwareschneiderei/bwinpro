@@ -67,7 +67,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
         else {
            JFileChooser fc = new JFileChooser();
            DBFileFilter txtFilter = new DBFileFilter();
-           txtFilter.setExtension("db");
+           txtFilter.setExtension("sqlite");
            fc.addChoosableFileFilter(txtFilter);
            int auswahl = fc.showOpenDialog(this);
            dir = fc.getSelectedFile().getPath();
@@ -259,7 +259,7 @@ public class JPanelDatabase extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser fc = new JFileChooser();
         DBFileFilter dbFilter = new DBFileFilter();
-        dbFilter.setExtension("db");
+        dbFilter.setExtension("sqlite");
         fc.addChoosableFileFilter(dbFilter);
         fc.setFileFilter(dbFilter); 
         fc.setAcceptAllFileFilterUsed(true);

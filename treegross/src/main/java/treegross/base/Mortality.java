@@ -78,6 +78,14 @@ class Mortality implements PlugInMortality {
 
             double maxNha = maxBa / (Math.PI * Math.pow(atree.d / 200.0, 2.0));
             st.sp[i].spDef.criticalCrownClosure = (maxNha * Math.PI * Math.pow((atree.cw / 2.0), 2.0)) / 10000.0;
+//            
+// Limit für die Kiefer und andere eingefügt
+// jn
+//
+            if (st.sp[i].spDef.criticalCrownClosure < 1.0 && atree.d == 7.0) {
+                st.sp[i].spDef.criticalCrownClosure = 1.0;
+            }
+//            
             st.sp[i].dg = olddg;
             st.sp[i].hg = oldhg;
         }

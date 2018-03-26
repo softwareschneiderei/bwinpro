@@ -16,6 +16,7 @@ GNU General Public License for more details.
  */
 package nwfva.assortment;
 
+import nwfva.biomass.Biomass;
 import java.awt.Color;
 import java.io.File;
 import java.net.URL;
@@ -28,6 +29,8 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import nwfva.biomass.BiomassDialog;
 import org.jdom.DocType;
 import org.jdom.Document;
@@ -63,8 +66,9 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
     FileHandler logHandler = null;
     String localPath = "";
     String programDir ="";
-    String version = "Version 0.2 2014-06-08";
+    String version = "Version 0.9 2016-05-24";
     private static final Logger log = Logger.getLogger( nwfva.assortment.NWFVA_Nutzung.class.getName() );
+    String biomassXML ="";
 
     /**
      * 
@@ -88,6 +92,8 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
         programDir=localPath+System.getProperty("file.separator")+"user";
         SpeciesDefMap SDM = new SpeciesDefMap();
         SDM.readFromPath(programDir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+st.FileXMLSettings);
+        biomassXML = programDir+System.getProperty("file.separator")+"moduls"+System.getProperty("file.separator")+"biomass"
+                +System.getProperty("file.separator")+"BiomassEnna.xml";
         st.setSDM(SDM);
         st.setProgramDir(programDir);
         loadGeneralSettings(programDir);
@@ -171,8 +177,8 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
 
         setJMenuBar(jMenuBar1);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-860)/2, (screenSize.height-627)/2, 860, 627);
+        setSize(new java.awt.Dimension(860, 627));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
@@ -225,7 +231,7 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // Hilfe Info
-        JTextArea about = new JTextArea("GPXReport"+version+" \n http://nw-fva.de   \n (c) 2013 juergen.nagel@nw-fva.de ");
+        JTextArea about = new JTextArea("NW-FVA Nutzung "+version+" \n http://nw-fva.de   \n (c) 2016 juergen.nagel@nw-fva.de ");
         about.setBackground(Color.LIGHT_GRAY);
         JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
 

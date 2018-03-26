@@ -84,7 +84,7 @@ public class TreeSplitter {
      public void splitTree(Tree tr, double fellingHeight){
 //        log.info("Splitter Baum"+tr.no);        
         ntl = 0;
-        JSortiererNFV sortierer = new JSortiererNFV(tr.st.sp[0].spDef.taperFunctionXML);
+        JSortiererNFV sortierer = new JSortiererNFV(tr.sp.spDef.taperFunctionXML);
         double startHeight=fellingHeight;
         int taperFunctionNr=sortierer.getFunNumber(tr.code);
         for (int j=0;j<nausgewaehlt;j++) {

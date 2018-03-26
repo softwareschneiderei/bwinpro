@@ -20,16 +20,18 @@ package nwfva.biomass;
  * Hilfsklasse zur Übergabe der Biomassefunktionen und Nährstoffkonzentrationswerte
  * @author J. Nagel
  */
-public class BiomassSetting {
+public class BiomassSetting2 {
     
     int code=0;
     String specieslist="";
     String totalBM="";
+    String stumpBMkg="";
+    String stumpBarkBMkg = "";
     String stemBMkg="";
     String barkBMkg="";
     String branchBMkg="";
     String reisigBMkg="";
-    String leafBM="";
+    String leafBMkg="";
     String woodDensity="";
     String woodFacC="";
     String woodFacN="";
@@ -96,7 +98,7 @@ public class BiomassSetting {
     String stemVolumeFunction="";
 
     /** Creates a new instance of LoggingSortiment */
-    public BiomassSetting() {
+    public BiomassSetting2() {
     }
    
 }

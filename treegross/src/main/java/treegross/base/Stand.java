@@ -142,6 +142,10 @@ public class Stand implements Cloneable {
      */
     public int bt = 0;
     /**
+     * Stand Development Type code
+     */
+    public int wet = 0;
+    /**
      * Ageclass
      */
     public int ageclass = 0;
@@ -270,7 +274,7 @@ public class Stand implements Cloneable {
 
     /*added by jhansen*/
     /* a container to store all added StandChangeListeners*/
-    private final ArrayList<StandChangeListener> StandChangeListeners = new ArrayList<StandChangeListener>();
+    private final ArrayList<StandChangeListener> StandChangeListeners = new ArrayList<>();
     public double ed = 0;
     public double pd = 0;
     public int water = -99;
@@ -338,6 +342,7 @@ public class Stand implements Cloneable {
         clone.year = this.year;
         clone.monat = this.monat;
         clone.bt = this.bt;
+        clone.wet = this.wet;
         clone.ageclass = this.ageclass;
         //clone.randomGrowthEffects=this.randomGrowthEffects;
         clone.riskActive = this.riskActive;
@@ -427,6 +432,9 @@ public class Stand implements Cloneable {
         trule.treatmentStep = 5;
         trule.lastTreatment = 0;
         status = 0;
+        bt = -999;
+        trule.standType = 0;
+        wet = -999;
     }
 
     // in Stand ????
@@ -657,7 +665,6 @@ public class Stand implements Cloneable {
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         addtree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb);
         tr[ntrees - 1].origin = 2;
-        tr[ntrees - 1].layer = 3;
     }
 
     public void addTreeFromDB(int co, String num, double fac, int age, int out, int outtype, double d, double h, double v, double cb, double cw,
@@ -1091,29 +1098,20 @@ public class Stand implements Cloneable {
         // Stand is 1=growing, or 2....9 = Period of harvest, or 99=final clear cut
         if (status == 0) {
             status = 1;
-        }
-        int i;
+        }        
         // Start risk model
         if (riskActive) {
             try {
                 String modelPlugIn = "treegross.base.Risk";
                 PlugInRisk risk = (PlugInRisk) Class.forName(modelPlugIn).newInstance();
                 risk.applyRisk(this);
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-            } catch (IllegalAccessException e) {
-                if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-            } catch (InstantiationException e) {
-                if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
+                    LOGGER.log(Level.WARNING, "treegross", e);
                 }
             }
         }
-
+        //int i;
         /*for (i = 0; i < ntrees && !stop; i++) {
             if (tr[i].out < 0) {
                 tr[i].updateCompetition();
@@ -1145,12 +1143,12 @@ public class Stand implements Cloneable {
 
         if (nspecies > 0 && naturalIngrowth) {
             try {
-                String modelPlugIn = "treegross.base." + sp[0].spDef.ingrowthXML;
+                String modelPlugIn = /*"treegross.base." + */sp[0].spDef.ingrowthXML;
                 PlugInIngrowth ig = (PlugInIngrowth) Class.forName(modelPlugIn).newInstance();
                 ig.predictIngrowth(this);
             } catch (Exception e) {
                 if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
+                    LOGGER.log(Level.WARNING, "treegross", e);
                 }
             } finally {
                 descspecies();
@@ -1636,6 +1634,7 @@ public class Stand implements Cloneable {
         if (nspecies > 0 /*&& sp[0].hg > 1.3*/) {
             calculateDegreeOfStockingAndSpeciesPercentage();
         }
+        if (bt < 10 && bha > 0.0) bt = getBT();
         // layer.setAssmannConfiguratedtoTrees(this);
     }
 
@@ -2052,7 +2051,7 @@ public class Stand implements Cloneable {
      */
     public int cleanTreeArrayReg() {
         Collection trees = getDeadRegTrees();
-        ArrayList<Tree> treelist = new ArrayList<Tree>();
+        ArrayList<Tree> treelist = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             treelist.add(tr[i]);
         }
@@ -2073,7 +2072,7 @@ public class Stand implements Cloneable {
      */
     public boolean deleteTree(int index, boolean decspecies) {
         int oldN = ntrees;
-        ArrayList<Tree> treelist = new ArrayList<Tree>();
+        ArrayList<Tree> treelist = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             if (i != index) {
                 treelist.add(tr[i]);
@@ -2088,7 +2087,7 @@ public class Stand implements Cloneable {
     }
 
     private Collection getDeadRegTrees() {
-        ArrayList<Tree> treestoremove = new ArrayList<Tree>();
+        ArrayList<Tree> treestoremove = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             if (tr[i].d < 7 && tr[i].out > -1) {
                 treestoremove.add(tr[i]);
@@ -2156,6 +2155,37 @@ public class Stand implements Cloneable {
         }
         return mean;
     }
+        /**
+     * function returns the BT 
+     *
+     * @param treeCode
+     * @return avg. crown base
+     */
+    public int getBT() {
+        int bt = 0;
+        double maxg = 0.0;        
+        int merk = 0;
+        for (int i = 0; i < nspecies; i++) {
+            if (sp[i].percCSA > maxg) {
+                maxg = sp[i].percCSA;
+                merk = sp[i].code;
+            }
+        }
+        Integer bt1 = merk;
+        double maxg2 = 0.0;
+        merk = 0;
+        for (int i = 0; i < nspecies; i++) {
+            if (sp[i].percCSA > maxg2 && sp[i].code != bt1) {
+                maxg2 = sp[i].percCSA;
+                merk = sp[i].code;
+            }
+        }
+        Integer bt2 = merk;
+        if (maxg > 75.0) bt2 = 0;
+        String bts = bt1.toString().substring(0, 1)+bt2.toString().substring(0, 1);
+        bt = Integer.parseInt(bts);
+        return bt;
+    }
 
     /**
      * returns the percentage covered by crowns
@@ -2165,21 +2195,21 @@ public class Stand implements Cloneable {
      return cp.getCrownProjectionPercentage(this);
      }*/
     public void executeMortality() {
-        try {
-            String modelPlugIn = "treegross.base.Mortality";
-            PlugInMortality mo = (PlugInMortality) Class.forName(modelPlugIn).newInstance();
-            mo.mortalityByInfluenceZone(this);   // check for mortality
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
-        } catch (IllegalAccessException e) {
-            LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
-        } catch (InstantiationException e) {
-            LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
+       if (ntrees > 0 && sp[0].spDef.mortalityXML.length() > 1) {
+            try {
+                String modelPlugIn = sp[0].spDef.mortalityXML;
+                PlugInMortality comp = (PlugInMortality) Class.forName(modelPlugIn).newInstance();
+                comp.mortalityByInfluenceZone(this);
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                LOGGER.log(Level.WARNING, "ERROR in Class stand exceuteMortality !", e);
+            }
         }
+        
         for (int i = 0; i < ntrees; i++) {
             if (tr[i].out < 0) {
                 tr[i].ageBasedMortality();
             }
         }
+  
     }
 }

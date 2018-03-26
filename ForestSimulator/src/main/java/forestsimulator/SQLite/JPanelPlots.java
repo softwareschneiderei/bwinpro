@@ -39,7 +39,7 @@ public class JPanelPlots extends javax.swing.JPanel {
     public JPanelPlots(Stand stx, String dirx) {
         initComponents();
         st = stx;
-        dir = dirx+System.getProperty("file.separator")+"fsplots.db";
+        dir = dirx+System.getProperty("file.separator")+"fsplots.sqlite";
         String localPath="";
         java.io.File f1 = new java.io.File("");                    
         try{ 
@@ -53,7 +53,7 @@ public class JPanelPlots extends javax.swing.JPanel {
         else {
            JFileChooser fc = new JFileChooser();
            DBFileFilter txtFilter = new DBFileFilter();
-           txtFilter.setExtension("db");
+           txtFilter.setExtension("sqlite");
            fc.addChoosableFileFilter(txtFilter);
            int auswahl = fc.showOpenDialog(this);
            dir = fc.getSelectedFile().getPath();
@@ -245,7 +245,7 @@ public class JPanelPlots extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser fc = new JFileChooser();
         DBFileFilter dbFilter = new DBFileFilter();
-        dbFilter.setExtension("db");
+        dbFilter.setExtension("sqlite");
         fc.addChoosableFileFilter(dbFilter);
         fc.setFileFilter(dbFilter); 
         fc.setAcceptAllFileFilterUsed(true);
@@ -546,6 +546,8 @@ public class JPanelPlots extends javax.swing.JPanel {
              double ccb = Double.parseDouble(rs.getString("cb"));
              double ccw = Double.parseDouble(rs.getString("cw"));
              int oout = rs.getInt("alive");
+             if (oout == 0) oout=-1;
+             if (oout > 0 && oout < 4) oout=st.year;
              int oouttype = rs.getInt("status");
              boolean ccrop = Boolean.parseBoolean(rs.getString("crop"));
              boolean hhabitat = Boolean.parseBoolean(rs.getString("habitat"));

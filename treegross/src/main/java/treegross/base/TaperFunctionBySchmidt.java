@@ -37,15 +37,25 @@
 package treegross.base;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction {
 
-    double a[]; // array for parameter value 
-    double b[];
-    boolean abReady = false;
+    final double[] a; //1. array for parameter values 
+    final double[] b; //2. array for parameter values    
+    //boolean abReady = false;
     String info = "";
     int numberOfFunctions = 0;
     boolean hardwood = true;
+
+    // stores the actual loaded function number
+    private int actualFunctionNo;
+
+    public TaperFunctionBySchmidt() {
+        a = new double[3];
+        b = new double[3];
+        actualFunctionNo = -99;
+    }
 
     /*   void initTaperFunction()
      {   a= new double[3];
@@ -59,12 +69,21 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
      */
     @Override
     public void loadParameter(int funNo) {
-        //System.out.println(" Laden der Parameter "+spcode+"  ");
-        if (abReady == false) {
+        //jhansen: if funNo is equal to actual function number do nothing and reduce computation time
+        if (actualFunctionNo == funNo) {
+            return;
+        }
+        actualFunctionNo = funNo;
+        // all elements of "a" are always set for each function number.
+        // so reset only b. but is this necessary at all?
+        Arrays.fill(b, 0.0);        
+        //System.out.println(" Laden der Parameter "+spcode+"  ");    
+        //jhansen: bad solution: use empty constructor to create arrays
+        /*if (abReady == false) {
             a = new double[3];
             b = new double[3];
             abReady = true;
-        }
+        }*/        
         numberOfFunctions = 5;
         if (funNo == 0) //beech
         {
@@ -73,16 +92,14 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             a[0] = 0.694614;
             a[1] = 0.086273;
             a[2] = 0.135984;
-        }
-        if (funNo == 1) // Oaks 
+        } else if (funNo == 1) // Oaks 
         {
             info = "oak Schmidt(2001)";
             hardwood = true;
             a[0] = 0.569877;
             a[1] = 0.045065;
             a[2] = 0.245294;
-        }
-        if (funNo == 2) //spruce
+        } else if (funNo == 2) //spruce
         {
             info = "spruce Schmidt(2001)";
             hardwood = false;
@@ -92,8 +109,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             b[0] = 0.5119944;
             b[1] = -0.1575136;
             b[2] = -0.501926;
-        }
-        if (funNo == 3) //Pines
+        } else if (funNo == 3) //Pines
         {
             info = "pine Schmidt(2001)";
             hardwood = false;
@@ -103,8 +119,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             b[0] = 0;
             b[1] = -0.2141575;
             b[2] = 0.130589;
-        }
-        if (funNo == 4) //Douglas fir 
+        } else if (funNo == 4) //Douglas fir 
         {
             info = "Douglas fir Schmidt(2001)";
             hardwood = false;
@@ -114,8 +129,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             b[0] = 0.436905;
             b[1] = -0.200800;
             b[2] = -0.283568;
-        }
-        if (funNo == 5) //Abies grandis 2009 
+        } else if (funNo == 5) //Abies grandis 2009 
         {
             info = "Abies grandis Schmidt(2009)";
             hardwood = false;
@@ -125,17 +139,14 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             b[0] = 1.49214;
             b[1] = -0.41308;
             b[2] = 0.45226;
-        }
-        if (funNo == 6) // Ash 
+        } else if (funNo == 6) // Ash 
         {
             info = "oak Schmidt(2001), Rinde Esche";
             hardwood = true;
             a[0] = 0.569877;
             a[1] = 0.045065;
             a[2] = 0.245294;
-        }
-
-        if (funNo == 7) // Oaks 
+        } else if (funNo == 7) // Oaks 
         {
             info = "oak Schmidt(2001), mit Rinde Ahorn";
             hardwood = true;
@@ -143,17 +154,46 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
             a[1] = 0.045065;
             a[2] = 0.245294;
         }
-
         // System.out.println(" Laden der Parameter ENDE "+a[0]+"  "+b[0]);    
     }
 
     @Override
-    public double barkreduce(int funNo, double D) {
+    public double barkreduce(int funNo, double D) {        
         double bark = 0.0;
+        //Neue Rindenfunktion aus dem Best-Projekt. Siehe Abschlußbericht
+        switch (funNo) {
+            case 0: //Rotbuche Rumpf, Husmann, Doebbeler 2013
+                bark = 2.0355 + 0.2298 * D;
+                break;
+            case 1: //Eiche,Stieleiche Rumpf, Husmann, Doebbeler 2013
+                bark = Math.exp(0.9262 + 0.7229 * Math.log(D)) * 1.03;
+                break;
+            case 2: //Baumartengruppe Fichte Rumpf, Husmann, Doebbeler 2013
+                bark = 3.4010 + 0.4363 * D - 0.0018 * D * D;
+                break;
+            case 3: //Baumartengruppe Kiefer Rumpf, Husmann, Doebbeler 2013
+                bark = -0.4940 + 0.5639 * D + 0.0062 * D * D;
+                break;
+            case 4: //Baumartengruppe Altherr
+                bark = 1.59099 + 0.50146 * D;
+                break;
+            case 5: //Baumartengruppe KTa nach Fichte Rumpf, Husmann, Doebbeler 2013    
+                bark = 3.4010 + 0.4363 * D - 0.0018 * D * D;
+                break;
+            case 6: //Esche Rumpf, Husmann, Doebbeler 2013
+                bark = 2.2713 + 0.6210 * D;
+                break;
+            case 7: //Ahorn Rumpf, Husmann, Doebbeler 2013
+                bark = 1.2355 + 0.3634 * D;
+                break;
+        }
+        return bark / 10.0;        
+        //old stuff
+        /*        
         // Neue Rindenfunktion aus dem Best-Projekt. Siehe Abschlußbericht
         if (funNo == 0) {
             bark = 2.0355 + 0.2298 * D;
-        }                 //Rotbuche Rumpf, Husmann, Doebbeler 2013
+        }//Rotbuche Rumpf, Husmann, Doebbeler 2013
         if (funNo == 1) {
             bark = Math.exp(0.9262 + 0.7229 * D) * 1.03;
         }   //Eiche,Stieleiche Rumpf, Husmann, Doebbeler 2013
@@ -174,8 +214,8 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
         }                 //Esche Rumpf, Husmann, Doebbeler 2013
         if (funNo == 7) {
             bark = 1.2355 + 0.3634 * D;
-        }                 //Ahorn Rumpf, Husmann, Doebbeler 2013
-
+        }   //Ahorn Rumpf, Husmann, Doebbeler 2013
+        */
         /*
          Alte Altherr Funktionen 
          if (funNo==0){bark= 2.61029+0.28522*D;}                  //Rotbuche
@@ -226,9 +266,9 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
          if ((spcode>=421) && (spcode<=423)) {bark= 8.05239+0.84910*D;}                  //Erlen                                 
          if (spcode==431)                   {bark= 9.88855+0.56734*D;}                  //Aspe,
          if ((spcode>=332) && (spcode<=333)) {bark= 9.88855+0.56734*D;}                  //Flatterulme,Feldulme
-         **/                                                                          //Ende Laubholz
-        bark = bark / 10.0;
-        return bark;
+         **/
+        //bark = bark / 10.0;
+        //return bark;
     }
 
     /**
@@ -437,7 +477,7 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
      */
     @Override
     public double getCumVolume(int funNo, double dbh, double height, double h, int barkindex, int sortindex) {
-        double bh = 1.3;
+        //double bh = 1.3;
         double Vol, Volsum, Extrapol;
         int i;
         double r = 0;
@@ -551,6 +591,6 @@ public class TaperFunctionBySchmidt implements Serializable, PlugInTaperFunction
         if (speciesCode >= 320 && speciesCode < 323) {
             funNo = 7;               //Ahorn
         }
-        return funNo;
+        return funNo;        
     }
 }
