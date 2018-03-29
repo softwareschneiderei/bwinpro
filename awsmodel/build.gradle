@@ -1,0 +1,13 @@
+apply plugin: 'application'
+version = '2.1'
+
+mainClassName = 'awsmodel.AlbrechtWindStormModel'
+
+repositories {
+    flatDir {
+        dirs '../lib'
+    }
+}
+
+dependencies {
+}
