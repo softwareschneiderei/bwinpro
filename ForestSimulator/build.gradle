@@ -6,6 +6,7 @@ mainClassName = 'forestsimulator.standsimulation.ForestSimulator'
 repositories {
     flatDir {
         dirs '../lib'
+        dirs '../lib/UCanAccess'
     }
 }
 
@@ -23,6 +24,11 @@ dependencies {
     testCompile name: 'junit-4.12'
     testCompile name: 'hamcrest-core-1.3'
     runtime name: 'sqlitejdbc-v056'
+    runtime name: 'ucanaccess-3.0.6'
+    runtime name: 'hsqldb'
+    runtime name: 'jackcess-2.1.3'
+    runtime name: 'commons-lang-2.6'
+    runtime name: 'commons-logging-1.2'
 }
 
 distZip {

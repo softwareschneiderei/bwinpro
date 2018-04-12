@@ -77,19 +77,12 @@ public class ConnectionFactory {
 	    props_a.put("password", password);
 	}
 
-        try {
-            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(ConnectionFactory.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-
         Connection result=null;
 
         Exception error=null;
 
         try {
-            result = DriverManager.getConnection("jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=" + database, props_a);
+            result = DriverManager.getConnection("jdbc:ucanaccess://" + database, props_a);
         } catch (SQLException ex) {
             error=ex;
         }
