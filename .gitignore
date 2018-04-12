@@ -8,3 +8,4 @@ build/
 /gradle/native/
 /.nb-gradle/private/
 /.nb-gradle/profiles/private/
+/.idea/
