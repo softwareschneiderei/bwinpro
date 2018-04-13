@@ -14,7 +14,6 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.DBAccess;
-import com.sun.istack.internal.logging.Logger;
 import java.awt.Frame;
 import java.io.File;
 import treegross.base.*;
@@ -22,6 +21,7 @@ import treegross.treatment.*;
 import treegross.random.RandomNumber;
 import java.sql.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -395,7 +395,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 }
             }
         } catch (SQLException e) {
-            Logger.getLogger(DBAccessDialog.class).logException(e, Level.SEVERE);
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", e);
         }
     }//GEN-LAST:event_searchButtonActionPerformed
 
@@ -806,7 +806,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", ex);
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", ex);
         }
         dispose();
     }//GEN-LAST:event_jButton14ActionPerformed
@@ -895,7 +895,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 } // Kreise
             } // Inventur
         } catch (SQLException e) {
-            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database.", e);
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database.", e);
         }
         dispose();
     }//GEN-LAST:event_biPlotInfoButtonActionPerformed
@@ -1114,7 +1114,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 }
             }
         } catch (Exception e) {
-            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", e);
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", e);
         }
         dispose();
     }//GEN-LAST:event_feDataButtonActionPerformed
@@ -1182,7 +1182,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 }
             }
         } catch (SQLException e) {
-            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", e);
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", e);
         }
         dispose();
     }//GEN-LAST:event_simulationButtonActionPerformed
