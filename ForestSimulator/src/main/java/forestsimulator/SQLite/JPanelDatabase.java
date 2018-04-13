@@ -5,75 +5,57 @@
  */
 package forestsimulator.SQLite;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
 import treegross.base.GenerateXY;
+import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
 
 /**
  *
  * @author nagel
  */
-public class JPanelDatabase extends javax.swing.JPanel {
-     Stand st = null;
-     File dir = null;
+public class JPanelDatabase extends JPanel {
+    Stand st = null;
+    File dir = null;
 
-     String bestaende[] = new String[1000];
-     String bestand = "";
-     int nBestaende =0;
-     int standID =-9;
+    String bestaende[] = new String[1000];
+    String bestand = "";
+    int nBestaende = 0;
+    int standID = -9;
 
-
-    /**
-     * Creates new form JPanelDatabase
-     */
     public JPanelDatabase(Stand stx, File dirx) throws IOException {
         initComponents();
         st = stx;
         dir = new File(dirx, "fsdatabase.db");
-        String localPath="";
-        java.io.File f1 = new java.io.File("");                    
-        try{ 
-           localPath= f1.getCanonicalPath();
-          } catch (Exception e){ }
-/*        String finame = localPath+System.getProperty("file.separator")+"sqlnp.ini";
-        File fi = new File(finame);
-        if ( fi.exists()) {
-            try 
-              {  
-               String s;
-   	       BufferedReader in=
-	       new BufferedReader(new InputStreamReader(new FileInputStream(finame)));
-               dir=in.readLine();
-               in.close();
-               }
-             catch (Exception e){ 
-                 dir = dirx+System.getProperty("file.separator")+"fsdatabase.db";
-             }
-
+        String localPath = "";
+        java.io.File f1 = new java.io.File("");
+        try {
+            localPath = f1.getCanonicalPath();
+        } catch (Exception e) {
         }
-*/  
         if (dir.exists()) {
             filenameLabel.setText(dir.getCanonicalPath());
-        }
-        else {
-           JFileChooser fc = new JFileChooser();
-           DBFileFilter txtFilter = new DBFileFilter();
-           txtFilter.setExtension("db");
-           fc.addChoosableFileFilter(txtFilter);
-           int auswahl = fc.showOpenDialog(this);
-           dir = fc.getSelectedFile();
+        } else {
+            JFileChooser fc = new JFileChooser();
+            DBFileFilter txtFilter = new DBFileFilter();
+            txtFilter.setExtension("db");
+            fc.addChoosableFileFilter(txtFilter);
+            int auswahl = fc.showOpenDialog(this);
+            dir = fc.getSelectedFile();
         }
         filenameLabel.setText(dir.getCanonicalPath());
-        setVisible(true);    
+        setVisible(true);
     }
 
     /**
@@ -275,53 +257,83 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
     private void saveActiveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActiveStandButtonActionPerformed
         // save stand to database
-        
-         int m = 0;
-         try{
-           Class.forName( "org.sqlite.JDBC" );
-           Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-           Statement  stm = cn.createStatement();
-// 
-        String sqltxt = "INSERT INTO stand (name,size_ha,month,year,lat,lon,masl,region,district,sitetype,exposition_gon,"
-                + "slope_percentage) VALUES "+
-                "( '"+st.standname+"', "+st.size+", "+st.monat+", "+st.year+", "+st.hochwert_m+", "+st.rechtswert_m+
-                ", "+st.hoehe_uNN_m+", '"+st.wuchsgebiet+"', '"+st.wuchsgebiet+"', '"+st.standort+"'"+
-                ", "+st.exposition_Gon+", "+st.hangneigungProzent+" )";
-        stm.execute(sqltxt);
-//  Bestandes ID merken
-        sqltxt="SELECT _id FROM stand ORDER BY _id DESC LIMIT 1;";
-        standID = -9;
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             standID = rs.getInt("_id");
-            }             
-        System.out.println("Letzte Id: = "+standID);
-// 
-        sqltxt = "INSERT INTO cornerpoints (standid,name,x,y,z) VALUES "+
-                "( "+standID+", '"+st.center.no+"', "+st.center.x+", "+st.center.y+", "+st.center.z+"  )";
-             stm.execute(sqltxt);
-
-        for (int i=0;i<st.ncpnt;i++){
-             sqltxt = "INSERT INTO cornerpoints (standid,name,x,y,z) VALUES "+
-                "( "+standID+", '"+st.cpnt[i].no+"', "+st.cpnt[i].x+", "+st.cpnt[i].y+", "+st.cpnt[i].z+"  )";
-             stm.execute(sqltxt);
-             }
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "")) {
+            try (PreparedStatement stm = connection.prepareStatement(
+                    "INSERT INTO stand (name, size_ha, month, year, lat, lon, masl, region, district, sitetype, exposition_gon, "
+                    + "slope_percentage) VALUES "
+                    + "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                stm.setString(1, st.standname);
+                stm.setDouble(2, st.size);
+                stm.setInt(3, st.monat);
+                stm.setInt(4, st.year);
+                stm.setDouble(5, st.hochwert_m);
+                stm.setDouble(6, st.rechtswert_m);
+                stm.setDouble(7, st.hoehe_uNN_m);
+                stm.setString(8, st.wuchsgebiet);
+                stm.setString(9, st.wuchsgebiet);
+                stm.setString(10, st.standort);
+                stm.setInt(11, st.exposition_Gon);
+                stm.setDouble(12, st.hangneigungProzent);
+                stm.execute();
+            }
+            //  Bestandes ID merken
+            standID = -9;
+            try (Statement stm = connection.createStatement(); ResultSet rs = stm.executeQuery("SELECT _id FROM stand ORDER BY _id DESC LIMIT 1;")) {
+                while (rs.next()) {
+                    standID = rs.getInt("_id");
+                }
+            }
+            System.out.println("Letzte Id: = " + standID);
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO cornerpoints (standid, name, x, y, z) VALUES (?, ?, ?, ?, ?)")) {
+                ps.setInt(1, standID);
+                ps.setString(2, st.center.no);
+                ps.setDouble(3, st.center.x);
+                ps.setDouble(4, st.center.y);
+                ps.setDouble(5, st.center.z);
+                ps.execute();
+            }
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO cornerpoints (standid, name, x, y, z) VALUES (?, ?, ?, ?, ?")) {
+                for (int i = 0; i < st.ncpnt; i++) {
+                    ps.setInt(1, standID);
+                    ps.setString(2, st.cpnt[i].no);
+                    ps.setDouble(3, st.cpnt[i].x);
+                    ps.setDouble(4, st.cpnt[i].y);
+                    ps.setDouble(5, st.cpnt[i].z);
+                    ps.execute();
+                }
+            }
 //  alle Bäume speichern 
-        for (int i=0;i<st.ntrees;i++){
-             sqltxt = "INSERT INTO trees (standid,code,name,year,age,dbh,h,si,cb,cw,alive,status,x,y,z,crop,habitat,fac,remarks, layer) VALUES "+
-                "( "+standID+", "+st.tr[i].code+", '"+st.tr[i].no+"', "+st.year+", "+st.tr[i].age+", "+st.tr[i].d+", "+st.tr[i].h+", "+st.tr[i].si+
-                     ", "+st.tr[i].cb+", "+st.tr[i].cw+", "+st.tr[i].out+", "+st.tr[i].outtype+
-                     ", "+st.tr[i].x+", "+st.tr[i].y+", "+st.tr[i].z+", '"+st.tr[i].crop+"', '"+st.tr[i].habitat+"', "+st.tr[i].fac+", '"+
-                     st.tr[i].remarks+"', "+st.tr[i].layer+"  )";
-             stm.execute(sqltxt);
-             }
-//
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
+            try (PreparedStatement ps = connection.prepareStatement("INSERT INTO trees "
+                    + "(standid, code, name, year, age, dbh, h, si, cb, cw, alive, status, x, y, z, crop, habitat, fac, remarks, layer) VALUES "
+                    + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                for (int i = 0; i < st.ntrees; i++) {
+                    ps.setInt(1, standID);
+                    ps.setInt(2, st.tr[i].code);
+                    ps.setString(3, st.tr[i].no);
+                    ps.setInt(4, st.year);
+                    ps.setInt(5, st.tr[i].age);
+                    ps.setDouble(6, st.tr[i].d);
+                    ps.setDouble(7, st.tr[i].h);
+                    ps.setDouble(8, st.tr[i].si);
+                    ps.setDouble(9, st.tr[i].cb);
+                    ps.setDouble(10, st.tr[i].cw);
+                    ps.setInt(11, st.tr[i].out);
+                    ps.setInt(12, st.tr[i].outtype);
+                    ps.setDouble(13, st.tr[i].x);
+                    ps.setDouble(14, st.tr[i].y);
+                    ps.setDouble(15, st.tr[i].z);
+                    ps.setBoolean(16, st.tr[i].crop);
+                    ps.setBoolean(17, st.tr[i].habitat);
+                    ps.setDouble(18,st.tr[i].fac);
+                    ps.setString(19, st.tr[i].remarks);
+                    ps.setInt(20, st.tr[i].layer);
+                    ps.execute();
+                }
+            }
+        } catch (SQLException eio) {
+            System.out.println(eio);
+        }
         lastDataset();
-       
-        
-        
     }//GEN-LAST:event_saveActiveStandButtonActionPerformed
 
     private void navigateToFirstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToFirstButtonActionPerformed
@@ -336,23 +348,24 @@ public class JPanelDatabase extends javax.swing.JPanel {
     }//GEN-LAST:event_navigateToLastButtonActionPerformed
 
     private void navigateBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateBackButtonActionPerformed
-       try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT _id FROM stand WHERE _id < "+standID+" ORDER BY _id DESC LIMIT 1;";
-        int idold = standID;
-        standID = -9;
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             standID = rs.getInt("_id");
-            }  
-        if (standID == -9) standID = idold;
-        jLabel8.setText(new Integer(standID).toString());
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);} 
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                PreparedStatement ps = cn.prepareStatement("SELECT _id FROM stand WHERE _id < ? ORDER BY _id DESC LIMIT 1")) {
+            ps.setInt(1, standID);
+            int idold = standID;
+            standID = -9;
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    standID = rs.getInt("_id");
+                }
+            }
+            if (standID == -9) {
+                standID = idold;
+            }
+            jLabel8.setText(String.valueOf(standID));
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
         dispStandID();
-        // Find next
     }//GEN-LAST:event_navigateBackButtonActionPerformed
 
     private void navigateForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateForwardButtonActionPerformed
@@ -365,60 +378,58 @@ public class JPanelDatabase extends javax.swing.JPanel {
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // delete standID
-                try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="DELETE FROM stand WHERE _id = "+standID+" ;";
-        ResultSet rs = stm.executeQuery(sqltxt);
-        sqltxt="DELETE FROM cornerpoints WHERE standid = "+standID+" ;";
-        rs = stm.executeQuery(sqltxt);
-        sqltxt="DELETE FROM trees WHERE standid = "+standID+" ;";
-        rs = stm.executeQuery(sqltxt);
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);} 
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "" )) {
+            try (PreparedStatement stm = cn.prepareStatement("DELETE FROM stand WHERE _id = ?")) {
+                stm.setInt(1, standID);
+                stm.execute();
+            }
+            try (PreparedStatement stm = cn.prepareStatement("DELETE FROM cornerpoints WHERE standid = ?")) {
+                stm.setInt(1, standID);
+                stm.execute();
+            }
+            try (PreparedStatement stm = cn.prepareStatement("DELETE FROM trees WHERE standid = ?")) {
+                stm.setInt(1, standID);
+                stm.execute();
+            }
+        } catch (SQLException eio){
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        } 
         int wert = nextDataset(); 
-        if (wert < 0) firstDataset();
+        if (wert < 0) {
+            firstDataset();
+        }
         dispStandID();
-        // Find next
- 
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         //search stand first by id then by name
-        String suche =searchTextField.getText();
+        String suche = searchTextField.getText();
         boolean found = false;
-        try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT * FROM stand WHERE _id = "+suche+" ;";
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-            standID = rs.getInt("_id");
-            found = true;
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "" )) {
+            try (PreparedStatement stm = cn.prepareStatement("SELECT * FROM stand WHERE _id = ?")) {
+                stm.setString(1, suche);
+                try (ResultSet rs = stm.executeQuery()) {
+                    while (rs.next()){
+                        standID = rs.getInt("_id");
+                        found = true;
+                    } 
+                }
+            }
+            if (!found) {
+                try (PreparedStatement stm = cn.prepareStatement("SELECT * FROM stand WHERE name like ?")) {
+                    stm.setString(1, suche);
+                    try (ResultSet rs = stm.executeQuery()) {
+                        while (rs.next()){
+                           standID = rs.getInt("_id");
+                           found = true;
+                        }
+                    }                    
+                }
+            }
+        } catch (Exception eio){System.out.println(eio);}  
+        if (found) {
+            dispStandID();
         } 
-        cn.close(); 
-         } catch (Exception eio){System.out.println(eio);}  
-        try{
-        if (found != true){
-           Class.forName( "org.sqlite.JDBC" );
-           Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-           Statement  stm = cn.createStatement();
-            String sqltxt="SELECT * FROM stand WHERE name like '"+suche+"' ;";
-            ResultSet rs = stm.executeQuery(sqltxt);
-            while (rs.next()){
-                standID = rs.getInt("_id");
-               found = true;
-            } 
-                
-        cn.close(); 
-        }
-         } catch (Exception eio){System.out.println(eio);}  
-        if (found) dispStandID(); 
-        
-
-       
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
@@ -426,175 +437,175 @@ public class JPanelDatabase extends javax.swing.JPanel {
     }//GEN-LAST:event_searchTextFieldActionPerformed
 
     private void dispStandID(){
-        try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT * FROM stand WHERE _id = "+standID+" ;";
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-            jLabel8.setText(new Integer(standID).toString());
-            jLabel9.setText(rs.getString("name"));
-            jLabel10.setText(new Integer(rs.getInt("year")).toString());
-            jLabel11.setText(rs.getString("size_ha"));
-            }  
-        
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
-        // Find next
-        
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                PreparedStatement ps = cn.prepareStatement("SELECT * FROM stand WHERE _id = ?")) {
+            try (ResultSet rs = ps.executeQuery();) {
+                while (rs.next()) {
+                    jLabel8.setText(String.valueOf(standID));
+                    jLabel9.setText(rs.getString("name"));
+                    jLabel10.setText(String.valueOf(rs.getInt("year")));
+                    jLabel11.setText(rs.getString("size_ha"));
+                }
+            }
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
     }
     
-    private int nextDataset(){
-      int erg=-9;  
-      try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT _id FROM stand WHERE _id > "+standID+" ORDER BY _id LIMIT 1;";
-        int idold = standID;
-        standID = -9;
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             standID = rs.getInt("_id");
-             erg = standID;
-            }  
-        if (standID == -9) standID = idold;
-        jLabel8.setText(new Integer(standID).toString());
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
+    private int nextDataset() {
+        int erg = -9;
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                PreparedStatement ps = cn.prepareStatement("SELECT _id FROM stand WHERE _id > ? ORDER BY _id LIMIT 1;")) {
+            ps.setInt(1, standID);
+            int idold = standID;
+            standID = -9;
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    standID = rs.getInt("_id");
+                    erg = standID;
+                }
+            }
+            if (standID == -9) {
+                standID = idold;
+            }
+            jLabel8.setText(String.valueOf(standID));
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
         dispStandID();
         return erg;
     }
     
-        private int firstDataset(){
-      int erg=-9;  
-       try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT _id FROM stand ORDER BY _id LIMIT 1;";
-        standID = -9;
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             standID = rs.getInt("_id");
-            }             
-        jLabel8.setText(new Integer(standID).toString());
-        cn.close();     
-       } catch (Exception eio){System.out.println(eio);} 
+    private int firstDataset() {
+        int erg = -9;
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                Statement stm = cn.createStatement()) {
+            standID = -9;
+            try (ResultSet rs = stm.executeQuery("SELECT _id FROM stand ORDER BY _id LIMIT 1;")) {
+                while (rs.next()) {
+                    standID = rs.getInt("_id");
+                }
+            }
+            jLabel8.setText(String.valueOf(standID));
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
         dispStandID();
         return erg;
     }
-        
-        private int lastDataset(){
-            int erg = -9;
-            try{
-               Class.forName( "org.sqlite.JDBC" );
-               Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-               Statement  stm = cn.createStatement();
-               String sqltxt="SELECT _id FROM stand ORDER BY _id DESC LIMIT 1;";
-               standID = -9;
-               ResultSet rs = stm.executeQuery(sqltxt);
-               while (rs.next()){
-                  standID = rs.getInt("_id");
-                  erg=standID;
-               }             
-               jLabel8.setText(new Integer(standID).toString());
-               cn.close();     
-            } catch (Exception eio){System.out.println(eio);}  
-            dispStandID();
-            return erg;
-        }
-        
-    public Stand createStand(){
-        try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT * FROM stand WHERE _id = "+standID+" ;";
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             st.standname = rs.getString("name");
-             st.year = rs.getInt("year");
-             st.size = Double.parseDouble(rs.getString("size_ha"));
-             st.monat = rs.getInt("month");
-             st.rechtswert_m = Double.parseDouble(rs.getString("lat"));
-             st.hochwert_m = Double.parseDouble(rs.getString("lon"));
-             st.hoehe_uNN_m = Double.parseDouble(rs.getString("masl"));
-             st.wuchsgebiet = rs.getString("region");
-             st.wuchsbezirk = rs.getString("district");
-             st.standort = rs.getString("sitetype");
-             st.exposition_Gon = (int)(Math.round(Double.parseDouble(rs.getString("exposition_gon"))));
-             st.hangneigungProzent = Double.parseDouble(rs.getString("slope_percentage"));
-        }  
-        sqltxt="SELECT * FROM cornerpoints WHERE standid = "+standID+" ;";
-        rs = stm.executeQuery(sqltxt);
-        st.ncpnt=0;
-        while (rs.next()){
-             String na = rs.getString("name");
-             if (na.indexOf("circle")>=0 || na.indexOf("polygon")>=0){
-                 st.center.no=na;
-                 st.center.x = Double.parseDouble(rs.getString("x"));
-                 st.center.y = Double.parseDouble(rs.getString("y"));
-                 st.center.z = Double.parseDouble(rs.getString("z"));
-             }
-             else {
-                 double xx = Double.parseDouble(rs.getString("x"));
-                 double yy = Double.parseDouble(rs.getString("y"));
-                 double zz = Double.parseDouble(rs.getString("z"));
-                 st.addcornerpoint(na, xx, yy, zz);
-             }
-        }  
-        sqltxt="SELECT * FROM trees WHERE standid = "+standID+" ;";
-        rs = stm.executeQuery(sqltxt);
-        st.ntrees=0;
-        while (rs.next()){
-             String na = rs.getString("name");
-             int cc = rs.getInt("code");
-             int aa = rs.getInt("age");
-             double dd = Double.parseDouble(rs.getString("dbh"));
-             double hh = Double.parseDouble(rs.getString("h"));
-             double si = Double.parseDouble(rs.getString("si"));
-             double ccb = Double.parseDouble(rs.getString("cb"));
-             double ccw = Double.parseDouble(rs.getString("cw"));
-             int oout = rs.getInt("alive");
-             int oouttype = rs.getInt("status");
-             boolean ccrop = Boolean.parseBoolean(rs.getString("crop"));
-             boolean hhabitat = Boolean.parseBoolean(rs.getString("habitat"));
-             boolean tz = false;
-             String rm = rs.getString("remarks");        
-             double xx = Double.parseDouble(rs.getString("x"));
-             double yy = Double.parseDouble(rs.getString("y"));
-             double zz = Double.parseDouble(rs.getString("z"));
-             double ff = Double.parseDouble(rs.getString("fac"));
-             int lay = rs.getInt("layer");
- 
-             int nclone=1;
-             if (ff >= 2.0){
-                nclone = (int) Math.floor(ff); 
-                ff = ff/Math.floor(ff); 
-             }
-             for (int k=0; k<nclone;k++){
-                 String nam = na;
-                 if (k > 0) { 
-                     nam=na+"_"+k;
-                     xx = -9.0;
-                     yy = -9.0;
-                 }
-                 st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, 0, 0.0, rm);
-                 st.tr[st.ntrees-1].layer = lay;
- 
-             }
-        }
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
 
+    private int lastDataset() {
+        int erg = -9;
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                Statement stm = cn.createStatement()) {
+            standID = -9;
+            try (ResultSet rs = stm.executeQuery("SELECT _id FROM stand ORDER BY _id DESC LIMIT 1")) {
+            while (rs.next()) {
+                standID = rs.getInt("_id");
+                erg = standID;
+            }
+            }
+            jLabel8.setText(String.valueOf(standID));
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
+        dispStandID();
+        return erg;
+    }
+
+    public Stand createStand() {
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");
+                PreparedStatement stm = cn.prepareStatement("SELECT * FROM stand WHERE _id = ?")) {
+            stm.setInt(1, standID);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    st.standname = rs.getString("name");
+                    st.year = rs.getInt("year");
+                    st.size = Double.parseDouble(rs.getString("size_ha"));
+                    st.monat = rs.getInt("month");
+                    st.rechtswert_m = Double.parseDouble(rs.getString("lat"));
+                    st.hochwert_m = Double.parseDouble(rs.getString("lon"));
+                    st.hoehe_uNN_m = Double.parseDouble(rs.getString("masl"));
+                    st.wuchsgebiet = rs.getString("region");
+                    st.wuchsbezirk = rs.getString("district");
+                    st.standort = rs.getString("sitetype");
+                    st.exposition_Gon = (int) (Math.round(Double.parseDouble(rs.getString("exposition_gon"))));
+                    st.hangneigungProzent = Double.parseDouble(rs.getString("slope_percentage"));
+                }
+            }
+            try (PreparedStatement ps = cn.prepareStatement("SELECT * FROM cornerpoints WHERE standid = ?")) {
+                ps.setInt(1, standID);
+                try (ResultSet rs = ps.executeQuery()) {
+                    st.ncpnt = 0;
+                    while (rs.next()) {
+                        String na = rs.getString("name");
+                        if (na.contains("circle") || na.contains("polygon")) {
+                            st.center.no = na;
+                            st.center.x = Double.parseDouble(rs.getString("x"));
+                            st.center.y = Double.parseDouble(rs.getString("y"));
+                            st.center.z = Double.parseDouble(rs.getString("z"));
+                        } else {
+                            double xx = Double.parseDouble(rs.getString("x"));
+                            double yy = Double.parseDouble(rs.getString("y"));
+                            double zz = Double.parseDouble(rs.getString("z"));
+                            st.addcornerpoint(na, xx, yy, zz);
+                        }
+                    }
+                }
+            }
+            try (PreparedStatement ps = cn.prepareStatement("SELECT * FROM trees WHERE standid = ?")) {
+                ps.setInt(1, standID);
+                try (ResultSet rs = stm.executeQuery()) {
+                    st.ntrees = 0;
+                    while (rs.next()) {
+                        String na = rs.getString("name");
+                        int cc = rs.getInt("code");
+                        int aa = rs.getInt("age");
+                        double dd = Double.parseDouble(rs.getString("dbh"));
+                        double hh = Double.parseDouble(rs.getString("h"));
+                        double si = Double.parseDouble(rs.getString("si"));
+                        double ccb = Double.parseDouble(rs.getString("cb"));
+                        double ccw = Double.parseDouble(rs.getString("cw"));
+                        int oout = rs.getInt("alive");
+                        int oouttype = rs.getInt("status");
+                        boolean ccrop = Boolean.parseBoolean(rs.getString("crop"));
+                        boolean hhabitat = Boolean.parseBoolean(rs.getString("habitat"));
+                        boolean tz = false;
+                        String rm = rs.getString("remarks");
+                        double xx = Double.parseDouble(rs.getString("x"));
+                        double yy = Double.parseDouble(rs.getString("y"));
+                        double zz = Double.parseDouble(rs.getString("z"));
+                        double ff = Double.parseDouble(rs.getString("fac"));
+                        int lay = rs.getInt("layer");
+
+                        int nclone = 1;
+                        if (ff >= 2.0) {
+                            nclone = (int) Math.floor(ff);
+                            ff = ff / Math.floor(ff);
+                        }
+                        for (int k = 0; k < nclone; k++) {
+                            String nam = na;
+                            if (k > 0) {
+                                nam = na + "_" + k;
+                                xx = -9.0;
+                                yy = -9.0;
+                            }
+                            st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, 0, 0.0, rm);
+                            st.tr[st.ntrees - 1].layer = lay;
+                        }
+                    }
+                } catch (SpeciesNotDefinedException ex) {
+                    Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } catch (SQLException eio) {
+            Logger.getLogger(JPanelDatabase.class.getName()).log(Level.SEVERE, "Problem with database", eio);
+        }
         st.missingData();
         GenerateXY gen = new GenerateXY();
         gen.zufall(st);
-        st.descspecies(); 
-       return(st);
-
+        st.descspecies();
+        return (st);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
