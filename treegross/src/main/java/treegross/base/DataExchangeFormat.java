@@ -24,20 +24,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.random.RandomNumber;
 
+/**
+ * write stand data format delimited by ; : 1. Row : stand name; 2. Row :
+ * year of data measurement 3. Row : stand size in ha 4. ROW : number of
+ * Corner Points ncp: 5. to ncp ROW: label,x-coordinate, y-coordinate,
+ * z_koordinate Rest. Row to end : single tree values : species code Lower
+ * Saxony, tree number (string), -1 = tree is alive otherwise the year of
+ * mortality or cut, dbh (cm), height (m), crown base (m), crown width (m),
+ * x-coordinate, y-coordinate, z-coordinate (all in m and should be positive
+ * or zero)
+ */
 public class DataExchangeFormat {
 
-    /**
-     * write stand data format delimited by ; : 1. Row : stand name; 2. Row :
-     * year of data measurement 3. Row : stand size in ha 4. ROW : number of
-     * Corner Points ncp: 5. to ncp ROW: label,x-coordinate, y-coordinate,
-     * z_koordinate Rest. Row to end : single tree values : species code Lower
-     * Saxony, tree number (string), -1 = tree is alive otherwise the year of
-     * mortality or cut, dbh (cm), height (m), crown base (m), crown width (m),
-     * x-coordinate, y-coordinate, z-coordinate (all in m and should be positive
-     * or zero)
-     */
-
     private final static Logger LOGGER = Logger.getLogger(DataExchangeFormat.class.getName());
+    private static final String DELIM = ";";
 
     public void save(Stand st, String fn) {
         try {
@@ -205,51 +205,26 @@ public class DataExchangeFormat {
     }
 
     public void read(Stand st, String fn) {
-        try {
+        try (BufferedReader in = new BufferedReader(new FileReader(fn))) {
             int pm;
             String s;
             st.newStand();
-            BufferedReader in
-                    = new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(fn)));
-
-            //s=in.readLine();
             in.readLine();
             st.addName(in.readLine());
-            s = in.readLine();
-
-            //			System.out.println("Test  :"+s);
-            //			Boolean B = new Boolean();
-            //			boolean b=new Boolean(s).booleanValue();
-            //			System.out.println(s+" Test2  :"+b);
-            //			
-            StringTokenizer stx;
-            String delim = ";";
-            stx = new StringTokenizer(s, delim);
-            st.year = Integer.parseInt(stx.nextToken());
-            s = in.readLine();
-            stx = new StringTokenizer(s, delim);
-            st.addsize(Double.parseDouble(stx.nextToken()));
+            st.year = Integer.parseInt(tokenizeNextLine(in).nextToken());
+            st.addsize(Double.parseDouble(tokenizeNextLine(in).nextToken()));
 
             // read line with corner coordinates, if not existant than first number =0	
-            s = in.readLine();
-            stx = new StringTokenizer(s, delim);
-            int ii, nx;
-            nx = Integer.parseInt(stx.nextToken());
-            /*s=*/
+            int nx = Integer.parseInt(tokenizeNextLine(in).nextToken());
             in.readLine(); //read over Header
-            //            System.out.println("Eckpunkte  "+nx);
-            for (ii = 0; ii < nx; ii++) {
-                s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+
+            for (int ii = 0; ii < nx; ii++) {
+                StringTokenizer stx = tokenizeNextLine(in);
                 st.addcornerpoint(stx.nextToken(), Double.parseDouble(stx.nextToken()), Double.parseDouble(stx.nextToken()),
                         Double.parseDouble(stx.nextToken()));
             }
-
             //read simulation options
-            s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            StringTokenizer stx =tokenizeNextLine(in);
             int rge = Integer.parseInt(stx.nextToken());
 
             if (rge == 1) {
@@ -261,75 +236,75 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             int dd = Integer.parseInt(stx.nextToken());
             st.distanceDependent = dd == 1;
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             int ia = Integer.parseInt(stx.nextToken());
             st.ingrowthActive = ia == 1;
 
             //read treatment options 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.treatmentType = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.maxHarvestVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.minHarvestVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.maxThinningVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.minThinningVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.minOutVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.maxOutVolume = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.standType = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.targetType = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.nHabitat = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.treatmentStep = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.harvestingYears = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.maxHarvestingPeriode = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             st.trule.harvestLayerFromBelow = pm == 1;
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.selectCropTrees = true;
@@ -338,7 +313,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.reselectCropTrees = true;
@@ -347,7 +322,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.selectCropTreesOfAllSpecies = true;
@@ -356,7 +331,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.releaseCropTrees = true;
@@ -365,7 +340,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.releaseCropTreesSpeciesDependent = true;
@@ -374,7 +349,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.cutCompetingCropTrees = true;
@@ -383,7 +358,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.thinArea = true;
@@ -392,7 +367,7 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.thinAreaSpeciesDependent = true;
@@ -401,19 +376,19 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.thinningIntensityArea = Double.parseDouble(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.typeOfHarvest = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             st.trule.lastTreatment = Integer.parseInt(stx.nextToken());
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
                 st.trule.selectHabiatPart = true;
@@ -422,13 +397,13 @@ public class DataExchangeFormat {
             }
 
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             st.trule.protectMinorities = pm == 1;
 
             //get number of species
             s = in.readLine();
-            stx = new StringTokenizer(s, delim);
+            stx = new StringTokenizer(s, DELIM);
             int nspecies = Integer.parseInt(stx.nextToken());
 
             //Read treatment options for species            
@@ -446,47 +421,47 @@ public class DataExchangeFormat {
             //Read treatment options for target main species  
             for (int i = 0; i < nspecies; i++) {
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 codeSp[i] = Integer.parseInt(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 tISp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 tdSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 tdlSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 talSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 tcpSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 cthSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 maxAgeSp[i] = Double.parseDouble(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 nCT[i] = Integer.parseInt(stx.nextToken());
 
                 s = in.readLine();
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 tR[i] = Integer.parseInt(stx.nextToken());
             }
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
             while (true) {
                 s = in.readLine();
                 //System.out.println("DataReadIn"+s);                
@@ -494,7 +469,7 @@ public class DataExchangeFormat {
                     break;
                 }
 
-                stx = new StringTokenizer(s, delim);
+                stx = new StringTokenizer(s, DELIM);
                 int code = Integer.parseInt(stx.nextToken());
                 double numberoftrees = Double.parseDouble(stx.nextToken());
                 //int numberoftrees = Integer.parseInt(stx.nextToken());
@@ -559,6 +534,14 @@ public class DataExchangeFormat {
         }
     }
 
+    private StringTokenizer tokenizeNextLine(final BufferedReader in) throws IOException {
+        String s;
+        StringTokenizer stx;
+        s = in.readLine();
+        stx = new StringTokenizer(s, DELIM);
+        return stx;
+    }
+
     public double targetDiameter;
     /**
      * diameter for start of harvesting periode of layer (cm)
@@ -618,7 +601,7 @@ public class DataExchangeFormat {
                             new InputStreamReader(
                                     new FileInputStream(fn)));
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
             st.addName(in.readLine());
             s = in.readLine();
 
@@ -752,7 +735,7 @@ public class DataExchangeFormat {
                 thIntensSp[i] = Double.parseDouble(stx.nextToken());
             }
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
 
             while (true) {
                 s = in.readLine();
@@ -835,7 +818,7 @@ public class DataExchangeFormat {
                             new InputStreamReader(
                                     new FileInputStream(fn)));
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
             st.addName(in.readLine());
             s = in.readLine();
 
@@ -969,7 +952,7 @@ public class DataExchangeFormat {
                 maxAgeSp[i] = Double.parseDouble(stx.nextToken());
             }
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
 
             while (true) {
                 s = in.readLine();
@@ -1048,7 +1031,7 @@ public class DataExchangeFormat {
                             new InputStreamReader(
                                     new FileInputStream(fn)));
 
-            /*s=*/            in.readLine();
+            /*s=*/ in.readLine();
             st.addName(in.readLine());
             s = in.readLine();
 
@@ -1080,7 +1063,7 @@ public class DataExchangeFormat {
             }
 
             in.readLine();
-            while ((s = in.readLine())!=null) {                
+            while ((s = in.readLine()) != null) {
 
                 stx = new StringTokenizer(s, delim);
 
