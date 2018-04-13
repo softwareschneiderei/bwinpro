@@ -16,6 +16,7 @@
 package forestsimulator.DBAccess;
 import java.awt.Frame;
 import java.io.File;
+import java.io.IOException;
 import treegross.base.*;
 import treegross.treatment.*;
 import treegross.random.RandomNumber;
@@ -479,113 +480,106 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ida[] = new String[50000];
         int aufa[] = new int[50000];
         int scen[] = new int[50000];
         int nauf = 0;
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift  ");
-            while (rs.next()) {
-                ida[nauf] = rs.getObject("edvid").toString();
-                aufa[nauf] = rs.getInt("auf");
-                scen[nauf] = rs.getInt("Szenario");
-                nauf = nauf + 1;
-            }
-        } catch (Exception e) {
-            System.out.println("Problem: " + " " + e);
-        }
-
-        for (int ii = 0; ii < nauf; ii++) {
-            String ids = ida[ii];
-            int aufs = aufa[ii];
-            int nwiederh = 0;
-//
-            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM Vorschrift WHERE edvid = ? AND auf = ? AND Szenario = ?")) {
-                stmt.setString(1, ids);
-                stmt.setInt(2, aufs);
-                stmt.setInt(3, scen[ii]);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        nwiederh = rs.getInt("wiederholung");
-                    }
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+            try (Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift")) {
+                while (rs.next()) {
+                    ida[nauf] = rs.getObject("edvid").toString();
+                    aufa[nauf] = rs.getInt("auf");
+                    scen[nauf] = rs.getInt("Szenario");
+                    nauf = nauf + 1;
                 }
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 System.out.println("Problem: " + " " + e);
             }
-//
-            for (int iw = 0; iw < nwiederh; iw++) {
-                st = lts.loadFromDB(con, st, ids, aufs, true, true);
-                st.sortbyd();
-                st.missingData();
-                GenerateXY gxy = new GenerateXY();
-                gxy.zufall(st);
-// Test if all trees are in area           
-                for (int k = 0; k < st.ntrees; k++) {
-                    if (pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                        st.tr[k].out = 1900;
-                        st.tr[k].outtype = 1;
+            for (int ii = 0; ii < nauf; ii++) {
+                String ids = ida[ii];
+                int aufs = aufa[ii];
+                int nwiederh = 0;
+                try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM Vorschrift WHERE edvid = ? AND auf = ? AND Szenario = ?")) {
+                    stmt.setString(1, ids);
+                    stmt.setInt(2, aufs);
+                    stmt.setInt(3, scen[ii]);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        while (rs.next()) {
+                            nwiederh = rs.getInt("wiederholung");
+                        }
                     }
+                } catch (Exception e) {
+                    System.out.println("Problem: " + " " + e);
                 }
-                st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth          
-                for (int k = 0; k < st.ntrees; k++) {
-                    if (st.tr[k].fac == 0.0) {
-                        st.tr[k].out = 1900;
-                        st.tr[k].outtype = 1;
-                    }
-                }
-                st.descspecies();
-                Treatment2 t2 = new Treatment2();
-                st = lts.loadRules(con, st, ids, aufs, t2, scen[ii]);
-                int ebaum = lts.getEBaum();
-                int baumart = lts.getBaumart();
-                int bestand = lts.getBestand();
-                int durchf = lts.getDurchf();
-                if (ebaum == 1) {
-                    lts.saveBaum(con, st, ids, aufs, 0, iw + 1);
-                }
-                if (baumart == 1) {
-                    lts.saveSpecies(con, st, ids, aufs, 0, iw + 1);
-                }
-                if (bestand == 1) {
-                    lts.saveStand(con, st, ids, aufs, 0, iw + 1);
-                }
-                for (int i = 0; i < st.temp_Integer; i++) {
-                    if (durchf == 1) {
-                        st.descspecies();
-                        st.sortbyd();
-                        t2.executeManager2(st);
-                        st.descspecies();
-                    }
-                    st.executeMortality();
-                    st.descspecies();
-                    if (bestand == 1) {
-                        lts.saveStand(con, st, ids, aufs, i + 1, iw + 1);
-                    }
-                    if (ebaum == 1) {
-                        lts.saveBaum(con, st, ids, aufs, i + 1, iw + 1);
-                    }
-                    if (baumart == 1) {
-                        lts.saveSpecies(con, st, ids, aufs, i + 1, iw + 1);
-                    }
-                    st.grow(5, st.ingrowthActive);
+                for (int iw = 0; iw < nwiederh; iw++) {
+                    st = lts.loadFromDB(con, st, ids, aufs, true, true);
                     st.sortbyd();
                     st.missingData();
+                    GenerateXY gxy = new GenerateXY();
+                    gxy.zufall(st);
+// Test if all trees are in area           
+                    for (int k = 0; k < st.ntrees; k++) {
+                        if (pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
+                            st.tr[k].out = 1900;
+                            st.tr[k].outtype = 1;
+                        }
+                    }
                     st.descspecies();
-                }
-                if (ebaum == 2) {
-                    lts.saveBaum(con, st, ids, aufs, st.temp_Integer, iw + 1);
+// Define all trees with fac = 0.0 as dead zu that there is no growth          
+                    for (int k = 0; k < st.ntrees; k++) {
+                        if (st.tr[k].fac == 0.0) {
+                            st.tr[k].out = 1900;
+                            st.tr[k].outtype = 1;
+                        }
+                    }
+                    st.descspecies();
+                    Treatment2 t2 = new Treatment2();
+                    st = lts.loadRules(con, st, ids, aufs, t2, scen[ii]);
+                    int ebaum = lts.getEBaum();
+                    int baumart = lts.getBaumart();
+                    int bestand = lts.getBestand();
+                    int durchf = lts.getDurchf();
+                    if (ebaum == 1) {
+                        lts.saveBaum(con, st, ids, aufs, 0, iw + 1);
+                    }
+                    if (baumart == 1) {
+                        lts.saveSpecies(con, st, ids, aufs, 0, iw + 1);
+                    }
+                    if (bestand == 1) {
+                        lts.saveStand(con, st, ids, aufs, 0, iw + 1);
+                    }
+                    for (int i = 0; i < st.temp_Integer; i++) {
+                        if (durchf == 1) {
+                            st.descspecies();
+                            st.sortbyd();
+                            t2.executeManager2(st);
+                            st.descspecies();
+                        }
+                        st.executeMortality();
+                        st.descspecies();
+                        if (bestand == 1) {
+                            lts.saveStand(con, st, ids, aufs, i + 1, iw + 1);
+                        }
+                        if (ebaum == 1) {
+                            lts.saveBaum(con, st, ids, aufs, i + 1, iw + 1);
+                        }
+                        if (baumart == 1) {
+                            lts.saveSpecies(con, st, ids, aufs, i + 1, iw + 1);
+                        }
+                        st.grow(5, st.ingrowthActive);
+                        st.sortbyd();
+                        st.missingData();
+                        st.descspecies();
+                    }
+                    if (ebaum == 2) {
+                        lts.saveBaum(con, st, ids, aufs, st.temp_Integer, iw + 1);
+                    }
                 }
             }
-        }
-
-        try {
-            con.close();
         } catch (Exception e) {
             System.out.println("Problem: " + " " + e);
         }
@@ -594,128 +588,104 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        lts.saveXMLToDB(con, st);
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+            LoadTreegrossStand lts = new LoadTreegrossStand();
+            lts.saveXMLToDB(con, st);
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
         dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void selectFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileButtonActionPerformed
         // Select data base file
         java.io.File f = new java.io.File("");
-        String localPath="";
-        try{
-           localPath=  f.getCanonicalPath();
+        String localPath = "";
+        try {
+            localPath = f.getCanonicalPath();
+        } catch (IOException e) {
         }
-        catch (Exception e){};
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setCurrentDirectory(new java.io.File(localPath));
-        int k=jf.showOpenDialog(this);
+        int k = jf.showOpenDialog(this);
         java.io.File verzeichnis = jf.getSelectedFile();
-        databaseFilenameTextField.setText(verzeichnis.getAbsolutePath());        
-
-
-
-        
+        databaseFilenameTextField.setText(verzeichnis.getAbsolutePath());
     }//GEN-LAST:event_selectFileButtonActionPerformed
 
     private void loadSPISButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSPISButtonActionPerformed
-        // TODO add your handling code here:
         aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        LoadProbekreis lpk = new LoadProbekreis();
-        int pl = Integer.parseInt(plotNumberTextField.getText());
-        st = lpk.loadFromElSalto(con, st,  pl );
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+            LoadProbekreis lpk = new LoadProbekreis();
+            int pl = Integer.parseInt(plotNumberTextField.getText());
+            st = lpk.loadFromElSalto(con, st, pl);
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
         st.missingData();
         GenerateXY gxy = new GenerateXY();
         gxy.setGroupRadius(0.0);
         gxy.zufall(st);
         st.sortbyd();
         st.descspecies();
-        
         st.random.setRandomType(RandomNumber.PSEUDO);
-
         dispose();
-
     }//GEN-LAST:event_loadSPISButtonActionPerformed
 
     private void specialMixtureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specialMixtureButtonActionPerformed
-        // TODO add your handling code here:
         aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        String ids = "95650200";
-        
-        int aufs = 8;
-        
-        try{
-           Statement stmt = con.createStatement();
-           ResultSet rs = stmt.executeQuery("SELECT * FROM AufRun   "); 
-           while (rs.next()){
-               ids = rs.getString("edvid");
-               aufs= rs.getInt("auf");
-           
-                       
-        
-         
-        st=lts.loadFromDB( con, st, ids, aufs , true, true);
-        st.sortbyd();
-           for (int k=0; k < st.ntrees; k++){
-               if (st.tr[k].code==320){
-                   st.tr[k].code=321;
-               }
-           }
-        st.missingData();
-        GenerateXY gxy =new GenerateXY();
-        gxy.zufall(st);
-        // Test if all trees are in area           
-           for (int k=0; k < st.ntrees; k++){
-               if (pnpoly(st.tr[k].x, st.tr[k].y, st)==0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+            LoadTreegrossStand lts = new LoadTreegrossStand();
+            String ids = "95650200";
+            int aufs = 8;
+            try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM AufRun   ")) {
+                while (rs.next()) {
+                    ids = rs.getString("edvid");
+                    aufs = rs.getInt("auf");
 
-            st.descspecies();
+                    st = lts.loadFromDB(con, st, ids, aufs, true, true);
+                    st.sortbyd();
+                    for (int k = 0; k < st.ntrees; k++) {
+                        if (st.tr[k].code == 320) {
+                            st.tr[k].code = 321;
+                        }
+                    }
+                    st.missingData();
+                    GenerateXY gxy = new GenerateXY();
+                    gxy.zufall(st);
+                    // Test if all trees are in area           
+                    for (int k = 0; k < st.ntrees; k++) {
+                        if (pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
+                            st.tr[k].out = 1900;
+                            st.tr[k].outtype = 1;
+                        }
+                    }
+                    st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
-           for (int k=0; k < st.ntrees; k++){
-               if (st.tr[k].fac==0.0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
-        st.descspecies();
-        try{
-//          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
+                    for (int k = 0; k < st.ntrees; k++) {
+                        if (st.tr[k].fac == 0.0) {
+                            st.tr[k].out = 1900;
+                            st.tr[k].outtype = 1;
+                        }
+                    }
+                    st.descspecies();
+                }
+            }
 // Daten speichern        
-        
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        MixedTreeInfo mti = new MixedTreeInfo();
-        mti.saveTreeInfo(con, st,  ids, aufs );
-        
-        lts.saveSpecies(con, st, ids, aufs, 0, 0);
+            aktivesDatenfile = databaseFilenameTextField.getText();
+            try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+                MixedTreeInfo mti = new MixedTreeInfo();
+                mti.saveTreeInfo(connection, st, ids, aufs);
 
-        
-           }
-        System.out.println("edvis auf fertig: "+ids+"  "+aufs);   
-        con.close();
-        }catch (Exception e){  System.out.println("Problem: "+" "+e); }
-        
+                lts.saveSpecies(connection, st, ids, aufs, 0, 0);
+            }
+            System.out.println("edvis auf fertig: " + ids + "  " + aufs);
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
-        
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed

@@ -40,6 +40,10 @@ public class ConnectionFactory {
         props.put("charSet", charset);
     }
 
+    public Connection openDBConnection(String database, String username, String password, boolean readonly, boolean autocom) {
+        return openDBConnection(ACCESS, database, username, password, readonly, autocom);
+    }
+    
     public Connection openDBConnection(int dbtype, String database, String username, String password, boolean readonly, boolean autocom) {
         try {
             return openDBConnectionAccess(database, username, password, readonly, autocom);
