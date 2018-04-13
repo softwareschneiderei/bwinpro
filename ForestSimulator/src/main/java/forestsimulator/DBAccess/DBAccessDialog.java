@@ -14,11 +14,14 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.DBAccess;
+import com.sun.istack.internal.logging.Logger;
+import java.awt.Frame;
 import java.io.File;
 import treegross.base.*;
 import treegross.treatment.*;
 import treegross.random.RandomNumber;
 import java.sql.*;
+import java.util.logging.Level;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -29,14 +32,11 @@ import java.sql.*;
  * It reads a forest stand from the data base structure of the NW-FVA
  */
 public class DBAccessDialog extends javax.swing.JDialog {
-    ConnectionFactory dbconnAC = null;
-    Connection con;
-    String aktivesDatenfile=null;
-    Stand st= null;
-    int  growthCycles = 0;
+    String aktivesDatenfile;
+    Stand st;
+    int growthCycles = 0;
     
-    /** Creates new form DBAccessDialog */
-    public DBAccessDialog(java.awt.Frame parent, boolean modal,Stand stand, File dir) {
+    public DBAccessDialog(Frame parent, boolean modal,Stand stand, File dir) {
         super(parent, modal);
         initComponents();
         st = stand;
@@ -385,26 +385,24 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-          try {
-               Statement stmt = con.createStatement(); 
-               ResultSet rs = stmt.executeQuery("SELECT * FROM Auf WHERE (edvid = '"+jTextField2.getText()+"') " );
-               while (rs.next()){
-                     jComboBox1.addItem(rs.getInt("auf"));
-               }
-               con.close();
-              }
-           catch (Exception e){  System.out.println("Problem: "+" "+e); }
-        
-        // TODO add your handling code here:
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection connection = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Auf WHERE edvid = '?'")) {
+            stmt.setString(1, jTextField2.getText());
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    jComboBox1.addItem(rs.getInt("auf"));
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(DBAccessDialog.class).logException(e, Level.SEVERE);
+        }
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void loadStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStandButtonActionPerformed
-
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         
         String ids = jTextField2.getText();
@@ -412,8 +410,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
         
         int aufs = Integer.parseInt(txt.toString());
         
-        st=lts.loadFromDB( con, st, ids, aufs , true, true);
-         st.sortbyd();
+        st = lts.loadFromDB(con, st, ids, aufs , true, true);
+        st.sortbyd();
         st.missingData();
         GenerateXY gxy =new GenerateXY();
         gxy.zufall(st);
@@ -444,8 +442,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         Treatment2 t2 = new Treatment2();
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         
@@ -481,26 +479,27 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        LoadTreegrossStand lts = new LoadTreegrossStand();
+
         String ida[] = new String[50000];
-        int aufa[]= new  int[50000];
-        int scen[]= new  int[50000];
+        int aufa[] = new int[50000];
+        int scen[] = new int[50000];
         int nauf = 0;
-          try {
-               Statement stmt = con.createStatement(); 
-               ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift  " );
-               while (rs.next()){
-                     ida[nauf]= rs.getObject("edvid").toString();
-                     aufa[nauf]=rs.getInt("auf");
-                     scen[nauf]=rs.getInt("Szenario");
-                     nauf = nauf +1;
-               }
-              }
-           catch (Exception e){  System.out.println("Problem: "+" "+e); }
-        
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift  ");
+            while (rs.next()) {
+                ida[nauf] = rs.getObject("edvid").toString();
+                aufa[nauf] = rs.getInt("auf");
+                scen[nauf] = rs.getInt("Szenario");
+                nauf = nauf + 1;
+            }
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
+
         for (int ii = 0; ii < nauf; ii++) {
             String ids = ida[ii];
             int aufs = aufa[ii];
@@ -519,80 +518,90 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 System.out.println("Problem: " + " " + e);
             }
 //
-          for (int iw=0; iw <nwiederh;iw++){
-           st=lts.loadFromDB( con, st, ids, aufs , true, true);
-           st.sortbyd();
-           st.missingData();
-           GenerateXY gxy =new GenerateXY();
-           gxy.zufall(st);
+            for (int iw = 0; iw < nwiederh; iw++) {
+                st = lts.loadFromDB(con, st, ids, aufs, true, true);
+                st.sortbyd();
+                st.missingData();
+                GenerateXY gxy = new GenerateXY();
+                gxy.zufall(st);
 // Test if all trees are in area           
-           for (int k=0; k < st.ntrees; k++){
-               if (pnpoly(st.tr[k].x, st.tr[k].y, st)==0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
-           st.descspecies();
+                for (int k = 0; k < st.ntrees; k++) {
+                    if (pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
+                        st.tr[k].out = 1900;
+                        st.tr[k].outtype = 1;
+                    }
+                }
+                st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
-           for (int k=0; k < st.ntrees; k++){
-               if (st.tr[k].fac==0.0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
-           st.descspecies();
-           Treatment2 t2 = new Treatment2();
-           st=lts.loadRules( con, st, ids, aufs, t2, scen[ii] );
-           int ebaum = lts.getEBaum();
-           int baumart = lts.getBaumart();
-           int bestand = lts.getBestand();
-           int durchf = lts.getDurchf();
-           if (ebaum ==1) lts.saveBaum(con, st, ids, aufs, 0,iw+1);
-           if (baumart ==1) lts.saveSpecies(con, st, ids, aufs, 0, iw+1);
-           if (bestand ==1) lts.saveStand(con, st, ids, aufs, 0,iw+1);
-           for (int i=0;i<st.temp_Integer;i++){
-               if (durchf == 1) {
-                   st.descspecies();
-                   st.sortbyd();
-                   t2.executeManager2(st);
-                   st.descspecies();
-               }
-               st.executeMortality();
-               st.descspecies();
-               if (bestand ==1) lts.saveStand(con, st, ids, aufs, i+1,iw+1);
-               if (ebaum == 1) lts.saveBaum(con, st, ids, aufs, i+1,iw+1);
-               if (baumart==1) lts.saveSpecies(con, st, ids, aufs, i+1, iw+1);
-               st.grow(5, st.ingrowthActive);
-               st.sortbyd();
-               st.missingData();
-               st.descspecies();
+                for (int k = 0; k < st.ntrees; k++) {
+                    if (st.tr[k].fac == 0.0) {
+                        st.tr[k].out = 1900;
+                        st.tr[k].outtype = 1;
+                    }
+                }
+                st.descspecies();
+                Treatment2 t2 = new Treatment2();
+                st = lts.loadRules(con, st, ids, aufs, t2, scen[ii]);
+                int ebaum = lts.getEBaum();
+                int baumart = lts.getBaumart();
+                int bestand = lts.getBestand();
+                int durchf = lts.getDurchf();
+                if (ebaum == 1) {
+                    lts.saveBaum(con, st, ids, aufs, 0, iw + 1);
+                }
+                if (baumart == 1) {
+                    lts.saveSpecies(con, st, ids, aufs, 0, iw + 1);
+                }
+                if (bestand == 1) {
+                    lts.saveStand(con, st, ids, aufs, 0, iw + 1);
+                }
+                for (int i = 0; i < st.temp_Integer; i++) {
+                    if (durchf == 1) {
+                        st.descspecies();
+                        st.sortbyd();
+                        t2.executeManager2(st);
+                        st.descspecies();
+                    }
+                    st.executeMortality();
+                    st.descspecies();
+                    if (bestand == 1) {
+                        lts.saveStand(con, st, ids, aufs, i + 1, iw + 1);
+                    }
+                    if (ebaum == 1) {
+                        lts.saveBaum(con, st, ids, aufs, i + 1, iw + 1);
+                    }
+                    if (baumart == 1) {
+                        lts.saveSpecies(con, st, ids, aufs, i + 1, iw + 1);
+                    }
+                    st.grow(5, st.ingrowthActive);
+                    st.sortbyd();
+                    st.missingData();
+                    st.descspecies();
+                }
+                if (ebaum == 2) {
+                    lts.saveBaum(con, st, ids, aufs, st.temp_Integer, iw + 1);
+                }
             }
-            if (ebaum == 2)
-                lts.saveBaum(con, st, ids, aufs, st.temp_Integer, iw+1);
-          }
         }
-        
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
 
+        try {
+            con.close();
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
         dispose();
-        // TODO add your handling code here:
-
-        // TODO add your handling code here:
     }//GEN-LAST:event_calculateAllButtonActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         lts.saveXMLToDB(con, st);
         try{
           con.close();
         } catch (Exception e){  System.out.println("Problem: "+" "+e); }
         dispose();
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void selectFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileButtonActionPerformed
@@ -617,8 +626,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void loadSPISButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSPISButtonActionPerformed
         // TODO add your handling code here:
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadProbekreis lpk = new LoadProbekreis();
         int pl = Integer.parseInt(plotNumberTextField.getText());
         st = lpk.loadFromElSalto(con, st,  pl );
@@ -641,8 +650,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void specialMixtureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specialMixtureButtonActionPerformed
         // TODO add your handling code here:
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         String ids = "95650200";
         
@@ -710,105 +719,96 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        // TODO add your handling code here:
-           aktivesDatenfile = databaseFilenameTextField.getText();
-           dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-           con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-           LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-           
-        java.io.File f = new java.io.File("");
-/*        st = new Stand();
-        st.modelRegion="ForestSimulatorNWGermanyBC4";
-        st.FileXMLSettings="ForestSimulatorNWGermanyBC4.xml";
+        aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        LoadTreegrossStand lts = new LoadTreegrossStand();
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            for (int ib = 0; ib < 16; ib++) {
+                int bestand = ib;
+                for (int j = 0; j < 9; j++) {
+                    double mix = 0.0;
+                    for (int i = 0; i < 21; i++) {
+                        int art1 = 211;
+                        int art2 = 511;
+                        Double v211B = 0.0;
+                        Double v511B = 0.0;
+                        Double v211E = 0.0;
+                        Double v511E = 0.0;
+                        Double c66B = 0.0;
+                        Double c66F = 0.0;
+                        st = lts.newStand(st, "FiBu", 0.5);
 
-        SpeciesDefMap SDM = new SpeciesDefMap();
-        URL xmlPath=getClass().getResource("/treegross/model/ForestSimulatorNWGermanyBC4.xml");
+                        double mix1 = mix + i * 0.05;
+                        double mix2 = 1.0 - i * 0.05;
+                        if (mix1 > 0) {
+                            st = lts.addLayerFromStartwert(con, st, bestand, art1, mix1);
+                        }
+                        if (mix2 > 0) {
+                            st = lts.addLayerFromStartwert(con, st, bestand, art2, mix2);
+                        }
+                        for (int ii = 0; ii < st.nspecies; ii++) {
+                            if (st.sp[ii].code == 211) {
+                                v211B = st.getVha(211);
+                            }
+                            if (st.sp[ii].code == 511) {
+                                v511B = st.getVha(511);
+                            }
+                        }
+                        lts.saveSpecies(con, st, "FiBu", i * 5, bestand, st.year);
+                        st.grow(5, false);
+                        st.descspecies();
+                        lts.saveSpecies(con, st, "FiBu", i, bestand, st.year);
+                        for (int ii = 0; ii < st.nspecies; ii++) {
+                            if (st.sp[ii].code == 211) {
+                                v211E = st.getVha(211);
+                                int anz = 0;
+                                for (int jj = 0; jj < st.ntrees; jj++) {
+                                    if (st.tr[jj].code == 211 && st.tr[jj].out < 0) {
+                                        c66B = c66B + st.tr[jj].c66xy;
+                                        anz = anz + 1;
+                                    }
+                                }
+                                if (anz > 0) {
+                                    c66B = c66B / anz;
+                                }
+                            }
+                            if (st.sp[ii].code == 511) {
+                                v511E = st.getVha(511);
+                                int anz = 0;
+                                for (int jj = 0; jj < st.ntrees; jj++) {
+                                    if (st.tr[jj].code == 511 && st.tr[jj].out < 0) {
+                                        c66F = c66F + st.tr[jj].c66xy;
+                                        anz = anz + 1;
+                                    }
+                                }
+                                if (anz > 0) {
+                                    c66F = c66F / anz;
+                                }
 
-        SDM.readFromURL(xmlPath);
-        st.setSDM(SDM);
-*/        
-           int bestand = 1;        
-        for  (int ib=0;ib<16;ib++){
-            
-            bestand=ib;
-        for (int j=0;j< 9;j++){   
-           double mix = 0.0;
-           for (int i = 0; i< 21; i++){
-              int art1 = 211;
-              int art2 = 511;
-              Double v211B =0.0;
-              Double v511B =0.0;
-              Double v211E =0.0;
-              Double v511E =0.0;
-              Double c66B =0.0;
-              Double c66F =0.0;
-              st = lts.newStand(st, "FiBu", 0.5);
-
-              double mix1 = mix + i*0.05;
-              double mix2 = 1.0 - i*0.05;
-              if (mix1 > 0) st=lts.addLayerFromStartwert(con, st, bestand, art1, mix1);
-              if (mix2 > 0) st=lts.addLayerFromStartwert(con, st, bestand, art2, mix2);
-              for (int ii=0;ii<st.nspecies;ii++){
-                  if (st.sp[ii].code == 211) v211B =st.getVha(211);
-                  if (st.sp[ii].code == 511) v511B =st.getVha(511);
-              }              
-              lts.saveSpecies(con, st, "FiBu",i*5, bestand, st.year);
-              st.grow(5, false);
-              st.descspecies();
-              lts.saveSpecies(con, st, "FiBu",i, bestand, st.year);
-              for (int ii=0;ii<st.nspecies;ii++){
-                  if (st.sp[ii].code == 211) {
-                      v211E =st.getVha(211);
-                      int anz =0;
-                      for (int jj=0;jj<st.ntrees;jj++){
-                          if (st.tr[jj].code==211 && st.tr[jj].out < 0){
-                              c66B=c66B+st.tr[jj].c66xy;
-                              anz=anz+1;
-                          }
-                      }
-                      if (anz > 0) c66B = c66B/anz;
-                  }
-                  if (st.sp[ii].code == 511) {
-                      v511E =st.getVha(511);
-                      int anz =0;
-                      for (int jj=0;jj<st.ntrees;jj++){
-                          if (st.tr[jj].code==511 && st.tr[jj].out < 0){
-                              c66F=c66F+st.tr[jj].c66xy;
-                              anz=anz+1;
-                          }
-                      }
-                      if (anz > 0) c66F = c66F/anz;
-
-                  }
-              }
-               try (PreparedStatement stmt = con.prepareStatement("INSERT INTO Produktivitaet ( Bestand, MixBu, V1Art1, V1Art2, V2Art1, V2Art2, c66xyArt1, c66xyArt2) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
-                   int bum = i * 5;
-                   stmt.setInt(1, bestand);
-                   stmt.setInt(2, bum);
-                   stmt.setDouble(3, v211B);
-                   stmt.setDouble(4, v511B);
-                   stmt.setDouble(5, v211E);
-                   stmt.setDouble(6, v511E);
-                   stmt.setDouble(7, c66B);
-                   stmt.setDouble(8, c66F);
-                   stmt.execute();
-               } catch (Exception e) {
-                   System.out.println("Datenbank Stammv :" + e);
-               }
- 
-              System.out.println("Fertig "+ib+"  "+j);
-              
-           }
-           }
+                            }
+                        }
+                        try (PreparedStatement stmt = con.prepareStatement("INSERT INTO Produktivitaet ( Bestand, MixBu, V1Art1, V1Art2, V2Art1, V2Art2, c66xyArt1, c66xyArt2) values (?, ?, ?, ?, ?, ?, ?, ?)")) {
+                            int bum = i * 5;
+                            stmt.setInt(1, bestand);
+                            stmt.setInt(2, bum);
+                            stmt.setDouble(3, v211B);
+                            stmt.setDouble(4, v511B);
+                            stmt.setDouble(5, v211E);
+                            stmt.setDouble(6, v511E);
+                            stmt.setDouble(7, c66B);
+                            stmt.setDouble(8, c66F);
+                            stmt.execute();
+                        } catch (SQLException e) {
+                            System.out.println("Datenbank Stammv :" + e);
+                        }
+                        System.out.println("Fertig " + ib + "  " + j);
+                    }
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", ex);
         }
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
-
         dispose();
-        
-        
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void plotNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotNumberTextFieldActionPerformed
@@ -817,39 +817,35 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void biPlotInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biPlotInfoButtonActionPerformed
         // BI Plot Info
-        boolean beginnPeriode = false;
-        if (beginCheckBox.isSelected()) beginnPeriode=true;
-        LoadTreegrossStand lts = new  LoadTreegrossStand();
+        boolean beginnPeriode = beginCheckBox.isSelected();
+        LoadTreegrossStand lts = new LoadTreegrossStand();
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+
         String bi = "179-2001-001";
         String bi2 = " ";
         //        String bi2 = "";
         String pk = "4172";
 
-        String orga[]=new String[300];
-        int norga =0;
+        String orga[] = new String[300];
+        int norga = 0;
 
-        try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ");
-            while (rs.next()){
-                int stj = rs.getInt("DatOrga_Stj");
-                if (stj >= 1990){
-                    orga[norga]= rs.getString("DatOrga_Key");
-                    norga=norga+1;
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga")) {
+                while (rs.next()) {
+                    int stj = rs.getInt("DatOrga_Stj");
+                    if (stj >= 1990) {
+                        orga[norga] = rs.getString("DatOrga_Key");
+                        norga = norga + 1;
+                    }
                 }
             }
-        }
-        catch (Exception e){  System.out.println("Problem: "+" "+e); }
+            for (int inventur = 0; inventur < norga; inventur++) {
 
-        for (int inventur =0; inventur < norga; inventur++){
-
-            bi=orga[inventur];
-            bi2="";
-            int type =2;
-            /*        if (beginnPeriode == false){
+                bi = orga[inventur];
+                bi2 = "";
+                int type = 2;
+                /*        if (beginnPeriode == false){
                 if (bi.indexOf("167") >= 0) bi2="167-2009-001";
                 if (bi.indexOf("172") >= 0) bi2="172-2008-001";
                 if (bi.indexOf("179") >= 0) bi2="179-2009-001";
@@ -859,54 +855,55 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 if (bi.indexOf("273") >= 0) bi2="273-2008-001";
                 type=3;
             }
-            */
+                 */
 
-            int kr[] = new int[10000];
-            int nkr = 0;
-            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
-                stmt.setString(1, bi);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
-                        nkr = nkr + 1;
+                int kr[] = new int[10000];
+                int nkr = 0;
+                try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
+                    stmt.setString(1, bi);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        while (rs.next()) {
+                            kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                            nkr = nkr + 1;
+                        }
                     }
+                } catch (Exception e) {
+                    System.out.println("Problem: " + " " + e);
                 }
-            } catch (Exception e) {
-                System.out.println("Problem: " + " " + e);
-            }
 
-            for (int kreis =0; kreis < nkr; kreis++){
+                for (int kreis = 0; kreis < nkr; kreis++) {
 
-                LoadProbekreis lpk = new LoadProbekreis();
+                    LoadProbekreis lpk = new LoadProbekreis();
 
-                st = lpk.loadFromDB(con, st,bi , kr[kreis],bi2,type);
-                st.missingData();
-                for (int i=0; i< st.ntrees; i++)
-                if (st.tr[i].out > 0) st.tr[i].outtype=2;
-                GenerateXY gxy = new GenerateXY();
-                gxy.setGroupRadius(0.0);
-                gxy.zufall(st);
-                st.sortbyd();
-                st.descspecies();
-                lts.saveStandV2(con, st, bi , kr[kreis], type, st.year, st.bt);
-                lts.saveSpecies(con, st, bi , kr[kreis], type, st.year);
+                    st = lpk.loadFromDB(con, st, bi, kr[kreis], bi2, type);
+                    st.missingData();
+                    for (int i = 0; i < st.ntrees; i++) {
+                        if (st.tr[i].out > 0) {
+                            st.tr[i].outtype = 2;
+                        }
+                    }
+                    GenerateXY gxy = new GenerateXY();
+                    gxy.setGroupRadius(0.0);
+                    gxy.zufall(st);
+                    st.sortbyd();
+                    st.descspecies();
+                    lts.saveStandV2(con, st, bi, kr[kreis], type, st.year, st.bt);
+                    lts.saveSpecies(con, st, bi, kr[kreis], type, st.year);
 
-                System.out.println(kreis+"  FERTIG PLOT: "+bi+" "+kr[kreis]);
+                    System.out.println(kreis + "  FERTIG PLOT: " + bi + " " + kr[kreis]);
 
-            } // Kreise
-        } // Inventur
-
-        try{
-            con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
+                } // Kreise
+            } // Inventur
+        } catch (SQLException e) {
+            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database.", e);
+        }
         dispose();
     }//GEN-LAST:event_biPlotInfoButtonActionPerformed
 
     private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
         LoadTreegrossStand lts = new LoadTreegrossStand();
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC = new ConnectionFactory();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
         try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
             String bi = "179-2001-001";
             String pk = "4172";
@@ -915,12 +912,12 @@ public class DBAccessDialog extends javax.swing.JDialog {
             int norga = 0;
 
             try (Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ")) {
+                    ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ")) {
                 while (rs.next()) {
                     int stj = rs.getInt("DatOrga_Stj");
                     /**
-                    * Änderung 2008 nach 2018
-                    */
+                     * Änderung 2008 nach 2018
+                     */
                     if (stj < 2018) {
                         orga[norga] = rs.getString("DatOrga_Key");
                         norga = norga + 1;
@@ -973,7 +970,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                     treatment2.setNatureProtection(st, 0,0,false,0.1,200);
                     treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
                     treatment2.setThinningRegime(st, 0,1.0,10,60,false);
-                    */
+                     */
                     //        lts.saveStandV2(dbconnAC, st, bi , kr[kreis], 1, st.year, st.bt);
                     //        lts.saveSpecies(dbconnAC, st, bi , kr[kreis], 1, st.year);
                     /*
@@ -985,7 +982,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                         st.grow(5, false);
                         st.descspecies();
                     }
-                    */
+                     */
                     lts.saveStandV2(con, st, bi, kr[kreis], 1, st.year, st.bt);
                     //        lts.saveBaum(con, st, bi , kr[kreis], 1, st.year);
                     lts.saveSpeciesV2(con, st, bi, kr[kreis], 1, st.year);
@@ -1007,13 +1004,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
         // BI Probekreis laden
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-        LoadProbekreis lpk = new LoadProbekreis();
-        int pl = Integer.parseInt(jTextField4.getText());
-        st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
-        try{
-            con.close();
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true)) {
+            LoadProbekreis lpk = new LoadProbekreis();
+            int pl = Integer.parseInt(jTextField4.getText());
+            st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
         } catch (Exception e){  System.out.println("Problem: "+" "+e); }
         st.missingData();
         GenerateXY gxy = new GenerateXY();
@@ -1037,45 +1032,39 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
         // TFE Daten
         aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-
-        double hg =0.0;
-        double dg= 0.0;
-        double dmax= 0.0;
-        double g =0.0;
-        double h100 =0.0;
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        double hg = 0.0;
+        double dg = 0.0;
+        double dmax = 0.0;
+        double g = 0.0;
+        double h100 = 0.0;
         String id = "test";
-        int art =0;
-        int alt =0;
+        int art = 0;
+        int alt = 0;
         Integer nummer = 0;
-        ResultSet rsx = null;
-        try{
-            Statement stmt = con.createStatement();
-            rsx = stmt.executeQuery("select * from BucheRein2 ");
-            while (rsx.next()) {
-                nummer = Integer.parseInt(rsx.getObject("ID").toString());
-                art = (int) Double.parseDouble(rsx.getObject("art").toString());
-                alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
-                hg = Double.parseDouble(rsx.getObject("hg").toString());
-                h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
-                dg = Double.parseDouble(rsx.getObject("dg").toString());
-                dmax = Double.parseDouble(rsx.getObject("d100").toString());
-                g = Double.parseDouble(rsx.getObject("gha").toString());
-                //
-                //
-                if ( hg > 5.0 && dg > 7.0 && g > 0.0){
-                    //              try {
-
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            try (Statement stmt = con.createStatement(); ResultSet rsx = stmt.executeQuery("select * from BucheRein2 ")) {
+                while (rsx.next()) {
+                    nummer = Integer.parseInt(rsx.getObject("ID").toString());
+                    art = (int) Double.parseDouble(rsx.getObject("art").toString());
+                    alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
+                    hg = Double.parseDouble(rsx.getObject("hg").toString());
+                    h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
+                    dg = Double.parseDouble(rsx.getObject("dg").toString());
+                    dmax = Double.parseDouble(rsx.getObject("d100").toString());
+                    g = Double.parseDouble(rsx.getObject("gha").toString());
+                    if (hg > 5.0 && dg > 7.0 && g > 0.0) {
                         EtafelSim etsim = new EtafelSim();
-                        id = nummer.toString() ;
+                        id = nummer.toString();
                         st = etsim.newYTStand(st, id, 0.5);
 
                         GenDistribution gdb = new GenDistribution();
-                        gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size,false);
+                        gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size, false);
                         // missing data fuer die Verteilung generieren
                         for (int j = 0; j < st.ntrees; j++) {
-                            if (st.tr[j].si <= -9) st.tr[j].si = h100;
+                            if (st.tr[j].si <= -9) {
+                                st.tr[j].si = h100;
+                            }
                         }
                         SIofDistrib siod = new SIofDistrib();
                         FunctionInterpreter fi = new FunctionInterpreter();
@@ -1094,7 +1083,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                                 tree.sp = st.tr[j].sp;
                                 tree.st = st;
                                 //                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) + fi.getValueForTree(tree, tree.sp.spDef.heightVariationXML) * nd.value(3.0);
-                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) ;
+                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                             }
                         }
                         for (int j = 0; j < st.ntrees; j++) {
@@ -1106,109 +1095,95 @@ public class DBAccessDialog extends javax.swing.JDialog {
                         gxy.zufall(st);
                         st.sortbyd();
                         st.descspecies();
-                        //                } catch (Exception ex) {}
-
-                }
-
-                st.random.setRandomType(RandomNumber.PSEUDO);
-                st.descspecies();
-                if (st.ntrees > 0){
-                    LoadTreegrossStand lts = new  LoadTreegrossStand();
-                    lts.saveStand(con, st, id, alt, 0, 0);
-                    lts.saveSpecies(con, st, id, alt, 0, 0);
-                    //
-                    st.grow(5, false);
-                    st.sortbyd();
-                    st.missingData();
+                    }
+                    st.random.setRandomType(RandomNumber.PSEUDO);
                     st.descspecies();
-                    lts.saveStand(con, st, id, alt, 1, 0);
-                    lts.saveSpecies(con, st, id, alt, 1, 0);
+                    if (st.ntrees > 0) {
+                        LoadTreegrossStand lts = new LoadTreegrossStand();
+                        lts.saveStand(con, st, id, alt, 0, 0);
+                        lts.saveSpecies(con, st, id, alt, 0, 0);
+                        //
+                        st.grow(5, false);
+                        st.sortbyd();
+                        st.missingData();
+                        st.descspecies();
+                        lts.saveStand(con, st, id, alt, 1, 0);
+                        lts.saveSpecies(con, st, id, alt, 1, 0);
+                    }
+
                 }
-
             }
-        }	catch (Exception e)  {	System.out.println(e); }
-
-        try{
-            con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
+        } catch (Exception e) {
+            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", e);
+        }
         dispose();
     }//GEN-LAST:event_feDataButtonActionPerformed
 
     private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
         // Yield table simulation
         aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-
-        EtafelSim etsim = new EtafelSim();
-        for (int iw=1; iw < 3; iw++){
-            for (int i=0; i < 5; i++){
-                Integer ekl = 37-(i*4);
-                Integer ixno = iw;
-                String id =  ixno.toString();
-                for (int j=0; j < 1; j++){
-                    int age = 20;
-                    Double mixPerc = 1.0;
-                    st = etsim.newYTStand(st, id, 0.5);
-                    st.ingrowthActive = false;
-                    st.riskActive = false;
-                    st.distanceDependent=true;
-                    //st.randomGrowthEffects=true;
-                    st.random.setRandomType(RandomNumber.PSEUDO);
-                    st = etsim.addLayerFromTable(con, st, 711, ekl, age, 1.0);
-                    st.descspecies();
-                    //             st.sp[0].spDef.moderateThinning="12.0;0;1.0;120.0;1.0;130;130;1.0;140";
-                    st.sp[0].trule.minCropTreeHeight = 12.0;
-                    st.sp[0].trule.targetDiameter = 85.0;
-                    st.sp[0].trule.targetCrownPercent = 100.0;
-                    st.sp[0].trule.numberCropTreesWanted = 120;
-                    st.sp[0].spDef.targetDiameter= 100.0;
-                    st.sp[0].spDef.cropTreeNumber=110;
-                    Treatment2 treatment2 = new Treatment2();
-                    treatment2.setAutoPlanting(st, false, false, 0.1, "511");
-                    treatment2.setSkidTrails(st, true, 20.0, 4.0);
-                    treatment2.setNatureProtection(st, 0,0,false,0.1,200);
-                    treatment2.setHarvestRegime(st, 2, 0,180, 0.0, "0.3;");
-                    treatment2.setThinningRegime(st, 0,1.0,0,120,false);
-                    if (st.ntrees > 0){
-                        age = (int) st.tr[0].age;
-                        LoadTreegrossStand lts = new  LoadTreegrossStand();
-                        lts.saveStand(con, st, id, age, 0, ekl);
-                        lts.saveSpecies(con, st, id, age, 0, ekl);
-                        st.sortbyd();
-                        st.missingData();
+        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            EtafelSim etsim = new EtafelSim();
+            for (int iw = 1; iw < 3; iw++) {
+                for (int i = 0; i < 5; i++) {
+                    Integer ekl = 37 - (i * 4);
+                    Integer ixno = iw;
+                    String id = ixno.toString();
+                    for (int j = 0; j < 1; j++) {
+                        int age = 20;
+                        Double mixPerc = 1.0;
+                        st = etsim.newYTStand(st, id, 0.5);
+                        st.ingrowthActive = false;
+                        st.riskActive = false;
+                        st.distanceDependent = true;
+                        //st.randomGrowthEffects=true;
+                        st.random.setRandomType(RandomNumber.PSEUDO);
+                        st = etsim.addLayerFromTable(con, st, 711, ekl, age, 1.0);
                         st.descspecies();
-
-                        //
-                        for (int jj=0;jj<20;jj++){
-                            treatment2.executeManager2(st);
-                            st.executeMortality();
-                            st.descspecies();
+                        //             st.sp[0].spDef.moderateThinning="12.0;0;1.0;120.0;1.0;130;130;1.0;140";
+                        st.sp[0].trule.minCropTreeHeight = 12.0;
+                        st.sp[0].trule.targetDiameter = 85.0;
+                        st.sp[0].trule.targetCrownPercent = 100.0;
+                        st.sp[0].trule.numberCropTreesWanted = 120;
+                        st.sp[0].spDef.targetDiameter = 100.0;
+                        st.sp[0].spDef.cropTreeNumber = 110;
+                        Treatment2 treatment2 = new Treatment2();
+                        treatment2.setAutoPlanting(st, false, false, 0.1, "511");
+                        treatment2.setSkidTrails(st, true, 20.0, 4.0);
+                        treatment2.setNatureProtection(st, 0, 0, false, 0.1, 200);
+                        treatment2.setHarvestRegime(st, 2, 0, 180, 0.0, "0.3;");
+                        treatment2.setThinningRegime(st, 0, 1.0, 0, 120, false);
+                        if (st.ntrees > 0) {
                             age = (int) st.tr[0].age;
-
-                            lts.saveStand(con, st, id, age, 1, ekl);
-                            lts.saveSpecies(con, st, id, age, 1, ekl);
-                            st.grow(5, false);
+                            LoadTreegrossStand lts = new LoadTreegrossStand();
+                            lts.saveStand(con, st, id, age, 0, ekl);
+                            lts.saveSpecies(con, st, id, age, 0, ekl);
+                            st.sortbyd();
+                            st.missingData();
                             st.descspecies();
-                            System.out.println(jj+"  "+age);
 
+                            //
+                            for (int jj = 0; jj < 20; jj++) {
+                                treatment2.executeManager2(st);
+                                st.executeMortality();
+                                st.descspecies();
+                                age = (int) st.tr[0].age;
+
+                                lts.saveStand(con, st, id, age, 1, ekl);
+                                lts.saveSpecies(con, st, id, age, 1, ekl);
+                                st.grow(5, false);
+                                st.descspecies();
+                                System.out.println(jj + "  " + age);
+
+                            }
                         }
-
-                        //                st.descspecies();
-                        //                age = (int) st.tr[0].si;
-                        //                lts.saveStand(dbconnAC, st, id, age , 1, jk);
-                        //                lts.saveSpecies(dbconnAC, st, id, age, 1, jk);
-
                     }
                 }
             }
+        } catch (SQLException e) {
+            Logger.getLogger(DBAccessDialog.class).log(Level.SEVERE, "Problem with database", e);
         }
-
-        try{
-            con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
         dispose();
     }//GEN-LAST:event_simulationButtonActionPerformed
  

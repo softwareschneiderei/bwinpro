@@ -592,24 +592,13 @@ public class DataExchangeFormat {
     public double thinningIntensity;
 
     public void readOldFormat3(Stand st, String fn) {
-        try {
-
+        try (BufferedReader in = new BufferedReader(new FileReader(fn))) {
             String s;
             st.newStand();
-            BufferedReader in
-                    = new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(fn)));
 
             /*s=*/ in.readLine();
             st.addName(in.readLine());
             s = in.readLine();
-
-            //			System.out.println("Test  :"+s);
-            //			Boolean B = new Boolean();
-            //			boolean b=new Boolean(s).booleanValue();
-            //			System.out.println(s+" Test2  :"+b);
-            //			
             StringTokenizer stx;
             String delim = ";";
             stx = new StringTokenizer(s, delim);
@@ -806,17 +795,11 @@ public class DataExchangeFormat {
     }
 
     public void readOldFormat2(Stand st, String fn) {
-        try {
-
+        try (BufferedReader in = new BufferedReader(new FileReader(fn))) {
             String s;
             st.ntrees = 0;
             st.nspecies = 0;
             st.ncpnt = 0;
-
-            BufferedReader in
-                    = new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(fn)));
 
             /*s=*/ in.readLine();
             st.addName(in.readLine());
@@ -1020,16 +1003,11 @@ public class DataExchangeFormat {
     }
 
     public void readOldFormat1(Stand st, String fn) {
-        try {
+        try (BufferedReader in = new BufferedReader(new FileReader(fn))) {
             String s;
             st.ntrees = 0;
             st.nspecies = 0;
             st.ncpnt = 0;
-
-            BufferedReader in
-                    = new BufferedReader(
-                            new InputStreamReader(
-                                    new FileInputStream(fn)));
 
             /*s=*/ in.readLine();
             st.addName(in.readLine());
@@ -1113,13 +1091,11 @@ public class DataExchangeFormat {
     }
 
     public void writeTreeTable(Stand st) {
-        PrintWriter out = null;
-        try {
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream("baumtabelle.txt")))) {
             NumberFormat f;
             f = NumberFormat.getInstance(new Locale("en", "US"));
             f.setMaximumFractionDigits(2);
             f.setMinimumFractionDigits(2);
-            out = new PrintWriter(new OutputStreamWriter(new FileOutputStream("baumtabelle.txt")));
             for (int i = 0; i < st.ntrees; i++) {
                 st.tr[i].updateCrown();
             }
@@ -1136,10 +1112,6 @@ public class DataExchangeFormat {
             }
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
         }
     }
 }
