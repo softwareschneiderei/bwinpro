@@ -197,38 +197,40 @@ public class DBAccessDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(biDataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(yearsLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(213, 213, 213)
-                                .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(simulationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(76, 76, 76)
-                                .addComponent(biUpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(beginCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(biPlotInfoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(feDataButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(215, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(biDataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(yearsLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
-                        .addComponent(loadCircleButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(simulationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(biUpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(beginCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(biPlotInfoButton)
+                    .addComponent(feDataButton)
+                    .addComponent(loadCircleButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {biPlotInfoButton, feDataButton, loadCircleButton});
+
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -247,7 +249,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                     .addComponent(yearsLabel)
                     .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(biPlotInfoButton))
-                .addGap(35, 35, 35)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(feDataButton)
                     .addComponent(simulationButton))
@@ -276,11 +278,11 @@ public class DBAccessDialog extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(86, 86, 86)
-                .addComponent(plotNumberLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(plotNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(loadSPISButton, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(plotNumberLabel)
+                .addGap(18, 18, 18)
+                .addComponent(plotNumberTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(loadSPISButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -315,46 +317,40 @@ public class DBAccessDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(loadStandButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(calculateStandButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(calculateAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(485, 485, 485))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(databaseFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(15, 15, 15)
-                                .addComponent(selectFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(loadStandButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGap(18, 18, 18)
+                            .addComponent(calculateStandButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(calculateAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(239, 239, 239)
+                            .addComponent(jButton5)
+                            .addGap(197, 197, 197))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(databaseFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(15, 15, 15)
+                            .addComponent(selectFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton5))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(searchButton)))
-                        .addGap(67, 67, 67)))
-                .addContainerGap(21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(searchButton)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(specialMixtureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(specialMixtureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -372,11 +368,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(loadStandButton)
-                        .addComponent(calculateStandButton)
-                        .addComponent(calculateAllButton))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loadStandButton)
+                    .addComponent(calculateStandButton)
+                    .addComponent(calculateAllButton)
                     .addComponent(jButton5))
                 .addGap(9, 9, 9)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -597,413 +592,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
           con.close();
         } catch (Exception e){  System.out.println("Problem: "+" "+e); }
         dispose();
-           
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
-        // Yield table simulation
-        aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-
-        EtafelSim etsim = new EtafelSim();
-        for (int iw=1; iw < 3; iw++){
-        for (int i=0; i < 5; i++){
-           Integer ekl = 37-(i*4);
-           Integer ixno = iw;
-           String id =  ixno.toString();
-           for (int j=0; j < 1; j++){
-             int age = 20; 
-             Double mixPerc = 1.0;
-             st = etsim.newYTStand(st, id, 0.5); 
-             st.ingrowthActive = false;
-             st.riskActive = false;
-             st.distanceDependent=true;
-             //st.randomGrowthEffects=true;
-             st.random.setRandomType(RandomNumber.PSEUDO);
-             st = etsim.addLayerFromTable(con, st, 711, ekl, age, 1.0); 
-             st.descspecies();
-//             st.sp[0].spDef.moderateThinning="12.0;0;1.0;120.0;1.0;130;130;1.0;140";
-             st.sp[0].trule.minCropTreeHeight = 12.0; 
-             st.sp[0].trule.targetDiameter = 85.0; 
-             st.sp[0].trule.targetCrownPercent = 100.0; 
-             st.sp[0].trule.numberCropTreesWanted = 120;
-             st.sp[0].spDef.targetDiameter= 100.0;
-             st.sp[0].spDef.cropTreeNumber=110;
-             Treatment2 treatment2 = new Treatment2();
-             treatment2.setAutoPlanting(st, false, false, 0.1, "511");
-             treatment2.setSkidTrails(st, true, 20.0, 4.0);
-             treatment2.setNatureProtection(st, 0,0,false,0.1,200);
-             treatment2.setHarvestRegime(st, 2, 0,180, 0.0, "0.3;");
-             treatment2.setThinningRegime(st, 0,1.0,0,120,false);
-             if (st.ntrees > 0){
-                age = (int) st.tr[0].age;
-                LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-                lts.saveStand(con, st, id, age, 0, ekl);
-                lts.saveSpecies(con, st, id, age, 0, ekl); 
-                st.sortbyd();
-                st.missingData();
-                st.descspecies();
-
-                //
-                for (int jj=0;jj<20;jj++){
-                      treatment2.executeManager2(st);
-                      st.executeMortality();
-                      st.descspecies();
-                      age = (int) st.tr[0].age;
-
-                      lts.saveStand(con, st, id, age, 1, ekl);
-                      lts.saveSpecies(con, st, id, age, 1, ekl); 
-                      st.grow(5, false);
-                      st.descspecies();
-                      System.out.println(jj+"  "+age);
-
-                }
- 
-//                st.descspecies();
-//                age = (int) st.tr[0].si;
-//                lts.saveStand(dbconnAC, st, id, age , 1, jk);
-//                lts.saveSpecies(dbconnAC, st, id, age, 1, jk); 
-             
-             }
-           }
-        }
-        }
-
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
-        dispose();
-    }//GEN-LAST:event_simulationButtonActionPerformed
-
-    private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
-        // TFE Daten
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        
-        
-        double hg =0.0;
-        double dg= 0.0;
-        double dmax= 0.0;
-        double g =0.0;
-        double h100 =0.0;
-        String id = "test";
-        int art =0;
-        int alt =0;
-        Integer nummer = 0;
-        ResultSet rsx = null;
-        try{          
-           Statement stmt = con.createStatement(); 
-           rsx = stmt.executeQuery("select * from BucheRein2 ");
-           while (rsx.next()) {
-              nummer = Integer.parseInt(rsx.getObject("ID").toString());
-              art = (int) Double.parseDouble(rsx.getObject("art").toString());
-              alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
-              hg = Double.parseDouble(rsx.getObject("hg").toString());
-              h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
-              dg = Double.parseDouble(rsx.getObject("dg").toString());
-              dmax = Double.parseDouble(rsx.getObject("d100").toString());
-              g = Double.parseDouble(rsx.getObject("gha").toString());
-//
-//
-              if ( hg > 5.0 && dg > 7.0 && g > 0.0){
- //              try {
-                   
-                   EtafelSim etsim = new EtafelSim();
-                   id = nummer.toString() ;
-                   st = etsim.newYTStand(st, id, 0.5); 
-
-                  GenDistribution gdb = new GenDistribution();
-                  gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size,false);
-// missing data fuer die Verteilung generieren
-                  for (int j = 0; j < st.ntrees; j++) {
-                     if (st.tr[j].si <= -9) st.tr[j].si = h100;
-                     }
-                  SIofDistrib siod = new SIofDistrib();
-                  FunctionInterpreter fi = new FunctionInterpreter();
-                  siod.si(st, art, alt, dg, hg);
-                  for (int j = 0; j < st.ntrees; j++) {
-                   if (st.tr[j].h == 0.0) {
-                      Tree tree = new Tree();
-                      tree.code = art;
-                      tree.sp = st.tr[j].sp;
-                      tree.sp.dg = dg;
-                      tree.sp.hg = hg;
-                      tree.sp.h100 = 0.0;
-                      tree.sp.d100 = 0.0;
-                      tree.d = st.tr[j].d;
-                      tree.code = st.tr[j].code;
-                      tree.sp = st.tr[j].sp;
-                      tree.st = st;
-//                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) + fi.getValueForTree(tree, tree.sp.spDef.heightVariationXML) * nd.value(3.0);
-                      st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) ;
-                   }
-                  }
-                  for (int j = 0; j < st.ntrees; j++) {
-                      st.tr[j].setMissingData();
-                  }
-                  GenerateXY gxy = null;
-                  gxy = new GenerateXY();
-                  gxy.setGroupRadius(0.0);
-                  gxy.zufall(st);
-                  st.sortbyd();
-                  st.descspecies();
-//                } catch (Exception ex) {}
-           
-           }
-        
-
-           st.random.setRandomType(RandomNumber.PSEUDO);
-           st.descspecies();
-           if (st.ntrees > 0){
-              LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-              lts.saveStand(con, st, id, alt, 0, 0);
-              lts.saveSpecies(con, st, id, alt, 0, 0); 
-//       
-              st.grow(5, false);
-              st.sortbyd();
-              st.missingData();
-              st.descspecies();
-              lts.saveStand(con, st, id, alt, 1, 0);
-              lts.saveSpecies(con, st, id, alt, 1, 0); 
-           }
-           
-        }
-        }	catch (Exception e)  {	System.out.println(e); }
-
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
-        dispose();
-
-    }//GEN-LAST:event_feDataButtonActionPerformed
-
-    private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
-        // BI Probekreis laden
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
-        LoadProbekreis lpk = new LoadProbekreis();
-        int pl = Integer.parseInt(jTextField4.getText());
-        st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-        st.missingData();
-        GenerateXY gxy = new GenerateXY();
-        gxy.setGroupRadius(0.0);
-        gxy.zufall(st);
-        st.sortbyd();
-        st.descspecies();
-        
-        st.random.setRandomType(RandomNumber.PSEUDO);
-        
-        Treatment2 treatment2 = new Treatment2();
-        treatment2.setAutoPlanting(st, false, false, 0.2, "511");
-        treatment2.setSkidTrails(st, false, 20.0, 4.0);
-        treatment2.setNatureProtection(st, 0,0,false,0.1,200);
-        treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
-        treatment2.setThinningRegime(st, 2,1.0,10,60,false);
-
-
-        dispose();
-        
-        
-    }//GEN-LAST:event_loadCircleButtonActionPerformed
-
-    private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
-        LoadTreegrossStand lts = new LoadTreegrossStand();
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
-            String bi = "179-2001-001";
-            String pk = "4172";
-
-            String orga[] = new String[900];
-            int norga = 0;
-
-            try (Statement stmt = con.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ")) {
-                while (rs.next()) {
-                    int stj = rs.getInt("DatOrga_Stj");
-                    /**
-                     * Änderung 2008 nach 2018
-                     */
-                    if (stj < 2018) {
-                        orga[norga] = rs.getString("DatOrga_Key");
-                        norga = norga + 1;
-                    }
-                }
-            } catch (SQLException e) {
-                System.out.println("Problem: " + " " + e);
-            }
-
-            for (int inventur = 0; inventur < norga; inventur++) {
-
-                bi = orga[inventur];
-                int kr[] = new int[90000];
-                int nkr = 0;
-                try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
-                    stmt.setString(1, bi);
-                    try (ResultSet rs = stmt.executeQuery()) {
-                        while (rs.next()) {
-                            kr[nkr] = rs.getInt("DatPh2_KSPNr");
-                            nkr = nkr + 1;
-                        }
-                    }
-                } catch (Exception e) {
-                    System.out.println("Problem: " + " " + e);
-                }
-
-                for (int kreis = 0; kreis < nkr; kreis++) {
-
-                    LoadProbekreis lpk = new LoadProbekreis();
-
-                    st = lpk.loadFromDB(con, st, bi, kr[kreis], "", 1);
-                    st.missingData();
-                    GenerateXY gxy = new GenerateXY();
-                    gxy.setGroupRadius(0.0);
-                    gxy.zufall(st);
-                    st.sortbyd();
-                    st.descspecies();
-
-
-                    /*        st.randomGrowthEffects=false;
-        st.ingrowthActive = false;
-        st.riskActive = true;
-        st.distanceDependent=true;
-        Treatment2 treatment2 = new Treatment2();
-        
-        if (st.bt > 0 ) 
-            treatment2.setBT(st); 
-        
-        treatment2.setAutoPlanting(st, false, false, 0.2, "511");
-        treatment2.setSkidTrails(st, false, 20.0, 4.0);
-        treatment2.setNatureProtection(st, 0,0,false,0.1,200);
-        treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
-        treatment2.setThinningRegime(st, 0,1.0,10,60,false);
-                     */
-//        lts.saveStandV2(dbconnAC, st, bi , kr[kreis], 1, st.year, st.bt);
-//        lts.saveSpecies(dbconnAC, st, bi , kr[kreis], 1, st.year);
-/*        
-        for (int ngr =0; ngr <2; ngr++){
-               treatment2.executeManager2(st);
-               st.descspecies();
-               st.executeMortality();
-               st.descspecies();
-               st.grow(5, false);
-               st.descspecies();
-        }
-                     */
-                    lts.saveStandV2(con, st, bi, kr[kreis], 1, st.year, st.bt);
-//        lts.saveBaum(con, st, bi , kr[kreis], 1, st.year);
-                    lts.saveSpeciesV2(con, st, bi, kr[kreis], 1, st.year);
-                    System.out.println(inventur + " " + bi + " " + kreis + "  FERTIG PLOT: " + kr[kreis]);
-
-                } // Kreise
-
-            } // inventur
-        } catch (Exception e) {
-            System.out.println("Problem: " + " " + e);
-        }
-        dispose();
-    }//GEN-LAST:event_biUpdateButtonActionPerformed
-
-    private void biPlotInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biPlotInfoButtonActionPerformed
-        // BI Plot Info
-        boolean beginnPeriode = false;
-        if (beginCheckBox.isSelected()) beginnPeriode=true;
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
-        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
-        String bi = "179-2001-001";
-        String bi2 = " ";
-//        String bi2 = "";
-        String pk = "4172";
-        
-        
-        String orga[]=new String[300];
-        int norga =0;
-        
-        try {
-             Statement stmt = con.createStatement(); 
-             ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  "); 
-             while (rs.next()){
-                  int stj = rs.getInt("DatOrga_Stj");
-                  if (stj >= 1990){
-                    orga[norga]= rs.getString("DatOrga_Key");
-                    norga=norga+1;
-                  }  
-               }
-              }
-         catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
-        for (int inventur =0; inventur < norga; inventur++){
-
-        bi=orga[inventur];
-        bi2="";
-        int type =2;
-/*        if (beginnPeriode == false){
-          if (bi.indexOf("167") >= 0) bi2="167-2009-001";
-          if (bi.indexOf("172") >= 0) bi2="172-2008-001";
-          if (bi.indexOf("179") >= 0) bi2="179-2009-001";
-          if (bi.indexOf("262") >= 0) bi2="262-2009-001";
-          if (bi.indexOf("268") >= 0) bi2="268-2011-001";
-          if (bi.indexOf("269") >= 0) bi2="269-2008-001";
-          if (bi.indexOf("273") >= 0) bi2="273-2008-001";
-          type=3;
-        }
-*/          
-        
-        int kr[] = new int[10000];
-        int nkr = 0;
-            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
-                stmt.setString(1, bi);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
-                        nkr = nkr + 1;
-                    }
-                }
-            } catch (Exception e) {
-                System.out.println("Problem: " + " " + e);
-            }
-
-        for (int kreis =0; kreis < nkr; kreis++){
-        
-        
-        LoadProbekreis lpk = new LoadProbekreis();
-        
-        st = lpk.loadFromDB(con, st,bi , kr[kreis],bi2,type);
-        st.missingData();
-        for (int i=0; i< st.ntrees; i++)
-            if (st.tr[i].out > 0) st.tr[i].outtype=2;
-        GenerateXY gxy = new GenerateXY();
-        gxy.setGroupRadius(0.0);
-        gxy.zufall(st);
-        st.sortbyd();
-        st.descspecies();
-        lts.saveStandV2(con, st, bi , kr[kreis], type, st.year, st.bt);
-        lts.saveSpecies(con, st, bi , kr[kreis], type, st.year);
-        
-        System.out.println(kreis+"  FERTIG PLOT: "+bi+" "+kr[kreis]);
-        
-        } // Kreise
-        } // Inventur
- 
-       try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
-
-        dispose();
-
-    }//GEN-LAST:event_biPlotInfoButtonActionPerformed
 
     private void selectFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileButtonActionPerformed
         // Select data base file
@@ -1225,9 +815,402 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_plotNumberTextFieldActionPerformed
 
+    private void biPlotInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biPlotInfoButtonActionPerformed
+        // BI Plot Info
+        boolean beginnPeriode = false;
+        if (beginCheckBox.isSelected()) beginnPeriode=true;
+        LoadTreegrossStand lts = new  LoadTreegrossStand();
+        aktivesDatenfile = databaseFilenameTextField.getText();
+        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        String bi = "179-2001-001";
+        String bi2 = " ";
+        //        String bi2 = "";
+        String pk = "4172";
+
+        String orga[]=new String[300];
+        int norga =0;
+
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ");
+            while (rs.next()){
+                int stj = rs.getInt("DatOrga_Stj");
+                if (stj >= 1990){
+                    orga[norga]= rs.getString("DatOrga_Key");
+                    norga=norga+1;
+                }
+            }
+        }
+        catch (Exception e){  System.out.println("Problem: "+" "+e); }
+
+        for (int inventur =0; inventur < norga; inventur++){
+
+            bi=orga[inventur];
+            bi2="";
+            int type =2;
+            /*        if (beginnPeriode == false){
+                if (bi.indexOf("167") >= 0) bi2="167-2009-001";
+                if (bi.indexOf("172") >= 0) bi2="172-2008-001";
+                if (bi.indexOf("179") >= 0) bi2="179-2009-001";
+                if (bi.indexOf("262") >= 0) bi2="262-2009-001";
+                if (bi.indexOf("268") >= 0) bi2="268-2011-001";
+                if (bi.indexOf("269") >= 0) bi2="269-2008-001";
+                if (bi.indexOf("273") >= 0) bi2="273-2008-001";
+                type=3;
+            }
+            */
+
+            int kr[] = new int[10000];
+            int nkr = 0;
+            try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
+                stmt.setString(1, bi);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                        nkr = nkr + 1;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Problem: " + " " + e);
+            }
+
+            for (int kreis =0; kreis < nkr; kreis++){
+
+                LoadProbekreis lpk = new LoadProbekreis();
+
+                st = lpk.loadFromDB(con, st,bi , kr[kreis],bi2,type);
+                st.missingData();
+                for (int i=0; i< st.ntrees; i++)
+                if (st.tr[i].out > 0) st.tr[i].outtype=2;
+                GenerateXY gxy = new GenerateXY();
+                gxy.setGroupRadius(0.0);
+                gxy.zufall(st);
+                st.sortbyd();
+                st.descspecies();
+                lts.saveStandV2(con, st, bi , kr[kreis], type, st.year, st.bt);
+                lts.saveSpecies(con, st, bi , kr[kreis], type, st.year);
+
+                System.out.println(kreis+"  FERTIG PLOT: "+bi+" "+kr[kreis]);
+
+            } // Kreise
+        } // Inventur
+
+        try{
+            con.close();
+        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+
+        dispose();
+    }//GEN-LAST:event_biPlotInfoButtonActionPerformed
+
+    private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
+        LoadTreegrossStand lts = new LoadTreegrossStand();
+        aktivesDatenfile = databaseFilenameTextField.getText();
+        dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+            String bi = "179-2001-001";
+            String pk = "4172";
+
+            String orga[] = new String[900];
+            int norga = 0;
+
+            try (Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga  ")) {
+                while (rs.next()) {
+                    int stj = rs.getInt("DatOrga_Stj");
+                    /**
+                    * Änderung 2008 nach 2018
+                    */
+                    if (stj < 2018) {
+                        orga[norga] = rs.getString("DatOrga_Key");
+                        norga = norga + 1;
+                    }
+                }
+            } catch (SQLException e) {
+                System.out.println("Problem: " + " " + e);
+            }
+
+            for (int inventur = 0; inventur < norga; inventur++) {
+
+                bi = orga[inventur];
+                int kr[] = new int[90000];
+                int nkr = 0;
+                try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
+                    stmt.setString(1, bi);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        while (rs.next()) {
+                            kr[nkr] = rs.getInt("DatPh2_KSPNr");
+                            nkr = nkr + 1;
+                        }
+                    }
+                } catch (Exception e) {
+                    System.out.println("Problem: " + " " + e);
+                }
+
+                for (int kreis = 0; kreis < nkr; kreis++) {
+
+                    LoadProbekreis lpk = new LoadProbekreis();
+
+                    st = lpk.loadFromDB(con, st, bi, kr[kreis], "", 1);
+                    st.missingData();
+                    GenerateXY gxy = new GenerateXY();
+                    gxy.setGroupRadius(0.0);
+                    gxy.zufall(st);
+                    st.sortbyd();
+                    st.descspecies();
+
+                    /*        st.randomGrowthEffects=false;
+                    st.ingrowthActive = false;
+                    st.riskActive = true;
+                    st.distanceDependent=true;
+                    Treatment2 treatment2 = new Treatment2();
+
+                    if (st.bt > 0 )
+                    treatment2.setBT(st);
+
+                    treatment2.setAutoPlanting(st, false, false, 0.2, "511");
+                    treatment2.setSkidTrails(st, false, 20.0, 4.0);
+                    treatment2.setNatureProtection(st, 0,0,false,0.1,200);
+                    treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
+                    treatment2.setThinningRegime(st, 0,1.0,10,60,false);
+                    */
+                    //        lts.saveStandV2(dbconnAC, st, bi , kr[kreis], 1, st.year, st.bt);
+                    //        lts.saveSpecies(dbconnAC, st, bi , kr[kreis], 1, st.year);
+                    /*
+                    for (int ngr =0; ngr <2; ngr++){
+                        treatment2.executeManager2(st);
+                        st.descspecies();
+                        st.executeMortality();
+                        st.descspecies();
+                        st.grow(5, false);
+                        st.descspecies();
+                    }
+                    */
+                    lts.saveStandV2(con, st, bi, kr[kreis], 1, st.year, st.bt);
+                    //        lts.saveBaum(con, st, bi , kr[kreis], 1, st.year);
+                    lts.saveSpeciesV2(con, st, bi, kr[kreis], 1, st.year);
+                    System.out.println(inventur + " " + bi + " " + kreis + "  FERTIG PLOT: " + kr[kreis]);
+
+                } // Kreise
+
+            } // inventur
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
+        dispose();
+    }//GEN-LAST:event_biUpdateButtonActionPerformed
+
     private void yearsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearsTextFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_yearsTextFieldActionPerformed
+
+    private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
+        // BI Probekreis laden
+        aktivesDatenfile = databaseFilenameTextField.getText();
+        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
+        LoadProbekreis lpk = new LoadProbekreis();
+        int pl = Integer.parseInt(jTextField4.getText());
+        st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
+        try{
+            con.close();
+        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+        st.missingData();
+        GenerateXY gxy = new GenerateXY();
+        gxy.setGroupRadius(0.0);
+        gxy.zufall(st);
+        st.sortbyd();
+        st.descspecies();
+
+        st.random.setRandomType(RandomNumber.PSEUDO);
+
+        Treatment2 treatment2 = new Treatment2();
+        treatment2.setAutoPlanting(st, false, false, 0.2, "511");
+        treatment2.setSkidTrails(st, false, 20.0, 4.0);
+        treatment2.setNatureProtection(st, 0,0,false,0.1,200);
+        treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
+        treatment2.setThinningRegime(st, 2,1.0,10,60,false);
+
+        dispose();
+    }//GEN-LAST:event_loadCircleButtonActionPerformed
+
+    private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
+        // TFE Daten
+        aktivesDatenfile = databaseFilenameTextField.getText();
+        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+
+        double hg =0.0;
+        double dg= 0.0;
+        double dmax= 0.0;
+        double g =0.0;
+        double h100 =0.0;
+        String id = "test";
+        int art =0;
+        int alt =0;
+        Integer nummer = 0;
+        ResultSet rsx = null;
+        try{
+            Statement stmt = con.createStatement();
+            rsx = stmt.executeQuery("select * from BucheRein2 ");
+            while (rsx.next()) {
+                nummer = Integer.parseInt(rsx.getObject("ID").toString());
+                art = (int) Double.parseDouble(rsx.getObject("art").toString());
+                alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
+                hg = Double.parseDouble(rsx.getObject("hg").toString());
+                h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
+                dg = Double.parseDouble(rsx.getObject("dg").toString());
+                dmax = Double.parseDouble(rsx.getObject("d100").toString());
+                g = Double.parseDouble(rsx.getObject("gha").toString());
+                //
+                //
+                if ( hg > 5.0 && dg > 7.0 && g > 0.0){
+                    //              try {
+
+                        EtafelSim etsim = new EtafelSim();
+                        id = nummer.toString() ;
+                        st = etsim.newYTStand(st, id, 0.5);
+
+                        GenDistribution gdb = new GenDistribution();
+                        gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size,false);
+                        // missing data fuer die Verteilung generieren
+                        for (int j = 0; j < st.ntrees; j++) {
+                            if (st.tr[j].si <= -9) st.tr[j].si = h100;
+                        }
+                        SIofDistrib siod = new SIofDistrib();
+                        FunctionInterpreter fi = new FunctionInterpreter();
+                        siod.si(st, art, alt, dg, hg);
+                        for (int j = 0; j < st.ntrees; j++) {
+                            if (st.tr[j].h == 0.0) {
+                                Tree tree = new Tree();
+                                tree.code = art;
+                                tree.sp = st.tr[j].sp;
+                                tree.sp.dg = dg;
+                                tree.sp.hg = hg;
+                                tree.sp.h100 = 0.0;
+                                tree.sp.d100 = 0.0;
+                                tree.d = st.tr[j].d;
+                                tree.code = st.tr[j].code;
+                                tree.sp = st.tr[j].sp;
+                                tree.st = st;
+                                //                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) + fi.getValueForTree(tree, tree.sp.spDef.heightVariationXML) * nd.value(3.0);
+                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) ;
+                            }
+                        }
+                        for (int j = 0; j < st.ntrees; j++) {
+                            st.tr[j].setMissingData();
+                        }
+                        GenerateXY gxy = null;
+                        gxy = new GenerateXY();
+                        gxy.setGroupRadius(0.0);
+                        gxy.zufall(st);
+                        st.sortbyd();
+                        st.descspecies();
+                        //                } catch (Exception ex) {}
+
+                }
+
+                st.random.setRandomType(RandomNumber.PSEUDO);
+                st.descspecies();
+                if (st.ntrees > 0){
+                    LoadTreegrossStand lts = new  LoadTreegrossStand();
+                    lts.saveStand(con, st, id, alt, 0, 0);
+                    lts.saveSpecies(con, st, id, alt, 0, 0);
+                    //
+                    st.grow(5, false);
+                    st.sortbyd();
+                    st.missingData();
+                    st.descspecies();
+                    lts.saveStand(con, st, id, alt, 1, 0);
+                    lts.saveSpecies(con, st, id, alt, 1, 0);
+                }
+
+            }
+        }	catch (Exception e)  {	System.out.println(e); }
+
+        try{
+            con.close();
+        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+
+        dispose();
+    }//GEN-LAST:event_feDataButtonActionPerformed
+
+    private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
+        // Yield table simulation
+        aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
+        dbconnAC= new ConnectionFactory();     // a class to manage the conection to a database
+        con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true);
+
+        EtafelSim etsim = new EtafelSim();
+        for (int iw=1; iw < 3; iw++){
+            for (int i=0; i < 5; i++){
+                Integer ekl = 37-(i*4);
+                Integer ixno = iw;
+                String id =  ixno.toString();
+                for (int j=0; j < 1; j++){
+                    int age = 20;
+                    Double mixPerc = 1.0;
+                    st = etsim.newYTStand(st, id, 0.5);
+                    st.ingrowthActive = false;
+                    st.riskActive = false;
+                    st.distanceDependent=true;
+                    //st.randomGrowthEffects=true;
+                    st.random.setRandomType(RandomNumber.PSEUDO);
+                    st = etsim.addLayerFromTable(con, st, 711, ekl, age, 1.0);
+                    st.descspecies();
+                    //             st.sp[0].spDef.moderateThinning="12.0;0;1.0;120.0;1.0;130;130;1.0;140";
+                    st.sp[0].trule.minCropTreeHeight = 12.0;
+                    st.sp[0].trule.targetDiameter = 85.0;
+                    st.sp[0].trule.targetCrownPercent = 100.0;
+                    st.sp[0].trule.numberCropTreesWanted = 120;
+                    st.sp[0].spDef.targetDiameter= 100.0;
+                    st.sp[0].spDef.cropTreeNumber=110;
+                    Treatment2 treatment2 = new Treatment2();
+                    treatment2.setAutoPlanting(st, false, false, 0.1, "511");
+                    treatment2.setSkidTrails(st, true, 20.0, 4.0);
+                    treatment2.setNatureProtection(st, 0,0,false,0.1,200);
+                    treatment2.setHarvestRegime(st, 2, 0,180, 0.0, "0.3;");
+                    treatment2.setThinningRegime(st, 0,1.0,0,120,false);
+                    if (st.ntrees > 0){
+                        age = (int) st.tr[0].age;
+                        LoadTreegrossStand lts = new  LoadTreegrossStand();
+                        lts.saveStand(con, st, id, age, 0, ekl);
+                        lts.saveSpecies(con, st, id, age, 0, ekl);
+                        st.sortbyd();
+                        st.missingData();
+                        st.descspecies();
+
+                        //
+                        for (int jj=0;jj<20;jj++){
+                            treatment2.executeManager2(st);
+                            st.executeMortality();
+                            st.descspecies();
+                            age = (int) st.tr[0].age;
+
+                            lts.saveStand(con, st, id, age, 1, ekl);
+                            lts.saveSpecies(con, st, id, age, 1, ekl);
+                            st.grow(5, false);
+                            st.descspecies();
+                            System.out.println(jj+"  "+age);
+
+                        }
+
+                        //                st.descspecies();
+                        //                age = (int) st.tr[0].si;
+                        //                lts.saveStand(dbconnAC, st, id, age , 1, jk);
+                        //                lts.saveSpecies(dbconnAC, st, id, age, 1, jk);
+
+                    }
+                }
+            }
+        }
+
+        try{
+            con.close();
+        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+
+        dispose();
+    }//GEN-LAST:event_simulationButtonActionPerformed
  
     /** check if a point is in polygon , if return is 0 then outside*/
     private int pnpoly(double x, double y, Stand st){
