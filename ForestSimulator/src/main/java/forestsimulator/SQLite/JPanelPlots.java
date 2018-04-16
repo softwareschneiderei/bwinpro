@@ -5,14 +5,13 @@
  */
 package forestsimulator.SQLite;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -261,59 +260,88 @@ public class JPanelPlots extends javax.swing.JPanel {
 
     private void saveActiveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActiveStandButtonActionPerformed
         // save stand to database
-        if (st.center.no.equalsIgnoreCase("circle")){ 
-       
-           try{
-              Class.forName( "org.sqlite.JDBC" );
-              Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-              Statement  stm = cn.createStatement();
-              String sqltxt = "INSERT INTO stand (name,size_ha,month,year,lat,lon,masl,region,district,sitetype,exposition_gon,"
-                + "slope_percentage) VALUES "+
-                "( '"+st.standname+"', "+st.size+", "+st.monat+", "+st.year+", "+st.hochwert_m+", "+st.rechtswert_m+
-                ", "+st.hoehe_uNN_m+", '"+st.wuchsgebiet+"', '"+st.wuchsgebiet+"', '"+st.standort+"'"+
-                ", "+st.exposition_Gon+", "+st.hangneigungProzent+" )";
-               stm.execute(sqltxt);
+        if (st.center.no.equalsIgnoreCase("circle")) {
+            try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "")) {
+                try (PreparedStatement stm = cn.prepareStatement("INSERT INTO stand (name, size_ha, month, year, lat, lon, masl, region, district, sitetype, exposition_gon, slope_percentage)"
+                        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                    stm.setString(1, st.standname);
+                    stm.setDouble(2, st.size);
+                    stm.setInt(3, st.monat);
+                    stm.setInt(4, st.year);
+                    stm.setDouble(5, st.hochwert_m);
+                    stm.setDouble(6, st.rechtswert_m);
+                    stm.setDouble(7, st.hoehe_uNN_m);
+                    stm.setString(8, st.wuchsgebiet);
+                    stm.setString(9, st.wuchsgebiet); // TODO: This looks like a bug, check with FVA
+                    stm.setString(10, st.standort);
+                    stm.setDouble(11, st.exposition_Gon);
+                    stm.setDouble(12, st.hangneigungProzent);
+
+                    stm.execute();
+                }
 //  Bestandes ID merken
-               sqltxt="SELECT _id FROM stand ORDER BY _id DESC LIMIT 1;";
-               standID = -9;
-               ResultSet rs = stm.executeQuery(sqltxt);
-               while (rs.next()){
-                  standID = rs.getInt("_id");
-               }             
+                standID = -9;
+                try (Statement stmt = cn.createStatement(); ResultSet rs = stmt.executeQuery("SELECT _id FROM stand ORDER BY _id DESC LIMIT 1")) {
+                    while (rs.next()) {
+                        standID = rs.getInt("_id");
+                    }
+                }
 //           System.out.println("Letzte Id: = "+standID);
 //  alle Bäume speichern 
-        for (int i=0;i<st.ntrees;i++){
-            int w = 0;
-            double e = 0.0;
-            double dx = st.tr[i].x-st.center.x;
-            double dy = st.tr[i].y-st.center.y;
-            double ent = Math.sqrt(Math.pow(dx, 2.0)+Math.pow(dy, 2.0));
-            double gon = 200.0*Math.asin((dx)/ent)/Math.PI;
-            if (dx >=0.0 && dy >=0.0) w=(int) Math.round(gon);
-            if (dx >=0.0 && dy <0.0) w=(int) Math.round(200.0-gon);
-            if (dx <0.0 && dy <0.0) w=(int) Math.round(Math.abs(gon)+200);
-            if (dx <0.0 && dy >=0.0) w=(int) Math.round(400.0-Math.abs(gon));
-    
-            
-            sqltxt = "INSERT INTO trees (standid,code,name,year,age,dbh,h,si,cb,cw,alive,status,azimuth,distance,z,crop,habitat,fac,remarks, layer) VALUES "+
-                "( "+standID+", "+st.tr[i].code+", '"+st.tr[i].no+"', "+st.year+", "+st.tr[i].age+", "+st.tr[i].d+", "+st.tr[i].h+", "+st.tr[i].si+
-                     ", "+st.tr[i].cb+", "+st.tr[i].cw+", "+st.tr[i].out+", "+st.tr[i].outtype+
-                     ", "+w+", "+ent+", "+st.tr[i].z+", '"+st.tr[i].crop+"', '"+st.tr[i].habitat+"', "+st.tr[i].fac+", '"+
-                    st.tr[i].remarks+"', "+st.tr[i].layer+"  )";
-            stm.execute(sqltxt);
+                try (PreparedStatement ps = cn.prepareStatement("INSERT INTO trees (standid, code, name, year, age, dbh, h, si, cb, cw, alive,"
+                        + " status, azimuth, distance, z, crop, habitat, fac, remarks, layer)"
+                        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                    for (int i = 0; i < st.ntrees; i++) {
+                        int w = 0;
+                        double e = 0.0;
+                        double dx = st.tr[i].x - st.center.x;
+                        double dy = st.tr[i].y - st.center.y;
+                        double ent = Math.sqrt(Math.pow(dx, 2.0) + Math.pow(dy, 2.0));
+                        double gon = 200.0 * Math.asin((dx) / ent) / Math.PI;
+                        if (dx >= 0.0 && dy >= 0.0) {
+                            w = (int) Math.round(gon);
+                        }
+                        if (dx >= 0.0 && dy < 0.0) {
+                            w = (int) Math.round(200.0 - gon);
+                        }
+                        if (dx < 0.0 && dy < 0.0) {
+                            w = (int) Math.round(Math.abs(gon) + 200);
+                        }
+                        if (dx < 0.0 && dy >= 0.0) {
+                            w = (int) Math.round(400.0 - Math.abs(gon));
+                        }
+                        ps.setInt(1, standID);
+                        ps.setInt(2, st.tr[i].code);
+                        ps.setString(3, st.tr[i].no);
+                        ps.setInt(4, st.year);
+                        ps.setInt(5, st.tr[i].age);
+                        ps.setDouble(6, st.tr[i].d);
+                        ps.setDouble(7, st.tr[i].h);
+                        ps.setDouble(8, st.tr[i].si);
+                        ps.setDouble(9, st.tr[i].cb);
+                        ps.setDouble(10, st.tr[i].cw);
+                        ps.setInt(11, st.tr[i].out);
+                        ps.setInt(12, st.tr[i].outtype);
+                        ps.setInt(13, w);
+                        ps.setDouble(14, ent);
+                        ps.setDouble(15, st.tr[i].z);
+                        ps.setBoolean(16, st.tr[i].crop);
+                        ps.setBoolean(17, st.tr[i].habitat);
+                        ps.setDouble(18, st.tr[i].fac);
+                        ps.setString(19, st.tr[i].remarks);
+                        ps.setInt(20, st.tr[i].layer);
+
+                        ps.execute();
+                    }
+                }
+            } catch (SQLException eio) {
+                System.out.println(eio);
             }
-//
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
-        lastDataset();
-       
-       }
-       else{
+            lastDataset();
+        } else {
             JTextArea about = new JTextArea("not saved: No circular plots");
             JOptionPane.showMessageDialog(this, about, "Error", JOptionPane.INFORMATION_MESSAGE);
-       }
-   
-        
+        }
     }//GEN-LAST:event_saveActiveStandButtonActionPerformed
 
     private void navigateToFirstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToFirstButtonActionPerformed
@@ -328,23 +356,23 @@ public class JPanelPlots extends javax.swing.JPanel {
     }//GEN-LAST:event_navigateToLastButtonActionPerformed
 
     private void navigateBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateBackButtonActionPerformed
-       try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="SELECT _id FROM stand WHERE _id < "+standID+" ORDER BY _id DESC LIMIT 1;";
-        int idold = standID;
-        standID = -9;
-        ResultSet rs = stm.executeQuery(sqltxt);
-        while (rs.next()){
-             standID = rs.getInt("_id");
-            }  
-        if (standID == -9) standID = idold;
-        jLabel8.setText(new Integer(standID).toString());
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);} 
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); PreparedStatement stm = cn.prepareStatement("SELECT _id FROM stand WHERE _id < ? ORDER BY _id DESC LIMIT 1")) {
+            stm.setInt(1, standID);
+            int idold = standID;
+            standID = -9;
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    standID = rs.getInt("_id");
+                }
+            }
+            if (standID == -9) {
+                standID = idold;
+            }
+            jLabel8.setText(String.valueOf(standID));
+        } catch (SQLException eio) {
+            System.out.println(eio);
+        }
         dispStandID();
-        // Find next
     }//GEN-LAST:event_navigateBackButtonActionPerformed
 
     private void navigateForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateForwardButtonActionPerformed
@@ -357,22 +385,22 @@ public class JPanelPlots extends javax.swing.JPanel {
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         // delete standID
-                try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  stm = cn.createStatement();
-        String sqltxt="DELETE FROM stand WHERE _id = "+standID+" ;";
-        ResultSet rs = stm.executeQuery(sqltxt);
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "")) {
+            Statement stm = cn.createStatement();
+            String sqltxt = "DELETE FROM stand WHERE _id = " + standID + " ;";
+            ResultSet rs = stm.executeQuery(sqltxt);
 
-        sqltxt="DELETE FROM trees WHERE standid = "+standID+" ;";
-        rs = stm.executeQuery(sqltxt);
-        cn.close();     
-         } catch (Exception eio){System.out.println(eio);} 
-        int wert = nextDataset(); 
-        if (wert < 0) firstDataset();
+            sqltxt = "DELETE FROM trees WHERE standid = " + standID + " ;";
+            rs = stm.executeQuery(sqltxt);
+            cn.close();
+        } catch (SQLException eio) {
+            System.out.println(eio);
+        }
+        int wert = nextDataset();
+        if (wert < 0) {
+            firstDataset();
+        }
         dispStandID();
-        // Find next
- 
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
@@ -380,7 +408,6 @@ public class JPanelPlots extends javax.swing.JPanel {
         String suche =searchField.getText();
         boolean found = false;
         try{
-        Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  stm = cn.createStatement();
         String sqltxt="SELECT * FROM stand WHERE _id = "+suche+" ;";
@@ -393,7 +420,6 @@ public class JPanelPlots extends javax.swing.JPanel {
          } catch (Exception eio){System.out.println(eio);}  
         try{
         if (found != true){
-           Class.forName( "org.sqlite.JDBC" );
            Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
            Statement  stm = cn.createStatement();
             String sqltxt="SELECT * FROM stand WHERE name like '"+suche+"' ;";
@@ -418,7 +444,6 @@ public class JPanelPlots extends javax.swing.JPanel {
 
     private void dispStandID(){
         try{
-        Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  stm = cn.createStatement();
         String sqltxt="SELECT * FROM stand WHERE _id = "+standID+" ;";
@@ -439,7 +464,6 @@ public class JPanelPlots extends javax.swing.JPanel {
     private int nextDataset(){
       int erg=-9;  
       try{
-        Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  stm = cn.createStatement();
         String sqltxt="SELECT _id FROM stand WHERE _id > "+standID+" ORDER BY _id LIMIT 1;";
@@ -461,7 +485,6 @@ public class JPanelPlots extends javax.swing.JPanel {
         private int firstDataset(){
       int erg=-9;  
        try{
-        Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  stm = cn.createStatement();
         String sqltxt="SELECT _id FROM stand ORDER BY _id LIMIT 1;";
@@ -480,7 +503,6 @@ public class JPanelPlots extends javax.swing.JPanel {
         private int lastDataset(){
             int erg = -9;
             try{
-               Class.forName( "org.sqlite.JDBC" );
                Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
                Statement  stm = cn.createStatement();
                String sqltxt="SELECT _id FROM stand ORDER BY _id DESC LIMIT 1;";
@@ -499,7 +521,6 @@ public class JPanelPlots extends javax.swing.JPanel {
         
     public Stand createStand(){
         try{
-        Class.forName( "org.sqlite.JDBC" );
         Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
         Statement  stm = cn.createStatement();
         String sqltxt="SELECT * FROM stand WHERE _id = "+standID+" ;";
