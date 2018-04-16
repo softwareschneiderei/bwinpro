@@ -82,23 +82,26 @@ public class LoadProbekreis {
                         double h2 = 0.0;
                         int out = -1;
                         if (type == 3) {
-                            Statement stmt2 = connection.createStatement();
-                            ResultSet rs2 = stmt2.executeQuery("select * from tblDatPh2_Vorr where DatOrga_Key = \'" + idx2
-                                    + "\' AND DatPh2_KSPNr = " + kreis
-                                    + " AND DatPh2_Vorr_Richtung = " + win + " AND DatPh2_Vorr_Abstand = " + ent + " ");
-
-                            if (rs2.next()) {
-                                int artx = rs2.getInt("DatPh2_Vorr_BA");
-                                d2 = rs2.getDouble("DatPh2_Vorr_BHD") / 10.0;
-                                d2k = rs2.getDouble("DatPh2_Vorr_BHDKlup") / 10.0;
-                                if (d2k > 0) {
-                                    d2 = (d2 + d2k) / 2.0;
+                            try (PreparedStatement stmt2 = connection.prepareStatement("select * from tblDatPh2_Vorr where DatOrga_Key = ? AND DatPh2_KSPNr = ? AND DatPh2_Vorr_Richtung = ? AND DatPh2_Vorr_Abstand = ?")) {
+                                stmt2.setString(1, idx2);
+                                stmt2.setInt(2, kreis);
+                                stmt2.setDouble(3, win);
+                                stmt2.setDouble(4, ent);
+                                try (ResultSet rs2 = stmt2.executeQuery()) {
+                                    if (rs2.next()) {
+                                        int artx = rs2.getInt("DatPh2_Vorr_BA");
+                                        d2 = rs2.getDouble("DatPh2_Vorr_BHD") / 10.0;
+                                        d2k = rs2.getDouble("DatPh2_Vorr_BHDKlup") / 10.0;
+                                        if (d2k > 0) {
+                                            d2 = (d2 + d2k) / 2.0;
+                                        }
+                                        if (d2 < 1.0 || artx != art) {
+                                            out = st.year;
+                                        }
+                                        h2 = rs2.getDouble("DatPh2_Vorr_Hoehe") / 10.0;
+                                        k2 = rs2.getDouble("DatPh2_Vorr_Krone") / 10.0;
+                                    }
                                 }
-                                if (d2 < 1.0 || artx != art) {
-                                    out = st.year;
-                                }
-                                h2 = rs2.getDouble("DatPh2_Vorr_Hoehe") / 10.0;
-                                k2 = rs2.getDouble("DatPh2_Vorr_Krone") / 10.0;
                             }
                         }
                         ent = ent / 100.0;
@@ -221,13 +224,14 @@ public class LoadProbekreis {
         st.size = 0.25;
         st.standname = "Plot:" + kreis;
 // Stichjahr und BT         
-        try {
-            Statement stmt = dbconn.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from SPIS WHERE Plot = " + kreis + " ");
-            if (rs.next()) {
-                int jahr = rs.getInt("Aufnahmejahr");
-                st.year = jahr;
-                st.size = rs.getDouble("Flaechengrosse");
+        try (PreparedStatement stmt = dbconn.prepareStatement("select * from SPIS WHERE Plot = ?")) {
+            stmt.setInt(1, kreis);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int jahr = rs.getInt("Aufnahmejahr");
+                    st.year = jahr;
+                    st.size = rs.getDouble("Flaechengrosse");
+                }
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -260,7 +264,7 @@ public class LoadProbekreis {
 // Bäume aufbauen
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from SPIS where Plot = ?")) {
             stmt.setInt(1, kreis);
-            try (ResultSet rs = stmt.executeQuery("select * from SPIS where Plot = " + kreis + " ")) {
+            try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
 
                     int art = rs.getInt("Artencode");

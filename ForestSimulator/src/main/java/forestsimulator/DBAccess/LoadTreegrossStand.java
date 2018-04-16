@@ -728,8 +728,6 @@ public class LoadTreegrossStand {
         } catch (Exception e) {
             System.out.println(e);
         }
-//
-//
         if (hg > 5.0 && dg > 7.0 && g > 0.0) {
             try {
                 GenDistribution gdb = new GenDistribution();
