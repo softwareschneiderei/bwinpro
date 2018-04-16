@@ -56,9 +56,9 @@ public class GenDistribution {
      * @param gfl
      * @param dmax
      * @param correct
-     * @throws java.lang.Exception
+     * @throws treegross.base.SpeciesNotDefinedException
      */
-    public void weibull(Stand st, int art, int alter, double dg, double hg, double dmax, double gfl, boolean correct) throws Exception {
+    public void weibull(Stand st, int art, int alter, double dg, double hg, double dmax, double gfl, boolean correct) throws SpeciesNotDefinedException {
         double dgen, gsum;
         String nr;//="";
         Species spx = new Species();

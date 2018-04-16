@@ -2,6 +2,8 @@ package forestsimulator.DBAccess;
 
 import java.io.File;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.treatment.*;
 import treegross.random.RandomNumber;
@@ -502,42 +504,41 @@ public class LoadTreegrossStand {
     }
 
     public void saveSpecies(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
-        try {
-            Statement stmt = dbconn.createStatement();
+        try (PreparedStatement stmt = dbconn.prepareStatement(
+                "INSERT INTO ProgArt (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
+                        + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
+                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
-                Double ggha = st.sp[i].gha;
-                Double vvha = st.sp[i].vol;
-                Double ddg = st.sp[i].dg;
-                Double hhg = st.sp[i].hg;
-                Double dd100 = st.sp[i].d100;
-                Double hh100 = st.sp[i].h100;
-                Double nnha = st.sp[i].nha;
-                Double nnhaa = st.sp[i].nhaout;
-                Double gghaa = st.sp[i].ghaout;
-                Double aalt = st.sp[i].h100age;
-                Double vvhaa = st.sp[i].vhaout;
-                Double gpro = 100.0 * st.sp[i].gha / st.bha;
-                int art = st.sp[i].code;
-
-                stmt.execute("INSERT INTO ProgArt (  edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
-                        + "dg,hg,d100,h100,nhaa,ghaa,vhaa) "
-                        + "values (  '" + ids + "', " + aufs + ", " + art + ", " + nwieder + ", " + scenario + ", " + gpro + ", " + sims + "," + aalt + "," + nnha + ", "
-                        + ggha + " , " + vvha + " , " + ddg
-                        + " , " + hhg + " , " + dd100 + " , " + hh100
-                        + " , " + nnhaa + " , " + gghaa + " ," + vvhaa + " )");
-
+                stmt.setString(1, ids);
+                stmt.setInt(2, aufs);
+                stmt.setInt(3, st.sp[i].code);
+                stmt.setInt(4, nwieder);
+                stmt.setInt(5, scenario);
+                stmt.setDouble(6, 100.0 * st.sp[i].gha / st.bha);
+                stmt.setInt(7, sims);
+                stmt.setDouble(8, st.sp[i].h100age);
+                stmt.setDouble(9, st.sp[i].nha);
+                stmt.setDouble(10, st.sp[i].gha);
+                stmt.setDouble(11, st.sp[i].vol);
+                stmt.setDouble(12, st.sp[i].dg);
+                stmt.setDouble(13, st.sp[i].hg);
+                stmt.setDouble(14, st.sp[i].d100);
+                stmt.setDouble(15, st.sp[i].h100);
+                stmt.setDouble(16, st.sp[i].nhaout);
+                stmt.setDouble(17, st.sp[i].ghaout);
+                stmt.setDouble(18, st.sp[i].vhaout);
+                stmt.execute();
             }
-            stmt.close();
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Datenbank Stammv :" + e);
         }
-
     }
 
     public void saveSpeciesV2(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
-        try {
-            Statement stmt = dbconn.createStatement();
+        try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgArt"
+                + " (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
+                + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
                 Double ggha = st.sp[i].gha;
                 Double vvha = st.sp[i].vol;
@@ -564,76 +565,72 @@ public class LoadTreegrossStand {
                         vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
                     }
                 }
-
-                stmt.execute("INSERT INTO ProgArt (  edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
-                        + "dg,hg,d100,h100,nhaa,ghaa,vhaa) "
-                        + "values (  '" + ids + "', " + aufs + ", " + art + ", " + nwieder + ", " + scenario + ", " + gpro + ", " + sims + "," + aalt + "," + nnha + ", "
-                        + ggha + " , " + vvha + " , " + ddg
-                        + " , " + hhg + " , " + dd100 + " , " + hh100
-                        + " , " + nnhaa + " , " + gghaa + " ," + vvhaa + " )");
-
+                stmt.setString(1, ids);
+                stmt.setInt(2, aufs);
+                stmt.setInt(3, art);
+                stmt.setInt(4, nwieder);
+                stmt.setInt(5, scenario);
+                stmt.setDouble(6, gpro);
+                stmt.setInt(7, sims);
+                stmt.setDouble(8, aalt);
+                stmt.setDouble(9, nnha);
+                stmt.setDouble(10, ggha);
+                stmt.setDouble(11, vvha);
+                stmt.setDouble(12, ddg);
+                stmt.setDouble(13, hhg);
+                stmt.setDouble(14, dd100);
+                stmt.setDouble(15, hh100);
+                stmt.setDouble(16, nnhaa);
+                stmt.setDouble(17, gghaa);
+                stmt.setDouble(18, vvhaa);
+                
+                stmt.execute();
             }
-            stmt.close();
-
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Datenbank Stammv :" + e);
         }
-
     }
 
     public void saveStand(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
-        try {
-            Statement stmt = dbconn.createStatement();
+        try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha, dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
+                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             st.descspecies();
-            Double ggha = st.bha;
-            Double vvha = st.getVhaResidual(0);
-            Double ddg = st.dg;
-            Double hhg = st.hg;
-            Double dd100 = st.d100;
-            Double hh100 = st.h100;
-            Double nnha = st.nha;
-            Double nnhaa = st.nhaout;
-            Double gghaa = st.bhaout;
-            Double aalt = 1.0 * st.year;
-            Double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0);
-            double vvhaaz = st.getVhaTargetDiameter(0);
+            double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0);
 
-            stmt.execute("INSERT INTO ProgBestand (  edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha,"
-                    + "dg,hg,d100,h100,nhaa,ghaa,vhaa, vhaazst) "
-                    + "values (  '" + ids + "', " + aufs + ", " + sims + ", " + nwieder + ", " + scenario + "," + aalt + "," + nnha + ", "
-                    + ggha + " , " + vvha + " , " + ddg
-                    + " , " + hhg + " , " + dd100 + " , " + hh100
-                    + " , " + nnhaa + " , " + gghaa + " ," + vvhaa + " ," + vvhaaz + " )");
-
-            stmt.close();
-
-        } catch (Exception e) {
+            stmt.setString(1, ids);
+            stmt.setInt(2, aufs);
+            stmt.setInt(3, sims);
+            stmt.setInt(4, nwieder);
+            stmt.setInt(5, scenario);
+            stmt.setDouble(6, 1.0 * st.year);
+            stmt.setDouble(7, st.nha);
+            stmt.setDouble(8, st.bha);
+            stmt.setDouble(9, st.getVhaResidual(0));
+            stmt.setDouble(10, st.dg);
+            stmt.setDouble(11, st.hg);
+            stmt.setDouble(12, st.d100);
+            stmt.setDouble(13, st.h100);
+            stmt.setDouble(14, st.nhaout);
+            stmt.setDouble(15, st.bhaout);
+            stmt.setDouble(16, vvhaa);
+            stmt.setDouble(17, st.getVhaTargetDiameter(0));
+                
+            stmt.execute();
+        } catch (SQLException e) {
             System.out.println("Datenbank Stammv :" + e);
         }
-
     }
 
     public void saveStandV2(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder, int scena) {
-        try {
-            Statement stmt = dbconn.createStatement();
+        try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha,"
+                    + " dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
+                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             st.descspecies();
-            Double ggha = st.bha;
-            Double vvha = st.getVhaResidual(0);
-            Double ddg = st.dg;
-            Double hhg = st.hg;
-            Double dd100 = st.d100;
-            Double hh100 = st.h100;
-            Double nnha = st.nha;
-            Double nnhaa = st.nhaout;
-            Double gghaa = st.bhaout;
-            Double aalt = 1.0 * st.year;
-            Double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0);
-            double vvhaaz = st.getVhaTargetDiameter(0);
 
             // SUMME Grundfläche und Volumen der Nutzung  
-            vvhaa = 0.0;
-            vvhaaz = 0.0;
-            gghaa = 0.0;
+            double vvhaa = 0.0;
+            double vvhaaz = 0.0;
+            double gghaa = 0.0;
             for (int ik = 0; ik < st.ntrees; ik++) {
                 if (st.tr[ik].out > 0) {
                     gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
@@ -643,65 +640,102 @@ public class LoadTreegrossStand {
                     }
                 }
             }
-            stmt.execute("INSERT INTO ProgBestand (  edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha,"
-                    + "dg,hg,d100,h100,nhaa,ghaa,vhaa, vhaazst) "
-                    + "values (  '" + ids + "', " + aufs + ", " + sims + ", " + nwieder + ", " + scena + "," + aalt + "," + nnha + ", "
-                    + ggha + " , " + vvha + " , " + ddg
-                    + " , " + hhg + " , " + dd100 + " , " + hh100
-                    + " , " + nnhaa + " , " + gghaa + " ," + vvhaa + " ," + vvhaaz + " )");
 
-            stmt.close();
-
-        } catch (Exception e) {
+            stmt.setString(1, ids);
+            stmt.setInt(2, aufs);
+            stmt.setInt(3, sims);
+            stmt.setInt(4, nwieder);
+            stmt.setInt(5, scena);
+            stmt.setDouble(6, 1.0 * st.year);
+            stmt.setDouble(7, st.nha);
+            stmt.setDouble(8, st.bha);
+            stmt.setDouble(9, st.getVhaResidual(0));
+            stmt.setDouble(10, st.dg);
+            stmt.setDouble(11, st.hg);
+            stmt.setDouble(12, st.d100);
+            stmt.setDouble(13, st.h100);
+            stmt.setDouble(14, st.nhaout);
+            stmt.setDouble(15, gghaa);
+            stmt.setDouble(16, vvhaa);
+            stmt.setDouble(17, vvhaaz);
+                
+            stmt.execute();
+        } catch (SQLException e) {
             System.out.println("Datenbank Stammv :" + e);
         }
     }
 
     public void saveXMLToDB(Connection dbconn, Stand st) {
         try {
-            Statement stmt = dbconn.createStatement();
-
-            for (int i = 0; i < st.ncpnt; i++) {
-                Double xx = new Double(st.cpnt[i].x);
-                Double yy = new Double(st.cpnt[i].y);
-                String nrx = "ECK" + i;
-                stmt.execute("INSERT INTO Stammv ( edvid, nr, art, auf, x, y, z) "
-                        + "values (  '" + st.standname + "','" + nrx + "', -99, 1, "
-                        + xx.toString() + " , " + yy.toString() + ", 0.0)");
-
-            }
-            for (int i = 0; i < st.ntrees; i++) {
-                Double xx = new Double(st.tr[i].x);
-                Double yy = new Double(st.tr[i].y);
-                stmt.execute("INSERT INTO Stammv ( edvid, nr, art, auf, x, y, z) "
-                        + "values (  '" + st.standname + "','" + st.tr[i].no + "'," + st.tr[i].code + ",1, "
-                        + xx.toString() + " , " + yy.toString() + ", 0.0)");
-            }
-            for (int i = 0; i < st.ntrees; i++) {
-                int dd = (int) (Math.round(st.tr[i].d * 10));
-                int hh = (int) (Math.round(st.tr[i].h * 10));
-                int ka = (int) (Math.round(st.tr[i].cb * 10));
-                int kb = (int) (Math.round(st.tr[i].cw * 5));
-                String aus = "";
-                if (st.tr[i].out > 0) {
-                    aus = "1";
+            try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Stammv (edvid, nr, art, auf, x, y, z)"
+                            + " values (?, ?, -99, 1, ?, ?, 0.0)")) {
+                for (int i = 0; i < st.ncpnt; i++) {
+                    stmt.setString(1, st.standname);
+                    stmt.setString(2, "ECK" + i);
+                    stmt.setDouble(3, st.cpnt[i].x);
+                    stmt.setDouble(4, st.cpnt[i].y);
+        
+                    stmt.execute();
                 }
-                stmt.execute("INSERT INTO Baum ( edvid, nr, art, auf, anzahl, repfl, mh, alt, dmess,d,"
-                        + " h, k, g0, g5, g10, g15, g20, g25, g30, g35, a ) "
-                        + "values (  '" + st.standname + "','" + st.tr[i].no + "'," + st.tr[i].code + ",1,1,1,13, "
-                        + st.tr[i].age + "," + dd + "," + dd + "," + hh + ", " + ka + ", " + kb + "," + kb + "," + kb + "," + kb + ","
-                        + kb + "," + kb + "," + kb + "," + kb + ",'" + aus + "' )");
+            }
+            try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Stammv (edvid, nr, art, auf, x, y, z)"
+                            + " values (?, ?, ?, 1, ?, ?, 0.0)")) {
+                for (int i = 0; i < st.ntrees; i++) {
+                    stmt.setString(1, st.standname);
+                    stmt.setString(2, st.tr[i].no);
+                    stmt.setInt(3, st.tr[i].code);
+                    stmt.setDouble(4, st.tr[i].x);
+                    stmt.setDouble(5, st.tr[i].y);
+                    
+                    stmt.execute();
+                }
+            }
+            try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Baum ( edvid, nr, art, auf, anzahl, repfl, mh, alt, dmess,d,"
+                    + " h, k, g0, g5, g10, g15, g20, g25, g30, g35, a)"
+                    + " values (?, ?, ?, 1, 1, 1, 13, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                for (int i = 0; i < st.ntrees; i++) {
+                    int dd = (int) (Math.round(st.tr[i].d * 10));
+                    int hh = (int) (Math.round(st.tr[i].h * 10));
+                    int ka = (int) (Math.round(st.tr[i].cb * 10));
+                    int kb = (int) (Math.round(st.tr[i].cw * 5));
+                    String aus = "";
+                    if (st.tr[i].out > 0) {
+                        aus = "1";
+                    }
+                    stmt.setString(1, st.standname);
+                    stmt.setString(2, st.tr[i].no);
+                    stmt.setInt(3, st.tr[i].code);
+                    stmt.setInt(4, st.tr[i].age);
+                    stmt.setInt(5, dd);
+                    stmt.setInt(6, dd);
+                    stmt.setInt(7, hh);
+                    stmt.setInt(8, ka);
+                    stmt.setInt(9, kb);
+                    stmt.setInt(10, kb);
+                    stmt.setInt(11, kb);
+                    stmt.setInt(12, kb);
+                    stmt.setInt(13, kb);
+                    stmt.setInt(14, kb);
+                    stmt.setInt(15, kb);
+                    stmt.setInt(16, kb);
+                    stmt.setString(17, aus);
+                    stmt.execute();
+                }
             }
 // In auf Datei schreiben
             String idx = st.standname + " 1";
-
-            stmt.execute("INSERT INTO Auf ( id, edvid, auf, monat, jahr, flha ) "
-                    + "values (  '" + idx + "','" + st.standname + "',1,1," + st.year + "," + st.size + " )");
-
-        } catch (Exception e) {
+            try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Auf (id, edvid, auf, monat, jahr, flha)"
+                        + " values (?, ?, 1, 1, ?, ?)")) {
+                stmt.setString(1, idx);
+                stmt.setString(2, st.standname);
+                stmt.setInt(3, st.year);
+                stmt.setDouble(4, st.size);
+                
+                stmt.execute();
+            }
+        } catch (SQLException e) {
             System.out.println("Datenbank Stammv :" + e);
         }
-
     }
 
     public Stand addLayerFromStartwert(Connection dbconn, Stand st, int bestand, int art, double mix) {
@@ -713,19 +747,21 @@ public class LoadTreegrossStand {
         int alt = 0;
         double yc = 0;
         int szNr = 0;
-        try {
-            Statement stmt = dbconn.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from Startwerte where ( Bestand = " + bestand + " AND Art = " + art + " )");
-            if (rs.next()) {
-                hg = Double.parseDouble(rs.getObject("Hg").toString());
-                dg = Double.parseDouble(rs.getObject("Dg").toString());
-                d100 = Double.parseDouble(rs.getObject("Dmax").toString());
-                h100 = Double.parseDouble(rs.getObject("H100").toString());
-                g = Double.parseDouble(rs.getObject("G").toString());
-                alt = (int) (Double.parseDouble(rs.getObject("Alter").toString()));
-                art = (int) (Double.parseDouble(rs.getObject("Art").toString()));
+        try (PreparedStatement stmt = dbconn.prepareStatement("select * from Startwerte where (Bestand = ? AND Art = ?)")) {
+            stmt.setInt(1, bestand);
+            stmt.setInt(2, art);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    hg = Double.parseDouble(rs.getObject("Hg").toString());
+                    dg = Double.parseDouble(rs.getObject("Dg").toString());
+                    d100 = Double.parseDouble(rs.getObject("Dmax").toString());
+                    h100 = Double.parseDouble(rs.getObject("H100").toString());
+                    g = Double.parseDouble(rs.getObject("G").toString());
+                    alt = (int) (Double.parseDouble(rs.getObject("Alter").toString()));
+                    art = (int) (Double.parseDouble(rs.getObject("Art").toString()));
+                }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
         if (hg > 5.0 && dg > 7.0 && g > 0.0) {
@@ -759,13 +795,13 @@ public class LoadTreegrossStand {
                 for (int j = 0; j < st.ntrees; j++) {
                     st.tr[j].setMissingData();
                 }
-                GenerateXY gxy = null;
-                gxy = new GenerateXY();
+                GenerateXY gxy = new GenerateXY();
                 gxy.setGroupRadius(0.0);
                 gxy.zufall(st);
                 st.sortbyd();
                 st.descspecies();
-            } catch (Exception ex) {
+            } catch (SpeciesNotDefinedException ex) {
+                Logger.getLogger(LoadTreegrossStand.class.getName()).log(Level.SEVERE, "Could not get layer.", ex);
             }
         }
         return st;
