@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JFileChooser;
 import treegross.base.FunctionInterpreter;
@@ -276,67 +277,58 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     }
     
     private int loadBestaende(){
-       int m = 0;
-       try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  st = cn.createStatement();
-//      
-        String namAlt="";
-        String name = "neu";
-        String sqltxt = "SELECT * FROM Nutzungsplanung ";
-        ResultSet rs = st.executeQuery(sqltxt);
-        while (rs.next()){
-             name = rs.getString("name").toString();
-             if (name.equals(namAlt) == false){
-                bestaende[m]= name;
-                namAlt=name;
-                m=m+1;
-             }
-            }             
-         cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
-        
+        int m = 0;
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement statement = cn.createStatement()) {
+            String namAlt = "";
+            String name = "neu";
+            try (ResultSet rs = statement.executeQuery("SELECT * FROM Nutzungsplanung ")) {
+                while (rs.next()) {
+                    name = rs.getString("name");
+                    if (name.equals(namAlt) == false) {
+                        bestaende[m] = name;
+                        namAlt = name;
+                        m = m + 1;
+                    }
+                }
+            }
+        } catch (SQLException eio) {
+            System.out.println(eio);
+        }
         return m;
     }
     
-    
     private void loadBestand(){
-       boolean found = false; 
-       for (int i=dataTable1.getRowCount(); i>0 ; i=i-1){
-                dataTable1.removeRow(i-1);
-       }
-       try{
-        Class.forName( "org.sqlite.JDBC" );
-        Connection cn = DriverManager.getConnection("jdbc:sqlite:"+dir, "", "" );
-        Statement  st = cn.createStatement();
-//        
-        String name =standNameTextField.getText();
-        String sqltxt = "SELECT * FROM Nutzungsplanung WHERE name = '"+name+"'";
-        ResultSet rs = st.executeQuery(sqltxt);
-        int m=0;
-        while (rs.next()){
-            found = true;
-              dataTable1.addRow(rowData1);
-              String nam = rs.getString("name").toString();
-              jTable1.setValueAt(nam,m,0);
-              String art = rs.getString("art").toString();
-              jTable1.setValueAt(art,m,1);
-              String schicht = rs.getString("schicht").toString();
-              jTable1.setValueAt(schicht,m,2);            
-              String mischung = rs.getString("mischung").toString();
-              jTable1.setValueAt(mischung,m,3);        
-              String alt = rs.getString("alt").toString();
-              jTable1.setValueAt(alt,m,4);       
-              String hoehe = rs.getString("hoehe").toString();
-              jTable1.setValueAt(hoehe,m,5);     
-              String gha= rs.getString("gha").toString();
-              jTable1.setValueAt(gha,m,6);  
-              m=m+1;
-            }             
-         cn.close();     
-         } catch (Exception eio){System.out.println(eio);}  
-       
+        boolean found = false;
+        for (int i = dataTable1.getRowCount(); i > 0; i = i - 1) {
+            dataTable1.removeRow(i - 1);
+        }
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement st = cn.createStatement()) {
+            String name = standNameTextField.getText();
+            try (ResultSet rs = st.executeQuery("SELECT * FROM Nutzungsplanung WHERE name = '" + name + "'")) {
+                int m = 0;
+                while (rs.next()) {
+                    found = true;
+                    dataTable1.addRow(rowData1);
+                    String nam = rs.getString("name");
+                    jTable1.setValueAt(nam, m, 0);
+                    String art = rs.getString("art");
+                    jTable1.setValueAt(art, m, 1);
+                    String schicht = rs.getString("schicht");
+                    jTable1.setValueAt(schicht, m, 2);
+                    String mischung = rs.getString("mischung");
+                    jTable1.setValueAt(mischung, m, 3);
+                    String alt = rs.getString("alt");
+                    jTable1.setValueAt(alt, m, 4);
+                    String hoehe = rs.getString("hoehe");
+                    jTable1.setValueAt(hoehe, m, 5);
+                    String gha = rs.getString("gha");
+                    jTable1.setValueAt(gha, m, 6);
+                    m = m + 1;
+                }
+            }
+        } catch (SQLException eio) {
+            System.out.println(eio);
+        }
     }
  
     public Stand createStand(){
