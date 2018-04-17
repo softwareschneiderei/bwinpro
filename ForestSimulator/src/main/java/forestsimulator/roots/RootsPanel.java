@@ -15,24 +15,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.roots;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.*;
+import java.text.*;
+import java.util.*;
+import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
-import org.jdom.Comment;
-import org.jdom.output.XMLOutputter;
 import org.jdom.input.*;
-import org.jdom.DocType;
-import java.net.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.*;
-import java.text.*;
-import javax.swing.*;
-import java.net.*;
+import org.jdom.output.XMLOutputter;
 import treegross.base.*;
-import java.io.*;
 
 
 /**
@@ -306,159 +301,140 @@ public class RootsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jList1ValueChanged
 
     private void calculateBiomassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBiomassButtonActionPerformed
-  // Calculate and write xml
-       String pa="";
-       String dn="";
-       pa = workDir+System.getProperty("file.separator")+"rootbiomass.xml";
-//
-       NumberFormat f=NumberFormat.getInstance();
-       f=NumberFormat.getInstance(new Locale("en","US"));
-       f.setMaximumFractionDigits(2);
-       f.setMinimumFractionDigits(2);
-       f.setGroupingUsed(false);
-       Element elt;
-       Element elt2;
-       Element elt3;
-/** Creates an Treegross xml */
-       Document doc = new Document();
-       rootElt = new Element("Rootbiomass");
-       ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
-                 "type=\"text/xsl\" href=\"rootbiomass.xsl\"");
-       doc.addContent(pi);
-       doc.setRootElement(rootElt);
-       try {
-// File 
-        rootElt= addString(rootElt, "Id","1");
-        rootElt= addString(rootElt, "Kennung",st.standname);
-        rootElt= addString(rootElt, "Allgemeines"," ");
-        rootElt= addString(rootElt, "Flaechengroesse_m2",new Double(st.size*10000).toString());
-        rootElt= addString(rootElt, "HauptbaumArtCodeStd",new Integer(st.sp[0].code).toString());
-        rootElt= addString(rootElt, "HauptbaumArtCodeLokal",new Integer(st.sp[0].code).toString());
-        rootElt= addString(rootElt, "AufnahmeJahr",new Integer(st.year).toString());
-        rootElt= addString(rootElt, "AufnahmeMonat",new Integer(st.monat).toString());
-        rootElt= addString(rootElt, "DatenHerkunft",st.datenHerkunft);
-        rootElt= addString(rootElt, "Standort",st.standort);
-        rootElt= addString(rootElt, "Hochwert_m",new Double(st.hochwert_m).toString());
-        rootElt= addString(rootElt, "Rechtswert_m",new Double(st.rechtswert_m).toString());
-        rootElt= addString(rootElt, "Hoehe_uNN_m",new Double(st.hoehe_uNN_m).toString());
-        rootElt= addString(rootElt, "Exposition_Gon",new Integer(st.exposition_Gon).toString());
-        rootElt= addString(rootElt, "Hangneigung_Prozent",new Double(st.hangneigungProzent).toString());
-        rootElt= addString(rootElt, "Wuchsgebiet",st.wuchsgebiet);
-        rootElt= addString(rootElt, "Wuchsbezirk",st.wuchsbezirk);
-        rootElt= addString(rootElt, "Standortskennziffer",st.standortsKennziffer);
-    
-// Table of functions
-           for (int jj=0; jj< nrss; jj++){
-              elt = new Element("Functions");
-              elt = addString(elt, "Code", new Integer(rss[jj].code).toString());
-              elt = addString(elt, "Shortname", rss[jj].shortname);
-              elt = addString(elt, "Component", "CoarseRoot");
-              elt = addString(elt, "Function", rss[jj].coarseRootFun);
-              rootElt.addContent(elt);
-              elt = new Element("Functions");
-              elt = addString(elt, "Code", new Integer(rss[jj].code).toString());
-              elt = addString(elt, "Shortname", rss[jj].shortname);
-              elt = addString(elt, "Component", "FineRoot");
-              elt = addString(elt, "Function", rss[jj].fineRootFun);
-              rootElt.addContent(elt);
-              elt = new Element("Functions");
-              elt = addString(elt, "Code", new Integer(rss[jj].code).toString());
-              elt = addString(elt, "Shortname", rss[jj].shortname);
-              elt = addString(elt, "Component", "SmallRoot");
-              elt = addString(elt, "Function", rss[jj].smallRootFun);
-              rootElt.addContent(elt);
-              elt = new Element("Functions");
-              elt = addString(elt, "Code", new Integer(rss[jj].code).toString());
-              elt = addString(elt, "Shortname", rss[jj].shortname);
-              elt = addString(elt, "Component", "TotalRoot");
-              elt = addString(elt, "Function", rss[jj].totalRootFun);
-              rootElt.addContent(elt);
-               
-           }
-           
-// Calculate stand total root biomass
-           FunctionInterpreter fi = new FunctionInterpreter();
-           for (int jj=0; jj< nrss; jj++){
-              double sumCR = 0.0;
-              double sumFR = 0.0;
-              double sumSR = 0.0;
-              double sumTR = 0.0;
-              for (int i=0;i < st.ntrees;i++)
-                  if (st.tr[i].out < 0 && st.tr[i].code == rss[jj].code) {
-                      sumCR = sumCR + st.tr[i].fac*fi.getValueForTree(st.tr[i], rss[jj].coarseRootFun);
-                      sumFR = sumFR + st.tr[i].fac*fi.getValueForTree(st.tr[i], rss[jj].fineRootFun);
-                      sumSR = sumSR + st.tr[i].fac*fi.getValueForTree(st.tr[i], rss[jj].smallRootFun);
-                      sumTR = sumTR + st.tr[i].fac*fi.getValueForTree(st.tr[i], rss[jj].totalRootFun);
-              }
-              sumCR = sumCR/st.size;
-              sumFR = sumFR/st.size;
-              sumSR = sumSR/st.size;
-              sumTR = sumTR/st.size;
-              elt = new Element("Species");
-              elt = addString(elt, "Code", new Integer(rss[jj].code).toString());
-              elt = addString(elt, "Shortname", rss[jj].shortname);
-              elt = addString(elt, "SumCoarseRoots", f.format(sumCR));
-              elt = addString(elt, "SumFineRoots", f.format(sumFR));
-              elt = addString(elt, "SumSmallRoots", f.format(sumSR));
-              elt = addString(elt, "SumTotalRoots", f.format(sumTR));
-              rootElt.addContent(elt);
-           }
-       
-       for (int jj=0; jj< nrss; jj++){
-              for (int i=0;i < st.ntrees;i++)
-                  if (st.tr[i].out < 0 && st.tr[i].code == rss[jj].code) {
-               elt = new Element("Tree");
-               elt = addString(elt, "Code", new Integer(st.tr[i].code).toString());
-               elt = addString(elt, "Shortname", st.tr[i].sp.spDef.shortName);
-               elt = addString(elt, "Shortname", st.tr[i].no);
-               elt = addString(elt, "Age", new Integer(st.tr[i].age).toString());
-               elt = addString(elt, "DBH", f.format(st.tr[i].d));
-               elt = addString(elt, "Height", f.format(st.tr[i].h));
-               elt = addString(elt, "CoarseRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].coarseRootFun)));
-               elt = addString(elt, "FineRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].fineRootFun)));
-               elt = addString(elt, "SmallRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].smallRootFun)));
-               elt = addString(elt, "TotalRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].totalRootFun)));
-               rootElt.addContent(elt);
-           }
-       }
-
-       }
-       catch (Exception e){
-		System.out.println(e); 
-		} 
-   
-           
+        // Calculate and write xml
+        String pa = "";
+        String dn = "";
+        pa = workDir + System.getProperty("file.separator") + "rootbiomass.xml";
+        NumberFormat f = NumberFormat.getInstance();
+        f = NumberFormat.getInstance(new Locale("en", "US"));
+        f.setMaximumFractionDigits(2);
+        f.setMinimumFractionDigits(2);
+        f.setGroupingUsed(false);
+        Element elt;
+        Element elt2;
+        Element elt3;
+        /**
+         * Creates an Treegross xml
+         */
+        Document doc = new Document();
+        rootElt = new Element("Rootbiomass");
+        ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
+                "type=\"text/xsl\" href=\"rootbiomass.xsl\"");
+        doc.addContent(pi);
+        doc.setRootElement(rootElt);
         try {
-            File file = new File(pa);
-            FileOutputStream result = new FileOutputStream(file);
-            XMLOutputter outputter = new XMLOutputter();
-//            outputter.setNewlines(true);
-//            outputter.setIndent("  ");
-            outputter.output(doc,result);
-//
-//            
-            if (dialogActive){
-                String seite="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+pa;
-                try  {
-                    Runtime.getRuntime().exec( " rundll32 url.dll,FileProtocolHandler "+seite);
-                   }
-		   catch ( Exception e2)  {
-                    System.out.println(e2); 
-                   }	         
+// File 
+            rootElt = addString(rootElt, "Id", "1");
+            rootElt = addString(rootElt, "Kennung", st.standname);
+            rootElt = addString(rootElt, "Allgemeines", " ");
+            rootElt = addString(rootElt, "Flaechengroesse_m2", Double.toString(st.size * 10000));
+            rootElt = addString(rootElt, "HauptbaumArtCodeStd", Integer.toString(st.sp[0].code));
+            rootElt = addString(rootElt, "HauptbaumArtCodeLokal", Integer.toString(st.sp[0].code));
+            rootElt = addString(rootElt, "AufnahmeJahr", Integer.toString(st.year));
+            rootElt = addString(rootElt, "AufnahmeMonat", Integer.toString(st.monat));
+            rootElt = addString(rootElt, "DatenHerkunft", st.datenHerkunft);
+            rootElt = addString(rootElt, "Standort", st.standort);
+            rootElt = addString(rootElt, "Hochwert_m", Double.toString(st.hochwert_m));
+            rootElt = addString(rootElt, "Rechtswert_m", Double.toString(st.rechtswert_m));
+            rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
+            rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
+            rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
+            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
+            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
+            rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
 
-            }    
-            
-                        
+// Table of functions
+            for (int jj = 0; jj < nrss; jj++) {
+                elt = new Element("Functions");
+                elt = addString(elt, "Code", Integer.toString(rss[jj].code));
+                elt = addString(elt, "Shortname", rss[jj].shortname);
+                elt = addString(elt, "Component", "CoarseRoot");
+                elt = addString(elt, "Function", rss[jj].coarseRootFun);
+                rootElt.addContent(elt);
+                elt = new Element("Functions");
+                elt = addString(elt, "Code", Integer.toString(rss[jj].code));
+                elt = addString(elt, "Shortname", rss[jj].shortname);
+                elt = addString(elt, "Component", "FineRoot");
+                elt = addString(elt, "Function", rss[jj].fineRootFun);
+                rootElt.addContent(elt);
+                elt = new Element("Functions");
+                elt = addString(elt, "Code", Integer.toString(rss[jj].code));
+                elt = addString(elt, "Shortname", rss[jj].shortname);
+                elt = addString(elt, "Component", "SmallRoot");
+                elt = addString(elt, "Function", rss[jj].smallRootFun);
+                rootElt.addContent(elt);
+                elt = new Element("Functions");
+                elt = addString(elt, "Code", Integer.toString(rss[jj].code));
+                elt = addString(elt, "Shortname", rss[jj].shortname);
+                elt = addString(elt, "Component", "TotalRoot");
+                elt = addString(elt, "Function", rss[jj].totalRootFun);
+                rootElt.addContent(elt);
+            }
+
+// Calculate stand total root biomass
+            FunctionInterpreter fi = new FunctionInterpreter();
+            for (int jj = 0; jj < nrss; jj++) {
+                double sumCR = 0.0;
+                double sumFR = 0.0;
+                double sumSR = 0.0;
+                double sumTR = 0.0;
+                for (int i = 0; i < st.ntrees; i++) {
+                    if (st.tr[i].out < 0 && st.tr[i].code == rss[jj].code) {
+                        sumCR = sumCR + st.tr[i].fac * fi.getValueForTree(st.tr[i], rss[jj].coarseRootFun);
+                        sumFR = sumFR + st.tr[i].fac * fi.getValueForTree(st.tr[i], rss[jj].fineRootFun);
+                        sumSR = sumSR + st.tr[i].fac * fi.getValueForTree(st.tr[i], rss[jj].smallRootFun);
+                        sumTR = sumTR + st.tr[i].fac * fi.getValueForTree(st.tr[i], rss[jj].totalRootFun);
+                    }
+                }
+                sumCR = sumCR / st.size;
+                sumFR = sumFR / st.size;
+                sumSR = sumSR / st.size;
+                sumTR = sumTR / st.size;
+                elt = new Element("Species");
+                elt = addString(elt, "Code", Integer.toString(rss[jj].code));
+                elt = addString(elt, "Shortname", rss[jj].shortname);
+                elt = addString(elt, "SumCoarseRoots", f.format(sumCR));
+                elt = addString(elt, "SumFineRoots", f.format(sumFR));
+                elt = addString(elt, "SumSmallRoots", f.format(sumSR));
+                elt = addString(elt, "SumTotalRoots", f.format(sumTR));
+                rootElt.addContent(elt);
+            }
+
+            for (int jj = 0; jj < nrss; jj++) {
+                for (int i = 0; i < st.ntrees; i++) {
+                    if (st.tr[i].out < 0 && st.tr[i].code == rss[jj].code) {
+                        elt = new Element("Tree");
+                        elt = addString(elt, "Code", Integer.toString(st.tr[i].code));
+                        elt = addString(elt, "Shortname", st.tr[i].sp.spDef.shortName);
+                        elt = addString(elt, "Shortname", st.tr[i].no);
+                        elt = addString(elt, "Age", Integer.toString(st.tr[i].age));
+                        elt = addString(elt, "DBH", f.format(st.tr[i].d));
+                        elt = addString(elt, "Height", f.format(st.tr[i].h));
+                        elt = addString(elt, "CoarseRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].coarseRootFun)));
+                        elt = addString(elt, "FineRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].fineRootFun)));
+                        elt = addString(elt, "SmallRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].smallRootFun)));
+                        elt = addString(elt, "TotalRoots", f.format(fi.getValueForTree(st.tr[i], rss[jj].totalRootFun)));
+                        rootElt.addContent(elt);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
-        catch (IOException e){
+        try (FileOutputStream result = new FileOutputStream(pa)) {
+            XMLOutputter outputter = new XMLOutputter();
+            outputter.output(doc, result);
+            if (dialogActive) {
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + pa;
+                try {
+                    Runtime.getRuntime().exec(" rundll32 url.dll,FileProtocolHandler " + seite);
+                } catch (Exception e2) {
+                    System.out.println(e2);
+                }
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-  
-
-// TODO add your handling code here:
     }//GEN-LAST:event_calculateBiomassButtonActionPerformed
 
 private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFunctionsButtonActionPerformed
