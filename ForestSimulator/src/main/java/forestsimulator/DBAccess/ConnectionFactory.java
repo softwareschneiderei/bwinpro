@@ -53,7 +53,7 @@ public class ConnectionFactory {
         }
     }
 
-    private Connection openDBConnectionAccess(String database, String username, String password, boolean readonly, boolean autocom) {
+    private Connection openDBConnectionAccess(String database, String username, String password, boolean readonly, boolean autocom) throws SQLException {
         Properties props_a = new Properties();
         if (username != null) {
             props_a.put("user", username);
@@ -61,14 +61,9 @@ public class ConnectionFactory {
         if (password != null) {
             props_a.put("password", password);
         }
-        try {
-            Connection result = DriverManager.getConnection("jdbc:ucanaccess://" + database, props_a);
-            result.setReadOnly(readonly);
-            result.setAutoCommit(autocom);
-            return result;
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Problem getting connection to database: " + database, ex);
-            return null;
-        }
+        Connection result = DriverManager.getConnection("jdbc:ucanaccess://" + database, props_a);
+        result.setReadOnly(readonly);
+        result.setAutoCommit(autocom);
+        return result;
     }
 }
