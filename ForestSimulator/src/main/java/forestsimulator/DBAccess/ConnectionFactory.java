@@ -41,7 +41,7 @@ public class ConnectionFactory {
     }
 
     public Connection openDBConnection(String database, String username, String password, boolean readonly, boolean autocom) {
-        return openDBConnection(ACCESS, database, username, password, readonly, autocom);
+        return openDBConnection(ACCESS, database, username, password);
     }
     
     public Connection openDBConnection(int dbtype, String database, String username, String password) {
