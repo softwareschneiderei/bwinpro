@@ -1,12 +1,11 @@
 package forestsimulator.DBAccess;
 
-import java.io.File;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
-import treegross.treatment.*;
 import treegross.random.RandomNumber;
+import treegross.treatment.*;
 
 /**
  *
@@ -38,12 +37,6 @@ public class LoadTreegrossStand {
             }
         } catch (Exception e) {
             System.out.println(e);
-        }
-        File f = new java.io.File(" ");
-        String localPath = "";
-        try {
-            localPath = f.getCanonicalPath();
-        } catch (Exception e) {
         }
         String SAuf = String.valueOf(selectedAufn);
         stl.addName(flaechenName + " " + abtName + " Auf: " + SAuf);

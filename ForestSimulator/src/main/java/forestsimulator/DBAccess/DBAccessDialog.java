@@ -21,8 +21,12 @@ import treegross.base.*;
 import treegross.treatment.*;
 import treegross.random.RandomNumber;
 import java.sql.*;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -32,10 +36,11 @@ import java.util.logging.Logger;
  * This dialog class is used only special data management of the NW-FVA and it is not documented.
  * It reads a forest stand from the data base structure of the NW-FVA
  */
-public class DBAccessDialog extends javax.swing.JDialog {
-    String aktivesDatenfile;
+public class DBAccessDialog extends JDialog {
     Stand st;
     int growthCycles = 0;
+    private final ConnectionFactory dbconnAC = new ConnectionFactory();
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     
     public DBAccessDialog(Frame parent, boolean modal,Stand stand, File dir) {
         super(parent, modal);
@@ -59,7 +64,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         searchButton = new javax.swing.JButton();
         databaseFilenameTextField = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        standNameTextField = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
         loadStandButton = new javax.swing.JButton();
         calculateStandButton = new javax.swing.JButton();
@@ -98,7 +103,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
         databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
 
-        jTextField2.setText(bundle.getString("DBAccessDialog.jTextField2.text")); // NOI18N
+        standNameTextField.setText(bundle.getString("DBAccessDialog.standNameTextField.text")); // NOI18N
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -204,21 +209,19 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(yearsTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(simulationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
-                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(biUpdateButton, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))))
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(biUpdateButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(beginCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -317,40 +320,38 @@ public class DBAccessDialog extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(loadStandButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGap(18, 18, 18)
-                            .addComponent(calculateStandButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(calculateAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(239, 239, 239)
-                            .addComponent(jButton5)
-                            .addGap(197, 197, 197))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(databaseFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 858, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(15, 15, 15)
-                            .addComponent(selectFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGap(8, 8, 8)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(loadStandButton)
                         .addGap(18, 18, 18)
-                        .addComponent(searchButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(calculateStandButton, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(calculateAllButton, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton5))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(8, 8, 8)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(databaseFilenameTextField)))
+                .addContainerGap(298, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(specialMixtureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton14, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(selectFileButton, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                            .addComponent(specialMixtureButton, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                            .addComponent(searchButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(173, 173, 173)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -367,7 +368,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(searchButton)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(loadStandButton)
@@ -385,101 +386,99 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection connection = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
-                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Auf WHERE edvid = '?'")) {
-            stmt.setString(1, jTextField2.getText());
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        final String standName = standNameTextField.getText();
+        boolean standFound = false;
+        try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "");
+                PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Auf WHERE edvid = ?")) {
+            stmt.setString(1, standName);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
+                    standFound = true;
                     jComboBox1.addItem(rs.getInt("auf"));
                 }
             }
         } catch (SQLException e) {
             Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", e);
         }
+        if (!standFound) {
+            JOptionPane.showMessageDialog(rootPane, MessageFormat.format(messages.getString("DBAccessDialog.stand.not.found.message"), standName));
+        }
     }//GEN-LAST:event_searchButtonActionPerformed
 
     private void loadStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStandButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        
-        String ids = jTextField2.getText();
-        Object txt = jComboBox1.getSelectedItem();
-        
-        int aufs = Integer.parseInt(txt.toString());
-        
-        st = lts.loadFromDB(con, st, ids, aufs , true, true);
-        st.sortbyd();
-        st.missingData();
-        GenerateXY gxy =new GenerateXY();
-        gxy.zufall(st);
-        // Test if all trees are in area           
-           for (int k=0; k < st.ntrees; k++){
-               if (pnpoly(st.tr[k].x, st.tr[k].y, st)==0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        LoadTreegrossStand lts = new LoadTreegrossStand();
 
+        String ids = standNameTextField.getText();
+        Object txt = jComboBox1.getSelectedItem();
+
+        int aufs = Integer.parseInt(txt.toString());
+
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+            st = lts.loadFromDB(con, st, ids, aufs, true, true);
+            st.sortbyd();
+            st.missingData();
+            GenerateXY gxy = new GenerateXY();
+            gxy.zufall(st);
+            // Test if all trees are in area           
+            for (int k = 0; k < st.ntrees; k++) {
+                if (pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
+                    st.tr[k].out = 1900;
+                    st.tr[k].outtype = 1;
+                }
+            }
             st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
-           for (int k=0; k < st.ntrees; k++){
-               if (st.tr[k].fac==0.0){
-                   st.tr[k].out=1900;
-                   st.tr[k].outtype=1;
-               }
-           }
-        st.descspecies();
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+            for (int k = 0; k < st.ntrees; k++) {
+                if (st.tr[k].fac == 0.0) {
+                    st.tr[k].out = 1900;
+                    st.tr[k].outtype = 1;
+                }
+            }
+            st.descspecies();
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
 
         dispose();
-        // TODO add your handling code here:
     }//GEN-LAST:event_loadStandButtonActionPerformed
 
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
-        Treatment2 t2 = new Treatment2();
-        LoadTreegrossStand lts = new  LoadTreegrossStand(); 
-        
-        
-        String ids = jTextField2.getText();
-        Object txt = jComboBox1.getSelectedItem();
-        
-        int aufs = Integer.parseInt(txt.toString());
-        
-        st=lts.loadFromDB( con, st, ids, aufs , true, true);
-        st.sortbyd();
-        st.missingData();
-        GenerateXY gxy =new GenerateXY();
-        gxy.zufall(st);
-        st.descspecies();
-        st=lts.loadRules( con, st, ids, aufs, t2, 0 );
-        lts.saveBaum(con, st, ids, aufs, 0, 0);
-        for (int i=0;i<st.temp_Integer;i++){
-            st.grow(5, false);
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+            Treatment2 t2 = new Treatment2();
+            LoadTreegrossStand lts = new LoadTreegrossStand();
+            String ids = standNameTextField.getText();
+            Object txt = jComboBox1.getSelectedItem();
+
+            int aufs = Integer.parseInt(txt.toString());
+
+            st = lts.loadFromDB(con, st, ids, aufs, true, true);
             st.sortbyd();
             st.missingData();
+            GenerateXY gxy = new GenerateXY();
+            gxy.zufall(st);
             st.descspecies();
-            lts.saveBaum(con, st, ids, aufs, i+1,0);
+            st = lts.loadRules(con, st, ids, aufs, t2, 0);
+            lts.saveBaum(con, st, ids, aufs, 0, 0);
+            for (int i = 0; i < st.temp_Integer; i++) {
+                st.grow(5, false);
+                st.sortbyd();
+                st.missingData();
+                st.descspecies();
+                lts.saveBaum(con, st, ids, aufs, i + 1, 0);
+            }
+        } catch (SQLException e) {
+            System.out.println("Problem: " + " " + e);
         }
-        
-        try{
-          con.close();
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
-
         dispose();
-        // TODO add your handling code here:
     }//GEN-LAST:event_calculateStandButtonActionPerformed
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
@@ -487,7 +486,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         int aufa[] = new int[50000];
         int scen[] = new int[50000];
         int nauf = 0;
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift")) {
                 while (rs.next()) {
@@ -587,9 +586,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_calculateAllButtonActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadTreegrossStand lts = new LoadTreegrossStand();
             lts.saveXMLToDB(con, st);
         } catch (Exception e) {
@@ -614,9 +613,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_selectFileButtonActionPerformed
 
     private void loadSPISButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSPISButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(plotNumberTextField.getText());
             st = lpk.loadFromElSalto(con, st, pl);
@@ -634,9 +633,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_loadSPISButtonActionPerformed
 
     private void specialMixtureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specialMixtureButtonActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadTreegrossStand lts = new LoadTreegrossStand();
             String ids = "95650200";
             int aufs = 8;
@@ -675,7 +674,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
             }
 // Daten speichern        
             aktivesDatenfile = databaseFilenameTextField.getText();
-            try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "", false, true)) {
+            try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
                 MixedTreeInfo mti = new MixedTreeInfo();
                 mti.saveTreeInfo(connection, st, ids, aufs);
 
@@ -689,10 +688,10 @@ public class DBAccessDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             for (int ib = 0; ib < 16; ib++) {
                 int bestand = ib;
                 for (int j = 0; j < 9; j++) {
@@ -789,7 +788,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // BI Plot Info
         boolean beginnPeriode = beginCheckBox.isSelected();
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
 
         String bi = "179-2001-001";
@@ -800,7 +799,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         String orga[] = new String[300];
         int norga = 0;
 
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga")) {
                 while (rs.next()) {
                     int stj = rs.getInt("DatOrga_Stj");
@@ -872,9 +871,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        aktivesDatenfile = databaseFilenameTextField.getText();
+        String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             String bi = "179-2001-001";
             String pk = "4172";
 
@@ -973,9 +972,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
         // BI Probekreis laden
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "")) {
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(jTextField4.getText());
             st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
@@ -1001,8 +1000,8 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
         // TFE Daten
-        aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
+        String aktivesDatenfile = databaseFilenameTextField.getText();
+        ConnectionFactory dbconnAC = new ConnectionFactory();
         double hg = 0.0;
         double dg = 0.0;
         double dmax = 0.0;
@@ -1012,7 +1011,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         int art = 0;
         int alt = 0;
         Integer nummer = 0;
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rsx = stmt.executeQuery("select * from BucheRein2 ")) {
                 while (rsx.next()) {
                     nummer = Integer.parseInt(rsx.getObject("ID").toString());
@@ -1091,9 +1090,9 @@ public class DBAccessDialog extends javax.swing.JDialog {
 
     private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
         // Yield table simulation
-        aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
+        String aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
+        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             EtafelSim etsim = new EtafelSim();
             for (int iw = 1; iw < 3; iw++) {
                 for (int i = 0; i < 5; i++) {
@@ -1197,7 +1196,6 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
@@ -1210,6 +1208,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private javax.swing.JButton selectFileButton;
     private javax.swing.JButton simulationButton;
     private javax.swing.JButton specialMixtureButton;
+    private javax.swing.JTextField standNameTextField;
     private javax.swing.JLabel yearsLabel;
     private javax.swing.JTextField yearsTextField;
     // End of variables declaration//GEN-END:variables
