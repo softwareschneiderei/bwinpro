@@ -15,6 +15,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
+import java.awt.Frame;
 import treegross.base.*;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -42,12 +43,9 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
     
     /** Creates new form TgSpeciesManXML */
-    public TgSpeciesManXML(java.awt.Frame parent, boolean modal, String workdir, String fn) {
+    public TgSpeciesManXML(Frame parent, boolean modal, String workdir, String fn) {
         super(parent, modal);
         initComponents();
-//        java.awt.Dimension scr = parent.getSize();
-//        setPreferredSize(scr);
-//        setSize(scr);
         urlname=workdir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+fn;
         loadXMLFile();
 //        int m = 1+ (int)(scr.width*0.1);
@@ -380,7 +378,6 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
-// TODO add your handling code here:
         int m = jList1.getSelectedIndex();
        
         for (int i=m+1;i< nspd;i++){
@@ -392,27 +389,23 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     }//GEN-LAST:event_deleteButtonActionPerformed
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-// TODO add your handling code here:
        int m = jList1.getSelectedIndex(); //get SelectedIndex from List
        saveTable(m);
 
     }//GEN-LAST:event_saveButtonActionPerformed
 
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
-// TODO add your handling code here:
        int m = jList1.getSelectedIndex(); //get SelectedIndex from List
        loadTable(m);
 
     }//GEN-LAST:event_jList1ValueChanged
 
     private void saveSettingsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSettingsButtonActionPerformed
-// TODO add your handling code here:
         saveXMLFile();
         dispose();
     }//GEN-LAST:event_saveSettingsButtonActionPerformed
 
     private void saveAsNewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveAsNewButtonActionPerformed
-// TODO add your handling code here:
         spd[nspd] = new SpeciesDef();
         saveTable(nspd);
         nspd = nspd +1;
@@ -482,144 +475,179 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         spd[m].smallRootBiomass = (String) jTable1.getValueAt(34,1);
         spd[m].fineRootBiomass = (String) jTable1.getValueAt(35,1);
         spd[m].totalRootBiomass = (String) jTable1.getValueAt(36,1);
-        
     }
     
-    private int getInt(String s){
-        int i=-9;
+    private int getInt(String s) {
+        int i = -9;
         try {
-          i = Integer.parseInt(s); 
+            i = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
         }
-        catch (Exception e)  {	System.out.println(e); }
         return i;
     }
-    private double getDouble(String s){
-        double d=-9;
+
+    private double getDouble(String s) {
+        double d = -9;
         try {
-          d = Double.parseDouble(s); 
+            d = Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            System.out.println(e);
         }
-        catch (Exception e)  {	System.out.println(e); }
         return d;
     }
     
-    private void loadXMLFile(){
-       SpeciesDefMap sdm = new SpeciesDefMap();
-        nspd=0;
+    private void loadXMLFile() {
+        SpeciesDefMap sdm = new SpeciesDefMap();
+        nspd = 0;
         try {
-          String fname="";
-          
-          int m = urlname.toUpperCase().indexOf("FILE");
-          int m2 = urlname.toUpperCase().indexOf("HTTP");
-          if ( m < 0 && m2 <0 ) fname="file:///"+urlname;
-          else fname=urlname;
-          URL url = new URL(fname);
-         SAXBuilder builder = new SAXBuilder();
-         URLConnection urlcon = url.openConnection();
+            String fname = "";
 
-         Document doc = builder.build(urlcon.getInputStream());
-         
-         DocType docType = doc.getDocType();
+            int m = urlname.toUpperCase().indexOf("FILE");
+            int m2 = urlname.toUpperCase().indexOf("HTTP");
+            if (m < 0 && m2 < 0) {
+                fname = "file:///" + urlname;
+            } else {
+                fname = urlname;
+            }
+            URL url = new URL(fname);
+            SAXBuilder builder = new SAXBuilder();
+            URLConnection urlcon = url.openConnection();
+
+            Document doc = builder.build(urlcon.getInputStream());
+
+            DocType docType = doc.getDocType();
 //
-         
-         Element sortimente =  doc.getRootElement();  
-         List Sortiment = sortimente.getChildren("SpeciesDefinition");
-         Iterator i = Sortiment.iterator();
-         
-         while (i.hasNext()) {
-            Element sortiment = (Element) i.next();
-            spd[nspd] = new SpeciesDef();
-            spd[nspd].code =Integer.parseInt(sortiment.getChild("Code").getText());
-            spd[nspd].internalCode =Integer.parseInt(sortiment.getChild("InternalCode").getText());
-            spd[nspd].shortName = sortiment.getChild("ShortName").getText();
-            spd[nspd].longName = sortiment.getChild("LongName").getText();
-            spd[nspd].latinName = sortiment.getChild("LatinName").getText();
-            spd[nspd].codeGroup =Integer.parseInt(sortiment.getChild("CodeGroup").getText());
-            spd[nspd].handledLikeCode =Integer.parseInt(sortiment.getChild("HandledLikeCode").getText());
-            String temp = sortiment.getChild("HeightCurve").getText();
-            int ix = Integer.parseInt(temp);
-            spd[nspd].heightCurve = ix;
-            spd[nspd].uniformHeightCurveXML = sdm.initTGFunction(sortiment.getChild("UniformHeightCurveXML").getText());
-            spd[nspd].heightVariationXML = sdm.initTGFunction(sortiment.getChild("HeightVariation").getText());
-            spd[nspd].diameterDistributionXML =sdm.initTGFunction( sortiment.getChild("DiameterDistributionXML").getText());
-            spd[nspd].volumeFunctionXML =sdm.initTGFunction( sortiment.getChild("VolumeFunctionXML").getText());
-            spd[nspd].crownwidthXML = sdm.initTGFunction(sortiment.getChild("Crownwidth").getText());
-            spd[nspd].crownbaseXML = sdm.initTGFunction(sortiment.getChild("Crownbase").getText());
-            spd[nspd].crownType =Integer.parseInt(sortiment.getChild("CrownType").getText());
-            try { spd[nspd].cropTreeNumber = stripCommentsFromInt(sortiment.getChild("CropTreeNumber").getText(),100);
-              } catch (Exception e){ System.out.println("Number of crop trees ist nicht definiert: ");
-                                    spd[nspd].cropTreeNumber = 100;}
-            
-            spd[nspd].siteindexXML = sdm.initTGFunction(sortiment.getChild("SiteIndex").getText());
-            spd[nspd].siteindexHeightXML = sdm.initTGFunction(sortiment.getChild("SiteIndexHeight").getText());
-            spd[nspd].potentialHeightIncrementXML = sdm.initTGFunction(sortiment.getChild("PotentialHeightIncrement").getText());
-            spd[nspd].heightIncrementXML = sdm.initTGFunction(sortiment.getChild("HeightIncrement").getText());
-            spd[nspd].heightIncrementError =Double.parseDouble(sortiment.getChild("HeightIncrementError").getText());
-            spd[nspd].diameterIncrementXML = sdm.initTGFunction(sortiment.getChild("DiameterIncrement").getText());
-            spd[nspd].diameterIncrementError =Double.parseDouble(sortiment.getChild("DiameterIncrementError").getText());
-            spd[nspd].maximumDensityXML = sdm.initTGFunction(sortiment.getChild("MaximumDensity").getText());
-            spd[nspd].maximumAge =Integer.parseInt(sortiment.getChild("MaximumAge").getText());
-            spd[nspd].ingrowthXML = sortiment.getChild("Ingrowth").getText();
-            spd[nspd].decayXML = sdm.initTGFunction(sortiment.getChild("Decay").getText());
-            spd[nspd].targetDiameter =Double.parseDouble(sortiment.getChild("TargetDiameter").getText());
-            spd[nspd].heightOfThinningStart =Double.parseDouble(sortiment.getChild("HeightOfThinningStart").getText());
-            spd[nspd].moderateThinning = sortiment.getChild("ModerateThinning").getText();
-            spd[nspd].colorXML = sortiment.getChild("Color").getText();
-            spd[nspd].competitionXML = sortiment.getChild("Competition").getText();
-            spd[nspd].taperFunctionXML = sortiment.getChild("TaperFunction").getText();
-            try {  spd[nspd].stemVolumeFunctionXML = sortiment.getChild("StemVolumeFunction").getText();
-                 } catch (Exception e){ System.out.println("Schaftholz ist nicht definiert: ");}
-            spd[nspd].coarseRootBiomass = sortiment.getChild("CoarseRootBiomass").getText();
-            spd[nspd].smallRootBiomass = sortiment.getChild("SmallRootBiomass").getText();
-            spd[nspd].fineRootBiomass = sortiment.getChild("FineRootBiomass").getText();
-            spd[nspd].totalRootBiomass = sortiment.getChild("TotalRootBiomass").getText();
-         
-            nspd = nspd +1;
-         } 
-         
-         Element einstellung =  doc.getRootElement(); 
-         List einstellungen = einstellung.getChildren("GeneralSettings");
-         Iterator k = einstellungen.iterator();
-         
-         while (k.hasNext()) {
-            Element eingestellt = (Element) k.next();
-            modelRegionTextField.setText(eingestellt.getChild("ModelRegion").getText());
-            randomnessCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
-            ingrowthCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
-            deadWoodModuleCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("DeadwoodModul").getText()));
-            String ts = "5";
-            try {  ts = eingestellt.getChild("TimeStep").getText();
-                 } catch (Exception e){ ts = "5";}
-            timeStepTextField.setText(ts);
-            try {  authorTextField.setText(eingestellt.getChild("Author").getText());
-                 } catch (Exception e){ authorTextField.setText("add author");}
-            try {  dateTextField.setText(eingestellt.getChild("FirstDate").getText());
-                 } catch (Exception e){ dateTextField.setText("add date");}
-            try {  lastUpdateTextField.setText(eingestellt.getChild("LastChange").getText());
-                 } catch (Exception e){ lastUpdateTextField.setText("add date");}
-            try {  literatureTextField.setText(eingestellt.getChild("Literature").getText());
-                 } catch (Exception e){ literatureTextField.setText("add literature");}
-            try {  jTextArea1.setText(eingestellt.getChild("Description").getText());
-                 } catch (Exception e){ jTextArea1.setText("add model info");}
-            try {  sortingModuleTextField.setText(eingestellt.getChild("SortingModul").getText());
-                 } catch (Exception e){ sortingModuleTextField.setText("none");}
-            try {  biomassTextField.setText(eingestellt.getChild("BiomassModul").getText());
-                 } catch (Exception e){ biomassTextField.setText("none");}
-            try {  deadWoodModuleTextField.setText(eingestellt.getChild("DebriswoodModul").getText());
-                 } catch (Exception e){ deadWoodModuleTextField.setText("none");}
-            break;
-         }
 
+            Element sortimente = doc.getRootElement();
+            List Sortiment = sortimente.getChildren("SpeciesDefinition");
+            Iterator i = Sortiment.iterator();
 
-       } catch (Exception e) {e.printStackTrace();}
-      
-       renewList();
-        
+            while (i.hasNext()) {
+                Element sortiment = (Element) i.next();
+                spd[nspd] = new SpeciesDef();
+                spd[nspd].code = Integer.parseInt(sortiment.getChild("Code").getText());
+                spd[nspd].internalCode = Integer.parseInt(sortiment.getChild("InternalCode").getText());
+                spd[nspd].shortName = sortiment.getChild("ShortName").getText();
+                spd[nspd].longName = sortiment.getChild("LongName").getText();
+                spd[nspd].latinName = sortiment.getChild("LatinName").getText();
+                spd[nspd].codeGroup = Integer.parseInt(sortiment.getChild("CodeGroup").getText());
+                spd[nspd].handledLikeCode = Integer.parseInt(sortiment.getChild("HandledLikeCode").getText());
+                String temp = sortiment.getChild("HeightCurve").getText();
+                int ix = Integer.parseInt(temp);
+                spd[nspd].heightCurve = ix;
+                spd[nspd].uniformHeightCurveXML = sdm.initTGFunction(sortiment.getChild("UniformHeightCurveXML").getText());
+                spd[nspd].heightVariationXML = sdm.initTGFunction(sortiment.getChild("HeightVariation").getText());
+                spd[nspd].diameterDistributionXML = sdm.initTGFunction(sortiment.getChild("DiameterDistributionXML").getText());
+                spd[nspd].volumeFunctionXML = sdm.initTGFunction(sortiment.getChild("VolumeFunctionXML").getText());
+                spd[nspd].crownwidthXML = sdm.initTGFunction(sortiment.getChild("Crownwidth").getText());
+                spd[nspd].crownbaseXML = sdm.initTGFunction(sortiment.getChild("Crownbase").getText());
+                spd[nspd].crownType = Integer.parseInt(sortiment.getChild("CrownType").getText());
+                try {
+                    spd[nspd].cropTreeNumber = stripCommentsFromInt(sortiment.getChild("CropTreeNumber").getText(), 100);
+                } catch (Exception e) {
+                    System.out.println("Number of crop trees ist nicht definiert: ");
+                    spd[nspd].cropTreeNumber = 100;
+                }
+
+                spd[nspd].siteindexXML = sdm.initTGFunction(sortiment.getChild("SiteIndex").getText());
+                spd[nspd].siteindexHeightXML = sdm.initTGFunction(sortiment.getChild("SiteIndexHeight").getText());
+                spd[nspd].potentialHeightIncrementXML = sdm.initTGFunction(sortiment.getChild("PotentialHeightIncrement").getText());
+                spd[nspd].heightIncrementXML = sdm.initTGFunction(sortiment.getChild("HeightIncrement").getText());
+                spd[nspd].heightIncrementError = Double.parseDouble(sortiment.getChild("HeightIncrementError").getText());
+                spd[nspd].diameterIncrementXML = sdm.initTGFunction(sortiment.getChild("DiameterIncrement").getText());
+                spd[nspd].diameterIncrementError = Double.parseDouble(sortiment.getChild("DiameterIncrementError").getText());
+                spd[nspd].maximumDensityXML = sdm.initTGFunction(sortiment.getChild("MaximumDensity").getText());
+                spd[nspd].maximumAge = Integer.parseInt(sortiment.getChild("MaximumAge").getText());
+                spd[nspd].ingrowthXML = sortiment.getChild("Ingrowth").getText();
+                spd[nspd].decayXML = sdm.initTGFunction(sortiment.getChild("Decay").getText());
+                spd[nspd].targetDiameter = Double.parseDouble(sortiment.getChild("TargetDiameter").getText());
+                spd[nspd].heightOfThinningStart = Double.parseDouble(sortiment.getChild("HeightOfThinningStart").getText());
+                spd[nspd].moderateThinning = sortiment.getChild("ModerateThinning").getText();
+                spd[nspd].colorXML = sortiment.getChild("Color").getText();
+                spd[nspd].competitionXML = sortiment.getChild("Competition").getText();
+                spd[nspd].taperFunctionXML = sortiment.getChild("TaperFunction").getText();
+                try {
+                    spd[nspd].stemVolumeFunctionXML = sortiment.getChild("StemVolumeFunction").getText();
+                } catch (Exception e) {
+                    System.out.println("Schaftholz ist nicht definiert: ");
+                }
+                spd[nspd].coarseRootBiomass = sortiment.getChild("CoarseRootBiomass").getText();
+                spd[nspd].smallRootBiomass = sortiment.getChild("SmallRootBiomass").getText();
+                spd[nspd].fineRootBiomass = sortiment.getChild("FineRootBiomass").getText();
+                spd[nspd].totalRootBiomass = sortiment.getChild("TotalRootBiomass").getText();
+
+                nspd = nspd + 1;
+            }
+
+            Element einstellung = doc.getRootElement();
+            List einstellungen = einstellung.getChildren("GeneralSettings");
+            Iterator k = einstellungen.iterator();
+
+            while (k.hasNext()) {
+                Element eingestellt = (Element) k.next();
+                modelRegionTextField.setText(eingestellt.getChild("ModelRegion").getText());
+                randomnessCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
+                ingrowthCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
+                deadWoodModuleCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("DeadwoodModul").getText()));
+                String ts = "5";
+                try {
+                    ts = eingestellt.getChild("TimeStep").getText();
+                } catch (Exception e) {
+                    ts = "5";
+                }
+                timeStepTextField.setText(ts);
+                try {
+                    authorTextField.setText(eingestellt.getChild("Author").getText());
+                } catch (Exception e) {
+                    authorTextField.setText("add author");
+                }
+                try {
+                    dateTextField.setText(eingestellt.getChild("FirstDate").getText());
+                } catch (Exception e) {
+                    dateTextField.setText("add date");
+                }
+                try {
+                    lastUpdateTextField.setText(eingestellt.getChild("LastChange").getText());
+                } catch (Exception e) {
+                    lastUpdateTextField.setText("add date");
+                }
+                try {
+                    literatureTextField.setText(eingestellt.getChild("Literature").getText());
+                } catch (Exception e) {
+                    literatureTextField.setText("add literature");
+                }
+                try {
+                    jTextArea1.setText(eingestellt.getChild("Description").getText());
+                } catch (Exception e) {
+                    jTextArea1.setText("add model info");
+                }
+                try {
+                    sortingModuleTextField.setText(eingestellt.getChild("SortingModul").getText());
+                } catch (Exception e) {
+                    sortingModuleTextField.setText("none");
+                }
+                try {
+                    biomassTextField.setText(eingestellt.getChild("BiomassModul").getText());
+                } catch (Exception e) {
+                    biomassTextField.setText("none");
+                }
+                try {
+                    deadWoodModuleTextField.setText(eingestellt.getChild("DebriswoodModul").getText());
+                } catch (Exception e) {
+                    deadWoodModuleTextField.setText("none");
+                }
+                break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        renewList();
     }
     
     private void saveXMLFile(){
        String fn = urlname; 
-       NumberFormat f=NumberFormat.getInstance();
-       f=NumberFormat.getInstance(new Locale("en","US"));
+       NumberFormat f = NumberFormat.getInstance(new Locale("en","US"));
        f.setMaximumFractionDigits(2);
        f.setMinimumFractionDigits(2);
        Element elt;
@@ -633,9 +661,9 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 //
        elt = new Element("GeneralSettings");
        elt = addString(elt, "ModelRegion", modelRegionTextField.getText());
-       elt = addString(elt, "ErrorComponent",new Boolean(randomnessCheckBox.isSelected()).toString());
-       elt = addString(elt, "IngrowthModul",new Boolean(ingrowthCheckBox.isSelected()).toString());
-       elt = addString(elt, "DeadwoodModul",new Boolean(deadWoodModuleCheckBox.isSelected()).toString());
+       elt = addString(elt, "ErrorComponent",Boolean.toString(randomnessCheckBox.isSelected()));
+       elt = addString(elt, "IngrowthModul",Boolean.toString(ingrowthCheckBox.isSelected()));
+       elt = addString(elt, "DeadwoodModul",Boolean.toString(deadWoodModuleCheckBox.isSelected()));
        elt = addString(elt, "TimeStep",new Integer(timeStepTextField.getText().trim()).toString());
        elt = addString(elt, "Author",authorTextField.getText());
        elt = addString(elt, "FirstDate",dateTextField.getText());
@@ -650,14 +678,14 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 //         
        for (int i=0;i< nspd;i++){
             elt = new Element("SpeciesDefinition");
-            elt = addString(elt, "Code", new Integer(spd[i].code).toString());
+            elt = addString(elt, "Code", Integer.toString(spd[i].code));
             elt = addString(elt, "ShortName",spd[i].shortName);
             elt = addString(elt, "LongName",spd[i].longName);
             elt = addString(elt, "LatinName",spd[i].latinName);
-            elt = addString(elt, "InternalCode", new Integer(spd[i].internalCode).toString());
-            elt = addString(elt, "CodeGroup", new Integer(spd[i].codeGroup).toString());
-            elt = addString(elt, "HandledLikeCode", new Integer(spd[i].handledLikeCode).toString());
-            elt = addString(elt, "HeightCurve", new Integer(spd[i].heightCurve).toString());
+            elt = addString(elt, "InternalCode", Integer.toString(spd[i].internalCode));
+            elt = addString(elt, "CodeGroup", Integer.toString(spd[i].codeGroup));
+            elt = addString(elt, "HandledLikeCode", Integer.toString(spd[i].handledLikeCode));
+            elt = addString(elt, "HeightCurve", Integer.toString(spd[i].heightCurve));
             elt = addString(elt, "UniformHeightCurveXML",spd[i].uniformHeightCurveXML.toString());
             elt = addString(elt, "HeightVariation",spd[i].heightVariationXML.toString());
             elt = addString(elt, "DiameterDistributionXML",spd[i].diameterDistributionXML.toString());
@@ -665,22 +693,22 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
             elt = addString(elt, "StemVolumeFunction",spd[i].stemVolumeFunctionXML);
             elt = addString(elt, "Crownwidth",spd[i].crownwidthXML.toString());
             elt = addString(elt, "Crownbase",spd[i].crownbaseXML.toString());
-            elt = addString(elt, "CrownType", new Integer(spd[i].crownType).toString());
+            elt = addString(elt, "CrownType", Integer.toString(spd[i].crownType));
             elt = addString(elt, "SiteIndex",spd[i].siteindexXML.toString());
             elt = addString(elt, "SiteIndexHeight",spd[i].siteindexHeightXML.toString());
             elt = addString(elt, "PotentialHeightIncrement",spd[i].potentialHeightIncrementXML.toString());
             elt = addString(elt, "HeightIncrement",spd[i].heightIncrementXML.toString());
-            elt = addString(elt, "HeightIncrementError", new Double(spd[i].heightIncrementError).toString());
+            elt = addString(elt, "HeightIncrementError", Double.toString(spd[i].heightIncrementError));
             elt = addString(elt, "DiameterIncrement",spd[i].diameterIncrementXML.toString());
-            elt = addString(elt, "DiameterIncrementError", new Double(spd[i].diameterIncrementError).toString());
+            elt = addString(elt, "DiameterIncrementError", Double.toString(spd[i].diameterIncrementError));
             elt = addString(elt, "MaximumDensity", spd[i].maximumDensityXML.toString());
-            elt = addString(elt, "CropTreeNumber", new Integer(spd[i].cropTreeNumber).toString());
-            elt = addString(elt, "MaximumAge", new Integer(spd[i].maximumAge).toString());
+            elt = addString(elt, "CropTreeNumber", Integer.toString(spd[i].cropTreeNumber));
+            elt = addString(elt, "MaximumAge", Integer.toString(spd[i].maximumAge));
             elt = addString(elt, "Ingrowth", spd[i].ingrowthXML);
             elt = addString(elt, "Decay",spd[i].decayXML.toString());
-            elt = addString(elt, "TargetDiameter", new Double(spd[i].targetDiameter).toString());
-            elt = addString(elt, "HeightOfThinningStart", new Double(spd[i].heightOfThinningStart).toString());
-            elt = addString(elt, "ModerateThinning", spd[i].moderateThinning.toString());
+            elt = addString(elt, "TargetDiameter", Double.toString(spd[i].targetDiameter));
+            elt = addString(elt, "HeightOfThinningStart", Double.toString(spd[i].heightOfThinningStart));
+            elt = addString(elt, "ModerateThinning", spd[i].moderateThinning);
             elt = addString(elt, "Color",spd[i].colorXML);
             elt = addString(elt, "Competition",spd[i].competitionXML);
             elt = addString(elt, "TaperFunction",spd[i].taperFunctionXML);
@@ -690,28 +718,21 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
             elt = addString(elt, "TotalRootBiomass",spd[i].totalRootBiomass);
             rootElt.addContent(elt);
         }
-        try {
-            File file = new File(fn);
-            FileOutputStream result = new FileOutputStream(file);
+        try (FileOutputStream result = new FileOutputStream(fn)) {
             XMLOutputter outputter = new XMLOutputter();
 //            outputter.setNewlines(true);
 //            outputter.setIndent("  ");
-            outputter.output(doc,result);
- 
-                        
-        }
-        catch (IOException e){
+            outputter.output(doc, result);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-   
-
     }
-    
-         Element addString(Element elt, String variable, String text){
-            Element var = new Element(variable);
-            var.addContent(text);  
-            elt.addContent(var);
-            return elt;
+
+    Element addString(Element elt, String variable, String text) {
+        Element var = new Element(variable);
+        var.addContent(text);
+        elt.addContent(var);
+        return elt;
     }
 
     private void loadTable(int m){
@@ -754,14 +775,14 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         jTable1.setValueAt("Feinwurzelbiomasse Funktion",35,0);
         jTable1.setValueAt("Gesamtwurzelbiomasse Funktion",36,0);
         jTable1.setValueAt("Anzahl der Z-Bäume",37,0);
-        jTable1.setValueAt(new Integer(spd[m].code).toString(),0,1);
+        jTable1.setValueAt(Integer.toString(spd[m].code),0,1);
         jTable1.setValueAt(spd[m].shortName,1,1);
         jTable1.setValueAt(spd[m].longName,2,1);
         jTable1.setValueAt(spd[m].latinName,3,1);
-        jTable1.setValueAt(new Integer(spd[m].internalCode).toString(),4,1);
-        jTable1.setValueAt(new Integer(spd[m].codeGroup).toString(),5,1);
-        jTable1.setValueAt(new Integer(spd[m].handledLikeCode).toString(),6,1);
-        jTable1.setValueAt(new Integer(spd[m].heightCurve).toString(),7,1);
+        jTable1.setValueAt(Integer.toString(spd[m].internalCode),4,1);
+        jTable1.setValueAt(Integer.toString(spd[m].codeGroup),5,1);
+        jTable1.setValueAt(Integer.toString(spd[m].handledLikeCode),6,1);
+        jTable1.setValueAt(Integer.toString(spd[m].heightCurve),7,1);
         jTable1.setValueAt(spd[m].uniformHeightCurveXML,8,1);
         jTable1.setValueAt(spd[m].heightVariationXML,9,1);
         jTable1.setValueAt(spd[m].diameterDistributionXML,10,1);
@@ -769,20 +790,20 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         jTable1.setValueAt(spd[m].stemVolumeFunctionXML,12,1);
         jTable1.setValueAt(spd[m].crownwidthXML,13,1);
         jTable1.setValueAt(spd[m].crownbaseXML,14,1);
-        jTable1.setValueAt(new Integer(spd[m].crownType).toString(),15,1);
+        jTable1.setValueAt(Integer.toString(spd[m].crownType),15,1);
         jTable1.setValueAt(spd[m].siteindexXML,16,1);
         jTable1.setValueAt(spd[m].siteindexHeightXML,17,1);
         jTable1.setValueAt(spd[m].potentialHeightIncrementXML,18,1);
         jTable1.setValueAt(spd[m].heightIncrementXML,19,1);
-        jTable1.setValueAt(new Double(spd[m].heightIncrementError).toString(),20,1);
+        jTable1.setValueAt(Double.toString(spd[m].heightIncrementError),20,1);
         jTable1.setValueAt(spd[m].diameterIncrementXML,21,1);
-        jTable1.setValueAt(new Double(spd[m].diameterIncrementError).toString(),22,1);
+        jTable1.setValueAt(Double.toString(spd[m].diameterIncrementError),22,1);
         jTable1.setValueAt(spd[m].maximumDensityXML,23,1);
-        jTable1.setValueAt(new Integer(spd[m].maximumAge).toString(),24,1);
+        jTable1.setValueAt(Integer.toString(spd[m].maximumAge),24,1);
         jTable1.setValueAt(spd[m].ingrowthXML,25,1);
         jTable1.setValueAt(spd[m].decayXML,26,1);
-        jTable1.setValueAt(new Double(spd[m].targetDiameter).toString(),27,1);
-        jTable1.setValueAt(new Double(spd[m].heightOfThinningStart).toString(),28,1);
+        jTable1.setValueAt(Double.toString(spd[m].targetDiameter),27,1);
+        jTable1.setValueAt(Double.toString(spd[m].heightOfThinningStart),28,1);
         jTable1.setValueAt(spd[m].moderateThinning,29,1);
         jTable1.setValueAt(spd[m].colorXML,30,1);
         jTable1.setValueAt(spd[m].competitionXML,31,1);
@@ -791,7 +812,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         jTable1.setValueAt(spd[m].smallRootBiomass,34,1);
         jTable1.setValueAt(spd[m].fineRootBiomass,35,1);
         jTable1.setValueAt(spd[m].totalRootBiomass,36,1);
-        jTable1.setValueAt(new Integer(spd[m].cropTreeNumber).toString(),37,1);
+        jTable1.setValueAt(Integer.toString(spd[m].cropTreeNumber),37,1);
       }
         
     }    
