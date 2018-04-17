@@ -22,19 +22,16 @@ import java.text.*;
 import java.util.*;
 
 class TgHTMLsv {
-
-    Stand st = new Stand();
     String filename = "";
-    ResourceBundle messages;
 
     public TgHTMLsv(Stand st) {
     }
 
     void newreport(Stand st, String path, String fname, Locale preferredLanguage) {
-        messages = ResourceBundle.getBundle("forestsimulator/gui");
+        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
 
         try {
-            int i, j, merk;
+            int i;
 //	    System.out.println("Neuen Bericht erzeugen nach try");
             /**
              * all data is writen in File info/treelist.html
@@ -116,7 +113,6 @@ class TgHTMLsv {
                     }
                 }
             }
-
 //Ende der Änderung Brandenburg                     
             out.println("</TABLE>");
             out.println("<br>" + messages.getString("created") + st.modelRegion + "</br></HTML>");
@@ -129,5 +125,4 @@ class TgHTMLsv {
     public String getFilename() {
         return filename;
     }
-
 }

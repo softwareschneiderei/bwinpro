@@ -538,24 +538,18 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 TreegrossXML2 treegrossXML2 = new TreegrossXML2();
                 treegrossXML2.saveAsXML(st, pa);
             }
-
             //Menu save as jpg
             if (cmd.equals("ppJPG")) {
                 pp.getJPEG();
                 pp.neuzeichnen();
-
             }
-
             if (cmd.equals("Tree values")) {
                 TgHTMLsv sv = new TgHTMLsv(st);
                 sv.newreport(st, workingDir.getAbsolutePath(), "treelist.html", language.locale());
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
-                        + System.getProperty("file.separator") + sv.getFilename();
-                StartBrowser startBrowser = new StartBrowser(seite);
+                StartBrowser startBrowser = new StartBrowser("file:///" + sv.getFilename());
                 startBrowser.start();
             }
             if (cmd.equals("Stand table")) {
-
                 Groups grps = new Groups(st);
                 grps.setAutoGrouping();
                 st.sortbyd();
@@ -567,7 +561,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-//
             if (cmd.equals("Structure table")) {
                 st.sortbyd();
                 st.descspecies();
@@ -578,7 +571,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-//
             if (cmd.equals("Definition")) {
                 try {
                     st.getSDM().listCurrentSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciesdefinition.html");
@@ -590,60 +582,48 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     Logger.getLogger(TgJFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-//
             if (cmd.equals("species_code")) {
-
                 st.getSDM().listAllSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciescode.html");
                 seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
                         + System.getProperty("file.separator") + "speciescode.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
-
             }
-//           
             if (cmd.equals("tree_table")) {
                 st.sortbyd();
                 st.descspecies();
                 DataExchangeFormat dataex = new DataExchangeFormat();
                 dataex.writeTreeTable(st);
             }
-
-//                
             if (cmd.equals("Info page")) {
                 seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "index.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-//                
             if (cmd.equals("License")) {
                 seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "gpl.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-            //                
             if (cmd.equals("Introduction")) {
                 String fileName = user.getProgramDir() + System.getProperty("file.separator") + "help" + System.getProperty("file.separator") + "NWFVA11_TreeGrOSS.pdf";
                 String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + fileName;
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-            //                
             if (cmd.equals("Changes")) {
                 String fileName = user.getProgramDir() + System.getProperty("file.separator") + "help" + System.getProperty("file.separator") + "FSChanges.pdf";
                 String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + fileName;
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
-//                
-
             // menu item exit
             if (cmd.equals("exit")) {
                 LOGGER.info("Programm beendet");
                 System.exit(0);
             }
-
             //Menu "Properties"
             if (cmd.equals("Program Settings")) {
                 JDialog settings = new TgUserDialog(this, true);
