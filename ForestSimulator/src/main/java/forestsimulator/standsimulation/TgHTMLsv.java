@@ -22,25 +22,17 @@ import java.text.*;
 import java.util.*;
 
 class TgHTMLsv {
-    String filename = "";
+
+    private File file;
 
     public TgHTMLsv(Stand st) {
     }
 
     void newreport(Stand st, String path, String fname, Locale preferredLanguage) {
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
+        this.file = new File(path, fname);
 
-        try {
-            int i;
-//	    System.out.println("Neuen Bericht erzeugen nach try");
-            /**
-             * all data is writen in File info/treelist.html
-             */
-            File file = new File(path, fname);
-            filename = file.getCanonicalPath();
-            OutputStream os = new FileOutputStream(filename);
-            PrintWriter out = new PrintWriter(
-                    new OutputStreamWriter(os));
+        try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("single_tree_values") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("stand") + st.standname);
@@ -73,7 +65,7 @@ class TgHTMLsv {
                     + "><FONT SIZE=2>si <TH BGCOLOR=" + ss + "#C0C0C0" + ss + "></TR>");
             DecimalFormat f = new DecimalFormat("0.00");
 
-            for (i = 0; i < st.ntrees; i++) {
+            for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].out < 0) {
                     out.println("<TR><TD><FONT SIZE=2>" + st.tr[i].no + "<TD><FONT SIZE=2>" + st.tr[i].code + "<TD><FONT SIZE=2>" + st.tr[i].age
                             + "<TD><FONT SIZE=2>" + f.format(st.tr[i].d) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].h)
@@ -94,7 +86,7 @@ class TgHTMLsv {
             int jz = -5;
             while (jz < 100) {
                 jz = jz + 5;
-                for (i = 0; i < st.ntrees; i++) {
+                for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].year == st.tr[i].out - jz) {
                         out.println("<TR><TD><FONT SIZE=2>" + st.tr[i].no + "<TD><FONT SIZE=2>" + st.tr[i].code + "<TD><FONT SIZE=2>" + st.tr[i].age
                                 + "<TD><FONT SIZE=2>" + f.format(st.tr[i].d) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].h)
@@ -123,6 +115,6 @@ class TgHTMLsv {
     }
 
     public String getFilename() {
-        return filename;
+        return file.getAbsolutePath();
     }
 }
