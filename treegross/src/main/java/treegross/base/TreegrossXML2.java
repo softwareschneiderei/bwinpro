@@ -43,8 +43,6 @@ import org.jdom.JDOMException;
  */
 public class TreegrossXML2 {
 
-    //static Document doc;
-
     static Element rootElt;
     private final static Logger LOGGER = Logger.getLogger(TreegrossXML2.class.getName());
 
@@ -61,8 +59,7 @@ public class TreegrossXML2 {
      * @param filename
      */
     public void saveAsXML(Stand st, String filename) {
-        NumberFormat f;
-        f = NumberFormat.getInstance(new Locale("en", "US"));
+        NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         Element elt;
@@ -185,12 +182,9 @@ public class TreegrossXML2 {
             rootElt.addContent(elt);
         }
         /* Abspeichern des doc */
-        try {
-            File file = new File(filename);
-            FileOutputStream result = new FileOutputStream(file);
+        try (FileOutputStream result = new FileOutputStream(filename)) {
             XMLOutputter outputter = new XMLOutputter();
             outputter.output(doc, result);
-            result.close();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "", e);
         }
