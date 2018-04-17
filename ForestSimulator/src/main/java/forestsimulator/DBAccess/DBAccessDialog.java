@@ -387,7 +387,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection connection = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        try (Connection connection = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
                 PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Auf WHERE edvid = '?'")) {
             stmt.setString(1, jTextField2.getText());
             try (ResultSet rs = stmt.executeQuery()) {
@@ -403,7 +403,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void loadStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStandButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         
         String ids = jTextField2.getText();
@@ -444,7 +444,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true);
+        Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "");
         Treatment2 t2 = new Treatment2();
         LoadTreegrossStand lts = new  LoadTreegrossStand(); 
         
@@ -692,7 +692,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
             for (int ib = 0; ib < 16; ib++) {
                 int bestand = ib;
                 for (int j = 0; j < 9; j++) {
@@ -800,7 +800,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         String orga[] = new String[300];
         int norga = 0;
 
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga")) {
                 while (rs.next()) {
                     int stj = rs.getInt("DatOrga_Stj");
@@ -874,7 +874,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         LoadTreegrossStand lts = new LoadTreegrossStand();
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
             String bi = "179-2001-001";
             String pk = "4172";
 
@@ -975,7 +975,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // BI Probekreis laden
         aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS,  aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(jTextField4.getText());
             st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
@@ -1012,7 +1012,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         int art = 0;
         int alt = 0;
         Integer nummer = 0;
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rsx = stmt.executeQuery("select * from BucheRein2 ")) {
                 while (rsx.next()) {
                     nummer = Integer.parseInt(rsx.getObject("ID").toString());
@@ -1093,7 +1093,7 @@ public class DBAccessDialog extends javax.swing.JDialog {
         // Yield table simulation
         aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "", false, true)) {
+        try (Connection con = dbconnAC.openDBConnection(dbconnAC.ACCESS, aktivesDatenfile, "", "")) {
             EtafelSim etsim = new EtafelSim();
             for (int iw = 1; iw < 3; iw++) {
                 for (int i = 0; i < 5; i++) {
