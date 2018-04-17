@@ -948,12 +948,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
     }
 
+    @Override
     public void StandChanged(treegross.base.StandChangeEvent evt) {
         System.out.println("stand changed " + evt.getName());
         updatetp(false);
     }
 
-//------------------------------------------------------------------------------        
+    @Override
     public void itemStateChanged(ItemEvent e) {
         Object source = e.getItemSelectable();
         for (int i = 0; i < 7; i++) {
@@ -1110,17 +1111,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     st.timeStep = 5;
                 }
                 break;
-
             }
-
         } catch (Exception e) {
             LOGGER.info(e.toString());
             JTextArea about = new JTextArea("TgDesign file not found : " + fname);
             JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
             LOGGER.info("SpeciesDef General settings: File nicht gefunden: " + fname);
-
         }
-
     }
 
     public void updatetp(boolean from3D) {
@@ -1180,14 +1177,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         System.out.println("set Stand down");
     }
 
-    StringBuffer getFile(String path, String name) {
-
-        File file = new File(path, name);
-        FileReader fr;
-        StringBuffer sbuffer = new StringBuffer(500);
-
-        try {
-            fr = new FileReader(file);
+    StringBuilder getFile(String path, String name) {
+        StringBuilder sbuffer = new StringBuilder(500);
+        try (FileReader fr = new FileReader(new File(path, name))) {
             boolean end = false;
             int c;
             while (!end) {
@@ -1198,17 +1190,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     sbuffer.append((char) c);
                 }
             }
-            fr.close();
-
-        } catch (java.io.IOException e) {
+        } catch (IOException e) {
             LOGGER.info(e.toString());
         }
-
         return sbuffer;
     }
 
     public class MyInternalFrameListener extends InternalFrameAdapter {
 
+        @Override
         public void internalFrameClosing(InternalFrameEvent e) {
             for (int i = 0; i < 7; i++) {
                 if (e.getInternalFrame() == iframe[i]) {
