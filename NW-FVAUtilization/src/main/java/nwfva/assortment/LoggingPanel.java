@@ -100,7 +100,6 @@ public class LoggingPanel extends JPanel {
         jComboBox4.removeAllItems();
         jComboBox4.addItem(messages.getString("multiple"));
         jComboBox4.addItem(messages.getString("ones"));
-        jButton2.setText(messages.getString("save"));
         jButton3.setText(messages.getString("new"));
         jButton4.setText(messages.getString("delete"));
 
@@ -208,13 +207,14 @@ public class LoggingPanel extends JPanel {
         jPanel8.setBackground(new java.awt.Color(255, 255, 204));
         jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel13.setText("TreeGrOSS xml Datei :");
+        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("nwfva/assortment/LoggingPanel"); // NOI18N
+        jLabel13.setText(bundle.getString("LoggingPanel.jLabel13.text")); // NOI18N
         jPanel8.add(jLabel13);
 
         jTextField13.setPreferredSize(new java.awt.Dimension(511, 19));
         jPanel8.add(jTextField13);
 
-        jButton5.setText("laden");
+        jButton5.setText(bundle.getString("LoggingPanel.jButton5.text")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -228,10 +228,10 @@ public class LoggingPanel extends JPanel {
 
         jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        jLabel14.setText("Einstellen und auswählen der Sortimente für folgende Jahre:");
+        jLabel14.setText(bundle.getString("LoggingPanel.jLabel14.text")); // NOI18N
         jPanel10.add(jLabel14);
 
-        jTextField15.setText("all out");
+        jTextField15.setText(bundle.getString("LoggingPanel.jTextField15.text")); // NOI18N
         jTextField15.setPreferredSize(new java.awt.Dimension(60, 20));
         jTextField15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -240,10 +240,10 @@ public class LoggingPanel extends JPanel {
         });
         jPanel10.add(jTextField15);
 
-        jLabel16.setText("Füllschnitt [m]");
+        jLabel16.setText(bundle.getString("LoggingPanel.jLabel16.text")); // NOI18N
         jPanel10.add(jLabel16);
 
-        jTextField16.setText("0.3");
+        jTextField16.setText(bundle.getString("LoggingPanel.jTextField16.text")); // NOI18N
         jTextField16.setPreferredSize(new java.awt.Dimension(50, 20));
         jPanel10.add(jTextField16);
 
@@ -255,22 +255,22 @@ public class LoggingPanel extends JPanel {
 
         jPanel9.setLayout(new java.awt.GridLayout(1, 8));
 
-        jLabel1.setText("Name");
+        jLabel1.setText(bundle.getString("LoggingPanel.jLabel1.text")); // NOI18N
         jPanel9.add(jLabel1);
 
-        jTextField1.setText("Name");
+        jTextField1.setText(bundle.getString("LoggingPanel.jTextField1.text")); // NOI18N
         jPanel9.add(jTextField1);
 
-        jLabel2.setText("Art von");
+        jLabel2.setText(bundle.getString("LoggingPanel.jLabel2.text")); // NOI18N
         jPanel9.add(jLabel2);
 
-        jTextField2.setText("211");
+        jTextField2.setText(bundle.getString("LoggingPanel.jTextField2.text")); // NOI18N
         jPanel9.add(jTextField2);
 
-        jLabel3.setText("Art bis");
+        jLabel3.setText(bundle.getString("LoggingPanel.jLabel3.text")); // NOI18N
         jPanel9.add(jLabel3);
 
-        jTextField3.setText("499");
+        jTextField3.setText(bundle.getString("LoggingPanel.jTextField3.text")); // NOI18N
         jPanel9.add(jTextField3);
 
         jPanel4.add(jPanel9);
@@ -278,7 +278,7 @@ public class LoggingPanel extends JPanel {
         jPanel12.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         jCheckBox1.setSelected(true);
-        jCheckBox1.setText("Entnahme, wenn nein dann Totholz");
+        jCheckBox1.setText(bundle.getString("LoggingPanel.jCheckBox1.text")); // NOI18N
         jCheckBox1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jCheckBox1.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel12.add(jCheckBox1);
@@ -289,50 +289,50 @@ public class LoggingPanel extends JPanel {
 
         jPanel5.setLayout(new java.awt.GridLayout(2, 8));
 
-        jLabel4.setText("min D");
+        jLabel4.setText(bundle.getString("LoggingPanel.jLabel4.text")); // NOI18N
         jPanel5.add(jLabel4);
 
-        jLabel6.setText("max D");
+        jLabel6.setText(bundle.getString("LoggingPanel.jLabel6.text")); // NOI18N
         jPanel5.add(jLabel6);
 
-        jLabel7.setText("min Zopf");
+        jLabel7.setText(bundle.getString("LoggingPanel.jLabel7.text")); // NOI18N
         jPanel5.add(jLabel7);
 
-        jLabel8.setText("max Zopf");
+        jLabel8.setText(bundle.getString("LoggingPanel.jLabel8.text")); // NOI18N
         jPanel5.add(jLabel8);
 
-        jLabel9.setText("min L");
+        jLabel9.setText(bundle.getString("LoggingPanel.jLabel9.text")); // NOI18N
         jPanel5.add(jLabel9);
 
-        jLabel5.setText("max L");
+        jLabel5.setText(bundle.getString("LoggingPanel.jLabel5.text")); // NOI18N
         jPanel5.add(jLabel5);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zugabe %", "Zugabe cm" }));
         jPanel5.add(jComboBox1);
         jPanel5.add(jPanel7);
 
-        jTextField4.setText("7.0");
+        jTextField4.setText(bundle.getString("LoggingPanel.jTextField4.text")); // NOI18N
         jPanel5.add(jTextField4);
 
-        jTextField5.setText("199.9");
+        jTextField5.setText(bundle.getString("LoggingPanel.jTextField5.text")); // NOI18N
         jPanel5.add(jTextField5);
 
-        jTextField6.setText("7.0");
+        jTextField6.setText(bundle.getString("LoggingPanel.jTextField6.text")); // NOI18N
         jPanel5.add(jTextField6);
 
-        jTextField7.setText("199.9");
+        jTextField7.setText(bundle.getString("LoggingPanel.jTextField7.text")); // NOI18N
         jPanel5.add(jTextField7);
 
-        jTextField8.setText("3.0");
+        jTextField8.setText(bundle.getString("LoggingPanel.jTextField8.text")); // NOI18N
         jPanel5.add(jTextField8);
 
-        jTextField9.setText("18.0");
+        jTextField9.setText(bundle.getString("LoggingPanel.jTextField9.text")); // NOI18N
         jPanel5.add(jTextField9);
 
-        jTextField10.setText("0.0");
+        jTextField10.setText(bundle.getString("LoggingPanel.jTextField10.text")); // NOI18N
         jPanel5.add(jTextField10);
 
-        jCheckBox3.setText("bisKA");
+        jCheckBox3.setText(bundle.getString("LoggingPanel.jCheckBox3.text")); // NOI18N
         jCheckBox3.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         jCheckBox3.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel5.add(jCheckBox3);
@@ -341,25 +341,25 @@ public class LoggingPanel extends JPanel {
 
         jPanel6.setLayout(new java.awt.GridLayout(2, 4));
 
-        jLabel10.setText("Wertigkeit");
+        jLabel10.setText(bundle.getString("LoggingPanel.jLabel10.text")); // NOI18N
         jPanel6.add(jLabel10);
 
-        jLabel11.setText("Preis");
+        jLabel11.setText(bundle.getString("LoggingPanel.jLabel11.text")); // NOI18N
         jPanel6.add(jLabel11);
 
-        jLabel12.setText("Prozent der Bäume");
+        jLabel12.setText(bundle.getString("LoggingPanel.jLabel12.text")); // NOI18N
         jPanel6.add(jLabel12);
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "alle Bäume", "Z- Bäume" }));
         jPanel6.add(jComboBox3);
 
-        jTextField11.setText("10.0");
+        jTextField11.setText(bundle.getString("LoggingPanel.jTextField11.text")); // NOI18N
         jPanel6.add(jTextField11);
 
-        jTextField12.setText("50.0");
+        jTextField12.setText(bundle.getString("LoggingPanel.jTextField12.text")); // NOI18N
         jPanel6.add(jTextField12);
 
-        jTextField14.setText("100.0");
+        jTextField14.setText(bundle.getString("LoggingPanel.jTextField14.text")); // NOI18N
         jPanel6.add(jTextField14);
 
         jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mehrfach", "einfach" }));
@@ -379,7 +379,7 @@ public class LoggingPanel extends JPanel {
 
         jPanel2.add(jPanel13);
 
-        jButton3.setText("neu ");
+        jButton3.setText(bundle.getString("LoggingPanel.jButton3.text")); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -387,7 +387,7 @@ public class LoggingPanel extends JPanel {
         });
         jPanel3.add(jButton3);
 
-        jButton2.setText("speichern");
+        jButton2.setText(bundle.getString("LoggingPanel.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -395,7 +395,7 @@ public class LoggingPanel extends JPanel {
         });
         jPanel3.add(jButton2);
 
-        jButton4.setText("löschen");
+        jButton4.setText(bundle.getString("LoggingPanel.jButton4.text")); // NOI18N
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -412,7 +412,7 @@ public class LoggingPanel extends JPanel {
 
         jPanel14.setLayout(new java.awt.GridLayout(2, 0));
 
-        jLabel15.setText("Sortimente (xml-File)");
+        jLabel15.setText(bundle.getString("LoggingPanel.jLabel15.text")); // NOI18N
         jPanel14.add(jLabel15);
 
         jComboBox5.addActionListener(new java.awt.event.ActionListener() {

@@ -16,9 +16,8 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 import java.awt.Frame;
-import treegross.base.*;
-import java.util.*;
 import javax.swing.JDialog;
+import treegross.base.*;
 
 /**
  *
@@ -28,13 +27,11 @@ public class TgEditTreegross extends JDialog {
     Stand st;
     EditorPanel editorPanel = new EditorPanel();
         
-    public TgEditTreegross(Frame parent, boolean modal, Stand stand, Locale preferredLanguage) {
+    public TgEditTreegross(Frame parent, boolean modal, Stand stand) {
         super(parent, modal);
         initComponents();
-        st=stand;
-//        jButton1.setText(messages.getString("acceptChanges"));
+        st = stand;
         editorPanel.setStand(st);
-        editorPanel.setLanguage(preferredLanguage);
         editorPanel.loadStand();
         add(editorPanel);
     }

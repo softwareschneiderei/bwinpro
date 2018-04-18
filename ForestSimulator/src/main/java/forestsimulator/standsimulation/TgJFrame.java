@@ -487,7 +487,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
             // Edit Treegross data
             if (cmd.equals("edit")) {
-                TgEditTreegross tgEditTreegross = new TgEditTreegross(this, true, st, language.locale());
+                TgEditTreegross tgEditTreegross = new TgEditTreegross(this, true, st);
                 tgEditTreegross.setVisible(true);
                 if (grafik3D) {
                     manager3d.setStand(st);

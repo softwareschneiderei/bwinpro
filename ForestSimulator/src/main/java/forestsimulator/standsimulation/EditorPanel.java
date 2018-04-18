@@ -1,4 +1,5 @@
 package forestsimulator.standsimulation;
+
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,151 +10,155 @@ import javax.swing.*;
 import java.net.*;
 import javax.swing.table.DefaultTableModel;
 
-/**  EditorPanel  
+/**
+ * EditorPanel
  *
- *   http://www.nw-fva.de
+ * http://www.nw-fva.de
  *
- *  (c) 2007 Juergen Nagel, Northwest German Forest Research Station, 
- *      Grätzelstr.2, 37079 Göttingen, Germany
- *      E-Mail: Juergen.Nagel@nw-fva.de
+ * (c) 2007 Juergen Nagel, Northwest German Forest Research Station,
+ * Grätzelstr.2, 37079 Göttingen, Germany E-Mail: Juergen.Nagel@nw-fva.de
  *
- *  This program is free software; you can redistribute it and/or
- *  modify it under the terms of the GNU General Public License
- *  as published by the Free Software Foundation.
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT  WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
 public class EditorPanel extends JPanel {
+
     String urlcodebase = "";
     Stand st = null;
-    DefaultTableModel data= new DefaultTableModel(
-            new Object [][] {  },
-            new String [] {
-               "Code", "Nr", "Alter", "BHD", "Höhe",  "Bon", "KA", "KB", "lebend", "Entnahme",
-               "x","y","z","ZBaum","Habitatb.","Fac","Bemerk","Layer"
+    DefaultTableModel data = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{
+                "Code", "Nr", "Alter", "BHD", "Höhe", "Bon", "KA", "KB", "lebend", "Entnahme",
+                "x", "y", "z", "ZBaum", "Habitatb.", "Fac", "Bemerk", "Layer"
             }
-        );
-    Object[] rowData={" "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "," "};
-    DefaultTableModel corners= new DefaultTableModel(
-            new Object [][] {  },
-            new String [] {
-               "No", "x","y","z"
+    );
+    Object[] rowData = {" ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+    DefaultTableModel corners = new DefaultTableModel(
+            new Object[][]{},
+            new String[]{
+                "No", "x", "y", "z"
             }
-        );
-    Object[] rowData2={" "," "," "," "};
-    NumberFormat f=NumberFormat.getInstance();
-    boolean polar = false; 
+    );
+    Object[] rowData2 = {" ", " ", " ", " "};
+    private final NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
+    private boolean polar = false;
 
-    
-    /**
-     * Creates new form EditorPanel
-     */
     public EditorPanel() {
         initComponents();
-        polar = false;
-        st= new Stand();
+        st = new Stand();
         ExcelAdapter myAd = new ExcelAdapter(jTable1);
         ExcelAdapter myAd2 = new ExcelAdapter(jTable2);
-        f=NumberFormat.getInstance(new Locale("en","US"));
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
         st.setProgramDir(new File(urlcodebase));
-        st.ntrees=0;
-	st.nspecies=0;
-	st.ncpnt=0;
-	st.year=2008;
-        polarToXYButton.setText("xy2polar");
+        st.ntrees = 0;
+        st.nspecies = 0;
+        st.ncpnt = 0;
+        st.year = 2008;
+        changeCoordinateSystemButton.setText(messages.getString("EditorPanel.changeCoordinateSystemButton.toPolar.text"));
     }
-    
-    private int getInt(String txt){
+
+    private int getInt(String txt) {
         int erg = -9;
         try {
-           erg=Integer.parseInt(txt.trim());
+            erg = Integer.parseInt(txt.trim());
+        } catch (Exception e) {
+            erg = -9;
         }
-        catch (Exception e){ erg=-9; }
         return erg;
     }
-    private double getDouble(String txt){
+
+    private double getDouble(String txt) {
         double erg = -99.0;
         try {
-           erg=Double.parseDouble(txt.trim());
+            erg = Double.parseDouble(txt.trim());
+        } catch (Exception e) {
+            erg = -9;
         }
-        catch (Exception e){ erg=-9; }
         return erg;
     }
-    private boolean getBoolean(String txt){
+
+    private boolean getBoolean(String txt) {
         boolean erg = false;
         try {
-           erg=Boolean.parseBoolean(txt.trim());
+            erg = Boolean.parseBoolean(txt.trim());
+        } catch (Exception e) {
+            erg = false;
         }
-        catch (Exception e){ erg=false; }
         return erg;
     }
 
-    
-    public Stand updateStand(){
-        st.ntrees=0;
-        st.nspecies=0;
-        st.ncpnt=0;
+    public Stand updateStand() {
+        st.ntrees = 0;
+        st.nspecies = 0;
+        st.ncpnt = 0;
 // save to class stand
-        st.standname=standNameTextField.getText();
-        st.size=Double.parseDouble(standSizeTextField.getText());
-        st.year=Integer.parseInt(registrationDateYearTextField.getText());
-        st.monat=Integer.parseInt(registrationDateMonthTextField.getText());
-        st.rechtswert_m =Double.parseDouble(positionRightValueTextField.getText());
-        st.hochwert_m =Double.parseDouble(positionTopValueTextField.getText());
-        st.hoehe_uNN_m =Double.parseDouble(altitudeTextField.getText());
-        st.wuchsgebiet=regionTextField.getText();
-        st.wuchsbezirk=districtTextField.getText();
-        st.standort=locationTextField.getText();
-        st.exposition_Gon=Integer.parseInt(expositionTextField.getText());
-        st.hangneigungProzent =Double.parseDouble(gradientTextField.getText());
-        st.standortsKennziffer=locationCodeTextField.getText();
-//
-        st.center.no=(String) jTable1.getValueAt(0,0);
-        st.center.x =Double.parseDouble( (String) jTable1.getValueAt(0,1));
-        st.center.y =Double.parseDouble( (String) jTable1.getValueAt(0,2));
-        st.center.z =Double.parseDouble( (String) jTable1.getValueAt(0,3)) ;       
-        for (int i=1; i< jTable1.getRowCount() ; i++){
-            String xStr = (String) jTable1.getValueAt(i,1);
-            xStr=xStr.trim();
-            if (xStr.length()>0){
-              st.addcornerpoint((String) jTable1.getValueAt(i,0), Double.parseDouble( (String) jTable1.getValueAt(i,1)), 
-              Double.parseDouble( (String) jTable1.getValueAt(i,2)),Double.parseDouble( (String) jTable1.getValueAt(i,3))) ;       
-        }}
-//
-        int m=0;
-        for (int i=0; i< jTable2.getRowCount() ; i++){
-            String dStr = (String) jTable2.getValueAt(i,3);
-            dStr=dStr.trim();
-            if (dStr.length()>0){
-            try {
-                   st.addtree(getInt((String) jTable2.getValueAt(i,0)), (String) jTable2.getValueAt(i,1), getInt((String) jTable2.getValueAt(i,2)), getInt((String) jTable2.getValueAt(i,8)), getDouble((String) jTable2.getValueAt(i,3)), getDouble((String) jTable2.getValueAt(i,4)), getDouble((String) jTable2.getValueAt(i,6)), getDouble((String) jTable2.getValueAt(i,7)), getDouble((String) jTable2.getValueAt(i,5)), getDouble((String) jTable2.getValueAt(i,10)), getDouble((String) jTable2.getValueAt(i,11)), getDouble((String) jTable2.getValueAt(i,12)), 0, 0, 0);
+        st.standname = standNameTextField.getText();
+        st.size = Double.parseDouble(standSizeTextField.getText());
+        st.year = Integer.parseInt(registrationDateYearTextField.getText());
+        st.monat = Integer.parseInt(registrationDateMonthTextField.getText());
+        st.rechtswert_m = Double.parseDouble(positionRightValueTextField.getText());
+        st.hochwert_m = Double.parseDouble(positionTopValueTextField.getText());
+        st.hoehe_uNN_m = Double.parseDouble(altitudeTextField.getText());
+        st.wuchsgebiet = regionTextField.getText();
+        st.wuchsbezirk = districtTextField.getText();
+        st.standort = locationTextField.getText();
+        st.exposition_Gon = Integer.parseInt(expositionTextField.getText());
+        st.hangneigungProzent = Double.parseDouble(gradientTextField.getText());
+        st.standortsKennziffer = locationCodeTextField.getText();
+        st.center.no = (String) jTable1.getValueAt(0, 0);
+        st.center.x = Double.parseDouble((String) jTable1.getValueAt(0, 1));
+        st.center.y = Double.parseDouble((String) jTable1.getValueAt(0, 2));
+        st.center.z = Double.parseDouble((String) jTable1.getValueAt(0, 3));
+        for (int i = 1; i < jTable1.getRowCount(); i++) {
+            String xStr = (String) jTable1.getValueAt(i, 1);
+            xStr = xStr.trim();
+            if (xStr.length() > 0) {
+                st.addcornerpoint((String) jTable1.getValueAt(i, 0), Double.parseDouble((String) jTable1.getValueAt(i, 1)),
+                        Double.parseDouble((String) jTable1.getValueAt(i, 2)), Double.parseDouble((String) jTable1.getValueAt(i, 3)));
+            }
+        }
+        int m = 0;
+        for (int i = 0; i < jTable2.getRowCount(); i++) {
+            String dStr = (String) jTable2.getValueAt(i, 3);
+            dStr = dStr.trim();
+            if (dStr.length() > 0) {
+                try {
+                    st.addtree(getInt((String) jTable2.getValueAt(i, 0)), (String) jTable2.getValueAt(i, 1), getInt((String) jTable2.getValueAt(i, 2)), getInt((String) jTable2.getValueAt(i, 8)), getDouble((String) jTable2.getValueAt(i, 3)), getDouble((String) jTable2.getValueAt(i, 4)), getDouble((String) jTable2.getValueAt(i, 6)), getDouble((String) jTable2.getValueAt(i, 7)), getDouble((String) jTable2.getValueAt(i, 5)), getDouble((String) jTable2.getValueAt(i, 10)), getDouble((String) jTable2.getValueAt(i, 11)), getDouble((String) jTable2.getValueAt(i, 12)), 0, 0, 0);
                 } catch (Exception ex) {
-                        Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            st.tr[m].fac=getDouble( (String) jTable2.getValueAt(i,15));
-            st.tr[m].outtype=getInt( (String) jTable2.getValueAt(i,9));
-            st.tr[m].crop=getBoolean((String) jTable2.getValueAt(i,13));
-            st.tr[m].habitat=getBoolean((String) jTable2.getValueAt(i,14));
+                st.tr[m].fac = getDouble((String) jTable2.getValueAt(i, 15));
+                st.tr[m].outtype = getInt((String) jTable2.getValueAt(i, 9));
+                st.tr[m].crop = getBoolean((String) jTable2.getValueAt(i, 13));
+                st.tr[m].habitat = getBoolean((String) jTable2.getValueAt(i, 14));
 //            st.tr[m].c66=  Double.parseDouble( (String) jTable2.getValueAt(i,15));         
 //            st.tr[m].c66c=  Double.parseDouble( (String) jTable2.getValueAt(i,16));         
-            if (jTable2.getValueAt(i,16)!=null) st.tr[m].remarks=(String) jTable2.getValueAt(i,16);
-              else st.tr[m].remarks="";
-            if (jTable2.getValueAt(i,17)!=null) st.tr[m].layer=getInt((String) jTable2.getValueAt(i,17));
-              else st.tr[m].layer=0;
-
-            m=m+1;
-        }}
-       return st;
+                if (jTable2.getValueAt(i, 16) != null) {
+                    st.tr[m].remarks = (String) jTable2.getValueAt(i, 16);
+                } else {
+                    st.tr[m].remarks = "";
+                }
+                if (jTable2.getValueAt(i, 17) != null) {
+                    st.tr[m].layer = getInt((String) jTable2.getValueAt(i, 17));
+                } else {
+                    st.tr[m].layer = 0;
+                }
+                m = m + 1;
+            }
+        }
+        return st;
     }
-    
-        // Stand in die Table1 einladen
-    public void loadStand(){
+
+    // Stand in die Table1 einladen
+    public void loadStand() {
 //        for (int j=st.ntrees; j>0; j--) data.removeRow(j-1);
         standNameTextField.setText(st.standname);
         standSizeTextField.setText(Double.toString(st.size));
@@ -169,52 +174,52 @@ public class EditorPanel extends JPanel {
         gradientTextField.setText(Double.toString(st.hangneigungProzent));
         locationCodeTextField.setText(st.standortsKennziffer);
 // Center and corner points
-           corners.addRow(rowData2);
-           jTable1.setValueAt(st.center.no,0,0);
-           jTable1.setValueAt(f.format(st.center.x),0,1);
-           jTable1.setValueAt(f.format(st.center.y),0,2);
-           jTable1.setValueAt(f.format(st.center.z),0,3);
-        for (int i=0; i< st.ncpnt; i++){
-           corners.addRow(rowData2);
-           jTable1.setValueAt(st.cpnt[i].no,i+1,0);
-           jTable1.setValueAt(f.format(st.cpnt[i].x),i+1,1);
-           jTable1.setValueAt(f.format(st.cpnt[i].y),i+1,2);
-           jTable1.setValueAt(f.format(st.cpnt[i].z),i+1,3);
+        corners.addRow(rowData2);
+        jTable1.setValueAt(st.center.no, 0, 0);
+        jTable1.setValueAt(f.format(st.center.x), 0, 1);
+        jTable1.setValueAt(f.format(st.center.y), 0, 2);
+        jTable1.setValueAt(f.format(st.center.z), 0, 3);
+        for (int i = 0; i < st.ncpnt; i++) {
+            corners.addRow(rowData2);
+            jTable1.setValueAt(st.cpnt[i].no, i + 1, 0);
+            jTable1.setValueAt(f.format(st.cpnt[i].x), i + 1, 1);
+            jTable1.setValueAt(f.format(st.cpnt[i].y), i + 1, 2);
+            jTable1.setValueAt(f.format(st.cpnt[i].z), i + 1, 3);
         }
-      
-// Tree data        
-        for (int i=0; i< st.ntrees; i++){
-           data.addRow(rowData);
-           jTable2.setValueAt(Integer.toString(st.tr[i].code),i,0);
-           jTable2.setValueAt(st.tr[i].no,i,1);
-           jTable2.setValueAt(Integer.toString(st.tr[i].age),i,2);
-           jTable2.setValueAt(f.format(st.tr[i].d),i,3);
-           jTable2.setValueAt(f.format(st.tr[i].h),i,4);
-           jTable2.setValueAt(f.format(st.tr[i].si),i,5);
-           jTable2.setValueAt(f.format(st.tr[i].cb),i,6);
-           jTable2.setValueAt(f.format(st.tr[i].cw),i,7);
-           jTable2.setValueAt(Integer.toString(st.tr[i].out),i,8);
-           jTable2.setValueAt(Integer.toString(st.tr[i].outtype),i,9);
-           jTable2.setValueAt(f.format(st.tr[i].x),i,10);
-           jTable2.setValueAt(f.format(st.tr[i].y),i,11);
-           jTable2.setValueAt(f.format(st.tr[i].z),i,12);
-           jTable2.setValueAt(Boolean.toString(st.tr[i].crop),i,13);
-           jTable2.setValueAt(Boolean.toString(st.tr[i].habitat),i,14);
-           f.setMaximumFractionDigits(4);
-           f.setMinimumFractionDigits(4);
 
-           jTable2.setValueAt(f.format(st.tr[i].fac),i,15);
-           f.setMaximumFractionDigits(4);
-           f.setMinimumFractionDigits(4);
-           jTable2.setValueAt(st.tr[i].remarks,i,16);
-           jTable2.setValueAt(Integer.toString(st.tr[i].layer),i,17);
-         }
+// Tree data        
+        for (int i = 0; i < st.ntrees; i++) {
+            data.addRow(rowData);
+            jTable2.setValueAt(Integer.toString(st.tr[i].code), i, 0);
+            jTable2.setValueAt(st.tr[i].no, i, 1);
+            jTable2.setValueAt(Integer.toString(st.tr[i].age), i, 2);
+            jTable2.setValueAt(f.format(st.tr[i].d), i, 3);
+            jTable2.setValueAt(f.format(st.tr[i].h), i, 4);
+            jTable2.setValueAt(f.format(st.tr[i].si), i, 5);
+            jTable2.setValueAt(f.format(st.tr[i].cb), i, 6);
+            jTable2.setValueAt(f.format(st.tr[i].cw), i, 7);
+            jTable2.setValueAt(Integer.toString(st.tr[i].out), i, 8);
+            jTable2.setValueAt(Integer.toString(st.tr[i].outtype), i, 9);
+            jTable2.setValueAt(f.format(st.tr[i].x), i, 10);
+            jTable2.setValueAt(f.format(st.tr[i].y), i, 11);
+            jTable2.setValueAt(f.format(st.tr[i].z), i, 12);
+            jTable2.setValueAt(Boolean.toString(st.tr[i].crop), i, 13);
+            jTable2.setValueAt(Boolean.toString(st.tr[i].habitat), i, 14);
+            f.setMaximumFractionDigits(4);
+            f.setMinimumFractionDigits(4);
+
+            jTable2.setValueAt(f.format(st.tr[i].fac), i, 15);
+            f.setMaximumFractionDigits(4);
+            f.setMinimumFractionDigits(4);
+            jTable2.setValueAt(st.tr[i].remarks, i, 16);
+            jTable2.setValueAt(Integer.toString(st.tr[i].layer), i, 17);
+        }
     }
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -223,7 +228,7 @@ public class EditorPanel extends JPanel {
         readStandButton = new javax.swing.JButton();
         saveStandButton = new javax.swing.JButton();
         clearFormButton = new javax.swing.JButton();
-        polarToXYButton = new javax.swing.JButton();
+        changeCoordinateSystemButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -300,13 +305,13 @@ public class EditorPanel extends JPanel {
         });
         jPanel3.add(clearFormButton);
 
-        polarToXYButton.setText(bundle.getString("EditorPanel.polarToXYButton.text")); // NOI18N
-        polarToXYButton.addActionListener(new java.awt.event.ActionListener() {
+        changeCoordinateSystemButton.setText(bundle.getString("EditorPanel.changeCoordinateSystemButton.text")); // NOI18N
+        changeCoordinateSystemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                polarToXYButtonActionPerformed(evt);
+                changeCoordinateSystemButtonActionPerformed(evt);
             }
         });
-        jPanel3.add(polarToXYButton);
+        jPanel3.add(changeCoordinateSystemButton);
 
         add(jPanel3, java.awt.BorderLayout.SOUTH);
 
@@ -486,64 +491,61 @@ public class EditorPanel extends JPanel {
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void polarToXYButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_polarToXYButtonActionPerformed
-
-    if (polar){
-        polar2xy();
-        polarToXYButton.setText("xy2polar");
-        jTable1.getColumnModel().getColumn(1).setHeaderValue("x");
-        jTable1.getColumnModel().getColumn(2).setHeaderValue("y");
-        jTable1.getTableHeader().resizeAndRepaint();
-        jTable2.getColumnModel().getColumn(10).setHeaderValue("x");
-        jTable2.getColumnModel().getColumn(11).setHeaderValue("y");
-        jTable2.getTableHeader().resizeAndRepaint();
-
-        polar=false;
-    }
-    else {
-        xy2polar();
-        polar=true;
-        polarToXYButton.setText("polar2xy");
-        jTable1.getColumnModel().getColumn(1).setHeaderValue("Dist");
-        jTable1.getColumnModel().getColumn(2).setHeaderValue("Gon");
-        jTable1.getTableHeader().resizeAndRepaint();
-        jTable2.getColumnModel().getColumn(10).setHeaderValue("Dist");
-        jTable2.getColumnModel().getColumn(11).setHeaderValue("Gon");
-        jTable2.getTableHeader().resizeAndRepaint();
-    }
+    private void changeCoordinateSystemButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeCoordinateSystemButtonActionPerformed
+        if (polar) {
+            polar2xy();
+            changeCoordinateSystemButton.setText(messages.getString("EditorPanel.changeCoordinateSystemButton.toPolar.text"));
+            jTable1.getColumnModel().getColumn(1).setHeaderValue("x");
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("y");
+            jTable1.getTableHeader().resizeAndRepaint();
+            jTable2.getColumnModel().getColumn(10).setHeaderValue("x");
+            jTable2.getColumnModel().getColumn(11).setHeaderValue("y");
+            jTable2.getTableHeader().resizeAndRepaint();
+            polar = false;
+        } else {
+            xy2polar();
+            changeCoordinateSystemButton.setText(messages.getString("EditorPanel.changeCoordinateSystemButton.text"));
+            jTable1.getColumnModel().getColumn(1).setHeaderValue("Dist");
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Gon");
+            jTable1.getTableHeader().resizeAndRepaint();
+            jTable2.getColumnModel().getColumn(10).setHeaderValue("Dist");
+            jTable2.getColumnModel().getColumn(11).setHeaderValue("Gon");
+            jTable2.getTableHeader().resizeAndRepaint();
+            polar = true;
+        }
         loadStand();
-    }//GEN-LAST:event_polarToXYButtonActionPerformed
+    }//GEN-LAST:event_changeCoordinateSystemButtonActionPerformed
 
     private void clearFormButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearFormButtonActionPerformed
-//  Maske löschen
         clearAll();
     }//GEN-LAST:event_clearFormButtonActionPerformed
 
     private void readStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_readStandButtonActionPerformed
-// read stand
-      JFileChooser fc = new JFileChooser();
-      TxtFileFilter txtFilter = new TxtFileFilter();
-      txtFilter.setExtension("xml");
-      fc.addChoosableFileFilter(txtFilter);
-      int auswahl = fc.showOpenDialog(this);
-      String pa= fc.getSelectedFile().getPath();
-      String dn= fc.getSelectedFile().getName();
-      String fname="";
+        // read stand
+        JFileChooser fc = new JFileChooser();
+        TxtFileFilter txtFilter = new TxtFileFilter();
+        txtFilter.setExtension("xml");
+        fc.addChoosableFileFilter(txtFilter);
+        int auswahl = fc.showOpenDialog(this);
+        String pa = fc.getSelectedFile().getPath();
+        String dn = fc.getSelectedFile().getName();
+        String fname = "";
 
-      URL url =null;
-      int m = pa.toUpperCase().indexOf("FILE");
-      int m2 = pa.toUpperCase().indexOf("HTTP");
-      if ( m < 0 && m2 <0 ) fname="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+pa;
-      try {
-                 url = new URL(fname);}
-       catch (Exception e){ }
-      if (url.toString().length() >0){
-              TreegrossXML2 treegrossXML = new TreegrossXML2();
-              st=treegrossXML.readTreegrossStand(st,url);
-        } 
-        
-       loadStand();
-        
+        URL url = null;
+        int m = pa.toUpperCase().indexOf("FILE");
+        int m2 = pa.toUpperCase().indexOf("HTTP");
+        if (m < 0 && m2 < 0) {
+            fname = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + pa;
+        }
+        try {
+            url = new URL(fname);
+        } catch (Exception e) {
+        }
+        if (url.toString().length() > 0) {
+            TreegrossXML2 treegrossXML = new TreegrossXML2();
+            st = treegrossXML.readTreegrossStand(st, url);
+        }
+        loadStand();
     }//GEN-LAST:event_readStandButtonActionPerformed
 
     private void addEmptyLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEmptyLineButtonActionPerformed
@@ -553,59 +555,55 @@ public class EditorPanel extends JPanel {
     }//GEN-LAST:event_addEmptyLineButtonActionPerformed
 
     private void saveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStandButtonActionPerformed
-      st.ntrees=0;
-      st.nspecies=0;
-      st.ncpnt=0;
-       JFileChooser fc = new JFileChooser();
-       TxtFileFilter txtFilter = new TxtFileFilter();
-       txtFilter.setExtension("xml");
-       fc.addChoosableFileFilter(txtFilter);
+        st.ntrees = 0;
+        st.nspecies = 0;
+        st.ncpnt = 0;
+        JFileChooser fc = new JFileChooser();
+        TxtFileFilter txtFilter = new TxtFileFilter();
+        txtFilter.setExtension("xml");
+        fc.addChoosableFileFilter(txtFilter);
 //       fc.setCurrentDirectory(new File(user.getDataDir()));
-       fc.setApproveButtonText("speichern");
-       int auswahl = fc.showOpenDialog(this);
-       String pa= fc.getSelectedFile().getPath();
-       String dn= fc.getSelectedFile().getName();
+        fc.setApproveButtonText("speichern");
+        int auswahl = fc.showOpenDialog(this);
+        String pa = fc.getSelectedFile().getPath();
+        String dn = fc.getSelectedFile().getName();
 //       Model mo =new Model();
 //       st.setModelRegion(mo.getPlugInName(plugIn));
-
-       st = updateStand();
-//
+        st = updateStand();
 //        for (int j=0;j<st.ntrees;j++) st.tr[j].setMissingData();
 //        GenerateXY gxy=new GenerateXY();
 //        gxy.zufall(st); 
 //        st.sortbyd();
 //        st.descspecies();
 //       Save stand
-       TreegrossXML2 treegrossXML = new TreegrossXML2();
-       treegrossXML.saveAsXML(st,pa);
-
-//
-
+        TreegrossXML2 treegrossXML = new TreegrossXML2();
+        treegrossXML.saveAsXML(st, pa);
     }//GEN-LAST:event_saveStandButtonActionPerformed
 
     private void addCornerPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addCornerPointButtonActionPerformed
-// TODO add your handling code here:
-                corners.addRow(rowData2);
+        corners.addRow(rowData2);
     }//GEN-LAST:event_addCornerPointButtonActionPerformed
 
     private void deleteTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTreeButtonActionPerformed
-        if (jTable2.getSelectedRowCount()>0) {
-            int m[]=jTable2.getSelectedRows();
-            for (int j=0;j<jTable2.getSelectedRowCount();j++)
-               for (int i=0;i<15;i++) jTable2.setValueAt("",m[j],i);
+        if (jTable2.getSelectedRowCount() > 0) {
+            int m[] = jTable2.getSelectedRows();
+            for (int j = 0; j < jTable2.getSelectedRowCount(); j++) {
+                for (int i = 0; i < 15; i++) {
+                    jTable2.setValueAt("", m[j], i);
+                }
+            }
         }
-
-// TODO add your handling code here:
     }//GEN-LAST:event_deleteTreeButtonActionPerformed
 
     private void deleteCornerPointButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteCornerPointButtonActionPerformed
-        if (jTable1.getSelectedRowCount()>0) {
-            int m[]=jTable1.getSelectedRows();
-            for (int j=0;j<jTable1.getSelectedRowCount();j++)
-               for (int i=0;i<4;i++) jTable1.setValueAt("",m[j],i);
+        if (jTable1.getSelectedRowCount() > 0) {
+            int m[] = jTable1.getSelectedRows();
+            for (int j = 0; j < jTable1.getSelectedRowCount(); j++) {
+                for (int i = 0; i < 4; i++) {
+                    jTable1.setValueAt("", m[j], i);
+                }
+            }
         }
-
-// TODO add your handling code here:
     }//GEN-LAST:event_deleteCornerPointButtonActionPerformed
 
     private void gradientTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gradientTextFieldActionPerformed
@@ -616,7 +614,7 @@ public class EditorPanel extends JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_locationCodeTextFieldActionPerformed
 
-    private void clearAll(){
+    private void clearAll() {
         standNameTextField.setText("");
         standSizeTextField.setText("");
         registrationDateYearTextField.setText("");
@@ -630,99 +628,92 @@ public class EditorPanel extends JPanel {
         expositionTextField.setText("");
         gradientTextField.setText("");
         locationCodeTextField.setText("");
-        for (int j=0;j<jTable1.getRowCount();j++)
-             for (int i=0;i<jTable1.getColumnCount();i++) jTable1.setValueAt("",j,i);
-        for (int j=0;j<jTable2.getRowCount();j++)
-             for (int i=0;i<jTable2.getColumnCount();i++) jTable2.setValueAt("",j,i);
-        
+        for (int j = 0; j < jTable1.getRowCount(); j++) {
+            for (int i = 0; i < jTable1.getColumnCount(); i++) {
+                jTable1.setValueAt("", j, i);
+            }
+        }
+        for (int j = 0; j < jTable2.getRowCount(); j++) {
+            for (int i = 0; i < jTable2.getColumnCount(); i++) {
+                jTable2.setValueAt("", j, i);
+            }
+        }
     }
-    
-    public void setCodebase(String url){
+
+    public void setCodebase(String url) {
         urlcodebase = url;
-        System.out.println("Set url"+url);
+        System.out.println("Set url" + url);
         st.setProgramDir(new File(urlcodebase));
     }
-    
+
     public void setStand(Stand stand) {
         st = stand;
     }
-    
-    public void setLanguage(Locale language) {
-        Locale currentLocale;
-        currentLocale = language;
-//        standname.setText(messages.getString("standname"));
-//        jLabel2.setText(messages.getString("standsize"));
-//        jLabel4.setText(messages.getString("monthYear"));
-//        jLabel5.setText(messages.getString("coordRight"));
-//        jLabel6.setText(messages.getString("coordHeight"));
-//        jLabel7.setText(messages.getString("elevation"));
-//        jLabel8.setText(messages.getString("region"));
-//        jLabel9.setText(messages.getString("subregion"));
-//        jLabel10.setText(messages.getString("sitetype"));
-//        jLabel11.setText(messages.getString("exposition"));
-//        jLabel12.setText(messages.getString("slope"));
-//        jLabel13.setText(messages.getString("siteCode"));
-//        jButton3.setText(messages.getString("addCornerPoint"));
-//        jButton5.setText(messages.getString("delCornerPoint"));
-//        jButton1.setText(messages.getString("addEmptyLines"));
-//        jButton4.setText(messages.getString("delSelectedTree"));
-//        jButton6.setText(messages.getString("readStand"));
-//        jButton2.setText(messages.getString("saveStand"));
-//        jButton7.setText(messages.getString("clearTable"));
-//        jButton8.setText("xy2polar");
 
-    }
-    
-    private void xy2polar(){
+    private void xy2polar() {
         double xm = st.center.x;
         double ym = st.center.y;
-        for (int i=0; i < st.ncpnt; i++){
-            double dx = st.cpnt[i].x-xm;
-            double dy = st.cpnt[i].y-ym;
-            double ent = Math.sqrt(Math.pow(dx, 2.0)+Math.pow(dy, 2.0));
-            double gon = 200.0*Math.asin((dx)/ent)/Math.PI;
-            if (dx >=0.0 && dy >=0.0) st.cpnt[i].y=gon;
-            if (dx >=0.0 && dy <0.0) st.cpnt[i].y=200.0-gon;
-            if (dx <0.0 && dy <0.0) st.cpnt[i].y=Math.abs(gon)+200.0;
-            if (dx <0.0 && dy >=0.0) st.cpnt[i].y=400.0-Math.abs(gon);
-            st.cpnt[i].x=ent;
+        for (int i = 0; i < st.ncpnt; i++) {
+            double dx = st.cpnt[i].x - xm;
+            double dy = st.cpnt[i].y - ym;
+            double ent = Math.sqrt(Math.pow(dx, 2.0) + Math.pow(dy, 2.0));
+            double gon = 200.0 * Math.asin((dx) / ent) / Math.PI;
+            if (dx >= 0.0 && dy >= 0.0) {
+                st.cpnt[i].y = gon;
+            }
+            if (dx >= 0.0 && dy < 0.0) {
+                st.cpnt[i].y = 200.0 - gon;
+            }
+            if (dx < 0.0 && dy < 0.0) {
+                st.cpnt[i].y = Math.abs(gon) + 200.0;
+            }
+            if (dx < 0.0 && dy >= 0.0) {
+                st.cpnt[i].y = 400.0 - Math.abs(gon);
+            }
+            st.cpnt[i].x = ent;
         }
-        for (int i=0; i < st.ntrees; i++){
-            double dx = st.tr[i].x-xm;
-            double dy = st.tr[i].y-ym;
-            double ent = Math.sqrt(Math.pow(dx, 2.0)+Math.pow(dy, 2.0));
-            double gon = 200.0*Math.asin((dx)/ent)/Math.PI;
-            if (dx >=0.0 && dy >=0.0) st.tr[i].y=gon;
-            if (dx >=0.0 && dy <0.0) st.tr[i].y=200.0-gon;
-            if (dx <0.0 && dy <0.0) st.tr[i].y=Math.abs(gon)+200.0;
-            if (dx <0.0 && dy >=0.0) st.tr[i].y=400.0-Math.abs(gon);
-            st.tr[i].x=ent;
+        for (int i = 0; i < st.ntrees; i++) {
+            double dx = st.tr[i].x - xm;
+            double dy = st.tr[i].y - ym;
+            double ent = Math.sqrt(Math.pow(dx, 2.0) + Math.pow(dy, 2.0));
+            double gon = 200.0 * Math.asin((dx) / ent) / Math.PI;
+            if (dx >= 0.0 && dy >= 0.0) {
+                st.tr[i].y = gon;
+            }
+            if (dx >= 0.0 && dy < 0.0) {
+                st.tr[i].y = 200.0 - gon;
+            }
+            if (dx < 0.0 && dy < 0.0) {
+                st.tr[i].y = Math.abs(gon) + 200.0;
+            }
+            if (dx < 0.0 && dy >= 0.0) {
+                st.tr[i].y = 400.0 - Math.abs(gon);
+            }
+            st.tr[i].x = ent;
         }
-    }    
-    public void polar2xy(){
-        for (int i=0; i < st.ncpnt; i++){
-            double xp=st.center.x+Math.sin(Math.PI*st.cpnt[i].y/200.0)*st.cpnt[i].x;
-            double yp=st.center.y+Math.cos(Math.PI*st.cpnt[i].y/200.0)*st.cpnt[i].x;
-            st.cpnt[i].x=xp;
-            st.cpnt[i].y=yp;
+    }
+
+    public void polar2xy() {
+        for (int i = 0; i < st.ncpnt; i++) {
+            double xp = st.center.x + Math.sin(Math.PI * st.cpnt[i].y / 200.0) * st.cpnt[i].x;
+            double yp = st.center.y + Math.cos(Math.PI * st.cpnt[i].y / 200.0) * st.cpnt[i].x;
+            st.cpnt[i].x = xp;
+            st.cpnt[i].y = yp;
         }
-        for (int i=0; i < st.ntrees; i++){
-            double xp=st.center.x+Math.sin(Math.PI*st.tr[i].y/200.0)*st.tr[i].x;
-            double yp=st.center.y+Math.cos(Math.PI*st.tr[i].y/200.0)*st.tr[i].x;
-            st.tr[i].x=xp;
-            st.tr[i].y=yp;
+        for (int i = 0; i < st.ntrees; i++) {
+            double xp = st.center.x + Math.sin(Math.PI * st.tr[i].y / 200.0) * st.tr[i].x;
+            double yp = st.center.y + Math.cos(Math.PI * st.tr[i].y / 200.0) * st.tr[i].x;
+            st.tr[i].x = xp;
+            st.tr[i].y = yp;
         }
-    
-        
-    };
-   public boolean getpolar(){
-       
-       return  polar;
-   }      
-    
+    }
+
+   public boolean getpolar() {
+        return polar;
+    }
 
     public Stand getStand() {
-        return st ;
+        return st;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -730,6 +721,7 @@ public class EditorPanel extends JPanel {
     private javax.swing.JButton addEmptyLineButton;
     private javax.swing.JLabel altitudeLabel;
     private javax.swing.JTextField altitudeTextField;
+    private javax.swing.JButton changeCoordinateSystemButton;
     private javax.swing.JButton clearFormButton;
     private javax.swing.JButton deleteCornerPointButton;
     private javax.swing.JButton deleteTreeButton;
@@ -761,7 +753,6 @@ public class EditorPanel extends JPanel {
     private javax.swing.JTextField locationCodeTextField;
     private javax.swing.JLabel locationLabel;
     private javax.swing.JTextField locationTextField;
-    private javax.swing.JButton polarToXYButton;
     private javax.swing.JLabel positionRightValueLabel;
     private javax.swing.JTextField positionRightValueTextField;
     private javax.swing.JLabel positionTopValueLabel;
@@ -778,5 +769,5 @@ public class EditorPanel extends JPanel {
     private javax.swing.JLabel standSizeLabel;
     private javax.swing.JTextField standSizeTextField;
     // End of variables declaration//GEN-END:variables
-    
+
 }

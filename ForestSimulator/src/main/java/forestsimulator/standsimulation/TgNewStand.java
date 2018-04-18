@@ -30,7 +30,7 @@ public class TgNewStand extends JDialog {
     
     Stand st;
     TgJFrame frame;
-    /** Creates new form TgNewStand */
+
     public TgNewStand(Frame parent, boolean modal, Stand st1, TgJFrame owner, 
                       Locale preferredLanguage) {
         super(parent, modal);
@@ -41,7 +41,6 @@ public class TgNewStand extends JDialog {
 //        setTitle(messages.getString("new_Stand"));
 //        jLabel1.setText(messages.getString("IntroZeile"));
 //        jLabel2.setText(messages.getString("Size"));
-//        jLabel3.setText(messages.getString("standname"));
 //        jButton1.setText(messages.getString("create_area"));
 //        jComboBox1.removeAllItems();
 //        jComboBox1.addItem(messages.getString("square"));

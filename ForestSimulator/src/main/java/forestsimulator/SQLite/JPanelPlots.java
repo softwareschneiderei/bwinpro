@@ -509,7 +509,7 @@ public class JPanelPlots extends javax.swing.JPanel {
 
     public Stand createStand(){
         try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement stm = cn.createStatement()) {
-            try (ResultSet rs = stm.executeQuery("SELECT * FROM stand WHERE _id = " + standID + " ;")) {
+            try (ResultSet rs = stm.executeQuery("SELECT * FROM stand WHERE _id = " + standID)) {
                 while (rs.next()) {
                     st.standname = rs.getString("name");
                     st.year = rs.getInt("year");
@@ -538,7 +538,7 @@ public class JPanelPlots extends javax.swing.JPanel {
                 double zz = 0.0;
                 st.addcornerpoint("Eck" + i, xx, yy, zz);
             }
-            try (ResultSet rs = stm.executeQuery("SELECT * FROM trees WHERE standid = " + standID + " ;")) {
+            try (ResultSet rs = stm.executeQuery("SELECT * FROM trees WHERE standid = " + standID)) {
                 st.ntrees = 0;
                 while (rs.next()) {
                     String na = rs.getString("name");
