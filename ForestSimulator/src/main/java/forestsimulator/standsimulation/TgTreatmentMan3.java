@@ -36,7 +36,6 @@ public class TgTreatmentMan3 extends JPanel {
     TgYieldTable  yt  = null;
     Treatment2 treat = new Treatment2();
     
-    /** Creates new form TgTreatmentMan3 */
     public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, Locale preferredLanguage) {
         initComponents();
         st = stparent;
@@ -108,9 +107,7 @@ public class TgTreatmentMan3 extends JPanel {
         jTable1.setModel(data);
         
         jComboBox4.setSelectedIndex(2);
-        
         loadTable();
-        
     }
     
     /** This method is called from within the constructor to
@@ -538,8 +535,6 @@ private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         jTextField8.setVisible(false);
         jLabel17.setVisible(false);
     }
-
-    // TODO add your handling code here:
 }//GEN-LAST:event_jComboBox2ActionPerformed
 
 private void jTextField13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField13ActionPerformed
@@ -553,8 +548,8 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     public void formUpdate(Stand stand){
         loadTable();
     }
-/** loads the species settings    */
-    public void loadTable(){
+
+    private void loadTable(){
         jCheckBox2.setSelected(st.ingrowthActive);
 
         if (st.random.getRandomType() > 10) jCheckBox1.setSelected(true); else jCheckBox1.setSelected(false); 
@@ -601,10 +596,9 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
       jCheckBox3.setSelected(false);
       if (st.ntrees > 0){  
 // Set thinning  and intensity
-        double thIntensity=0.0;
         String thtxt = jComboBox4.getSelectedItem().toString();
         thtxt = thtxt.substring(0,3);
-        thIntensity = Double.parseDouble(thtxt);
+        double thIntensity = Double.parseDouble(thtxt);
 /*        if (jComboBox4.getSelectedIndex() == 1) thIntensity = 0.8;
         if (jComboBox4.getSelectedIndex() == 2) thIntensity = 1.0;
         if (jComboBox4.getSelectedIndex() == 3) thIntensity = 1.2;
@@ -641,22 +635,20 @@ private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
       double sum=0.0; 
       for (int i=0; i< st.nspecies; i++) sum=sum+st.sp[i].trule.targetCrownPercent;
       for (int i=0; i< st.nspecies; i++) st.sp[i].trule.targetCrownPercent=100.0*st.sp[i].trule.targetCrownPercent/sum;
-//
       loadTable();
     };
 
-    public int numberOfCropTrees(int speciesIndex, double diameter, double percentage){
+    public int numberOfCropTrees(int speciesIndex, double diameter, double percentage) {
         Tree atree = new Tree();
         atree.st = st;
-        atree.code=st.sp[speciesIndex].code;
-        atree.sp=st.sp[speciesIndex];
-        atree.d=diameter;
-        atree.h=st.sp[speciesIndex].hg;
-        double dist_ct=0.0;
-        dist_ct=atree.calculateCw();
-//Number of crop trees dependent on calcualted distance and actual mixture percent
-        return  (int)((10000.0/((Math.PI*Math.pow(dist_ct,2.0))/4))*percentage/100.0);            
-    }    
+        atree.code = st.sp[speciesIndex].code;
+        atree.sp = st.sp[speciesIndex];
+        atree.d = diameter;
+        atree.h = st.sp[speciesIndex].hg;
+        double dist_ct = atree.calculateCw();
+        // Number of crop trees dependent on calcualted distance and actual mixture percent
+        return (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * percentage / 100.0);
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
