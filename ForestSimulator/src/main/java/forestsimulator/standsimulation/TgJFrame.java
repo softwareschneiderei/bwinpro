@@ -223,12 +223,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         grWithMenu.add(tggrMenus, BorderLayout.NORTH);
         grWithMenu.add(gr, BorderLayout.CENTER);
 
-        iframe[0] = new TgInternalFrame(zfneu, messages.getString("Standmap"));
-        iframe[1] = new TgInternalFrame(ppneu, messages.getString("Parallel_Projection"));
-        iframe[2] = new TgInternalFrame(grWithMenu, messages.getString("Graphics"));
+        iframe[0] = new TgInternalFrame(zfneu, messages.getString("TgInternalFrame.standmap.title"));
+        iframe[1] = new TgInternalFrame(ppneu, messages.getString("TgInternalFrame.parallelProjection.title"));
+        iframe[2] = new TgInternalFrame(grWithMenu, messages.getString("TgInternalFrame.graphics.title"));
         iframe[3] = new TgInternalFrame(sd, messages.getString("Add_Trees"));
         iframe[4] = new TgInternalFrame(treatmentPanel, messages.getString("Simulation_Setting"));
-        iframe[5] = new TgInternalFrame(tsi, messages.getString("Stand_Info"));
+        iframe[5] = new TgInternalFrame(tsi, messages.getString("TgInternalFrame.standInfo.title"));
 
 //                user.currentDir();
         tgProgramInfo = new TgProgramInfo(this);

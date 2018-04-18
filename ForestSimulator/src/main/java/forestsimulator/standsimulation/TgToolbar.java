@@ -26,41 +26,27 @@ import java.util.*;
 
 public class TgToolbar extends JToolBar {
 
-    JButton button;
-
     public TgToolbar(ActionListener listener, String path, Locale preferredLanguage) {
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-        button = new JButton(new ImageIcon(path + "//icons//userbaum1.jpg"));
-        button.setRolloverEnabled(true);
-        button.setToolTipText(messages.getString("Grow"));
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setActionCommand("Grow");
+        JButton growButton = new JButton(new ImageIcon(path + "//icons//userbaum1.jpg"));
+        growButton.setRolloverEnabled(true);
+        growButton.setToolTipText(messages.getString("TgToolbar.growButton.toolTipText"));
+        growButton.setContentAreaFilled(false);
+        growButton.setBorderPainted(false);
+        growButton.setFocusPainted(false);
+        growButton.setActionCommand("Grow");
 
-        button.addActionListener(listener);
-        add(button);
+        growButton.addActionListener(listener);
+        add(growButton);
 
-        button = new JButton(new ImageIcon(path + "//icons//useraxt1.jpg"));
-        button.setToolTipText(messages.getString("Treatment"));
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setActionCommand("Treatment");
-        button.addActionListener(listener);
-        add(button);
-
-        /*        button = new JButton(new ImageIcon (path+"//icons//userlineal1.jpg"));
-        button.setToolTipText(messages.getString("Sorting"));
-        button.setContentAreaFilled( false );
-        button.setBorderPainted( false );   
-        button.setFocusPainted( false );
-        button.setActionCommand("Sorting");
-        button.addActionListener(listener);
-        add(button);
-         */
+        JButton treatmentButton = new JButton(new ImageIcon(path + "//icons//useraxt1.jpg"));
+        treatmentButton.setToolTipText(messages.getString("TgToolbar.treatmentButton.toolTipText"));
+        treatmentButton.setContentAreaFilled(false);
+        treatmentButton.setBorderPainted(false);
+        treatmentButton.setFocusPainted(false);
+        treatmentButton.setActionCommand("Treatment");
+        treatmentButton.addActionListener(listener);
+        add(treatmentButton);
         setFloatable(false);
-
     }
-
 }
