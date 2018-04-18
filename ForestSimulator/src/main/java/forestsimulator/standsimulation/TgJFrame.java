@@ -35,6 +35,7 @@ import javax.swing.event.*;
 import java.io.*;
 import java.util.*;
 import java.net.*;
+import java.text.MessageFormat;
 import java.util.logging.FileHandler;
 import java.util.logging.SimpleFormatter;
 import org.jdom.Document;
@@ -50,11 +51,12 @@ import org.jdom.DocType;
 public class TgJFrame extends JFrame implements ActionListener, ItemListener, StandChangeListener {
 
     private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     FileHandler logHandler = null;
 
-    String bwinproVersion = "Version 7.8.01 XML";
-    String bwinproLastUpdate = "15-09-2015";
-    boolean accessInput = true;
+    String bwinproVersion = "Version 7.8-0.1";
+    String bwinproLastUpdate = "18.04.2018";
+    private boolean accessInput = true;
     static Stand st = new Stand();
     SpeciesDefMap SDM = new SpeciesDefMap();
     File currentFile;
@@ -86,7 +88,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     JDesktopPane dp = new JDesktopPane();
     TgUser user;
     private JFrame owner;
-    ResourceBundle messages;
+
     private Manager3D manager3d;
 
     boolean grafik3D = false;
@@ -103,14 +105,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     int kspTyp = 0;
 
     public TgJFrame(Stand stneu) throws IOException {
-// Fehler logger bereitstellen
-        try {
-            logHandler = new FileHandler("log.txt");
-            logHandler.setFormatter(new SimpleFormatter());
-            LOGGER.addHandler(logHandler);
-            LOGGER.info("ForestSimulator Version: " + bwinproVersion);
-        } catch (Exception e) {
-        }
+        logHandler = new FileHandler("log.txt");
+        logHandler.setFormatter(new SimpleFormatter());
+        LOGGER.addHandler(logHandler);
+        LOGGER.log(Level.INFO, "ForestSimulator Version: {0}", bwinproVersion);
 
         st = stneu;
         st.addStandChangeListener(this);
@@ -122,19 +120,19 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
             JDialog settings = new TgUserDialog(this, true);
             settings.setVisible(true);
-            JTextArea about = new JTextArea("Please restart program with new settings");
-            JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea about = new JTextArea(messages.getString("TgJFrame.applySettingsDialog.message"));
+            JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.applySettingsDialog.title"), JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
         } else {
             System.out.println("Settings laden ");
-            LOGGER.info("TgJFrame local path : " + workingDirectory.getCanonicalPath());
+            LOGGER.log(Level.INFO, "TgJFrame local path : {0}", workingDirectory.getCanonicalPath());
             user.loadSettings();
             language = UserLanguage.forLocale(user.getLanguageShort());
             Locale.setDefault(language.locale());
             plugIn = user.getPlugIn();
             st.modelRegion = plugIn;
             st.FileXMLSettings = user.XMLSettings;
-            LOGGER.info("Modell :" + plugIn);
+            LOGGER.log(Level.INFO, "Modell :{0}", plugIn);
         }
         setTitle(getTitle() + "Forest Simulator BWINPro 7 " + bwinproVersion + " - Modell: " + plugIn);
         boolean available3d = false;
@@ -143,8 +141,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             new Query3DProperties();
             available3d = true;
         }
-//        accessInput = true;
-
         if (plugIn.indexOf("nwfva") > 0) {
             accessInput = true;
         }
@@ -163,7 +159,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         st.setProgramDir(programDir);
         loadGenralSettings(programDir);
 
-        messages = ResourceBundle.getBundle("forestsimulator/gui");
 
         JPanel zfneu = new JPanel();
         zfneu.setLayout(new BorderLayout());
@@ -226,13 +221,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         iframe[0] = new TgInternalFrame(zfneu, messages.getString("TgInternalFrame.standmap.title"));
         iframe[1] = new TgInternalFrame(ppneu, messages.getString("TgInternalFrame.parallelProjection.title"));
         iframe[2] = new TgInternalFrame(grWithMenu, messages.getString("TgInternalFrame.graphics.title"));
-        iframe[3] = new TgInternalFrame(sd, messages.getString("Add_Trees"));
-        iframe[4] = new TgInternalFrame(treatmentPanel, messages.getString("Simulation_Setting"));
+        iframe[3] = new TgInternalFrame(sd, messages.getString("TgInternalFrame.addTrees.title"));
+        iframe[4] = new TgInternalFrame(treatmentPanel, messages.getString("TgInternalFrame.SimulationSetting.title"));
         iframe[5] = new TgInternalFrame(tsi, messages.getString("TgInternalFrame.standInfo.title"));
-
-//                user.currentDir();
         tgProgramInfo = new TgProgramInfo(this);
-        iframe[6] = new TgInternalFrame(tgProgramInfo, messages.getString("Program_Info"));
+        iframe[6] = new TgInternalFrame(tgProgramInfo, messages.getString("TgInternalFrame.programInfo.title"));
 
         JPanel menus = new JPanel();
         menus.setLayout(new BoxLayout(menus, BoxLayout.X_AXIS));
@@ -272,17 +265,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
         getContentPane().add(dp, BorderLayout.CENTER);
 
-        // add a windowListener for closing the window		
-        addWindowListener(
-                new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent e) {
                 //writeFile(ColorInfo);
                 dispose();
                 System.exit(0);
             }
         });
-
-        // make TgJFrame visible
         user.loadSettings();
         setVisible(true);
         zf.neuzeichnen();
@@ -302,10 +292,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
     }
 
-//-----------------------------------------------------------------------------	
-    /**
-     * In case an action is performed
-     */
+    @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         String cmd = e.getActionCommand();
@@ -326,27 +313,25 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     iframe[3].setVisible(true);
                     menubar.cmi[3].setSelected(true);
                 }
-                if (st.modelRegion.indexOf("default") > -1) {
+                if (st.modelRegion.contains("default")) {
                     st.ingrowthActive = false;
                 }
             }
-
             if (cmd.equals("openTreegross")) {
-
                 yt.setYieldTableNew();
                 DataExchangeFormat dataex = new DataExchangeFormat();
                 JFileChooser fc = new JFileChooser();
                 TxtFileFilter txtFilter = new TxtFileFilter();
                 fc.addChoosableFileFilter(txtFilter);
                 fc.setCurrentDirectory(user.getDataDir());
-                int auswahl = fc.showOpenDialog(owner);
+                fc.showOpenDialog(owner);
                 String pa = fc.getSelectedFile().getPath();
-                String dn = fc.getSelectedFile().getName();
+                fc.getSelectedFile().getName();
                 Model mo = new Model();
                 st.setModelRegion(mo.getPlugInName(plugIn));
 
                 dataex.read(st, pa);
-                LOGGER.info("File eingelesen:" + pa);
+                LOGGER.log(Level.INFO, "File eingelesen:{0}", pa);
                 if (st.ntrees == 0) {
                     dataex.readOldFormat1(st, pa);
                 }
@@ -358,15 +343,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 }
                 if (st.getSpeciesDefinedTrue() == false) {
                     String text = st.getSpeciesUndefinedCode();
-                    JTextArea about = new JTextArea(messages.getString("ERROR_Reading_Tree1") + text
-                            + messages.getString("ERROR_Reading_Tree2")
-                            + messages.getString("ERROR_Reading_Tree3"));
+                    JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.aboutTextArea.error"), text));
                     about.setBackground(Color.LIGHT_GRAY);
-                    JOptionPane.showMessageDialog(this, about, "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.aboutMessageDialog.title"), JOptionPane.INFORMATION_MESSAGE);
                     st.ntrees = 0;
                     st.nspecies = 0;
                 }
-
                 st.sortbyd();
                 st.missingData();
                 st.descspecies();
@@ -629,9 +611,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 JDialog settings = new TgUserDialog(this, true);
                 settings.setVisible(true);
                 programDir = user.getWorkingDir();
-                JTextArea about = new JTextArea(messages.getString("Please_restart"));
             }
-
             if (cmd.equals("Species Manager")) {
                 TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir.getAbsolutePath(), st.FileXMLSettings);
                 spman.setVisible(true);

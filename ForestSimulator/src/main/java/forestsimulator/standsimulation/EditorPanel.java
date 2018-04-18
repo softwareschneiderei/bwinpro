@@ -62,15 +62,11 @@ public class EditorPanel extends JPanel {
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
         st.setProgramDir(new File(urlcodebase));
-//        System.out.println(urlcodebase);
         st.ntrees=0;
 	st.nspecies=0;
 	st.ncpnt=0;
 	st.year=2008;
         polarToXYButton.setText("xy2polar");
-
-//        ExcelAdapter myAd = new ExcelAdapter(jTable1);
-//        loadStand();
     }
     
     private int getInt(String txt){
@@ -160,17 +156,17 @@ public class EditorPanel extends JPanel {
     public void loadStand(){
 //        for (int j=st.ntrees; j>0; j--) data.removeRow(j-1);
         standNameTextField.setText(st.standname);
-        standSizeTextField.setText(new Double(st.size).toString());
-        registrationDateYearTextField.setText(new Integer(st.year).toString());
-        registrationDateMonthTextField.setText(new Integer(st.monat).toString());
-        positionRightValueTextField.setText(new Double(st.rechtswert_m).toString());
-        positionTopValueTextField.setText(new Double(st.hochwert_m).toString());
-        altitudeTextField.setText(new Double(st.hoehe_uNN_m).toString());
+        standSizeTextField.setText(Double.toString(st.size));
+        registrationDateYearTextField.setText(Integer.toString(st.year));
+        registrationDateMonthTextField.setText(Integer.toString(st.monat));
+        positionRightValueTextField.setText(Double.toString(st.rechtswert_m));
+        positionTopValueTextField.setText(Double.toString(st.hochwert_m));
+        altitudeTextField.setText(Double.toString(st.hoehe_uNN_m));
         regionTextField.setText(st.wuchsgebiet);
         districtTextField.setText(st.wuchsbezirk);
         locationTextField.setText(st.standort);
-        expositionTextField.setText(new Integer(st.exposition_Gon).toString());
-        gradientTextField.setText(new Double(st.hangneigungProzent).toString());
+        expositionTextField.setText(Integer.toString(st.exposition_Gon));
+        gradientTextField.setText(Double.toString(st.hangneigungProzent));
         locationCodeTextField.setText(st.standortsKennziffer);
 // Center and corner points
            corners.addRow(rowData2);
@@ -187,24 +183,23 @@ public class EditorPanel extends JPanel {
         }
       
 // Tree data        
-        int j=0;
         for (int i=0; i< st.ntrees; i++){
            data.addRow(rowData);
-           jTable2.setValueAt(new Integer(st.tr[i].code).toString(),i,0);
-           jTable2.setValueAt(st.tr[i].no.toString(),i,1);
-           jTable2.setValueAt(new Integer(st.tr[i].age).toString(),i,2);
+           jTable2.setValueAt(Integer.toString(st.tr[i].code),i,0);
+           jTable2.setValueAt(st.tr[i].no,i,1);
+           jTable2.setValueAt(Integer.toString(st.tr[i].age),i,2);
            jTable2.setValueAt(f.format(st.tr[i].d),i,3);
            jTable2.setValueAt(f.format(st.tr[i].h),i,4);
            jTable2.setValueAt(f.format(st.tr[i].si),i,5);
            jTable2.setValueAt(f.format(st.tr[i].cb),i,6);
            jTable2.setValueAt(f.format(st.tr[i].cw),i,7);
-           jTable2.setValueAt(new Integer(st.tr[i].out).toString(),i,8);
-           jTable2.setValueAt(new Integer(st.tr[i].outtype).toString(),i,9);
+           jTable2.setValueAt(Integer.toString(st.tr[i].out),i,8);
+           jTable2.setValueAt(Integer.toString(st.tr[i].outtype),i,9);
            jTable2.setValueAt(f.format(st.tr[i].x),i,10);
            jTable2.setValueAt(f.format(st.tr[i].y),i,11);
            jTable2.setValueAt(f.format(st.tr[i].z),i,12);
-           jTable2.setValueAt(new Boolean(st.tr[i].crop).toString(),i,13);
-           jTable2.setValueAt(new Boolean(st.tr[i].habitat).toString(),i,14);
+           jTable2.setValueAt(Boolean.toString(st.tr[i].crop),i,13);
+           jTable2.setValueAt(Boolean.toString(st.tr[i].habitat),i,14);
            f.setMaximumFractionDigits(4);
            f.setMinimumFractionDigits(4);
 
@@ -212,12 +207,9 @@ public class EditorPanel extends JPanel {
            f.setMaximumFractionDigits(4);
            f.setMinimumFractionDigits(4);
            jTable2.setValueAt(st.tr[i].remarks,i,16);
-           jTable2.setValueAt(new Integer(st.tr[i].layer).toString(),i,17);
+           jTable2.setValueAt(Integer.toString(st.tr[i].layer),i,17);
          }
-
     }
-
-    
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -555,16 +547,15 @@ public class EditorPanel extends JPanel {
     }//GEN-LAST:event_readStandButtonActionPerformed
 
     private void addEmptyLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addEmptyLineButtonActionPerformed
-// TODO add your handling code here:
-                for (int i=0; i<50; i++) data.addRow(rowData);
+        for (int i = 0; i < 50; i++) {
+            data.addRow(rowData);
+        }
     }//GEN-LAST:event_addEmptyLineButtonActionPerformed
 
     private void saveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveStandButtonActionPerformed
-// TODO add your handling code here:
       st.ntrees=0;
       st.nspecies=0;
       st.ncpnt=0;
-//
        JFileChooser fc = new JFileChooser();
        TxtFileFilter txtFilter = new TxtFileFilter();
        txtFilter.setExtension("xml");

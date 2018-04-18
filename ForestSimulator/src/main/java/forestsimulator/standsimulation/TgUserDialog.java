@@ -23,12 +23,13 @@ import forestsimulator.language.UserLanguage;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 
-public class TgUserDialog extends javax.swing.JDialog {
+public class TgUserDialog extends JDialog {
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     File WorkingDir;
     File ProgramDir;
     File DataDir;
@@ -36,11 +37,10 @@ public class TgUserDialog extends javax.swing.JDialog {
     File localPath;
     String XMLSettings="";
     String plugIn="";
-    java.io.File verzeichnis;
-    java.io.File localF = null;
+    File verzeichnis;
+    File localF = null;
     private TgUser user = new TgUser(new File("."));
    
-    /** Creates new form JDialog */
     public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
         if (user.fileExists("ForestSimulator.ini")) {
@@ -253,29 +253,24 @@ public class TgUserDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-        javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
-        jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jf.setCurrentDirectory(localPath);
-//        jf.setDialogTitle(messages.getString("choose_Output_Dir"));
-        int k=jf.showOpenDialog(this);
-        WorkingDir = jf.getSelectedFile();        
+        jf.showOpenDialog(this);
+        WorkingDir = jf.getSelectedFile();
         jTextField2.setText(WorkingDir.getAbsolutePath());
-
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try
-        {
+        try {
             saveSettings();
-            
-            JTextArea about = new JTextArea("Please restart program with new settings");
-            JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea about = new JTextArea(messages.getString("TgUserDialog.applySettingsDialog.message"));
+            JOptionPane.showMessageDialog(this, about, "TgUserDialog.applySettingsDialog.title", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
-
             dispose();
+        } catch (IOException e) {
+            System.out.println("Error! writing File standsimulation.ini");
         }
-        catch(java.io.IOException e){System.out.println("Error! writing File standsimulation.ini");}
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void saveSettings() throws IOException {
@@ -299,30 +294,24 @@ public class TgUserDialog extends javax.swing.JDialog {
         jf.setCurrentDirectory(localPath);
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
 //        jf.setDialogTitle(messages.getString("choose_User_Dir"));
-        int k=jf.showOpenDialog(this);
-        ProgramDir = jf.getSelectedFile();        
+        int k = jf.showOpenDialog(this);
+        ProgramDir = jf.getSelectedFile();
         jTextField1.setText(ProgramDir.getAbsolutePath());
         loadModels();
     }//GEN-LAST:event_jButton1ActionPerformed
-    
-    private void loadModels(){
+
+    private void loadModels() {
         jComboBox2.removeAllItems();
         File modelDirectory = new File(ProgramDir, "models");
 // Liste mit Dateien erstellen 
         String entries[] = modelDirectory.list();
-        for ( int i = 0; i < entries.length; i++ ) {
-             if (entries[i].indexOf(".xml") >0) jComboBox2.addItem(entries[i]);
+        for (String entry : entries) {
+            if (entry.indexOf(".xml") > 0) {
+                jComboBox2.addItem(entry);
+            }
         }
     }
     
-    /**
-     * @param args the command line arguments
-   */
-    /*
-    public static void main(String args[]) {
-        new javax.swing.JDialog(new javax.swing.JFrame(), true).show();
-    }
-    */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
