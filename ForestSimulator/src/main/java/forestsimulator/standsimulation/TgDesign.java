@@ -67,7 +67,6 @@ public class TgDesign extends JPanel {
 //        jComboBox1.removeAllItems();
 //        jComboBox1.addItem(messages.getString("random_coordinates"));
 //        jComboBox1.addItem(messages.getString("raster_coordinates"));
-//        jCheckBox1.setText(messages.getString("skidtrails"));
 //        jLabel13.setText(messages.getString("layer"));
         loadSpecies(programDir.getPath());
         setdbh();

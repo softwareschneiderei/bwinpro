@@ -42,11 +42,6 @@ public class TgTreatmentMan3 extends JPanel {
         st = stparent;
         yt = frameparent.yt;
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-        thinningAmountMinimumLabel.setText(messages.getString("maxThinning"));
-        harvestingAmountMinimumLabel.setText(messages.getString("maxHarvest"));
-        simulationDurationLabel.setText(messages.getString("simulationtime"));
-        scenarioSettingsHeadingLabel.setText(messages.getString("senario"));
-        developmentLabel.setText(messages.getString("skidtrails"));
         simulationDurationUnitLabel.setText(messages.getString("years"));
         minimumShadingLabel.setText(messages.getString("minCover"));
         protectionThicknessLabel.setText(messages.getString("protectDbh"));
@@ -55,7 +50,6 @@ public class TgTreatmentMan3 extends JPanel {
 
         useRandomEffectsCheckBox.setText(messages.getString("randomEffects"));
         useIngrowthModelCheckBox.setText(messages.getString("ingrowthModell"));
-        developmentCheckBox.setText(messages.getString("skidtrails"));
         freeZTreesCheckBox.setText(messages.getString("releaseOnlyCropTrees"));
         useRiskModelCheckBox.setText(messages.getString("riskModel"));
         minorityProtectionCheckBox.setText(messages.getString("minorities"));
