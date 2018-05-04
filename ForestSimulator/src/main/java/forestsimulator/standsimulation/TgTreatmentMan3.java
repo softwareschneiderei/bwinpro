@@ -41,27 +41,13 @@ public class TgTreatmentMan3 extends JPanel {
         initComponents();
         st = stparent;
         yt = frameparent.yt;
-        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-        simulationDurationUnitLabel.setText(messages.getString("years"));
-        minimumShadingLabel.setText(messages.getString("minCover"));
-        protectionThicknessLabel.setText(messages.getString("protectDbh"));
-        plantingLabel.setText(messages.getString("planting"));
-        speciesCodeLabel.setText(messages.getString("plantat"));
 
-        useRandomEffectsCheckBox.setText(messages.getString("randomEffects"));
-        useIngrowthModelCheckBox.setText(messages.getString("ingrowthModell"));
-        freeZTreesCheckBox.setText(messages.getString("releaseOnlyCropTrees"));
-        useRiskModelCheckBox.setText(messages.getString("riskModel"));
-        minorityProtectionCheckBox.setText(messages.getString("minorities"));
-        unterstandRemovalCheckBox.setText(messages.getString("removeunderstory"));
-        plantingCheckbox.setText(messages.getString("TgTreatmentMan3.plantingCheckbox.text"));
-        startSimulationButton.setText(messages.getString("startSimulation"));
         thinningIntensityComboBox.removeAllItems();
-        thinningIntensityComboBox.addItem(ThinningIntesity.None.entry());
-        thinningIntensityComboBox.addItem(ThinningIntesity.Low.entry());
-        thinningIntensityComboBox.addItem(ThinningIntesity.Moderate.entry());
-        thinningIntensityComboBox.addItem(ThinningIntesity.Heavy.entry());
-        thinningIntensityComboBox.addItem(ThinningIntesity.VeryHeavy.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.None.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.Low.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.Moderate.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.Heavy.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.VeryHeavy.entry());
         thinningIntensityComboBox.addItem("0.9");
         thinningIntensityComboBox.addItem("1.1");
         thinningIntensityComboBox.addItem("1.3");
@@ -71,12 +57,9 @@ public class TgTreatmentMan3 extends JPanel {
         thinningIntensityComboBox.addItem("1.8");
         thinningIntensityComboBox.addItem("1.9");
         
-        data = new javax.swing.table.DefaultTableModel(
+        data = new DefaultTableModel(
             new Object [][] {  },
-            new String [] {
-               messages.getString("species"), messages.getString("code"), messages.getString("thinningHeight"),
-                  messages.getString("targetD"), messages.getString("croptrees"), messages.getString("mixture")
-            }
+            TreatmentTableColumn.values()
         );
         jTable1.setModel(data);
         
@@ -120,7 +103,7 @@ public class TgTreatmentMan3 extends JPanel {
         thinningAmountMinimumTextField = new javax.swing.JTextField();
         thinningAmountMaximumLabel = new javax.swing.JLabel();
         thinningAmountMaximumTextField = new javax.swing.JTextField();
-        freeZTreesCheckBox = new javax.swing.JCheckBox();
+        releaseOnlyCropTreesCheckBox = new javax.swing.JCheckBox();
         jPanel8 = new javax.swing.JPanel();
         harvestingTypeLabel = new javax.swing.JLabel();
         harvestingTypeComboBox = new javax.swing.JComboBox();
@@ -136,16 +119,16 @@ public class TgTreatmentMan3 extends JPanel {
         habitatTreesTextField = new javax.swing.JTextField();
         woodTypeComboBox = new javax.swing.JComboBox();
         minorityProtectionCheckBox = new javax.swing.JCheckBox();
-        minimumShadingLabel = new javax.swing.JLabel();
-        minimumShadingTextField = new javax.swing.JTextField();
+        minimumCoverLabel = new javax.swing.JLabel();
+        minimumCoverTextField = new javax.swing.JTextField();
         protectionThicknessLabel = new javax.swing.JLabel();
         protectionThicknessTextField = new javax.swing.JTextField();
         jPanel10 = new javax.swing.JPanel();
         plantingLabel = new javax.swing.JLabel();
         plantingCheckbox = new javax.swing.JCheckBox();
-        unterstandRemovalCheckBox = new javax.swing.JCheckBox();
-        plantingMinimumLabel = new javax.swing.JLabel();
-        plantingMinimumCheckBox = new javax.swing.JTextField();
+        unterstoryRemovalCheckBox = new javax.swing.JCheckBox();
+        plantAtLabel = new javax.swing.JLabel();
+        plantAtTextField = new javax.swing.JTextField();
         speciesCodeLabel = new javax.swing.JLabel();
         speciesCodeTextField = new javax.swing.JTextField();
         jPanel5 = new javax.swing.JPanel();
@@ -283,13 +266,13 @@ public class TgTreatmentMan3 extends JPanel {
         });
         jPanel7.add(thinningAmountMaximumTextField);
 
-        freeZTreesCheckBox.setText(bundle.getString("TgTreatmentMan3.freeZTreesCheckBox.text")); // NOI18N
-        freeZTreesCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        releaseOnlyCropTreesCheckBox.setText(bundle.getString("TgTreatmentMan3.releaseOnlyCropTreesCheckBox.text")); // NOI18N
+        releaseOnlyCropTreesCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                freeZTreesCheckBoxActionPerformed(evt);
+                releaseOnlyCropTreesCheckBoxActionPerformed(evt);
             }
         });
-        jPanel7.add(freeZTreesCheckBox);
+        jPanel7.add(releaseOnlyCropTreesCheckBox);
 
         jPanel4.add(jPanel7);
 
@@ -298,7 +281,7 @@ public class TgTreatmentMan3 extends JPanel {
         harvestingTypeLabel.setText(bundle.getString("TgTreatmentMan3.harvestingTypeLabel.text")); // NOI18N
         jPanel8.add(harvestingTypeLabel);
 
-        harvestingTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zielstärkennutzung", "Schirmschlag", "Kahlschlag" }));
+        harvestingTypeComboBox.setModel(new DefaultComboBoxModel(HarvestingType.values()));
         harvestingTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 harvestingTypeComboBoxActionPerformed(evt);
@@ -352,12 +335,12 @@ public class TgTreatmentMan3 extends JPanel {
         minorityProtectionCheckBox.setText(bundle.getString("TgTreatmentMan3.minorityProtectionCheckBox.text")); // NOI18N
         jPanel9.add(minorityProtectionCheckBox);
 
-        minimumShadingLabel.setText(bundle.getString("TgTreatmentMan3.minimumShadingLabel.text")); // NOI18N
-        jPanel9.add(minimumShadingLabel);
+        minimumCoverLabel.setText(bundle.getString("TgTreatmentMan3.minimumCoverLabel.text")); // NOI18N
+        jPanel9.add(minimumCoverLabel);
 
-        minimumShadingTextField.setText(bundle.getString("TgTreatmentMan3.minimumShadingTextField.text")); // NOI18N
-        minimumShadingTextField.setPreferredSize(new java.awt.Dimension(26, 20));
-        jPanel9.add(minimumShadingTextField);
+        minimumCoverTextField.setText(bundle.getString("TgTreatmentMan3.minimumCoverTextField.text")); // NOI18N
+        minimumCoverTextField.setPreferredSize(new java.awt.Dimension(26, 20));
+        jPanel9.add(minimumCoverTextField);
 
         protectionThicknessLabel.setText(bundle.getString("TgTreatmentMan3.protectionThicknessLabel.text")); // NOI18N
         jPanel9.add(protectionThicknessLabel);
@@ -380,15 +363,15 @@ public class TgTreatmentMan3 extends JPanel {
         plantingCheckbox.setText(bundle.getString("TgTreatmentMan3.plantingCheckbox.text")); // NOI18N
         jPanel10.add(plantingCheckbox);
 
-        unterstandRemovalCheckBox.setText(bundle.getString("TgTreatmentMan3.unterstandRemovalCheckBox.text")); // NOI18N
-        jPanel10.add(unterstandRemovalCheckBox);
+        unterstoryRemovalCheckBox.setText(bundle.getString("TgTreatmentMan3.unterstoryRemovalCheckBox.text")); // NOI18N
+        jPanel10.add(unterstoryRemovalCheckBox);
 
-        plantingMinimumLabel.setText(bundle.getString("TgTreatmentMan3.plantingMinimumLabel.text")); // NOI18N
-        jPanel10.add(plantingMinimumLabel);
+        plantAtLabel.setText(bundle.getString("TgTreatmentMan3.plantAtLabel.text")); // NOI18N
+        jPanel10.add(plantAtLabel);
 
-        plantingMinimumCheckBox.setText(bundle.getString("TgTreatmentMan3.plantingMinimumCheckBox.text")); // NOI18N
-        plantingMinimumCheckBox.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel10.add(plantingMinimumCheckBox);
+        plantAtTextField.setText(bundle.getString("TgTreatmentMan3.plantAtTextField.text")); // NOI18N
+        plantAtTextField.setPreferredSize(new java.awt.Dimension(35, 20));
+        jPanel10.add(plantAtTextField);
 
         speciesCodeLabel.setText(bundle.getString("TgTreatmentMan3.speciesCodeLabel.text")); // NOI18N
         jPanel10.add(speciesCodeLabel);
@@ -439,9 +422,9 @@ private void harvestingAmountMaximumTextFieldActionPerformed(java.awt.event.Acti
     // TODO add your handling code here:
 }//GEN-LAST:event_harvestingAmountMaximumTextFieldActionPerformed
 
-private void freeZTreesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_freeZTreesCheckBoxActionPerformed
+private void releaseOnlyCropTreesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseOnlyCropTreesCheckBoxActionPerformed
     // TODO add your handling code here:
-}//GEN-LAST:event_freeZTreesCheckBoxActionPerformed
+}//GEN-LAST:event_releaseOnlyCropTreesCheckBoxActionPerformed
 
 private void simulationDurationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationDurationTextFieldActionPerformed
     // TODO add your handling code here:
@@ -527,7 +510,11 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private void loadTable(){
         useIngrowthModelCheckBox.setSelected(st.ingrowthActive);
 
-        if (st.random.getRandomType() > 10) useRandomEffectsCheckBox.setSelected(true); else useRandomEffectsCheckBox.setSelected(false); 
+        if (st.random.getRandomType() > 10) {
+            useRandomEffectsCheckBox.setSelected(true);
+        } else {
+            useRandomEffectsCheckBox.setSelected(false);
+        } 
         f=NumberFormat.getInstance(new Locale("en","US"));
         f.setMaximumFractionDigits(0);
         f.setMinimumFractionDigits(0);
@@ -548,52 +535,49 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
                if (nct <= 1) nct = st.sp[i].spDef.cropTreeNumber;
  //              if (nct <= 2) nct = numberOfCropTrees(i,st.sp[i].trule.targetDiameter,
  //                                                          st.sp[i].trule.targetCrownPercent);
-               
                jTable1.setValueAt(nct.toString(),i,4);
-               
                Double flant = Math.round(st.sp[i].trule.targetCrownPercent/(10.0 ))/10.0;
                pflArten = pflArten + st.sp[i].code + "["+flant.toString()+"];";
-               
         }
-        if (st.status ==0) speciesCodeTextField.setText(pflArten);
+        if (st.status == 0) {
+            speciesCodeTextField.setText(pflArten);
+        }
     }
     
     public void loadSettingsToStandRule() {
-        
-      if (useRandomEffectsCheckBox.isSelected() )  st.random.setRandomType(11); else st.random.setRandomType(10);
+      if (useRandomEffectsCheckBox.isSelected()) {
+          st.random.setRandomType(11);
+      } else {
+          st.random.setRandomType(10);
+      }
       st.ingrowthActive = useIngrowthModelCheckBox.isSelected();
       st.riskActive = useRiskModelCheckBox.isSelected();
       st.distanceDependent=true;
 // Planting rules
-      treat.setAutoPlanting(st,plantingCheckbox.isSelected(),  unterstandRemovalCheckBox.isSelected(), Double.parseDouble(plantingMinimumCheckBox.getText()), speciesCodeTextField.getText() );
+      treat.setAutoPlanting(st,plantingCheckbox.isSelected(),  unterstoryRemovalCheckBox.isSelected(), Double.parseDouble(plantAtTextField.getText()), speciesCodeTextField.getText() );
 // Skidtrails      
       treat.setSkidTrails(st,developmentCheckBox.isSelected(),Double.parseDouble(skidtrailDistanceTextField.getText()),Double.parseDouble(skidtrailWidthTextField.getText()));
       developmentCheckBox.setSelected(false);
-      if (st.ntrees > 0){  
+      if (st.ntrees > 0) {  
 // Set thinning  and intensity
         String thtxt = thinningIntensityComboBox.getSelectedItem().toString();
         thtxt = thtxt.substring(0,3);
         double thIntensity = Double.parseDouble(thtxt);
-/*        if (jComboBox4.getSelectedIndex() == 1) thIntensity = 0.8;
-        if (jComboBox4.getSelectedIndex() == 2) thIntensity = 1.0;
-        if (jComboBox4.getSelectedIndex() == 3) thIntensity = 1.2;
-        if (jComboBox4.getSelectedIndex() == 4) thIntensity = 1.5;
-*/      
-        boolean ctreesOnly=false;
-        if (freeZTreesCheckBox.isSelected()) ctreesOnly=true;
+        boolean ctreesOnly = releaseOnlyCropTreesCheckBox.isSelected();
 
         treat.setThinningRegime(st, thinningTypeComboBox.getSelectedIndex(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
                  Double.parseDouble(thinningAmountMaximumTextField.getText()), ctreesOnly) ;
 // set Harvesting Regime
-        double clearFak=0.0;
-        if (harvestingTypeComboBox.getSelectedIndex()==0) clearFak=Double.parseDouble(clearingTextField.getText());
+        double clearFak = 0.0;
+        if (harvestingTypeComboBox.getSelectedIndex() == 0) {
+            clearFak = Double.parseDouble(clearingTextField.getText());
+        }
         treat.setHarvestRegime(st, harvestingTypeComboBox.getSelectedIndex(), Double.parseDouble(harvestingAmountMinimumTextField.getText()),
                 Double.parseDouble(harvestingAmountMaximumTextField.getText()), clearFak, clearingTextField.getText());
 // Set nature conversation
         treat.setNatureProtection(st, Integer.parseInt(habitatTreesTextField.getText()), woodTypeComboBox.getSelectedIndex(), 
-                minorityProtectionCheckBox.isSelected(),Double.parseDouble(minimumShadingTextField.getText()),Integer.parseInt(protectionThicknessTextField.getText()));
+                minorityProtectionCheckBox.isSelected(),Double.parseDouble(minimumCoverTextField.getText()),Integer.parseInt(protectionThicknessTextField.getText()));
       }
- //      
       for (int i=0; i < jTable1.getRowCount(); i++){
           int merk = -9;
           for (int j = 0; j < st.nspecies; j++){
@@ -611,7 +595,7 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
       for (int i=0; i< st.nspecies; i++) sum=sum+st.sp[i].trule.targetCrownPercent;
       for (int i=0; i< st.nspecies; i++) st.sp[i].trule.targetCrownPercent=100.0*st.sp[i].trule.targetCrownPercent/sum;
       loadTable();
-    };
+    }
 
     public int numberOfCropTrees(int speciesIndex, double diameter, double percentage) {
         Tree atree = new Tree();
@@ -630,7 +614,6 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField clearingTextField;
     private javax.swing.JCheckBox developmentCheckBox;
     private javax.swing.JLabel developmentLabel;
-    private javax.swing.JCheckBox freeZTreesCheckBox;
     private javax.swing.JLabel habitatTreesLabel;
     private javax.swing.JTextField habitatTreesTextField;
     private javax.swing.JLabel harvestingAmountMaximumLabel;
@@ -652,16 +635,17 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel minimumShadingLabel;
-    private javax.swing.JTextField minimumShadingTextField;
+    private javax.swing.JLabel minimumCoverLabel;
+    private javax.swing.JTextField minimumCoverTextField;
     private javax.swing.JCheckBox minorityProtectionCheckBox;
     private javax.swing.JLabel natureProtectionLabel;
+    private javax.swing.JLabel plantAtLabel;
+    private javax.swing.JTextField plantAtTextField;
     private javax.swing.JCheckBox plantingCheckbox;
     private javax.swing.JLabel plantingLabel;
-    private javax.swing.JTextField plantingMinimumCheckBox;
-    private javax.swing.JLabel plantingMinimumLabel;
     private javax.swing.JLabel protectionThicknessLabel;
     private javax.swing.JTextField protectionThicknessTextField;
+    private javax.swing.JCheckBox releaseOnlyCropTreesCheckBox;
     private javax.swing.JLabel scenarioSettingsHeadingLabel;
     private javax.swing.JLabel simulationDurationLabel;
     private javax.swing.JTextField simulationDurationTextField;
@@ -682,7 +666,7 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JLabel thinningIntensityLabel;
     private javax.swing.JComboBox thinningTypeComboBox;
     private javax.swing.JLabel thinningTypeLabel;
-    private javax.swing.JCheckBox unterstandRemovalCheckBox;
+    private javax.swing.JCheckBox unterstoryRemovalCheckBox;
     private javax.swing.JCheckBox useIngrowthModelCheckBox;
     private javax.swing.JCheckBox useRandomEffectsCheckBox;
     private javax.swing.JCheckBox useRiskModelCheckBox;
