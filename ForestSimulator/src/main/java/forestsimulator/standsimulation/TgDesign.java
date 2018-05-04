@@ -36,6 +36,7 @@ import javax.swing.*;
 
 public class TgDesign extends JPanel {
 
+    private static final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     Stand st = new Stand();
     TgJFrame frame;
     File programDir;
@@ -51,10 +52,7 @@ public class TgDesign extends JPanel {
         startPositionLabel.setVisible(false);
         startXTextField.setVisible(false);
         startYTextField.setVisible(false);
-//        jLabel5.setText(messages.getString("age"));
-//        jLabel6.setText(messages.getString("Dg"));
 //        jLabel7.setText(messages.getString("Dmax"));
-//        jLabel8.setText(messages.getString("Hg"));
 //        jLabel9.setText(messages.getString("Basal_area"));
 //        jButton2.setText(messages.getString("start_creating"));
 //        jLabel1.setText(messages.getString("Site_index"));
@@ -292,7 +290,6 @@ public class TgDesign extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void typeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeComboBoxActionPerformed
-        // TODO add your handling code here:
         td2.setText("50");
         td4.setText("25");
         td6.setText("18.0");
@@ -308,16 +305,16 @@ public class TgDesign extends JPanel {
         widthLabel.setVisible(true);
         widthTextField.setVisible(true);
         if (typeComboBox.getSelectedIndex() == 0) {
-//            jLabel6.setText(messages.getString("Dg"));
-//            jLabel8.setText(messages.getString("Hg"));
+            diameterLabel.setText(messages.getString("TgDesign.diameterLabel.text"));
+            heightLabel.setText(messages.getString("TgDesign.heightLabel.text"));
 //            jLabel9.setText(messages.getString("Basal_area"));
             maxDiameterLabel.setVisible(true);
             td5.setVisible(true);
             td6.setText("18.0");
             td3.setVisible(true);
         } else {
-//            jLabel6.setText(messages.getString("dbh"));
-//            jLabel8.setText(messages.getString("height"));
+            diameterLabel.setText(messages.getString("TgDesign.diameterLabel.dbh.text"));
+            heightLabel.setText(messages.getString("TgDesign.heightLabel.height.text"));
 //            jLabel9.setText(messages.getString("number_of_trees"));
             maxDiameterLabel.setVisible(false);
             td5.setVisible(false);

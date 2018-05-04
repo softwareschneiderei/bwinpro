@@ -20,6 +20,7 @@ import treegross.base.*;
 import java.text.*;
 import java.util.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 class TgStandInfo extends JPanel {
@@ -36,13 +37,7 @@ class TgStandInfo extends JPanel {
 
         yieldTable = new javax.swing.table.DefaultTableModel(
                 new Object[][]{},
-                new String[]{
-                    messages.getString("sp"), "ly", messages.getString("Age"), messages.getString("Dg"),
-                    messages.getString("Hg"), messages.getString("D100"), messages.getString("H100"),
-                    messages.getString("nha"), messages.getString("gha"), messages.getString("vha"),
-                    messages.getString("noutha"), messages.getString("goutha"),
-                    messages.getString("voutha"), messages.getString("mix")
-                }
+                StandInfoTableColumn.values()
         );
 
         JScrollPane spane = new JScrollPane();
@@ -54,32 +49,24 @@ class TgStandInfo extends JPanel {
 
         setLayout(new BorderLayout());
         add(spane, BorderLayout.CENTER);
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
-            }
+        jCheckBox1.addActionListener((evt) -> {
+            jCheckBox1ActionPerformed(evt);
         });
         jCheckBox1.setText("getrennt Schichten (ly)");
         add(jCheckBox1, BorderLayout.NORTH);
-
-//
-//      yieldTable.
     }
 
     void formUpdate(Stand stand) {
-
         st = stand;
         if (jCheckBox1.isSelected()) {
             makeTableByLayer();
         } else {
             makeTable();
         }
-
     }
 
     private void makeTable() {
-        NumberFormat f = NumberFormat.getInstance();
-        f = NumberFormat.getInstance(new Locale("en", "US"));
+        NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
         f.setMaximumFractionDigits(1);
         f.setMinimumFractionDigits(1);
         f.setGroupingUsed(false);
@@ -132,8 +119,7 @@ class TgStandInfo extends JPanel {
     }
 
     private void makeTableByLayer() {
-        NumberFormat f = NumberFormat.getInstance();
-        f = NumberFormat.getInstance(new Locale("en", "US"));
+        NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
         f.setMaximumFractionDigits(1);
         f.setMinimumFractionDigits(1);
         f.setGroupingUsed(false);
@@ -220,13 +206,10 @@ class TgStandInfo extends JPanel {
                         jTable1.setValueAt("", nrow, 12);
                         jTable1.setValueAt(f.format(0.0001 * deck / st.size), nrow, 13);
                         nrow = nrow + 1;
-
                     }
                 }
-
             }
         }
-
         yieldTable.addRow(rowData);
         jTable1.setValueAt("Sum", nrow, 0);
         jTable1.setValueAt(f.format(sum_nha), nrow, 7);
@@ -236,11 +219,9 @@ class TgStandInfo extends JPanel {
         jTable1.setValueAt(f.format(sum_ghaout), nrow, 11);
         jTable1.setValueAt(f.format(sum_vhaout), nrow, 12);
         jTable1.setValueAt(f.format(st.degreeOfDensity), nrow, 13);
-
     }
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
         if (jCheckBox1.isSelected() == false) {
             jCheckBox1.setSelected(false);
             makeTable();
@@ -248,8 +229,5 @@ class TgStandInfo extends JPanel {
             jCheckBox1.setSelected(true);
             makeTableByLayer();
         }
-//       formUpdate(stand);
-
     }
-
 }
