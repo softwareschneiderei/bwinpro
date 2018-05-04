@@ -35,13 +35,11 @@ class TgHTMLsv {
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("single_tree_values") + "</P align=center></H2> ");
-            out.println("<P><B>" + messages.getString("stand") + st.standname);
+            out.println("<P><B>" + messages.getString("TgHTMLsv.standname.label") + st.standname);
             out.println("<BR>" + messages.getString("stand_size") + st.size);
             out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
-//      ss defined to write " 
-            String ss;
             char c = 34;
-            ss = String.valueOf(c);
+            String ss = String.valueOf(c);
             out.println("<HR>");
             out.println("<TABLE BORDER>");
             out.println("<TR><TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("no") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss

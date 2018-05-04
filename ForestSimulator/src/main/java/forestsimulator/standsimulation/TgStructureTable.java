@@ -30,21 +30,6 @@ class TgStructureTable {
     }
 
     void writeTable(Stand st, String path, String fname, Locale preferredLanguage) {
-//         LightCrown lc = new LightCrown(st);
-//         lc.calcLightCrown();
-        Double lightKMF = 0.0;
-        Double sumKMF = 0.0;
-        for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 0) {
-                lightKMF = lightKMF + st.tr[i].cwLightCrown;
-                double lx = 2.0 * (st.tr[i].h - st.tr[i].cb) / 3.0;
-                double crx = st.tr[i].cw / 2.0;
-                sumKMF = sumKMF + (Math.PI * crx / (6 * lx * lx)) * (Math.exp(Math.log(4 * lx * lx + crx * crx) * 1.5) - crx * crx * crx);;
-
-            }
-        }
-        lightKMF = lightKMF / st.size;
-        sumKMF = sumKMF / st.size;
 
         StandStructure struc = new StandStructure();
         messages = ResourceBundle.getBundle("forestsimulator/gui");
@@ -52,15 +37,12 @@ class TgStructureTable {
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("stand_structure_table") + "</P align=center></H2> ");
-            out.println("<P><B>" + messages.getString("stand") + st.standname);
+            out.println("<P><B>" + messages.getString("TgStructureTable.standname.label") + st.standname);
             out.println("<BR>" + messages.getString("stand_size") + st.size);
             out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
-            String ss;
-            char c = 34;
             NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
             f.setMaximumFractionDigits(1);
             f.setMinimumFractionDigits(1);
-            ss = String.valueOf(c);
             out.println("<HR>");
             out.println("<TABLE BORDER>");
 // Species Richness         
@@ -98,6 +80,19 @@ class TgStructureTable {
 // Shannon Index         
             out.println("<TR><TD><FONT SIZE=2>" + messages.getString("tart")
                     + "<TD><FONT SIZE=2>" + f.format(struc.tart(st)) + "</TR>");
+//        Double lightKMF = 0.0;
+//        Double sumKMF = 0.0;
+//        for (int i = 0; i < st.ntrees; i++) {
+//            if (st.tr[i].out < 0) {
+//                lightKMF = lightKMF + st.tr[i].cwLightCrown;
+//                double lx = 2.0 * (st.tr[i].h - st.tr[i].cb) / 3.0;
+//                double crx = st.tr[i].cw / 2.0;
+//                sumKMF = sumKMF + (Math.PI * crx / (6 * lx * lx)) * (Math.exp(Math.log(4 * lx * lx + crx * crx) * 1.5) - crx * crx * crx);;
+//
+//            }
+//        }
+//        lightKMF = lightKMF / st.size;
+//        sumKMF = sumKMF / st.size;
 //         out.println("<TR><TD><FONT SIZE=2>"+"Lichtkrone m²/ha"+
 //                     "<TD><FONT SIZE=2>"+f.format(lightKMF)+ "</TR>");
 //         out.println("<TR><TD><FONT SIZE=2>"+"Kronenmantel m²/ha"+

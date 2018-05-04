@@ -152,7 +152,7 @@ class TgYieldTable {
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("stand_development_table") + "</P align=center></H2> ");
-            out.println("<P><B>" + messages.getString("stand") + st.standname);
+            out.println("<P><B>" + messages.getString("TgYieldTable.standname.label") + st.standname);
             out.println("<BR>" + messages.getString("stand_size") + st.size);
             out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
             String ss;

@@ -195,7 +195,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         tsi = new TgStandInfo(language.locale());
 
 // Treatment Manager Window                
-        treatmentMan3 = new TgTreatmentMan3(st, this, language.locale());
+        treatmentMan3 = new TgTreatmentMan3(st, this);
         JPanel treatmentPanel = new JPanel();
         treatmentPanel.setLayout(new BorderLayout());
         JPanel tgTreatmentMenus = new JPanel();
