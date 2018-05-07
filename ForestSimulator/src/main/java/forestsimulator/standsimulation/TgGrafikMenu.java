@@ -26,33 +26,27 @@ import java.util.*;
 
 class TgGrafikMenu extends JMenuBar {
 
-    JCheckBoxMenuItem[] cmi = new JCheckBoxMenuItem[7];
-    JMenu subm = new JMenu("Graphic");
-    JComboBox dbhFactor = new JComboBox();
-    String country;
-
-    public TgGrafikMenu(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage) {
+    public TgGrafikMenu(ActionListener listener) {
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
         JMenu m; // Hauptmenupunkt
         JMenuItem mi; //Untermenupunkt
-        JMenu subm = new JMenu(messages.getString("show"));
 
 // 1. main menu item: Stand
-        m = new JMenu(messages.getString("Graphic"));
+        m = new JMenu(messages.getString("TgGrafikMenu.graphic"));
 // 1.1  submenu item below 1		
-        mi = new JMenuItem(messages.getString("refresh"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.graphic.refresh"));
         mi.setActionCommand("refreshPPMap");
         mi.addActionListener(listener);
         m.add(mi);
 // 1.2  stand designer		
-        mi = new JMenuItem(messages.getString("save_to_jpg"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.graphic.save_to_jpg"));
         mi.setActionCommand("saveChartToJPG");
         mi.addActionListener(listener);
         m.add(mi);
         add(m);
 
 // 2. main menu item: Edit
-        m = new JMenu(messages.getString("Attributes"));
+        m = new JMenu(messages.getString("TgGrafikMenu.attributes"));
 //2.2 Different graphics                
         mi = new JMenuItem(messages.getString("SpeciesByCrownSurfaceArea"));
         mi.setActionCommand("SpeciesByCrownSurfaceArea");

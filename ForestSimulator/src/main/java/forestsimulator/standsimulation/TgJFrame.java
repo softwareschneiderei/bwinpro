@@ -185,7 +185,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             JPanel tgPPMapMenus = new JPanel();
             tgPPMapMenus.setLayout(new BoxLayout(tgPPMapMenus, BoxLayout.X_AXIS));
             // adding the menu
-            tgPPMapMenu = new TgPPMapMenu(this, this, language.locale());
+            tgPPMapMenu = new TgPPMapMenu(this, this);
             tgPPMapMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
             tgPPMapMenus.add(tgPPMapMenu);
             ppneu.add(tgPPMapMenus, BorderLayout.NORTH);
@@ -212,7 +212,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         grWithMenu.setLayout(new BorderLayout());
         JPanel tggrMenus = new JPanel();
         tggrMenus.setLayout(new BoxLayout(tggrMenus, BoxLayout.X_AXIS));
-        tgGrafikMenu = new TgGrafikMenu(this, this, language.locale());
+        tgGrafikMenu = new TgGrafikMenu(this);
         tgGrafikMenu.setAlignmentY(Component.CENTER_ALIGNMENT);
         tggrMenus.add(tgGrafikMenu);
         grWithMenu.add(tggrMenus, BorderLayout.NORTH);

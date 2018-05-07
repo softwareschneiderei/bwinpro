@@ -27,26 +27,21 @@ import java.util.*;
 class TgPPMapMenu extends JMenuBar {
 
     JCheckBoxMenuItem[] cmi = new JCheckBoxMenuItem[7];
-    JMenu subm = new JMenu("DBH- Factor");
-//    JComboBox dbhFactor = new JComboBox();
-    JComboBox dbhFactor = new JComboBox();
-    String country;
 
-    public TgPPMapMenu(ActionListener listener, ItemListener Ilistener, Locale preferredLanguage) {
+    public TgPPMapMenu(ActionListener listener, ItemListener Ilistener) {
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
         JMenu m; // Hauptmenupunkt
         JMenuItem mi; //Untermenupunkt
-        JMenu subm = new JMenu(messages.getString("show"));
 
 // 1. main menu item: Stand
-        m = new JMenu(messages.getString("Graphic"));
+        m = new JMenu(messages.getString("TgPPMapMenu.graphic"));
 // 1.1  submenu item below 1		
-        mi = new JMenuItem(messages.getString("refresh"));
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.refresh"));
         mi.setActionCommand("refreshPPMap");
         mi.addActionListener(listener);
         m.add(mi);
 // 1.2  stand designer		
-        mi = new JMenuItem(messages.getString("save_to_jpg"));
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.save_to_jpg"));
         mi.setActionCommand("savePPMapToJPG");
         mi.addActionListener(listener);
         m.add(mi);
@@ -63,13 +58,13 @@ class TgPPMapMenu extends JMenuBar {
         add(m);
 
 // 2. main menu item: Edit
-        m = new JMenu(messages.getString("Attributes"));
+        m = new JMenu(messages.getString("TgPPMapMenu.attributes"));
 //2.1 add Tree
         cmi[0] = new JCheckBoxMenuItem(messages.getString("Living_trees"), true);
         cmi[0].addItemListener(Ilistener);
         m.add(cmi[0]);
 //2.1 add Tree
-        cmi[1] = new JCheckBoxMenuItem(messages.getString("Thinned_trees"), false);
+        cmi[1] = new JCheckBoxMenuItem(messages.getString("TgPPMapMenu.attributes.thinned_trees"), false);
         cmi[1].addItemListener(Ilistener);
         m.add(cmi[1]);
 //2.2 Treatment parameters                

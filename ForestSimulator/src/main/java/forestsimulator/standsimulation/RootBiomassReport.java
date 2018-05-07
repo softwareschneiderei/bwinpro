@@ -37,7 +37,6 @@ public class RootBiomassReport {
     public void report(Stand st, String programDir, String workingDir) {
         // Calculate and write xml
         String pa = "";
-        String dn = "";
         pa = workingDir + System.getProperty("file.separator") + "rootbiomass.xml";
 //
         NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
