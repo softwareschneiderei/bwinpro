@@ -1017,10 +1017,10 @@ public class DBAccessDialog extends JDialog {
                     nummer = Integer.parseInt(rsx.getObject("ID").toString());
                     art = (int) Double.parseDouble(rsx.getObject("art").toString());
                     alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
-                    hg = Double.parseDouble(rsx.getObject("hg").toString());
+                    hg = rsx.getDouble("hg");
                     h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
                     dg = Double.parseDouble(rsx.getObject("dg").toString());
-                    dmax = Double.parseDouble(rsx.getObject("d100").toString());
+                    dmax = rsx.getDouble("d100");
                     g = Double.parseDouble(rsx.getObject("gha").toString());
                     if (hg > 5.0 && dg > 7.0 && g > 0.0) {
                         EtafelSim etsim = new EtafelSim();

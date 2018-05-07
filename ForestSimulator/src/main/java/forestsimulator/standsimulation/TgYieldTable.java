@@ -48,7 +48,6 @@ class TgYieldTable {
                 yt[nyt] = new YieldTableLine();
                 merk = nyt;
                 nyt = nyt + 1;
-
             }
             yt[merk].year = st.year;
             yt[merk].code = st.sp[i].code;
@@ -120,20 +119,17 @@ class TgYieldTable {
             }
             yt[merk].hgz = 0.0;
             if (yt[merk].dgz > 0.0) {
-                if (st.sp[i].heightcurveUsed.indexOf("Einheit") > -1) {
-//                   UniformHeight ufh = new UniformHeight();
+                if (st.sp[i].heightcurveUsed.contains("Einheit")) {
                     FunctionInterpreter fi = new FunctionInterpreter();
                     Tree tree = new Tree();
                     tree.d = yt[merk].dgz;
                     tree.sp = st.sp[i];
                     yt[merk].hgz = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
-
                 } else {
                     HeightCurve m = new HeightCurve();
                     int htnr = Integer.parseInt(st.sp[i].heightcurveUsed.substring(0, 1));
                     yt[merk].hgz = m.getHeight(htnr, yt[merk].dgz, st.sp[i].heightcurveUsedP0, st.sp[i].heightcurveUsedP1, st.sp[i].heightcurveUsedP2);
                 }
-
             }
             yt[merk].nhaz = yt[merk].nhaz / st.size;
             yt[merk].ghaz = yt[merk].ghaz / st.size;
@@ -141,7 +137,6 @@ class TgYieldTable {
             yt[merk].nhaaz = yt[merk].nhaaz / st.size;
             yt[merk].ghaaz = yt[merk].ghaaz / st.size;
             yt[merk].vhaaz = yt[merk].vhaaz / st.size;
-
         }
     }
 
@@ -153,8 +148,8 @@ class TgYieldTable {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("stand_development_table") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("TgYieldTable.standname.label") + st.standname);
-            out.println("<BR>" + messages.getString("stand_size") + st.size);
-            out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
+            out.println("<BR>" + messages.getString("TgYieldTable.standsize.label") + st.size);
+            out.println("<BR>" + messages.getString("TgYieldTable.year.label") + st.year + "</B></P>");
             String ss;
             char c = 34;
             NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
@@ -165,18 +160,21 @@ class TgYieldTable {
             out.println("<TABLE BORDER>");
 
             out.println("<TR><TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("year") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("species") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("age")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("Dg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("Hg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("D100")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("H100") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("N_ha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("G_ha")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("V_ha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("n_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("g_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("v_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + "Mort N/ha" + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + "Mort G/ha" + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + "Mort V/ha" + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.year") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.species") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.age")
+                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.dg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.hg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.d100")
+                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.h100") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.nha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.gha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.vha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.nha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.gha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.vha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.nha.mortality") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.gha.mortality") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + "Mort V/ha" + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
                     + "></TR>");
             for (int i = 0; i < nyt; i++) {
                 out.println("<TR><TD><FONT SIZE=2>" + yt[i].year + "<TD><FONT SIZE=2>" + yt[i].code + "<TD><FONT SIZE=2>" + yt[i].age
@@ -193,20 +191,22 @@ class TgYieldTable {
             out.println("</HR></TABLE>");
             out.println("<P></P>");
             out.println("<HR>");
-            out.println("<B>Tabelle 2: Z-Bäume Crop tree</B>");
+            out.println("<B>" + messages.getString("TgYieldTable.croptree.table.heading") + "</B>");
             out.println("<TABLE BORDER>");
             out.println("<TR><TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("year") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("species") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("age")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("Dg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("Hg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("N_ha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("G_ha")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("V_ha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("n_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("g_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("v_ha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.year") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.species") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.age")
+                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.dg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.hg") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.nha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.gha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.vha") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.nha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.gha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
+                    + "><FONT SIZE=2>" + messages.getString("TgYieldTable.column.header.vha_out") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
                     + "></TR>");
             for (int i = 0; i < nyt; i++) {
-
                 out.println("<TR><TD><FONT SIZE=2>" + yt[i].year + "<TD><FONT SIZE=2>" + yt[i].code + "<TD><FONT SIZE=2>" + yt[i].age
                         + "<TD><FONT SIZE=2>" + f.format(yt[i].dgz) + "<TD><FONT SIZE=2>" + f.format(yt[i].hgz)
                         + "<TD><FONT SIZE=2>" + f.format(yt[i].nhaz)
@@ -217,8 +217,7 @@ class TgYieldTable {
             }
             out.println("</HR></TABLE>");
             out.println("<P></P>");
-            out.println("<BR>" + messages.getString("created") + st.modelRegion + "</BR></HTML>");
-            out.close();
+            out.println("<BR>" + messages.getString("TgYieldTable.created.label") + st.modelRegion + "</BR></HTML>");
         } catch (Exception e) {
             System.out.println(e);
         }

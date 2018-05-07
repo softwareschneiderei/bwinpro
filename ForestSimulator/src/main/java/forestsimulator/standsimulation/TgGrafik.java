@@ -380,7 +380,7 @@ class GraphicHeightDiameterPlot {
         JFreeChart chart = ChartFactory.createScatterPlot(
                 messages.getString("heightDiameter"),
                 messages.getString("TgGrafik.xaxis.dbh.label"),
-                messages.getString("height"),
+                messages.getString("TgGrafik.yaxis.height.label"),
                 dataset,
                 org.jfree.chart.plot.PlotOrientation.VERTICAL,
                 true,

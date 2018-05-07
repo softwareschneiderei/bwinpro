@@ -44,7 +44,7 @@ public class EtafelSim {
             stmt.setInt(2, yc);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    hg = Double.parseDouble(rs.getObject("Hg").toString());
+                    hg = rs.getDouble("Hg");
                     dg = Double.parseDouble(rs.getObject("Dg").toString());
                     d100 = Double.parseDouble(rs.getObject("Dmax").toString());
                     h100 = Double.parseDouble(rs.getObject("H100").toString());

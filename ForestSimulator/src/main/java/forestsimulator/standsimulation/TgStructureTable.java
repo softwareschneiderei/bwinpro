@@ -30,7 +30,6 @@ class TgStructureTable {
     }
 
     void writeTable(Stand st, String path, String fname, Locale preferredLanguage) {
-
         StandStructure struc = new StandStructure();
         messages = ResourceBundle.getBundle("forestsimulator/gui");
         this.file = new File(path, fname);
@@ -38,47 +37,47 @@ class TgStructureTable {
             out.println("<HTML>");
             out.println("<H2><P align=center>" + messages.getString("stand_structure_table") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("TgStructureTable.standname.label") + st.standname);
-            out.println("<BR>" + messages.getString("stand_size") + st.size);
-            out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
+            out.println("<BR>" + messages.getString("TgStructureTable.standsize.label") + st.size);
+            out.println("<BR>" + messages.getString("TgStructureTable.year.label") + st.year + "</B></P>");
             NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
             f.setMaximumFractionDigits(1);
             f.setMinimumFractionDigits(1);
             out.println("<HR>");
             out.println("<TABLE BORDER>");
 // Species Richness         
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("numberOfSpecies")
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.numberOfSpecies.label")
                     + "<TD><FONT SIZE=2>" + st.nspecies + "</TR>");
 // Shannon Index Stammzahl        
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("shannon") + "_N "
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.shannon_n.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.shannon_N(st)) + "</TR>");
 // Shannon Index Grundfläche        
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("shannon") + "_G "
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.shannon_g.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.shannon_G(st)) + "</TR>");
 // Evenness Index Stammzahl 
             double e_N = 0.0;
             if (st.nspecies > 1) {
                 e_N = struc.shannon_N(st) / Math.log(st.nspecies);
             }
-            out.println("<TR><TD><FONT SIZE=2>" + "Eveness_N "
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.eveness_n.label")
                     + "<TD><FONT SIZE=2>" + f.format(e_N) + "</TR>");
 // Evenness Index Grundfläche   
             double e_G = 0.0;
             if (st.nspecies > 1) {
                 e_G = struc.shannon_G(st) / Math.log(st.nspecies);
             }
-            out.println("<TR><TD><FONT SIZE=2>" + "Eveness_G "
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.eveness_g.label")
                     + "<TD><FONT SIZE=2>" + f.format(e_G) + "</TR>");
 // Species Profil         
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("profil")
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.profil.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.a_index(st)) + "</TR>");
 // Shannon Index         
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("th")
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.th.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.th(st)) + "</TR>");
 // Shannon Index         
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("td")
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.td.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.td(st)) + "</TR>");
 // Shannon Index         
-            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("tart")
+            out.println("<TR><TD><FONT SIZE=2>" + messages.getString("TgStructureTable.tart.label")
                     + "<TD><FONT SIZE=2>" + f.format(struc.tart(st)) + "</TR>");
 //        Double lightKMF = 0.0;
 //        Double sumKMF = 0.0;
@@ -132,8 +131,7 @@ class TgStructureTable {
              }
       out.println("</TABLE>");
              */
-            out.println("<BR>" + messages.getString("created") + st.modelRegion + "</BR></HTML>");
-            out.close();
+            out.println("<BR>" + messages.getString("TgStructureTable.created.label") + st.modelRegion + "</BR></HTML>");
         } catch (Exception e) {
             System.out.println(e);
         }

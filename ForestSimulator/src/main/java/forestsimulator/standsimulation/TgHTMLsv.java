@@ -34,33 +34,32 @@ class TgHTMLsv {
 
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>" + messages.getString("single_tree_values") + "</P align=center></H2> ");
+            out.println("<H2><P align=center>" + messages.getString("TgHTMLsv.heading.text") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("TgHTMLsv.standname.label") + st.standname);
-            out.println("<BR>" + messages.getString("stand_size") + st.size);
-            out.println("<BR>" + messages.getString("year") + st.year + "</B></P>");
-            char c = 34;
-            String ss = String.valueOf(c);
+            out.println("<BR>" + messages.getString("TgHTMLsv.standsize.label") + st.size);
+            out.println("<BR>" + messages.getString("TgHTMLsv.year.label") + st.year + "</B></P>");
             out.println("<HR>");
             out.println("<TABLE BORDER>");
-            out.println("<TR><TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("no") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("species") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("age") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("DBH")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("height") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("cb") + " <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>" + messages.getString("cw")
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>" + messages.getString("cr") + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>h/d  <TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>Vol."
-                    + "<TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>aus    <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>x <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>y <TH BGCOLOR=" + ss + "#C0C0C0" + ss + "><FONT SIZE=2>z <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>c66 <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>c66c <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>c66xy <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>c66cxy <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>Z-Baum <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>Outtype <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>Layer <TH BGCOLOR=" + ss + "#C0C0C0" + ss
-                    + "><FONT SIZE=2>si <TH BGCOLOR=" + ss + "#C0C0C0" + ss + "></TR>");
+            out.println("<TR><TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.number") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.species") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.age")
+                    + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.dbh")
+                    + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.height") + "<TH BGCOLOR=\"#C0C0C\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.cb") + " <TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.cw")
+                    + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.cr") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.hd") + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>Vol."
+                    + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.cr") + "aus    <TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.x") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.y") + "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>z <TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.c66") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.c66c") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.c66xy") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.c66cxy") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.croptree") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.outtype") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.layer") + "<TH BGCOLOR=\"#C0C0C0\""
+                    + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.si") + "<TH BGCOLOR=\"#C0C0C0\"></TR>");
             DecimalFormat f = new DecimalFormat("0.00");
 
             for (int i = 0; i < st.ntrees; i++) {
@@ -105,8 +104,7 @@ class TgHTMLsv {
             }
 //Ende der Änderung Brandenburg                     
             out.println("</TABLE>");
-            out.println("<br>" + messages.getString("created") + st.modelRegion + "</br></HTML>");
-            out.close();
+            out.println("<br>" + messages.getString("TgHTMLsv.created.label") + st.modelRegion + "</br></HTML>");
         } catch (Exception e) {
             System.out.println(e);
         }
