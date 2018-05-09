@@ -35,8 +35,8 @@ public class TgUserDialog extends JDialog {
     File DataDir;
     UserLanguage Language;
     File localPath;
-    String XMLSettings="";
-    String plugIn="";
+    String XMLSettings = "";
+    String plugIn = "";
     File verzeichnis;
     File localF = null;
     private TgUser user = new TgUser(new File("."));
@@ -44,7 +44,7 @@ public class TgUserDialog extends JDialog {
     public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
         if (user.fileExists("ForestSimulator.ini")) {
-            System.out.println("Settings laden ");
+            System.out.println("Settings laden");
             user.loadSettings();
               
             ProgramDir=user.getProgramDir();
@@ -71,16 +71,6 @@ public class TgUserDialog extends JDialog {
 // PlugIn Model
         languageSelector.setSelectedItem(Language);
         jComboBox3.setSelectedIndex(user.grafik3D);
-//        setTitle(messages.getString("TreeGrOSS_ForestSimulator"));
-//        jLabel1.setText(messages.getString("Language"));
-//        jLabel2.setText(messages.getString("find_directory_user"));
-//        jLabel3.setText(messages.getString("set_directory_output"));
-//        jLabel5.setText(messages.getString("set_directory_input"));
-//        jButton1.setText(messages.getString("search"));
-//        jButton4.setText(messages.getString("search"));
-//        jButton5.setText(messages.getString("search"));
-//        jButton2.setText(messages.getString("OK"));
-
     }
 
     private ComboBoxModel languageOptions() {
@@ -99,7 +89,7 @@ public class TgUserDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        languageLabel = new javax.swing.JLabel();
         languageSelector = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -124,9 +114,9 @@ public class TgUserDialog extends JDialog {
         setResizable(false);
         getContentPane().setLayout(null);
 
-        jLabel1.setText(bundle.getString("TgUserDialog.jLabel1.text")); // NOI18N
-        getContentPane().add(jLabel1);
-        jLabel1.setBounds(20, 20, 70, 14);
+        languageLabel.setText(bundle.getString("TgUserDialog.languageLabel.text")); // NOI18N
+        getContentPane().add(languageLabel);
+        languageLabel.setBounds(20, 20, 70, 14);
 
         languageSelector.setModel(languageOptions());
         languageSelector.setSelectedItem(activeLanguage());
@@ -156,16 +146,14 @@ public class TgUserDialog extends JDialog {
         jButton1.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
         jButton1.setText(bundle.getString("TgUserDialog.jButton1.text")); // NOI18N
         jButton1.setAlignmentY(0.0F);
-        jButton1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButton1.setMinimumSize(new java.awt.Dimension(100, 25));
-        jButton1.setPreferredSize(new java.awt.Dimension(100, 25));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton1);
-        jButton1.setBounds(500, 80, 80, 25);
+        jButton1.setBounds(500, 80, 80, 20);
 
         jButton2.setText(bundle.getString("TgUserDialog.jButton2.text")); // NOI18N
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -203,14 +191,14 @@ public class TgUserDialog extends JDialog {
         jTextField3.setBounds(20, 130, 450, 20);
 
         jButton5.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        jButton5.setText(null);
+        jButton5.setText(bundle.getString("TgUserDialog.jButton5.text")); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
         getContentPane().add(jButton5);
-        jButton5.setBounds(500, 130, 80, 9);
+        jButton5.setBounds(500, 130, 80, 21);
 
         jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Stand graphic 3D", "Stand graphic 2D" }));
         jComboBox3.addActionListener(new java.awt.event.ActionListener() {
@@ -225,7 +213,6 @@ public class TgUserDialog extends JDialog {
         getContentPane().add(jLabel6);
         jLabel6.setBounds(20, 230, 140, 14);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         getContentPane().add(jComboBox2);
         jComboBox2.setBounds(20, 250, 450, 20);
 
@@ -242,14 +229,13 @@ public class TgUserDialog extends JDialog {
     }//GEN-LAST:event_languageSelectorActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
-        jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jf.setCurrentDirectory(localPath);
-//        jf.setDialogTitle(messages.getString("choose_Data_Dir"));
-        int k=jf.showOpenDialog(this);
+        jf.setDialogTitle(messages.getString("TgUserDialog.chooseDataDirDialog.title"));
+        jf.showOpenDialog(this);
         DataDir = jf.getSelectedFile();        
         jTextField3.setText(DataDir.getAbsolutePath());
-        // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -319,7 +305,6 @@ public class TgUserDialog extends JDialog {
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
@@ -327,6 +312,7 @@ public class TgUserDialog extends JDialog {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JLabel languageLabel;
     private javax.swing.JComboBox languageSelector;
     // End of variables declaration//GEN-END:variables
 
