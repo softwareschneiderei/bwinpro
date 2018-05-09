@@ -70,7 +70,6 @@ class TgGrafik extends JPanel {
             this.add(chartPanel);
             this.repaint();
         }
-
     }
 
     public void drawGraph() {
@@ -99,9 +98,7 @@ class TgGrafik extends JPanel {
             chartPanel.setPreferredSize(new Dimension(600, 400));
             this.removeAll();
             this.add(chartPanel);
-
         }
-
     }
 
     public void neuzeichnen() {
@@ -117,10 +114,9 @@ class TgGrafik extends JPanel {
         ChartUtilities ut = null;
         try {
             ut.saveChartAsJPEG(fn, jfreeChart, 600, 400);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
         }
-
     }
 
     public void setJPGFilename(String fn) {
@@ -131,25 +127,17 @@ class TgGrafik extends JPanel {
 //------------------------------------------------------ 
 
 class GraphicSpeciesByCrownSurfaceArea {
-
-    JFreeChart chart;
-    ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public GraphicSpeciesByCrownSurfaceArea(String preferredLanguage) {
         messages = ResourceBundle.getBundle("forestsimulator/gui");
     }
 
-    public JFreeChart getChart() {
-        return chart;
-    }
-
     public JFreeChart createChart(Stand st) {
-// create the dataset...
         DefaultPieDataset dataset = new DefaultPieDataset();
         for (int j = 0; j < st.nspecies; j++) {
             dataset.setValue(st.sp[j].spDef.shortName, st.sp[j].percCSA);
         }
-//     
         JFreeChart chart = ChartFactory.createPieChart(
                 messages.getString("speciespercentage"), // chart title
                 dataset, // data
@@ -162,34 +150,21 @@ class GraphicSpeciesByCrownSurfaceArea {
             piePlot.setSectionPaint(i, new Color(st.sp[i].spDef.colorRed, st.sp[i].spDef.colorGreen, st.sp[i].spDef.colorBlue));
         }
         return chart;
-
     }
-
-    public void redraw() {
-        //     repaint();
-    }
-
 }
 
 //------------------------------------------------------ 
 class GraphicDiameterDistribution {
 
-    JFreeChart chart;
-    ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public GraphicDiameterDistribution(String preferredLanguage) {
         messages = ResourceBundle.getBundle("forestsimulator/gui");
     }
 
-    public JFreeChart getChart() {
-        return chart;
-    }
-
     public JFreeChart createChart(Stand st) {
-
-// create the dataset...
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-// Start and end of classes      
+        // Start and end of classes      
         int minBar = 24;
         int maxBar = 0;
         for (int i = 0; i < 25; i++) {
@@ -255,30 +230,19 @@ class GraphicDiameterDistribution {
         }
         return chart;
     }
-
-    public void redraw() {
-        //     repaint();
-    }
 }
 
 // -------------------------------------------------------
 class GraphicDiameterDistributionCT {
-
-    JFreeChart chart;
-    ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public GraphicDiameterDistributionCT(String preferredLanguage) {
         messages = ResourceBundle.getBundle("forestsimulator/gui");
     }
 
-    public JFreeChart getChart() {
-        return chart;
-    }
-
     public JFreeChart createChart(Stand st) {
-// create the dataset...
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-// Start and end of classes      
+        // Start and end of classes      
         int minBar = 24;
         int maxBar = 0;
         for (int i = 0; i < 25; i++) {
@@ -315,7 +279,6 @@ class GraphicDiameterDistributionCT {
                 }
             }
         }
-//     
         JFreeChart chart = ChartFactory.createStackedBarChart(
                 messages.getString("GraphicDiameterDistributionCT.title"),
                 messages.getString("GraphicDiameterDistributionCT.domain_axis.label"),
@@ -338,48 +301,34 @@ class GraphicDiameterDistributionCT {
         for (int i = 0; i < st.nspecies; i++) {
             renderer.setSeriesPaint(i, new Color(st.sp[i].spDef.colorRed, st.sp[i].spDef.colorGreen, st.sp[i].spDef.colorBlue));
         }
-
         return chart;
-    }
-
-    public void redraw() {
-        //     repaint();
     }
 }
 // -------------------------------------------------------
 
 class GraphicHeightDiameterPlot {
 
-    JFreeChart chart;
-    ResourceBundle messages;
+    private final ResourceBundle messages;
 
     public GraphicHeightDiameterPlot(String preferredLanguage) {
         messages = ResourceBundle.getBundle("forestsimulator/gui");
     }
 
-    public JFreeChart getChart() {
-        return chart;
-    }
-
     public JFreeChart createChart(Stand st) {
-// create the dataset...
         XYSeriesCollection dataset = new XYSeriesCollection();
         for (int i = 0; i < st.nspecies; i++) {
             XYSeries series = new XYSeries(st.sp[i].spDef.shortName);
-//          DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             for (int k = 0; k < st.ntrees; k++) {
                 if ((st.tr[k].d > 0) && st.tr[k].out < 0 && st.tr[k].code == st.sp[i].code) {
                     series.add(st.tr[k].d, st.tr[k].h);
                 }
-
             }
             dataset.addSeries(series);
         }
-//     
         JFreeChart chart = ChartFactory.createScatterPlot(
-                messages.getString("heightDiameter"),
-                messages.getString("TgGrafik.xaxis.dbh.label"),
-                messages.getString("TgGrafik.yaxis.height.label"),
+                messages.getString("GraphicHeightDiameterPlot.title"),
+                messages.getString("GraphicHeightDiameterPlot.domain_axis.label"),
+                messages.getString("GraphicHeightDiameterPlot.range_axis.label"),
                 dataset,
                 org.jfree.chart.plot.PlotOrientation.VERTICAL,
                 true,
@@ -388,8 +337,6 @@ class GraphicHeightDiameterPlot {
         XYPlot plot = chart.getXYPlot();
         plot.setDomainCrosshairVisible(true);
         plot.setRangeCrosshairVisible(true);
-//
-//         XYPlot plot = chart.getXYPlot();
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
         for (int i = 0; i < st.nspecies; i++) {
             renderer.setSeriesLinesVisible(i, false);
@@ -399,9 +346,4 @@ class GraphicHeightDiameterPlot {
 
         return chart;
     }
-
-    public void redraw() {
-        //     repaint();
-    }
-
 }
