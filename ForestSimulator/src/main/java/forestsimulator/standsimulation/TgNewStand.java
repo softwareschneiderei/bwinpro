@@ -37,9 +37,6 @@ public class TgNewStand extends JDialog {
         st = st1;
         frame = owner;
         initComponents();
-//        jComboBox1.removeAllItems();
-//        jComboBox1.addItem(messages.getString("square"));
-//        jComboBox1.addItem(messages.getString("circular"));
     }
     
     /** This method is called from within the constructor to

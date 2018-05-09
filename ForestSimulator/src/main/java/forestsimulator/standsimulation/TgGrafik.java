@@ -226,11 +226,10 @@ class GraphicDiameterDistribution {
                 }
             }
         }
-//     
         JFreeChart chart = ChartFactory.createStackedBarChart(
-                messages.getString("diameterDistribution"), // chart title
-                messages.getString("dbhClass"), // domain axis label
-                messages.getString("numberOfStems"), // range axis label
+                messages.getString("GraphicDiameterDistribution.title"),
+                messages.getString("GraphicDiameterDistribution.domain_axis.label"),
+                messages.getString("GraphicDiameterDistribution.range_axis.label"),
                 dataset, // data
                 PlotOrientation.VERTICAL, // orientation
                 true, // include legend
@@ -318,9 +317,9 @@ class GraphicDiameterDistributionCT {
         }
 //     
         JFreeChart chart = ChartFactory.createStackedBarChart(
-                messages.getString("diameterDistributionCT"), // chart title
-                messages.getString("dbhClass"), // domain axis label
-                messages.getString("numberOfStems"), // range axis label
+                messages.getString("GraphicDiameterDistributionCT.title"),
+                messages.getString("GraphicDiameterDistributionCT.domain_axis.label"),
+                messages.getString("GraphicDiameterDistributionCT.range_axis.label"),
                 dataset, // data
                 PlotOrientation.VERTICAL, // orientation
                 true, // include legend
