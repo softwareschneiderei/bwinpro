@@ -48,19 +48,19 @@ class TgGrafikMenu extends JMenuBar {
 // 2. main menu item: Edit
         m = new JMenu(messages.getString("TgGrafikMenu.attributes"));
 //2.2 Different graphics                
-        mi = new JMenuItem(messages.getString("SpeciesByCrownSurfaceArea"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.attributes.species_by_crown_surface_area"));
         mi.setActionCommand("SpeciesByCrownSurfaceArea");
         mi.addActionListener(listener);
         m.add(mi);
-        mi = new JMenuItem(messages.getString("DiameterDistribution"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.attributes.diameter_distribution"));
         mi.setActionCommand("DiameterDistribution");
         mi.addActionListener(listener);
         m.add(mi);
-        mi = new JMenuItem(messages.getString("DiameterDistributionCT"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.attributes.diameter_distribution_CT"));
         mi.setActionCommand("DiameterDistributionCT");
         mi.addActionListener(listener);
         m.add(mi);
-        mi = new JMenuItem(messages.getString("HeightDiameterPlot"));
+        mi = new JMenuItem(messages.getString("TgGrafikMenu.attributes.height_diameter_plot"));
         mi.setActionCommand("HeightDiameterPlot");
         mi.addActionListener(listener);
         m.add(mi);

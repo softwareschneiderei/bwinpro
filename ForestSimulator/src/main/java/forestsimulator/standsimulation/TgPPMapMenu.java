@@ -30,61 +30,64 @@ class TgPPMapMenu extends JMenuBar {
 
     public TgPPMapMenu(ActionListener listener, ItemListener Ilistener) {
         ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-        JMenu m; // Hauptmenupunkt
-        JMenuItem mi; //Untermenupunkt
 
-// 1. main menu item: Stand
+        add(createGraphicsMenu(messages, listener));
+        add(createAttributesMenu(messages, Ilistener, listener));
+    }
+
+    private JMenu createAttributesMenu(ResourceBundle messages, ItemListener Ilistener, ActionListener listener) {
+        JMenuItem mi;
+        // 2. main menu item: Edit
+        JMenu m = new JMenu(messages.getString("TgPPMapMenu.attributes"));
+        cmi[0] = new JCheckBoxMenuItem(messages.getString("TgPPMapMenu.attributes.living_trees"), true);
+        cmi[0].addItemListener(Ilistener);
+        m.add(cmi[0]);
+        cmi[1] = new JCheckBoxMenuItem(messages.getString("TgPPMapMenu.attributes.thinned_trees"), false);
+        cmi[1].addItemListener(Ilistener);
+        m.add(cmi[1]);
+        cmi[2] = new JCheckBoxMenuItem(messages.getString("TgPPMapMenu.attributes.dead_trees"), true);
+        cmi[2].addItemListener(Ilistener);
+        m.add(cmi[2]);
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.attributes.sky_color"));
+        mi.setActionCommand("ppSkyColor");
+        mi.addActionListener(listener);
+        m.add(mi);
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.attributes.ground_color"));
+        mi.setActionCommand("ppGroundColor");
+        mi.addActionListener(listener);
+        m.add(mi);
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.attributes.stand_ground_color"));
+        mi.setActionCommand("ppStandGroundColor");
+        mi.addActionListener(listener);
+        m.add(mi);
+        return m;
+    }
+
+    private JMenu createGraphicsMenu(ResourceBundle messages, ActionListener listener) {
+        JMenu m;
+        JMenuItem mi;
+        // 1. main menu item: Stand
         m = new JMenu(messages.getString("TgPPMapMenu.graphic"));
-// 1.1  submenu item below 1		
+        // 1.1  submenu item below 1
         mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.refresh"));
         mi.setActionCommand("refreshPPMap");
         mi.addActionListener(listener);
         m.add(mi);
-// 1.2  stand designer		
+        // 1.2  stand designer
         mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.save_to_jpg"));
         mi.setActionCommand("savePPMapToJPG");
         mi.addActionListener(listener);
         m.add(mi);
-//1.3 save stand		                
-        mi = new JMenuItem(messages.getString("zoom_in"));
+        //1.3 save stand
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.zoom_in"));
         mi.setActionCommand("zoomPPMapIn");
         mi.addActionListener(listener);
         m.add(mi);
-//1.4 save stand		                
-        mi = new JMenuItem(messages.getString("zoom_out"));
+        //1.4 save stand
+        mi = new JMenuItem(messages.getString("TgPPMapMenu.graphic.zoom_out"));
         mi.setActionCommand("zoomPPMapOut");
         mi.addActionListener(listener);
         m.add(mi);
-        add(m);
-
-// 2. main menu item: Edit
-        m = new JMenu(messages.getString("TgPPMapMenu.attributes"));
-//2.1 add Tree
-        cmi[0] = new JCheckBoxMenuItem(messages.getString("Living_trees"), true);
-        cmi[0].addItemListener(Ilistener);
-        m.add(cmi[0]);
-//2.1 add Tree
-        cmi[1] = new JCheckBoxMenuItem(messages.getString("TgPPMapMenu.attributes.thinned_trees"), false);
-        cmi[1].addItemListener(Ilistener);
-        m.add(cmi[1]);
-//2.2 Treatment parameters                
-        cmi[2] = new JCheckBoxMenuItem(messages.getString("Dead_trees"), true);
-        cmi[2].addItemListener(Ilistener);
-        m.add(cmi[2]);
-//2.2 Treatment parameters                
-        mi = new JMenuItem(messages.getString("Sky_Color"));
-        mi.setActionCommand("ppSkyColor");
-        mi.addActionListener(listener);
-        m.add(mi);
-        mi = new JMenuItem(messages.getString("Ground_Color"));
-        mi.setActionCommand("ppGroundColor");
-        mi.addActionListener(listener);
-        m.add(mi);
-        mi = new JMenuItem(messages.getString("Stand_Ground_Color"));
-        mi.setActionCommand("ppStandGroundColor");
-        mi.addActionListener(listener);
-        m.add(mi);
-
-        add(m);
+        return m;
     }
 }
