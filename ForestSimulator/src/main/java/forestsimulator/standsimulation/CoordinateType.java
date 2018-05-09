@@ -2,15 +2,14 @@ package forestsimulator.standsimulation;
 
 import java.util.ResourceBundle;
 
-public enum CreationType {
-    Distribution("CreationType.distribution"),
-    Tree("CreationType.tree"),
-    Regeneration("CreationType.regeneration");
+public enum CoordinateType {
+    Random("CoordinateType.random"),
+    Raster("CoordinateType.raster");
 
     private static final ResourceBundle bundle = ResourceBundle.getBundle("forestsimulator/gui");
     private final String resourceKey;
     
-    private CreationType(String resourceKey) {
+    private CoordinateType(String resourceKey) {
         this.resourceKey = resourceKey;
     }
 

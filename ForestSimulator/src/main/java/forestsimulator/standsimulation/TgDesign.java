@@ -20,8 +20,10 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -33,6 +35,7 @@ import java.util.*;
 import java.net.*;
 
 import javax.swing.*;
+import org.jdom.JDOMException;
 
 public class TgDesign extends JPanel {
 
@@ -52,20 +55,6 @@ public class TgDesign extends JPanel {
         startPositionLabel.setVisible(false);
         startXTextField.setVisible(false);
         startYTextField.setVisible(false);
-//        jLabel7.setText(messages.getString("Dmax"));
-//        jLabel9.setText(messages.getString("Basal_area"));
-//        jButton2.setText(messages.getString("start_creating"));
-//        jLabel1.setText(messages.getString("Site_index"));
-//        jLabel3.setText(messages.getString("Raster"));
-//        jLabel2.setText(messages.getString("Start"));
-//        jComboBox2.removeAllItems();
-//        jComboBox2.addItem(messages.getString("create_distribution"));
-//        jComboBox2.addItem(messages.getString("create_tree"));
-//        jComboBox2.addItem(messages.getString("regeneration"));
-//        jComboBox1.removeAllItems();
-//        jComboBox1.addItem(messages.getString("random_coordinates"));
-//        jComboBox1.addItem(messages.getString("raster_coordinates"));
-//        jLabel13.setText(messages.getString("layer"));
         loadSpecies(programDir.getPath());
         setdbh();
     }
@@ -95,7 +84,7 @@ public class TgDesign extends JPanel {
         startButton = new javax.swing.JButton();
         siteIndexLabel = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        distributionComboBox = new javax.swing.JComboBox();
         rasterLabel = new javax.swing.JLabel();
         typeComboBox = new javax.swing.JComboBox();
         rasterXTextField = new javax.swing.JTextField();
@@ -110,7 +99,7 @@ public class TgDesign extends JPanel {
         widthTextField = new javax.swing.JTextField();
         jComboBox4 = new javax.swing.JComboBox();
         mixtureLabel = new javax.swing.JLabel();
-        jLabel13 = new javax.swing.JLabel();
+        layerLabel = new javax.swing.JLabel();
         jComboBox5 = new javax.swing.JComboBox();
 
         setMaximumSize(new java.awt.Dimension(330, 407));
@@ -196,14 +185,14 @@ public class TgDesign extends JPanel {
         jPanel2.add(jTextField1);
         jTextField1.setBounds(220, 220, 40, 20);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "random coordinates", "raster coordinates" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        distributionComboBox.setModel(new DefaultComboBoxModel(CoordinateType.values()));
+        distributionComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                distributionComboBoxActionPerformed(evt);
             }
         });
-        jPanel2.add(jComboBox1);
-        jComboBox1.setBounds(30, 370, 230, 20);
+        jPanel2.add(distributionComboBox);
+        distributionComboBox.setBounds(30, 370, 230, 20);
 
         rasterLabel.setText(bundle.getString("TgDesign.rasterLabel.text")); // NOI18N
         jPanel2.add(rasterLabel);
@@ -267,9 +256,9 @@ public class TgDesign extends JPanel {
         jPanel2.add(mixtureLabel);
         mixtureLabel.setBounds(30, 320, 70, 14);
 
-        jLabel13.setText(bundle.getString("TgDesign.jLabel13.text")); // NOI18N
-        jPanel2.add(jLabel13);
-        jLabel13.setBounds(20, 260, 70, 14);
+        layerLabel.setText(bundle.getString("TgDesign.layerLabel.text")); // NOI18N
+        jPanel2.add(layerLabel);
+        layerLabel.setBounds(20, 260, 70, 14);
 
         jComboBox5.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4" }));
         jPanel2.add(jComboBox5);
@@ -298,16 +287,16 @@ public class TgDesign extends JPanel {
         diameterLabel.setVisible(true);
         jComboBox4.setVisible(true);
         mixtureLabel.setVisible(true);
-        jComboBox1.setVisible(true);
+        distributionComboBox.setVisible(true);
         developmentCheckBox.setVisible(true);
         distanceLabel.setVisible(true);
         distanceTextField.setVisible(true);
         widthLabel.setVisible(true);
         widthTextField.setVisible(true);
-        if (typeComboBox.getSelectedIndex() == 0) {
+        if (typeComboBox.getSelectedItem() == CreationType.Distribution) {
             diameterLabel.setText(messages.getString("TgDesign.diameterLabel.text"));
             heightLabel.setText(messages.getString("TgDesign.heightLabel.text"));
-//            jLabel9.setText(messages.getString("Basal_area"));
+            basalAreaLabel.setText(messages.getString("TgDesign.basalAreaLabel.text"));
             maxDiameterLabel.setVisible(true);
             td5.setVisible(true);
             td6.setText("18.0");
@@ -315,12 +304,12 @@ public class TgDesign extends JPanel {
         } else {
             diameterLabel.setText(messages.getString("TgDesign.diameterLabel.dbh.text"));
             heightLabel.setText(messages.getString("TgDesign.heightLabel.height.text"));
-//            jLabel9.setText(messages.getString("number_of_trees"));
+            basalAreaLabel.setText(messages.getString("TgDesign.basalAreaLabel.number_of_trees.text"));
             maxDiameterLabel.setVisible(false);
             td5.setVisible(false);
             td6.setText("1");
         }
-        if (typeComboBox.getSelectedIndex() == 2) {
+        if (typeComboBox.getSelectedItem() == CreationType.Regeneration) {
             td2.setText("5");
             td4.setText("0.5");
             td6.setText("50.0");
@@ -332,7 +321,7 @@ public class TgDesign extends JPanel {
 //            jLabel9.setText(messages.getString("coveragePercent"));
             jComboBox4.setVisible(false);
             mixtureLabel.setVisible(false);
-            jComboBox1.setVisible(false);
+            distributionComboBox.setVisible(false);
             developmentCheckBox.setVisible(false);
             distanceLabel.setVisible(false);
             distanceTextField.setVisible(false);
@@ -343,36 +332,23 @@ public class TgDesign extends JPanel {
         }
     }//GEN-LAST:event_typeComboBoxActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-        if (jComboBox1.getSelectedIndex() == 1) {
-            rasterLabel.setVisible(true);
-            rasterXTextField.setVisible(true);
-            rasterYTextField.setVisible(true);
-            startPositionLabel.setVisible(true);
-            startXTextField.setVisible(true);
-            startYTextField.setVisible(true);
-        } else {
-            rasterLabel.setVisible(false);
-            rasterXTextField.setVisible(false);
-            rasterYTextField.setVisible(false);
-            startPositionLabel.setVisible(false);
-            startXTextField.setVisible(false);
-            startYTextField.setVisible(false);
-        }
-
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void distributionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_distributionComboBoxActionPerformed
+        boolean showRasterControls = distributionComboBox.getSelectedItem() == CoordinateType.Raster;
+        rasterLabel.setVisible(showRasterControls);
+        rasterXTextField.setVisible(showRasterControls);
+        rasterYTextField.setVisible(showRasterControls);
+        startPositionLabel.setVisible(showRasterControls);
+        startXTextField.setVisible(showRasterControls);
+        startYTextField.setVisible(showRasterControls);
+    }//GEN-LAST:event_distributionComboBoxActionPerformed
 
     private void ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ActionPerformed
-
         String cmd = evt.getActionCommand();
-
-// check if size > 0.0 and stand created
+        // check if size > 0.0 and stand created
         if (st.size > 0.0) {
-
             // generate diameter distribution
             if (cmd.equals("start creating")) {
-                if (typeComboBox.getSelectedIndex() == 0) {
+                if (typeComboBox.getSelectedItem() == CreationType.Distribution) {
                     try {
                         GenDistribution gdb = new GenDistribution();
                         String codex = (String) (speciesCodeComboBox.getSelectedItem());
@@ -435,7 +411,7 @@ public class TgDesign extends JPanel {
                         if (jComboBox4.getSelectedIndex() == 3) {
                             gxy.setGroupRadius(40.0);
                         }
-                        if (jComboBox1.getSelectedIndex() == 0) {
+                        if (distributionComboBox.getSelectedIndex() == 0) {
                             gxy.zufall(st);
                         } else {
                             gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()), Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
@@ -447,7 +423,7 @@ public class TgDesign extends JPanel {
                         Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
-                if (typeComboBox.getSelectedIndex() == 1) {
+                if (typeComboBox.getSelectedItem() == CreationType.Tree) {
                     int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
                     for (int j = 0; j < Integer.parseInt(td6.getText()); j++) {
                         try {
@@ -462,20 +438,17 @@ public class TgDesign extends JPanel {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-
                     st.missingData();
                     st.descspecies();
                     GenerateXY gxy = new GenerateXY();
-                    if (jComboBox1.getSelectedIndex() == 0) {
+                    if (distributionComboBox.getSelectedIndex() == 0) {
                         gxy.zufall(st);
                     } else {
                         gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()),
                                 Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
                     }
-
                 }
-
-                if (typeComboBox.getSelectedIndex() == 2) {
+                if (typeComboBox.getSelectedItem() == CreationType.Regeneration) {
                     String codex = (String) (speciesCodeComboBox.getSelectedItem());
                     int m = codex.indexOf(":");
                     codex = codex.substring(0, m);
@@ -496,9 +469,7 @@ public class TgDesign extends JPanel {
                         }
                         cbx = atree.calculateCw();
                         gx = Math.PI * Math.pow(cbx / 2.0, 2.0);
-
                     }
-
                     double cov = Double.parseDouble(td6.getText());
                     int anzahl = (int) Math.round(st.size * cov * 100.0 / gx);
                     for (int i = 0; i < anzahl; i++) {
@@ -515,9 +486,7 @@ public class TgDesign extends JPanel {
                     }
                     GenerateXY gxy = new GenerateXY(false, 0.0, 0.0);
                     gxy.zufall(st);
-
                 }
-
             }
         } else {
             frame.iframe[3].setVisible(false);
@@ -532,35 +501,26 @@ public class TgDesign extends JPanel {
                 frame.menubar.cmi[3].setSelected(true);
             }
         }
-//	
-
-//           System.out.println("Bäume:"+st.ntrees);
         frame.tfUpdateTrue = true;
         frame.updatetp(false);
-
     }//GEN-LAST:event_ActionPerformed
 
     private void td2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_td2KeyPressed
-        // TODO add your handling code here:
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             setho();
             setdbh();
         }
-
     }//GEN-LAST:event_td2KeyPressed
 
     private void td4KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_td4KeyPressed
-        // TODO add your handling code here:
         int key = evt.getKeyCode();
         if (key == KeyEvent.VK_ENTER) {
             setdbh();
         }
-
     }//GEN-LAST:event_td4KeyPressed
     
     private void loadSpecies(String Dir) {
-        java.io.File file;
         String fname = "";
         try {
             URL url = null;
@@ -574,18 +534,15 @@ public class TgDesign extends JPanel {
             System.out.println("SpeciesDef: URL: " + fname);
             try {
                 url = new URL(fname);
-            } catch (Exception e) {
+            } catch (MalformedURLException e) {
                 JTextArea about = new JTextArea("TgDesign: Url file not found: " + fname);
                 JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
             }
-
             SAXBuilder builder = new SAXBuilder();
             URLConnection urlcon = url.openConnection();
-
             Document doc = builder.build(urlcon.getInputStream());
 
             DocType docType = doc.getDocType();
-//        
             Element sortimente = doc.getRootElement();
             List Sortiment = sortimente.getChildren("SpeciesDefinition");
             Iterator i = Sortiment.iterator();
@@ -594,15 +551,12 @@ public class TgDesign extends JPanel {
                 Element sortiment = (Element) i.next();
                 speciesCodeComboBox.addItem(sortiment.getChild("Code").getText() + ":" + sortiment.getChild("ShortName").getText());
             }
-
-        } catch (Exception e) {
+        } catch (HeadlessException | IOException | JDOMException e) {
             e.printStackTrace();
             JTextArea about = new JTextArea("TgDesign file not found: " + fname);
             JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
             System.out.println("SpeciesDef: File nicht gefunden: " + fname);
-
         }
-
         speciesCodeComboBox.setSelectedIndex(0);
     }
 
@@ -727,14 +681,14 @@ public class TgDesign extends JPanel {
     private javax.swing.JLabel diameterLabel;
     private javax.swing.JLabel distanceLabel;
     private javax.swing.JTextField distanceTextField;
+    private javax.swing.JComboBox distributionComboBox;
     private javax.swing.JLabel heightLabel;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel layerLabel;
     private javax.swing.JLabel maxDiameterLabel;
     private javax.swing.JLabel mixtureLabel;
     private javax.swing.JLabel rasterLabel;
