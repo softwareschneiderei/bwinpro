@@ -169,6 +169,7 @@ public class TgDesign extends JPanel {
 
         startButton.setBackground(new java.awt.Color(51, 153, 255));
         startButton.setText(bundle.getString("TgDesign.startButton.text")); // NOI18N
+        startButton.setActionCommand("start_creating"); // NOI18N
         startButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ActionPerformed(evt);
@@ -318,7 +319,7 @@ public class TgDesign extends JPanel {
             td3.setVisible(false);
             maxDiameterLabel.setVisible(false);
             td5.setVisible(false);
-//            jLabel9.setText(messages.getString("coveragePercent"));
+            basalAreaLabel.setText(messages.getString("TgDesign.basalAreaLabel.coveragePercent.text"));
             jComboBox4.setVisible(false);
             mixtureLabel.setVisible(false);
             distributionComboBox.setVisible(false);
@@ -347,7 +348,7 @@ public class TgDesign extends JPanel {
         // check if size > 0.0 and stand created
         if (st.size > 0.0) {
             // generate diameter distribution
-            if (cmd.equals("start creating")) {
+            if (cmd.equals("start_creating")) {
                 if (typeComboBox.getSelectedItem() == CreationType.Distribution) {
                     try {
                         GenDistribution gdb = new GenDistribution();
@@ -441,7 +442,7 @@ public class TgDesign extends JPanel {
                     st.missingData();
                     st.descspecies();
                     GenerateXY gxy = new GenerateXY();
-                    if (distributionComboBox.getSelectedIndex() == 0) {
+                    if (distributionComboBox.getSelectedItem() == CoordinateType.Random) {
                         gxy.zufall(st);
                     } else {
                         gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()),
@@ -464,7 +465,7 @@ public class TgDesign extends JPanel {
                                 false, 3, 0.0, "");
                         try {
                             atree.sp = st.addspecies(atree);
-                        } catch (Exception ex) {
+                        } catch (SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         cbx = atree.calculateCw();
