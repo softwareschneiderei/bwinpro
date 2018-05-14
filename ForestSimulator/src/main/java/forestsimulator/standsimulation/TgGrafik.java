@@ -111,9 +111,8 @@ class TgGrafik extends JPanel {
 
     public void saveToJPEG(String dir) {
         File fn = new File(jpgFilename);
-        ChartUtilities ut = null;
         try {
-            ut.saveChartAsJPEG(fn, jfreeChart, 600, 400);
+            ChartUtilities.saveChartAsJPEG(fn, jfreeChart, 600, 400);
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -122,7 +121,6 @@ class TgGrafik extends JPanel {
     public void setJPGFilename(String fn) {
         jpgFilename = fn;
     }
-
 }
 //------------------------------------------------------ 
 
@@ -139,7 +137,7 @@ class GraphicSpeciesByCrownSurfaceArea {
             dataset.setValue(st.sp[j].spDef.shortName, st.sp[j].percCSA);
         }
         JFreeChart chart = ChartFactory.createPieChart(
-                messages.getString("speciespercentage"), // chart title
+                messages.getString("GraphicSpeciesByCrownSurfaceArea.title"),
                 dataset, // data
                 true, // include legend
                 true, // tooltips?

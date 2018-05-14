@@ -58,7 +58,7 @@ public class RootingDialog extends javax.swing.JDialog {
         jComboBox2 = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        rootingTable = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
@@ -81,7 +81,7 @@ public class RootingDialog extends javax.swing.JDialog {
 
         jLabel6.setBackground(new java.awt.Color(255, 255, 204));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        rootingTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -128,7 +128,13 @@ public class RootingDialog extends javax.swing.JDialog {
                 "SpCode", "Species", "Age", "RootingDepth [m]"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(rootingTable);
+        if (rootingTable.getColumnModel().getColumnCount() > 0) {
+            rootingTable.getColumnModel().getColumn(0).setHeaderValue(bundle.getString("RootingDialog.rootingTable.columnModel.title0")); // NOI18N
+            rootingTable.getColumnModel().getColumn(1).setHeaderValue(bundle.getString("RootingDialog.rootingTable.columnModel.title1")); // NOI18N
+            rootingTable.getColumnModel().getColumn(2).setHeaderValue(bundle.getString("RootingDialog.rootingTable.columnModel.title2")); // NOI18N
+            rootingTable.getColumnModel().getColumn(3).setHeaderValue(bundle.getString("RootingDialog.rootingTable.columnModel.title3")); // NOI18N
+        }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,10 +195,10 @@ public class RootingDialog extends javax.swing.JDialog {
                 wt  = Math.round(wt*100)/1000.0;
                 txt = wt.toString();
             }
-            jTable1.setValueAt(new Integer(st.sp[i].code).toString(), i, 0);
-            jTable1.setValueAt(st.sp[i].spDef.shortName, i, 1);
-            jTable1.setValueAt(new Integer(nage).toString(), i, 2);
-            jTable1.setValueAt(txt, i, 3);
+            rootingTable.setValueAt(new Integer(st.sp[i].code).toString(), i, 0);
+            rootingTable.setValueAt(st.sp[i].spDef.shortName, i, 1);
+            rootingTable.setValueAt(new Integer(nage).toString(), i, 2);
+            rootingTable.setValueAt(txt, i, 3);
         }
 
     }//GEN-LAST:event_calculateButtonActionPerformed
@@ -222,8 +228,8 @@ public class RootingDialog extends javax.swing.JDialog {
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel precipitationLabel;
+    private javax.swing.JTable rootingTable;
     private javax.swing.JLabel soilTypeLabel;
     // End of variables declaration//GEN-END:variables
 
