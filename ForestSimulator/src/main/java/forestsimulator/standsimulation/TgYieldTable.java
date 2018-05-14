@@ -146,7 +146,7 @@ class TgYieldTable {
         filename = file.getAbsolutePath();
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>" + messages.getString("stand_development_table") + "</P align=center></H2> ");
+            out.println("<H2><P align=center>" + messages.getString("TgYieldTable.stand_development_table.heading") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("TgYieldTable.standname.label") + st.standname);
             out.println("<BR>" + messages.getString("TgYieldTable.standsize.label") + st.size);
             out.println("<BR>" + messages.getString("TgYieldTable.year.label") + st.year + "</B></P>");

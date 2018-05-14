@@ -23,19 +23,18 @@ import java.util.*;
 
 class TgStructureTable {
 
-    File file = new File("structuretable.html");
-    ResourceBundle messages;
+    private File file = new File("structuretable.html");
 
     void TgStructureTable() {
     }
 
     void writeTable(Stand st, String path, String fname, Locale preferredLanguage) {
         StandStructure struc = new StandStructure();
-        messages = ResourceBundle.getBundle("forestsimulator/gui");
+        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui", preferredLanguage);
         this.file = new File(path, fname);
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>" + messages.getString("stand_structure_table") + "</P align=center></H2> ");
+            out.println("<H2><P align=center>" + messages.getString("TgStructureTable.stand_structure_table.heading") + "</P align=center></H2> ");
             out.println("<P><B>" + messages.getString("TgStructureTable.standname.label") + st.standname);
             out.println("<BR>" + messages.getString("TgStructureTable.standsize.label") + st.size);
             out.println("<BR>" + messages.getString("TgStructureTable.year.label") + st.year + "</B></P>");

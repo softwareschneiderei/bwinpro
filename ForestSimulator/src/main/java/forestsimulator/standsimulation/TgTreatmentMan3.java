@@ -31,6 +31,7 @@ import treegross.treatment.*;
  */
 public class TgTreatmentMan3 extends JPanel {
     private final DefaultTableModel data;
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     Stand st = null;
     Object[] rowData={" "," "," "," "," "," "};
     NumberFormat f=NumberFormat.getInstance();
@@ -471,7 +472,7 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         harvestingAmountMaximumLabel.setVisible(true);
         harvestingAmountMinimumTextField.setVisible(true);
         harvestingAmountMaximumTextField.setVisible(true);
-//        jLabel17.setText(messages.getString("vjbo"));
+        clearingLabel.setText(messages.getString("TgTreatmentMan3.clearingLabel.text"));
         clearingTextField.setText("0.3");
     }
     if (harvestingTypeComboBox.getSelectedIndex()==1){
@@ -481,7 +482,7 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         harvestingAmountMaximumLabel.setVisible(false);
         harvestingAmountMinimumTextField.setVisible(false);
         harvestingAmountMaximumTextField.setVisible(false);
-//        jLabel17.setText(messages.getString("vjgz"));
+        clearingLabel.setText(messages.getString("TgTreatmentMan3.clearingLabel.regeneration.text"));
         if (st.trule.regenerationProcess.length()>1) clearingTextField.setText(st.trule.regenerationProcess);
             else clearingTextField.setText("0.7;0.4;0.2;0.0;");
     }
