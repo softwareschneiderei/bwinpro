@@ -13,8 +13,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ResourceBundle;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import treegross.base.GenerateXY;
 import treegross.base.Stand;
@@ -23,42 +25,33 @@ import treegross.base.Stand;
  *
  * @author nagel
  */
-public class JPanelPlots extends javax.swing.JPanel {
-     Stand st = null;
-     File dir = null;
+public class JPanelPlots extends JPanel {
 
-     String bestaende[] = new String[1000];
-     String bestand = "";
-     int nBestaende =0;
-     int standID =-9;
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
+    Stand st = null;
+    File dir = null;
 
+    String bestaende[] = new String[1000];
+    String bestand = "";
+    int nBestaende = 0;
+    int standID = -9;
 
-    /**
-     * Creates new form JPanelDatabase
-     */
     public JPanelPlots(Stand stx, File dirx) throws IOException {
         initComponents();
         st = stx;
         dir = new File(dirx, "fsplots.db");
-        String localPath="";
-        java.io.File f1 = new java.io.File("");                    
-        try{ 
-           localPath= f1.getCanonicalPath();
-          } catch (Exception e){ }
- 
         if (dir.exists()) {
             filenameLabel.setText(dir.getCanonicalPath());
-        }
-        else {
-           JFileChooser fc = new JFileChooser();
-           DBFileFilter txtFilter = new DBFileFilter();
-           txtFilter.setExtension("db");
-           fc.addChoosableFileFilter(txtFilter);
-           int auswahl = fc.showOpenDialog(this);
-           dir = fc.getSelectedFile();
+        } else {
+            JFileChooser fc = new JFileChooser();
+            DBFileFilter txtFilter = new DBFileFilter();
+            txtFilter.setExtension("db");
+            fc.addChoosableFileFilter(txtFilter);
+            fc.showOpenDialog(this);
+            dir = fc.getSelectedFile();
         }
         filenameLabel.setText(dir.getCanonicalPath());
-        setVisible(true);    
+        setVisible(true);
     }
 
     /**
@@ -244,18 +237,19 @@ public class JPanelPlots extends javax.swing.JPanel {
         DBFileFilter dbFilter = new DBFileFilter();
         dbFilter.setExtension("db");
         fc.addChoosableFileFilter(dbFilter);
-        fc.setFileFilter(dbFilter); 
+        fc.setFileFilter(dbFilter);
         fc.setAcceptAllFileFilterUsed(true);
         fc.setCurrentDirectory(dir);
-                       
+
         int auswahl = fc.showOpenDialog(this);
         try {
-           dir = fc.getSelectedFile();
-           filenameLabel.setText(dir.getCanonicalPath());
-           setVisible(true);
+            dir = fc.getSelectedFile();
+            filenameLabel.setText(dir.getCanonicalPath());
+            setVisible(true);
 //           nBestaende=loadBestaende();
+        } catch (Exception eio) {
+            System.out.println(eio);
         }
-        catch (Exception eio){System.out.println(eio);}  
     }//GEN-LAST:event_changeDatabaseButtonActionPerformed
 
     private void saveActiveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActiveStandButtonActionPerformed
@@ -339,8 +333,8 @@ public class JPanelPlots extends javax.swing.JPanel {
             }
             lastDataset();
         } else {
-            JTextArea about = new JTextArea("not saved: No circular plots");
-            JOptionPane.showMessageDialog(this, about, "Error", JOptionPane.INFORMATION_MESSAGE);
+            JTextArea about = new JTextArea(messages.getString("JPanelPlots.save_stand.no_plots.message"));
+            JOptionPane.showMessageDialog(this, about, messages.getString("JPanelPlots.save_stand.no_plots.title"), JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_saveActiveStandButtonActionPerformed
 
@@ -351,7 +345,7 @@ public class JPanelPlots extends javax.swing.JPanel {
 
     private void navigateToLastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_navigateToLastButtonActionPerformed
         // Find last record
-       lastDataset();
+        lastDataset();
 
     }//GEN-LAST:event_navigateToLastButtonActionPerformed
 
@@ -380,7 +374,7 @@ public class JPanelPlots extends javax.swing.JPanel {
         nextDataset();
         dispStandID();
         // Find next
- 
+
     }//GEN-LAST:event_navigateForwardButtonActionPerformed
 
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
@@ -435,7 +429,7 @@ public class JPanelPlots extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_searchFieldActionPerformed
 
-    private void dispStandID(){
+    private void dispStandID() {
         try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement stm = cn.createStatement()) {
             try (ResultSet rs = stm.executeQuery("SELECT * FROM stand WHERE _id = " + standID + " ;")) {
                 while (rs.next()) {
@@ -449,7 +443,7 @@ public class JPanelPlots extends javax.swing.JPanel {
             System.out.println(eio);
         }
     }
-    
+
     private int nextDataset() {
         int erg = -9;
         try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement stm = cn.createStatement()) {
@@ -507,7 +501,7 @@ public class JPanelPlots extends javax.swing.JPanel {
         return erg;
     }
 
-    public Stand createStand(){
+    public Stand createStand() {
         try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement stm = cn.createStatement()) {
             try (ResultSet rs = stm.executeQuery("SELECT * FROM stand WHERE _id = " + standID)) {
                 while (rs.next()) {
@@ -588,7 +582,7 @@ public class JPanelPlots extends javax.swing.JPanel {
         st.descspecies();
         return (st);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel areaSizeHeading;
     private javax.swing.JButton changeDatabaseButton;

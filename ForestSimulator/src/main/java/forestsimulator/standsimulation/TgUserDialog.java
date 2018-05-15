@@ -251,7 +251,7 @@ public class TgUserDialog extends JDialog {
         try {
             saveSettings();
             JTextArea about = new JTextArea(messages.getString("TgUserDialog.applySettingsDialog.message"));
-            JOptionPane.showMessageDialog(this, about, "TgUserDialog.applySettingsDialog.title", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, about, messages.getString("TgUserDialog.applySettingsDialog.title"), JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
             dispose();
         } catch (IOException e) {

@@ -42,6 +42,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
 import org.jdom.DocType;
+import org.jdom.JDOMException;
 
 /**
  * @author Juergen Nagel
@@ -138,7 +139,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         boolean available3d = false;
         PackageInfo info3d = new PackageInfo();
         if (info3d.isJ3DInstalled()) {
-            new Query3DProperties();
+            new Query3DProperties().print();
             available3d = true;
         }
         if (plugIn.indexOf("nwfva") > 0) {
@@ -280,7 +281,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         tfUpdateTrue = true;
         // sd.showdesigner(st); 
         if (!available3d) {
-            JOptionPane.showMessageDialog(null, "Es ist keine Java3D-API installiert.", "Java3D", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    null,
+                    messages.getString("TgJFrame.no3d.message"),
+                    messages.getString("TgJFrame.no3d.title"),
+                    JOptionPane.ERROR_MESSAGE);
         }
         if (user.needsUpdate(bwinproLastUpdate)) {
             JOptionPane.showMessageDialog(
@@ -342,9 +347,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 }
                 if (st.getSpeciesDefinedTrue() == false) {
                     String text = st.getSpeciesUndefinedCode();
-                    JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.aboutTextArea.error"), text));
-                    about.setBackground(Color.LIGHT_GRAY);
-                    JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.aboutMessageDialog.title"), JOptionPane.INFORMATION_MESSAGE);
+                    showUndefinedSpeciesMessage(text);
                     st.ntrees = 0;
                     st.nspecies = 0;
                 }
@@ -385,18 +388,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 try {
                     url = pa.toURI().toURL();
                     st = treegrossXML2.readTreegrossStand(st, url);
-                } catch (Exception e2) {
+                } catch (MalformedURLException e2) {
                     LOGGER.info(e2.toString());
                 }
                 LOGGER.info("File eingelesen:" + pa);
 
                 if (st.getSpeciesDefinedTrue() == false) {
                     String text = st.getSpeciesUndefinedCode();
-                    JTextArea about = new JTextArea(messages.getString("ERROR_Reading_Tree1") + text
-                            + messages.getString("ERROR_Reading_Tree2")
-                            + messages.getString("ERROR_Reading_Tree3"));
-                    about.setBackground(Color.LIGHT_GRAY);
-                    JOptionPane.showMessageDialog(this, about, "Error", JOptionPane.INFORMATION_MESSAGE);
+                    showUndefinedSpeciesMessage(text);
                     st.ntrees = 0;
                     st.nspecies = 0;
                 }
@@ -615,22 +614,19 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir.getAbsolutePath(), st.FileXMLSettings);
                 spman.setVisible(true);
             }
-            //Menu "Help"
-
             if (cmd.equals("About")) {
-                JTextArea about = new JTextArea("TreeGrOSS: ForestSimulation " + bwinproVersion + " \n http://www.nw-fva.de \n " + bwinproVersion + " \n (c) 2002-2015 Juergen Nagel, Northwest German Forest Research Station , \n Grätzelstr.2, 37079 Göttingen, Germany \n E-Mail: Juergen.Nagel@nw-fva.de");
+                JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.AboutDialog.message"), bwinproVersion, bwinproVersion));
                 about.setBackground(Color.LIGHT_GRAY);
-                JOptionPane.showMessageDialog(this, about, "About", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.AboutDialog.title"), JOptionPane.INFORMATION_MESSAGE);
             }
             if (cmd.equals("checksum")) {
                 String fname = programDir + System.getProperty("file.separator") + st.FileXMLSettings;
                 JackSumFile jsf = new JackSumFile();
-                String csum = jsf.getSum("ForestSimulatorSettings.xml");
-                JTextArea about = new JTextArea("TreeGrOSS: Model Checksum:  \n " + csum + " \n ");
+                String csum = jsf.getSum(fname);
+                JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.ChecksumDialog.message"), csum));
                 about.setBackground(Color.LIGHT_GRAY);
-                JOptionPane.showMessageDialog(this, about, "Check Sum", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.ChecksumDialog.title"), JOptionPane.INFORMATION_MESSAGE);
             }
-
         }
 
         if (cmd.equals("Grow")) {
@@ -907,6 +903,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
     }
 
+    private void showUndefinedSpeciesMessage(String text) throws HeadlessException {
+        JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.undefined_species.message"), text));
+        about.setBackground(Color.LIGHT_GRAY);
+        JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.undefined_species.title"), JOptionPane.INFORMATION_MESSAGE);
+    }
+
     @Override
     public void StandChanged(treegross.base.StandChangeEvent evt) {
         System.out.println("stand changed " + evt.getName());
@@ -1014,7 +1016,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     private void loadGenralSettings(File Dir) {
-        java.io.File file;
         File fname = null;
         try {
             URL url = null;
@@ -1023,18 +1024,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             System.out.println("SpeciesDef: URL: " + fname.toURI().toURL());
             try {
                 url = fname.toURI().toURL();
-            } catch (Exception e) {
-                LOGGER.info(e.toString());
-                JTextArea about = new JTextArea("TgDesign Genral Settings: Url file not found: " + fname);
-                JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
+            } catch (MalformedURLException e) {
+                LOGGER.info(e.getMessage());
+                showSettingsNotFoundMessage(fname);
             }
             SAXBuilder builder = new SAXBuilder();
             URLConnection urlcon = url.openConnection();
 
             Document doc = builder.build(urlcon.getInputStream());
 
-            DocType docType = doc.getDocType();
-//        
             Element sortimente = doc.getRootElement();
             java.util.List Setting = sortimente.getChildren("GeneralSettings");
             Iterator i = Setting.iterator();
@@ -1071,12 +1069,16 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 }
                 break;
             }
-        } catch (Exception e) {
+        } catch (HeadlessException | IOException | JDOMException e) {
             LOGGER.info(e.toString());
-            JTextArea about = new JTextArea("TgDesign file not found : " + fname);
-            JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
-            LOGGER.info("SpeciesDef General settings: File nicht gefunden: " + fname);
+            showSettingsNotFoundMessage(fname);
+            LOGGER.log(Level.INFO, "SpeciesDef General settings: File nicht gefunden: {0}", fname);
         }
+    }
+
+    private void showSettingsNotFoundMessage(File fname) throws HeadlessException {
+        JTextArea about = new JTextArea(MessageFormat.format(messages.getString("TgJFrame.load_settings.error.message"), fname));
+        JOptionPane.showMessageDialog(null, about, messages.getString("TgJFrame.load_settings.error.title"), JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void updatetp(boolean from3D) {

@@ -5,6 +5,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.*;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -14,12 +15,10 @@ import java.io.*;
  */
 public class AccessDatabaseCreator extends DatabaseCreator {
 
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     private String mdpath = "";  // a destination where an empty access database exists 
     // private String newdbpath=""; // the path and name of the new database;  inherited from DatabaseCreator
 
-    /**
-     * Creates a new instance of AccessDatabaseCreator
-     */
     public AccessDatabaseCreator(String metadatapath) {
         mdpath = metadatapath;
         type = 1; //-> 1=ACCESS must be the same as in DBConn inherited static field from basis class DatabaseCreator
@@ -55,7 +54,6 @@ public class AccessDatabaseCreator extends DatabaseCreator {
 
     @Override
     public boolean showFileSaveDialog() {
-        boolean created = false;
         // 1. eine leere Datenbank im gewünschten Verzeichnis erzeugen:
         JFileChooser fc = new JFileChooser();
         fc.setFileFilter(new FileFilter() {
@@ -67,7 +65,7 @@ public class AccessDatabaseCreator extends DatabaseCreator {
 
             @Override
             public String getDescription() {
-                return "Access Datenbank";
+                return messages.getString("AccessDatabaseCreator.save_dialog.filter.description");
             }
         });
         int returnVal = fc.showSaveDialog(null);
@@ -76,18 +74,15 @@ public class AccessDatabaseCreator extends DatabaseCreator {
             if (file.exists()) {
                 System.out.println("file already exists");
                 newdbpath = file.getAbsolutePath();
-                created = true;
-            } else {
-                created = createNewDB(file.getAbsolutePath());
+                return true;
             }
-        } else {
-            System.out.println("Auswahl abgebrochen");
-            created = false;
+            return createNewDB(file.getAbsolutePath());
         }
-        return created;
+        return false;
     }
 
-    public boolean createNewDB(String newpath) {
+    @Override
+    public final boolean createNewDB(String newpath) {
         if (mdpath.compareTo("") != 0 && newpath.compareTo("") != 0) {
             String newdb = newpath;
             if (newdb.endsWith(".mdb") == false) {
@@ -119,7 +114,11 @@ public class AccessDatabaseCreator extends DatabaseCreator {
         try {
             copyFile(emptydb, newdb);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Fehler beim Anlegen der neuen Datenbank", "Projekt anlegen", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    null,
+                    messages.getString("AccessDatabaseCreator.copy_database.error.message"),
+                    messages.getString("AccessDatabaseCreator.copy_database.error.title"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 }

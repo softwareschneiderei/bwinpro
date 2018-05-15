@@ -29,16 +29,17 @@ import java.awt.image.BufferedImage;
 import javax.media.j3d.Texture2D;
 import javax.media.j3d.Canvas3D;
 import java.net.*;
+import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
-//import WaldPlaner.WPClipboardSupport.*;
 
 /**
  *
  * @author jhansen
  */
 public class Manager3D implements ActionListener {
+    private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
      private Stand3DScene scene=null;
-     private Texture2D[] textures = new Texture2D[7];
+     private final Texture2D[] textures = new Texture2D[7];
      private JPanel home=null;    
      private Stand st=null;
      private boolean speccol=false;
@@ -64,13 +65,13 @@ public class Manager3D implements ActionListener {
      *  if null the option texture will not be available
      */
     public Manager3D(JPanel homepanel, File texturepath, boolean showtoolbar){
-        home=homepanel;
+        home = homepanel;
         texpath = new File(texturepath, "3dtextures");
         initSwing(new File(texturepath, "icons"));
         setToolbarVisible(showtoolbar);
         PackageInfo info3d=new PackageInfo();
         if(info3d.isJ3DInstalled()){
-            new Query3DProperties();
+            new Query3DProperties().print();
             available3d=true;
         } 
         if (showtoolbar == false) {
@@ -78,8 +79,15 @@ public class Manager3D implements ActionListener {
             showfog = false;
             showmesh = false;
         }
-        if(!available3d) JOptionPane.showMessageDialog(null,"Es ist keine Java3D-API installiert.","Java3D",JOptionPane.ERROR_MESSAGE);
-        if (showtoolbar) loadTextures();        
+        if (!available3d) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    messages.getString("Manager3D.no3d.message"),
+                    messages.getString("Manager3D.no3d.title"), JOptionPane.ERROR_MESSAGE);
+        }
+        if (showtoolbar) {
+            loadTextures();
+        }        
     }
     
     private void initSwing(File iconpath){
@@ -333,28 +341,25 @@ public class Manager3D implements ActionListener {
          }
     }
      
-    //     
-     private void saveImageAsJPEG(BufferedImage img, String filename) {           
+    private void saveImageAsJPEG(BufferedImage img, String filename) {
         File file = new File(filename);
-        int ok=JOptionPane.YES_OPTION;
-        if  (file.exists()){
+        int ok = JOptionPane.YES_OPTION;
+        if (file.exists()) {
             System.out.println("file alrerady exists");
-            ok = JOptionPane.showConfirmDialog(home,"Die Datei existiert bereits! überschreiben?","Speichern",JOptionPane.YES_NO_OPTION);                            
-        }    
-        if (ok == JOptionPane.YES_OPTION){
-              try
-                   {
-                   ImageIO.write(img, "JPG", new FileOutputStream(filename));
-                    
-                   }
-                   catch (Exception e)
-                   {
-                       System.out.println(e); 
-                   }		 
-
+            ok = JOptionPane.showConfirmDialog(
+                    home,
+                    messages.getString("Manager3D.save_image.overwrite.message"),
+                    messages.getString("Manager3D.save_image.overwrite.title"),
+                    JOptionPane.YES_NO_OPTION);
+        }
+        if (ok == JOptionPane.YES_OPTION) {
+            try {
+                ImageIO.write(img, "JPG", new FileOutputStream(filename));
+            } catch (Exception e) {
+                System.out.println(e);
             }
-      } 
-     
+        }
+    }
      
    public void copyToClipboard(){
        if (scene!=null){  
@@ -362,45 +367,54 @@ public class Manager3D implements ActionListener {
        }
    }
    
-   public void harvestTrees(){
-       scene.harvestAllMarkedTrees();
-       scene.setPickFocus();
-   }
-   
-   public void setInitialView(){
-       scene.setViewAndPositionStart();
-       scene.setPickFocus();
-   }
+    public void harvestTrees() {
+        scene.harvestAllMarkedTrees();
+        scene.setPickFocus();
+    }
 
-  public void setFogDisabled(){
-       scene.setFogEnable(false);
-   }
-   
-   public void saveScreenShot(){
-        if (scene!=null){    
-            BufferedImage img = scene.getScreenShot();           
+    public void setInitialView() {
+        scene.setViewAndPositionStart();
+        scene.setPickFocus();
+    }
+
+    public void setFogDisabled() {
+        scene.setFogEnable(false);
+    }
+
+    public void saveScreenShot() {
+        if (scene != null) {
+            BufferedImage img = scene.getScreenShot();
             JFileChooser fc = new JFileChooser();
-            fc.setFileFilter( new FileFilter() {
-            public boolean accept( File f ) {
-                return f.isDirectory() ||
-                   f.getName().toLowerCase().endsWith(".jpg");
-            }
-             public String getDescription() {
-                return "jpg";
-            }
-            } );    
-            int returnVal = fc.showSaveDialog( home );
-    
-            if ( returnVal == JFileChooser.APPROVE_OPTION ){
+            fc.setFileFilter(new FileFilter() {
+                @Override
+                public boolean accept(File f) {
+                    return f.isDirectory()
+                            || f.getName().toLowerCase().endsWith(".jpg");
+                }
+
+                @Override
+                public String getDescription() {
+                    return "jpg";
+                }
+            });
+            int returnVal = fc.showSaveDialog(home);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 String path = file.getAbsolutePath();
-                if (path.toLowerCase().endsWith(".jpg")==false) path=path+".jpg";
-                saveImageAsJPEG(img, path ); 
+                if (path.toLowerCase().endsWith(".jpg") == false) {
+                    path = path + ".jpg";
+                }
+                saveImageAsJPEG(img, path);
+            } else {
+                System.out.println("Speichern abgebrochen");
             }
-            else System.out.println( "Speichern abgebrochen" );
-       }
-       else{JOptionPane.showMessageDialog(home,"Sie haben kein File geöffnet.","Speichern",JOptionPane.INFORMATION_MESSAGE);}
-   }
-        
-    
+        } else {
+            JOptionPane.showMessageDialog(
+                    home,
+                    messages.getString("Manager3D.save_screenshot.no_scene.message"),
+                    messages.getString("Manager3D.save_screenshot.no_scene.title"),
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 }

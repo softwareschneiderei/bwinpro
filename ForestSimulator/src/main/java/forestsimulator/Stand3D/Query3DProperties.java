@@ -10,9 +10,8 @@ import javax.media.j3d.VirtualUniverse;
  */
 public class Query3DProperties {
     
-    public Query3DProperties() {        
-        VirtualUniverse vu = new VirtualUniverse();   
-	Map vuMap = vu.getProperties();
+    public void print() {
+	Map vuMap = VirtualUniverse.getProperties();
 	System.out.println("version = " +
 			   vuMap.get("j3d.version"));
 	System.out.println("vendor = " +

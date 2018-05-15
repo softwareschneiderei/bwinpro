@@ -33,6 +33,7 @@ import org.jdom.input.*;
 import org.jdom.DocType;
 import java.util.*;
 import java.net.*;
+import java.text.MessageFormat;
 
 import javax.swing.*;
 import org.jdom.JDOMException;
@@ -389,7 +390,7 @@ public class TgDesign extends JPanel {
                         for (int j = 0; j < st.ntrees; j++) {
                             st.tr[j].setMissingData();
                         }
-                        GenerateXY gxy = null;
+                        GenerateXY gxy;
                         if (developmentCheckBox.isSelected()) {
                             double dist = Double.parseDouble(distanceTextField.getText());
                             double br = Double.parseDouble(widthTextField.getText());
@@ -420,7 +421,7 @@ public class TgDesign extends JPanel {
                         st.sortbyd();
                         st.descspecies();
                         frame.tfUpdateTrue = true;
-                    } catch (Exception ex) {
+                    } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                         Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -435,7 +436,7 @@ public class TgDesign extends JPanel {
                             codex = codex.substring(0, m);
                             st.addtree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(jTextField1.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
                             st.tr[st.ntrees - 1].layer = lay;
-                        } catch (Exception ex) {
+                        } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -481,7 +482,7 @@ public class TgDesign extends JPanel {
                                 st.addtree(artx, nrAdd, Integer.parseInt(td2.getText()), -1, d, hei, hei / 2.0, cbx, bon, -9.0, -9.0, 0.0, 0, 0, 0);
                                 st.tr[st.ntrees - 1].layer = 3;
                             }
-                        } catch (Exception ex) {
+                        } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
@@ -536,8 +537,7 @@ public class TgDesign extends JPanel {
             try {
                 url = new URL(fname);
             } catch (MalformedURLException e) {
-                JTextArea about = new JTextArea("TgDesign: Url file not found: " + fname);
-                JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
+                showNotFoundDialog(fname);
             }
             SAXBuilder builder = new SAXBuilder();
             URLConnection urlcon = url.openConnection();
@@ -553,12 +553,15 @@ public class TgDesign extends JPanel {
                 speciesCodeComboBox.addItem(sortiment.getChild("Code").getText() + ":" + sortiment.getChild("ShortName").getText());
             }
         } catch (HeadlessException | IOException | JDOMException e) {
-            e.printStackTrace();
-            JTextArea about = new JTextArea("TgDesign file not found: " + fname);
-            JOptionPane.showMessageDialog(null, about, "About", JOptionPane.INFORMATION_MESSAGE);
+            showNotFoundDialog(fname);
             System.out.println("SpeciesDef: File nicht gefunden: " + fname);
         }
         speciesCodeComboBox.setSelectedIndex(0);
+    }
+
+    private void showNotFoundDialog(String fname) throws HeadlessException {
+        JTextArea message = new JTextArea(MessageFormat.format(messages.getString("TgDesign.load_species.not_found.message"), fname));
+        JOptionPane.showMessageDialog(null, message, messages.getString("TgDesign.load_species.not_found.title"), JOptionPane.INFORMATION_MESSAGE);
     }
 
     private double setho() {
