@@ -432,7 +432,6 @@ private void simulationDurationTextFieldActionPerformed(java.awt.event.ActionEve
 }//GEN-LAST:event_simulationDurationTextFieldActionPerformed
 
 private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSimulationButtonActionPerformed
-    // TODO add your handling code here:
     loadSettingsToStandRule();
 
 //    HessRied_Steuerung hrs = new HessRied_Steuerung() ;
@@ -441,7 +440,7 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
 
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText())/st.timeStep);
-    for (int i=0;i<nSimSteps;i++){
+    for (int i = 0; i < nSimSteps; i++){
         st.descspecies();
         st.executeMortality();
 

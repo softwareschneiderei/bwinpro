@@ -274,7 +274,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             }
         });
         user.loadSettings();
-        setVisible(true);
         zf.neuzeichnen();
         pp.neuzeichnen();
         gr.starten();

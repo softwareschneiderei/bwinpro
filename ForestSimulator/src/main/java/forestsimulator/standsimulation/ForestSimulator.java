@@ -17,6 +17,7 @@ GNU General Public License for more details.
 package forestsimulator.standsimulation;
 
 import java.io.IOException;
+import javax.swing.JFrame;
 import treegross.base.*;
 
 public class ForestSimulator {
@@ -24,6 +25,7 @@ public class ForestSimulator {
     public static void main(String args[]) throws IOException {
         System.getProperties().list(System.out);
         Stand st = new Stand();
-        new TgJFrame(st); //main GUI for the TreeGrOSS program
+        JFrame mainWindow = new TgJFrame(st);
+        mainWindow.setVisible(true);
     }
 }

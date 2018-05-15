@@ -20,8 +20,8 @@ import treegross.base.*;
 import java.text.*;
 import java.util.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 class TgStandInfo extends JPanel {
 
@@ -33,9 +33,7 @@ class TgStandInfo extends JPanel {
     Stand st = null;
 
     public TgStandInfo(Locale preferredLanguage) {
-        ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-
-        yieldTable = new javax.swing.table.DefaultTableModel(
+        yieldTable = new DefaultTableModel(
                 new Object[][]{},
                 StandInfoTableColumn.values()
         );
@@ -124,12 +122,10 @@ class TgStandInfo extends JPanel {
         f.setMinimumFractionDigits(1);
         f.setGroupingUsed(false);
 
-        //     define new groups       
-        int lay = 0;
         for (int i = 0; i < st.nspecies; i++) {
             for (int j = 0; j < st.ntrees; j++) {
                 if (st.sp[i].code == st.tr[j].code) {
-                    lay = st.tr[j].layer;
+                    int lay = st.tr[j].layer;
                     if (lay == 4) {
                         lay = 0;
                     }
@@ -149,9 +145,8 @@ class TgStandInfo extends JPanel {
             yieldTable.removeRow(j - 1);
         }
         nrow = 0;
-        int la = 0;
         for (int l = 0; l < 4; l++) {
-            la = l;
+            int la = l;
             if (la == 0) {
                 la = 4;
             }
