@@ -14,6 +14,7 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.roots;
+import java.awt.Frame;
 import treegross.base.*;
 /** TreeGrOSS : Stand.java
  *  version 	7.5 1-DEZ-2009
@@ -26,20 +27,20 @@ public class RootingDialog extends javax.swing.JDialog {
 
     EffectiveRootingDepth erd = null;
     Stand st = null;
-    /** Creates new form RootingDialog */
-    public RootingDialog(java.awt.Frame parent, boolean modal, treegross.base.Stand stand) {
+
+    public RootingDialog(Frame parent, boolean modal, treegross.base.Stand stand) {
         super(parent, modal);
         initComponents();
         st=stand;
         erd = new EffectiveRootingDepth();
         jComboBox1.removeAllItems();
-        for (int i=0;i<erd.soiltypes.length;i++)
-           jComboBox1.addItem(erd.soiltypes[i]);
+        for (SoilType soil : SoilType.values()) {
+           jComboBox1.addItem(soil);
+        }
         jComboBox2.removeAllItems();
-        for (int i=0;i<erd.preclevels.length;i++)
-           jComboBox2.addItem(erd.preclevels[i]);
-
-
+        for (String preclevel : erd.preclevels) {
+            jComboBox2.addItem(preclevel);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -186,7 +187,6 @@ public class RootingDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void calculateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateButtonActionPerformed
-        // TODO add your handling code here:
         for (int i=0;i < st.nspecies;i++){
             int nage = (int)(Math.round(st.sp[i].h100age));
             Double wt = erd.getEffectiveRootingDepth((jComboBox1.getSelectedIndex()),(jComboBox2.getSelectedIndex()),st.sp[i].code,nage);
@@ -195,32 +195,12 @@ public class RootingDialog extends javax.swing.JDialog {
                 wt  = Math.round(wt*100)/1000.0;
                 txt = wt.toString();
             }
-            rootingTable.setValueAt(new Integer(st.sp[i].code).toString(), i, 0);
+            rootingTable.setValueAt(Integer.toString(st.sp[i].code), i, 0);
             rootingTable.setValueAt(st.sp[i].spDef.shortName, i, 1);
-            rootingTable.setValueAt(new Integer(nage).toString(), i, 2);
+            rootingTable.setValueAt(Integer.toString(nage), i, 2);
             rootingTable.setValueAt(txt, i, 3);
         }
-
     }//GEN-LAST:event_calculateButtonActionPerformed
-
-    /**
-    * @param args the command line arguments
-    */
-/*
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                RootingDialog dialog = new RootingDialog(new javax.swing.JFrame(), true,st);
-                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
-                    public void windowClosing(java.awt.event.WindowEvent e) {
-                        System.exit(0);
-                    }
-                });
-                dialog.setVisible(true);
-            }
-        });
-    }
- */
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton calculateButton;

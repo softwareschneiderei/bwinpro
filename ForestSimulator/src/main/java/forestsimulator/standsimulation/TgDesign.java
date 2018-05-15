@@ -98,7 +98,7 @@ public class TgDesign extends JPanel {
         distanceTextField = new javax.swing.JTextField();
         widthLabel = new javax.swing.JLabel();
         widthTextField = new javax.swing.JTextField();
-        jComboBox4 = new javax.swing.JComboBox();
+        mixtureComboBox = new javax.swing.JComboBox();
         mixtureLabel = new javax.swing.JLabel();
         layerLabel = new javax.swing.JLabel();
         jComboBox5 = new javax.swing.JComboBox();
@@ -250,9 +250,9 @@ public class TgDesign extends JPanel {
         jPanel2.add(widthTextField);
         widthTextField.setBounds(220, 490, 30, 20);
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Einzelstamm", "Trupp", "Gruppe", "Horst" }));
-        jPanel2.add(jComboBox4);
-        jComboBox4.setBounds(120, 320, 140, 20);
+        mixtureComboBox.setModel(new DefaultComboBoxModel(MixtureType.values()));
+        jPanel2.add(mixtureComboBox);
+        mixtureComboBox.setBounds(120, 320, 140, 20);
 
         mixtureLabel.setText(bundle.getString("TgDesign.mixtureLabel.text")); // NOI18N
         jPanel2.add(mixtureLabel);
@@ -287,7 +287,7 @@ public class TgDesign extends JPanel {
         td3.setVisible(true);
         jTextField1.setText("-9.0");
         diameterLabel.setVisible(true);
-        jComboBox4.setVisible(true);
+        mixtureComboBox.setVisible(true);
         mixtureLabel.setVisible(true);
         distributionComboBox.setVisible(true);
         developmentCheckBox.setVisible(true);
@@ -321,7 +321,7 @@ public class TgDesign extends JPanel {
             maxDiameterLabel.setVisible(false);
             td5.setVisible(false);
             basalAreaLabel.setText(messages.getString("TgDesign.basalAreaLabel.coveragePercent.text"));
-            jComboBox4.setVisible(false);
+            mixtureComboBox.setVisible(false);
             mixtureLabel.setVisible(false);
             distributionComboBox.setVisible(false);
             developmentCheckBox.setVisible(false);
@@ -401,16 +401,16 @@ public class TgDesign extends JPanel {
                         } else {
                             gxy = new GenerateXY();
                         }
-                        if (jComboBox4.getSelectedIndex() == 0) {
+                        if (mixtureComboBox.getSelectedIndex() == 0) {
                             gxy.setGroupRadius(0.0);
                         }
-                        if (jComboBox4.getSelectedIndex() == 1) {
+                        if (mixtureComboBox.getSelectedIndex() == 1) {
                             gxy.setGroupRadius(10.0);
                         }
-                        if (jComboBox4.getSelectedIndex() == 2) {
+                        if (mixtureComboBox.getSelectedIndex() == 2) {
                             gxy.setGroupRadius(20.0);
                         }
-                        if (jComboBox4.getSelectedIndex() == 3) {
+                        if (mixtureComboBox.getSelectedIndex() == 3) {
                             gxy.setGroupRadius(40.0);
                         }
                         if (distributionComboBox.getSelectedIndex() == 0) {
@@ -687,13 +687,13 @@ public class TgDesign extends JPanel {
     private javax.swing.JTextField distanceTextField;
     private javax.swing.JComboBox distributionComboBox;
     private javax.swing.JLabel heightLabel;
-    private javax.swing.JComboBox jComboBox4;
     private javax.swing.JComboBox jComboBox5;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel layerLabel;
     private javax.swing.JLabel maxDiameterLabel;
+    private javax.swing.JComboBox mixtureComboBox;
     private javax.swing.JLabel mixtureLabel;
     private javax.swing.JLabel rasterLabel;
     private javax.swing.JTextField rasterXTextField;
