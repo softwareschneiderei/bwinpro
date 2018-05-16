@@ -1,6 +1,7 @@
 package forestsimulator.standsimulation;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -20,12 +21,12 @@ public enum ThinningIntensity {
         this.resourceKey = resourceKey;
     }
     
-    public String entry() {
-        return DecimalFormat.getNumberInstance(Locale.ENGLISH).format(value) + " " + toString();
+    private String description() {
+        return bundle.getString(resourceKey);
     }
 
     @Override
     public String toString() {
-        return bundle.getString(resourceKey);
+        return new DecimalFormat("0.0", DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(value) + " " + description();
     }
 }

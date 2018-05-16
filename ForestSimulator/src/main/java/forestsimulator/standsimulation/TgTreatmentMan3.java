@@ -44,11 +44,11 @@ public class TgTreatmentMan3 extends JPanel {
         yt = frameparent.yt;
 
         thinningIntensityComboBox.removeAllItems();
-        thinningIntensityComboBox.addItem(ThinningIntensity.None.entry());
-        thinningIntensityComboBox.addItem(ThinningIntensity.Low.entry());
-        thinningIntensityComboBox.addItem(ThinningIntensity.Moderate.entry());
-        thinningIntensityComboBox.addItem(ThinningIntensity.Heavy.entry());
-        thinningIntensityComboBox.addItem(ThinningIntensity.VeryHeavy.entry());
+        thinningIntensityComboBox.addItem(ThinningIntensity.None);
+        thinningIntensityComboBox.addItem(ThinningIntensity.Low);
+        thinningIntensityComboBox.addItem(ThinningIntensity.Moderate);
+        thinningIntensityComboBox.addItem(ThinningIntensity.Heavy);
+        thinningIntensityComboBox.addItem(ThinningIntensity.VeryHeavy);
         thinningIntensityComboBox.addItem("0.9");
         thinningIntensityComboBox.addItem("1.1");
         thinningIntensityComboBox.addItem("1.3");
@@ -245,7 +245,6 @@ public class TgTreatmentMan3 extends JPanel {
         thinningIntensityLabel.setText(bundle.getString("TgTreatmentMan3.thinningIntensityLabel.text")); // NOI18N
         jPanel7.add(thinningIntensityLabel);
 
-        thinningIntensityComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "null", "schwach", "mäßig", "stark" }));
         jPanel7.add(thinningIntensityComboBox);
 
         thinningAmountMinimumLabel.setText(bundle.getString("TgTreatmentMan3.thinningAmountMinimumLabel.text")); // NOI18N
