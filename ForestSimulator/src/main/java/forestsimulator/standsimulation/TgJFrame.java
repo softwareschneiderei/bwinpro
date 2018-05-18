@@ -41,7 +41,6 @@ import java.util.logging.SimpleFormatter;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
-import org.jdom.DocType;
 import org.jdom.JDOMException;
 
 /**
@@ -391,7 +390,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 } catch (MalformedURLException e2) {
                     LOGGER.info(e2.toString());
                 }
-                LOGGER.info("File eingelesen:" + pa);
+                LOGGER.log(Level.INFO, "File eingelesen:{0}", pa);
 
                 if (st.getSpeciesDefinedTrue() == false) {
                     String text = st.getSpeciesUndefinedCode();
@@ -423,64 +422,12 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             // open NutungsPlaner SQLite Database
             if (cmd.equals("SQlite")) {
                 LOGGER.info("open NutzungsPlaner SQlite Database");
-                try {
-                    String modelPlugIn = "forestsimulator.SQLite.SQLiteAccess";
-                    PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
-                    dialog.startDialog(this, st, user.getDataDir());
-                    int nGrowingCycles = st.temp_Integer;
-                    st.sortbyd();
-                    st.missingData();
-                    st.descspecies();
-                    // set Löwe default
-//                       GenerateXY gxy =new GenerateXY();
-//                       gxy.zufall(st);
-                    if (grafik3D) {
-                        manager3d.setStand(st);
-                    }
-                    tfUpdateTrue = true;
-                    updatetp(false);
-                    tfUpdateTrue = true;
-
-                    st.ingrowthActive = false;
-                    gr.starten();
-                    showIframes();
-                } catch (Exception ex) {
-                    LOGGER.info(ex.toString());
-                    LOGGER.info("Fehler SQLite ");
-                }
-
-                LOGGER.info("Open Access File");
+                batchProcessingUsingDatabase("forestsimulator.SQLite.SQLiteAccess");
             }
             // open Access File
             if (cmd.equals("openAccess")) {
-                LOGGER.info("Open Access File");
-                try {
-                    String modelPlugIn = "forestsimulator.DBAccess.DBAccess";
-                    PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
-                    dialog.startDialog(this, st, user.getDataDir());
-                    int nGrowingCycles = st.temp_Integer;
-                    st.sortbyd();
-                    st.missingData();
-                    st.descspecies();
-                    // set Löwe default
-//                       GenerateXY gxy =new GenerateXY();
-//                       gxy.zufall(st);
-                    if (grafik3D) {
-                        manager3d.setStand(st);
-                    }
-                    tfUpdateTrue = true;
-                    updatetp(false);
-                    tfUpdateTrue = true;
-
-                    st.ingrowthActive = false;
-                    gr.starten();
-                    showIframes();
-                } catch (Exception ex) {
-                    LOGGER.info(ex.toString());
-                    LOGGER.info("kein Access Plugin Vorhanden ");
-                }
-
-                LOGGER.info("Open Access File");
+                LOGGER.info("open NutzungsPlaner Access File");
+                batchProcessingUsingDatabase("forestsimulator.DBAccess.DBAccess");
             }
 
             // Edit Treegross data
@@ -901,6 +848,32 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             gr.setJPGFilename(pa);
             gr.saveToJPEG(workingDir.getAbsolutePath());
         }
+    }
+
+    private void batchProcessingUsingDatabase(String modelPlugIn) {
+        try {
+            PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
+            dialog.startDialog(this, st, user.getDataDir());
+            st.sortbyd();
+            st.missingData();
+            st.descspecies();
+            // set Löwe default
+//                       GenerateXY gxy =new GenerateXY();
+//                       gxy.zufall(st);
+            if (grafik3D) {
+                manager3d.setStand(st);
+            }
+            tfUpdateTrue = true;
+            updatetp(false);
+            tfUpdateTrue = true;
+
+            st.ingrowthActive = false;
+            gr.starten();
+            showIframes();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
+            LOGGER.info(ex.toString());
+        }
+        LOGGER.info("Open database for batch processing successful.");
     }
 
     private void showUndefinedSpeciesMessage(String text) throws HeadlessException {

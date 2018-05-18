@@ -46,8 +46,6 @@ public class DBAccessDialog extends JDialog {
         super(parent, modal);
         initComponents();
         st = stand;
-        jComboBox1.removeAllItems();
-//        jTextField1.setText(dir+System.getProperty("file.separator")+"localdata.mdb");
         databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
         jPanel1.setVisible(true);
         elsaltoPanel.setVisible(false);
@@ -253,8 +251,6 @@ public class DBAccessDialog extends JDialog {
         standNameTextField.setText(bundle.getString("DBAccessDialog.standNameTextField.text")); // NOI18N
 
         databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         searchButton.setText(bundle.getString("DBAccessDialog.searchButton.text")); // NOI18N
         searchButton.addActionListener(new java.awt.event.ActionListener() {
