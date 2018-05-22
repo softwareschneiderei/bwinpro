@@ -14,6 +14,7 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.DBAccess;
+import forestsimulator.util.StopWatch;
 import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,8 @@ import treegross.treatment.*;
 import treegross.random.RandomNumber;
 import java.sql.*;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,9 +40,9 @@ import javax.swing.JOptionPane;
  * It reads a forest stand from the data base structure of the NW-FVA
  */
 public class DBAccessDialog extends JDialog {
-    Stand st;
+    private Stand st;
     int growthCycles = 0;
-    private final ConnectionFactory dbconnAC = new ConnectionFactory();
+    private final ConnectionFactory connectionFactory = new ConnectionFactory();
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     
     public DBAccessDialog(Frame parent, boolean modal,Stand stand, File dir) {
@@ -401,7 +404,7 @@ public class DBAccessDialog extends JDialog {
         String aktivesDatenfile = databaseFilenameTextField.getText();
         final String standName = standNameTextField.getText();
         boolean standFound = false;
-        try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "");
+        try (Connection connection = connectionFactory.openDBConnection(aktivesDatenfile, "", "");
                 PreparedStatement stmt = connection.prepareStatement("SELECT * FROM Auf WHERE edvid = ?")) {
             stmt.setString(1, standName);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -459,8 +462,7 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             Treatment2 t2 = new Treatment2();
             LoadTreegrossStand lts = new LoadTreegrossStand();
             String ids = standNameTextField.getText();
@@ -491,33 +493,20 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
-
-        String ida[] = new String[50000];
-        int aufa[] = new int[50000];
-        int scen[] = new int[50000];
-        int nauf = 0;
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
-            try (Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift")) {
-                while (rs.next()) {
-                    ida[nauf] = rs.getObject("edvid").toString();
-                    aufa[nauf] = rs.getInt("auf");
-                    scen[nauf] = rs.getInt("Szenario");
-                    nauf = nauf + 1;
-                }
-            } catch (SQLException e) {
-                System.out.println("Problem: " + " " + e);
-            }
-            for (int ii = 0; ii < nauf; ii++) {
-                String ids = ida[ii];
-                int aufs = aufa[ii];
+        StopWatch wholeBatchTiming = new StopWatch("Whole batch").start();
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
+            List<CalculationRule> rules = gettingRules(con);
+            System.out.println("Number of calculation rules:" + rules.size());
+            for (CalculationRule rule : rules) {
+                StopWatch oneRule = new StopWatch("One rule").start();
                 int nwiederh = 0;
+                System.out.println("Calculating " + rule.edvId + " with auf: " + rule.aufId + " and scenario: " + rule.scenarioId);
+                StopWatch getRepetitionCount = new StopWatch("Repetition count").start();
                 try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM Vorschrift WHERE edvid = ? AND auf = ? AND Szenario = ?")) {
-                    stmt.setString(1, ids);
-                    stmt.setInt(2, aufs);
-                    stmt.setInt(3, scen[ii]);
+                    stmt.setString(1, rule.edvId);
+                    stmt.setInt(2, rule.aufId);
+                    stmt.setInt(3, rule.scenarioId);
                     try (ResultSet rs = stmt.executeQuery()) {
                         while (rs.next()) {
                             nwiederh = rs.getInt("wiederholung");
@@ -526,10 +515,17 @@ public class DBAccessDialog extends JDialog {
                 } catch (Exception e) {
                     System.out.println("Problem: " + " " + e);
                 }
+                getRepetitionCount.printElapsedTime();
+                System.out.println("Repetitions:" + nwiederh);
                 for (int iw = 0; iw < nwiederh; iw++) {
-                    st = lts.loadFromDB(con, st, ids, aufs, true, true);
+                    StopWatch onePass = new StopWatch("One pass").start();
+                    st = lts.loadFromDB(con, st, rule.edvId, rule.aufId, true, true);
+                    StopWatch sortByD = new StopWatch("Sort tree").start();
                     st.sortbyd();
+                    sortByD.printElapsedTime();
+                    StopWatch missingdata = new StopWatch("Missing data").start();
                     st.missingData();
+                    missingdata.printElapsedTime();
                     GenerateXY gxy = new GenerateXY();
                     gxy.zufall(st);
 // Test if all trees are in area           
@@ -549,19 +545,19 @@ public class DBAccessDialog extends JDialog {
                     }
                     st.descspecies();
                     Treatment2 t2 = new Treatment2();
-                    st = lts.loadRules(con, st, ids, aufs, t2, scen[ii]);
+                    st = lts.loadRules(con, st, rule.edvId, rule.aufId, t2, rule.scenarioId);
                     int ebaum = lts.getEBaum();
                     int baumart = lts.getBaumart();
                     int bestand = lts.getBestand();
                     int durchf = lts.getDurchf();
                     if (ebaum == 1) {
-                        lts.saveBaum(con, st, ids, aufs, 0, iw + 1);
+                        lts.saveBaum(con, st, rule.edvId, rule.aufId, 0, iw + 1);
                     }
                     if (baumart == 1) {
-                        lts.saveSpecies(con, st, ids, aufs, 0, iw + 1);
+                        lts.saveSpecies(con, st, rule.edvId, rule.aufId, 0, iw + 1);
                     }
                     if (bestand == 1) {
-                        lts.saveStand(con, st, ids, aufs, 0, iw + 1);
+                        lts.saveStand(con, st, rule.edvId, rule.aufId, 0, iw + 1);
                     }
                     for (int i = 0; i < st.temp_Integer; i++) {
                         if (durchf == 1) {
@@ -573,13 +569,13 @@ public class DBAccessDialog extends JDialog {
                         st.executeMortality();
                         st.descspecies();
                         if (bestand == 1) {
-                            lts.saveStand(con, st, ids, aufs, i + 1, iw + 1);
+                            lts.saveStand(con, st, rule.edvId, rule.aufId, i + 1, iw + 1);
                         }
                         if (ebaum == 1) {
-                            lts.saveBaum(con, st, ids, aufs, i + 1, iw + 1);
+                            lts.saveBaum(con, st, rule.edvId, rule.aufId, i + 1, iw + 1);
                         }
                         if (baumart == 1) {
-                            lts.saveSpecies(con, st, ids, aufs, i + 1, iw + 1);
+                            lts.saveSpecies(con, st, rule.edvId, rule.aufId, i + 1, iw + 1);
                         }
                         st.grow(5, st.ingrowthActive);
                         st.sortbyd();
@@ -587,15 +583,33 @@ public class DBAccessDialog extends JDialog {
                         st.descspecies();
                     }
                     if (ebaum == 2) {
-                        lts.saveBaum(con, st, ids, aufs, st.temp_Integer, iw + 1);
+                        lts.saveBaum(con, st, rule.edvId, rule.aufId, st.temp_Integer, iw + 1);
                     }
+                    onePass.printElapsedTime();
                 }
+                oneRule.printElapsedTime();
             }
         } catch (Exception e) {
             System.out.println("Problem: " + " " + e);
         }
+        wholeBatchTiming.printElapsedTime();
         dispose();
     }//GEN-LAST:event_calculateAllButtonActionPerformed
+
+    private List<CalculationRule> gettingRules(final Connection con) {
+        StopWatch gettingRules = new StopWatch("Getting rules").start();
+        List<CalculationRule> rules = new ArrayList<>();
+        try (Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift")) {
+            while (rs.next()) {
+                rules.add(new CalculationRule(rs.getString("edvid"), rs.getInt("auf"), rs.getInt("Szenario")));
+            }
+        } catch (SQLException e) {
+            System.out.println("Problem: " + " " + e);
+        }
+        gettingRules.printElapsedTime();
+        return rules;
+    }
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();

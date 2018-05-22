@@ -1,5 +1,6 @@
 package forestsimulator.DBAccess;
 
+import forestsimulator.util.StopWatch;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,7 @@ public class LoadTreegrossStand {
 
     public Stand loadFromDB(Connection connection, Stand stl, String idx, int selectedAufn, boolean missingDataAutomatisch,
             boolean missingDataReplace) {
+        StopWatch loadFromDB = new StopWatch("Load from Database").start();
         String flaechenName = "";
         String abtName = "";
         try (PreparedStatement stmt = connection.prepareStatement("select * from Versfl where edv_id = ?")) {
@@ -105,7 +107,7 @@ public class LoadTreegrossStand {
                         oux = ouxo.toString().trim();
                     }
                     int ou = 0;
-                    if (oux.indexOf("o") > -1 || oux.indexOf("O") > -1) {
+                    if (oux.contains("o") || oux.contains("O")) {
                         ou = 1;
                     }
                     if (oux.compareTo("u") > -1 || oux.compareTo("U") > -1) {
@@ -216,7 +218,7 @@ public class LoadTreegrossStand {
                     double yp = rs.getDouble("y");
                     String nox = rs.getObject("nr").toString();
                     nox = nox.trim();
-                    if (nox.indexOf("ECK") > -1) {
+                    if (nox.contains("ECK")) {
                         stl.addcornerpoint(nox, xp, yp, 0.0);
                         stl.center.no = "polygon";
                     }
@@ -275,6 +277,7 @@ public class LoadTreegrossStand {
                 nxx = nxx + 1;
             }
         }
+        loadFromDB.printElapsedTime();
         return stl;
     }
 
@@ -344,6 +347,7 @@ public class LoadTreegrossStand {
     }
 
     public void loadScenario(Connection dbconn, Stand st, Treatment2 t2, int scenarioNo) {
+        StopWatch loadScenario = new StopWatch("Load scenario").start();
         int szArtIndex = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Szenario where (SzenarioNr = ?)")) {
             stmt.setInt(1, scenarioNo);
@@ -396,6 +400,7 @@ public class LoadTreegrossStand {
             System.out.println(e);
         }
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from SzenarioArt where (SzenarioArtIndex = ?)")) {
+            StopWatch scenarioArt = new StopWatch("Scenario art").start();
             stmt.setInt(1, szArtIndex);
             try (ResultSet rs2 = stmt.executeQuery()) {
                 while (rs2.next()) {
@@ -418,14 +423,14 @@ public class LoadTreegrossStand {
                         st.sp[merk].trule.targetCrownPercent = mixxx;
                         st.sp[merk].trule.numberCropTreesWanted = cropx;
                         st.sp[merk].spDef.moderateThinning = moderateTh;
-                        System.out.println("springt raus");
                     }
-                    System.out.println("springt raus");
                 }
             }
+            scenarioArt.printElapsedTime();
         } catch (Exception e) {
             System.out.println(e);
         }
+        loadScenario.printElapsedTime();
     }
 
     public int getEBaum() {

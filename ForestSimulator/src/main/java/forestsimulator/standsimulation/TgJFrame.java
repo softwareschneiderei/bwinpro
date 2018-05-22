@@ -23,6 +23,7 @@ import forestsimulator.Stand3D.PackageInfo;
 import forestsimulator.Stand3D.Manager3D;
 import forestsimulator.Stand3D.Query3DProperties;
 import forestsimulator.language.UserLanguage;
+import forestsimulator.util.StopWatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -885,7 +886,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     @Override
     public void StandChanged(treegross.base.StandChangeEvent evt) {
         System.out.println("stand changed " + evt.getName());
+        StopWatch update = new StopWatch("Updating tp").start();
         updatetp(false);
+        update.printElapsedTime();
     }
 
     @Override

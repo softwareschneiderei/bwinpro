@@ -31,10 +31,6 @@ public class ConnectionFactory {
         props.put("charSet", charset);
     }
 
-    public ConnectionFactory(String charset) {
-        setConnectionCharSet(charset);
-    }
-
     public final void setConnectionCharSet(String cs) {
         charset = cs;
         props.put("charSet", charset);
