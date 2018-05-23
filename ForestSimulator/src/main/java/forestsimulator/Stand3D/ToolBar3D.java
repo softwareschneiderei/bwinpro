@@ -8,7 +8,7 @@ import java.net.*;
  * @author  jhansen
  */
 public class ToolBar3D extends javax.swing.JToolBar {
-    private File path;
+    private final File path;
     public boolean isLeft=false;
 
     public ToolBar3D(ActionListener al, boolean textures, File iconpath) {
