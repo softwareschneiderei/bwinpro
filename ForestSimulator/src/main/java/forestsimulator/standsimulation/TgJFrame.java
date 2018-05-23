@@ -1078,7 +1078,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             iframe[2].setVisible(false);
             iframe[2].setVisible(true);
         }
-
     }
 
     void showIframes() {
