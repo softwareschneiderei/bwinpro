@@ -493,11 +493,12 @@ public class DBAccessDialog extends JDialog {
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
         AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(aktivesDatenfile, st);
-        processor.execute();
-        JDialog progress = new JDialog(getOwner());
-        progress.getContentPane().add(new BatchProcessingProgressPanel());
+        BatchProgressDialog progress = new BatchProgressDialog((Frame) getParent(), new File(aktivesDatenfile).getName(), processor);
+        processor.setProgressListener(progress);
         progress.pack();
+        progress.setLocationRelativeTo(getOwner());
         progress.setVisible(true);
+        processor.execute();
         dispose();
     }//GEN-LAST:event_calculateAllButtonActionPerformed
 
