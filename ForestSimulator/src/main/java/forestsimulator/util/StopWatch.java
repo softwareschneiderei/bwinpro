@@ -1,7 +1,11 @@
 package forestsimulator.util;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class StopWatch {
 
+    private static final Logger logger = Logger.getLogger(StopWatch.class.getName());
     private final String name;
     private long start;
     private long end;
@@ -22,7 +26,7 @@ public class StopWatch {
     
     public StopWatch printElapsedTime() {
         stop();
-        System.out.println(name + ": " + deltaNanos() / 1e6 + " ms passed.");
+        logger.log(Level.FINE, "{0}: {1} ms passed.", new Object[]{name, deltaNanos() / 1e6});
         return this;
     }
     

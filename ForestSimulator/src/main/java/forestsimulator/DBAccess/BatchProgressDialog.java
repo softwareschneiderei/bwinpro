@@ -4,9 +4,12 @@ import java.awt.Frame;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
+import javax.swing.WindowConstants;
 
 public class BatchProgressDialog extends JDialog implements BatchProgressListener {
 
+    private final ResourceBundle messages = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
+        
     private final BatchProcessingControl batchControl;
 
     public BatchProgressDialog(Frame parent, String databaseFile, BatchProcessingControl batchControl) {
@@ -15,6 +18,7 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
         this.batchControl = batchControl;
         ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui");
         infoLabel.setText(MessageFormat.format(bundle.getString("BatchProcessingProgressPanel.infoLabel.text"), databaseFile));
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     /**
@@ -120,11 +124,11 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     }// </editor-fold>//GEN-END:initComponents
 
     private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
-        batchControl.stopProcessing();
+        initiateStop();
     }//GEN-LAST:event_stopButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        batchControl.stopProcessing();
+        initiateStop();
     }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -152,6 +156,11 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
         return progress + " / " + total;
     }
 
+    private void initiateStop() {
+        batchControl.stopProcessing();
+        stopButton.setText(messages.getString("BatchProgressDialog.stopButton.stopping.text")); // NOI18N
+    }
+    
     @Override
     public void aborted() {
         dispose();

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import treegross.base.GenerateXY;
 import treegross.base.Stand;
@@ -15,6 +17,7 @@ import treegross.treatment.Treatment2;
 
 public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgress> implements BatchProcessingControl {
 
+    private static final Logger logger = Logger.getLogger(AllCalculationRulesProcessor.class.getName());
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
     private final String aktivesDatenfile;
     private Stand st;
@@ -37,7 +40,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         StopWatch wholeBatchTiming = new StopWatch("Whole batch").start();
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             List<CalculationRule> rules = gettingRules(con);
-            System.out.println("Number of calculation rules:" + rules.size());
+            logger.log(Level.FINE, "Number of calculation rules: {0}", rules.size());
             for (CalculationRule rule : rules) {
                 if (shouldStop) {
                     System.out.println("Processing aborted before next rule.");
@@ -45,11 +48,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                     return null;
                 }
                 StopWatch oneRule = new StopWatch("One rule").start();
-                System.out.println("Calculating " + rule.edvId + " with auf: " + rule.aufId + " and scenario: " + rule.scenarioId);
-                System.out.println("Repetitions:" + rule.passCount);
+                logger.log(Level.FINE, "Calculating {0} with auf: {1} and scenario: {2}", new Object[]{rule.edvId, rule.aufId, rule.scenarioId});
+                logger.log(Level.FINE, "Repetitions: {0}", rule.passCount);
                 for (int pass = 0; pass < rule.passCount; pass++) {
                     if (shouldStop) {
-                        System.out.println("Processing aborted before next pass.");
+                        logger.log(Level.FINE, "Processing aborted before next pass.");
                         progressListener.aborted();
                         return null;
                     }
@@ -61,7 +64,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 oneRule.printElapsedTime();
             }
         } catch (Exception e) {
-            System.out.println("Problem: " + " " + e);
+            logger.log(Level.SEVERE, "Problem in batch processing", e);
         }
         wholeBatchTiming.printElapsedTime();
         return null;
@@ -110,7 +113,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         }
         for (int i = 0; i < st.temp_Integer; i++) {
             if (shouldStop) {
-                System.out.println("Processing aborted before next step.");
+                logger.log(Level.FINE, "Processing aborted before next step.");
                 progressListener.aborted();
                 return;
             }
@@ -149,7 +152,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
 
     @Override
     protected void process(List<BatchProgress> chunks) {
-        System.out.println("Processing chunks");
+        logger.log(Level.FINE, "Processing chunks");
         BatchProgress lastProgress = chunks.get(chunks.size() - 1);
         progressListener.updateProgress(lastProgress);
     }
@@ -163,7 +166,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 rules.add(new CalculationRule(rs.getString("edvid"), rs.getInt("auf"), rs.getInt("Szenario"), rs.getInt("wiederholung")));
             }
         } catch (SQLException e) {
-            System.out.println("Problem: " + " " + e);
+            logger.log(Level.WARNING, "Problem getting rules from database.", e);
         }
         gettingRules.printElapsedTime();
         return rules;
