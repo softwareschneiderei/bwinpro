@@ -1,4 +1,4 @@
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JFileChooser;

@@ -1,4 +1,4 @@
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 
 import java.awt.Frame;
 import java.text.MessageFormat;

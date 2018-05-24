@@ -1,4 +1,4 @@
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 
 import forestsimulator.util.StopWatch;
 import java.sql.*;

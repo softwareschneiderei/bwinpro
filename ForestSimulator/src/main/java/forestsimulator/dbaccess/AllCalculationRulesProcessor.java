@@ -1,4 +1,4 @@
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 
 import forestsimulator.util.StandGeometry;
 import forestsimulator.util.StopWatch;
@@ -51,7 +51,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             logger.log(Level.FINE, "Number of calculation rules: {0}", rules.size());
             for (CalculationRule rule : rules) {
                 if (shouldStop) {
-                    System.out.println("Processing aborted before next rule.");
+                    logger.log(Level.FINE, "Processing aborted before next rule.");
                     progressListener.aborted();
                     return null;
                 }

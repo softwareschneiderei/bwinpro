@@ -13,7 +13,7 @@
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more details.
 */
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 import forestsimulator.util.StandGeometry;
 import java.awt.Frame;
 import java.io.File;

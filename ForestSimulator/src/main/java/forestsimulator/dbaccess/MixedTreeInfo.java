@@ -1,4 +1,4 @@
-package forestsimulator.DBAccess;
+package forestsimulator.dbaccess;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
