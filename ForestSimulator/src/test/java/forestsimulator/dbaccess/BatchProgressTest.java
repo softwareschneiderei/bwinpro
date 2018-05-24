@@ -8,9 +8,6 @@ import static org.junit.Assert.*;
 
 public class BatchProgressTest {
     
-    public BatchProgressTest() {
-    }
-    
     @Test(expected = IllegalArgumentException.class)
     public void progressNeedsAtLeastOneRule() {
         new BatchProgress(Collections.emptyList(), new CalculationRule("id", 0, 0, 0), 0);
@@ -21,7 +18,7 @@ public class BatchProgressTest {
     public void currentRuleStartsWithOne() {
         CalculationRule rule = new CalculationRule("id", 0, 0, 0);
         BatchProgress progress = new BatchProgress(Arrays.asList(rule), rule, 0);
-        assertThat(progress.currentRule(), is(1));
+        assertThat(progress.ruleProgress().current, is(1));
     }
     
     @Test
@@ -29,12 +26,11 @@ public class BatchProgressTest {
         CalculationRule rule1 = new CalculationRule("id1", 0, 0, 5);
         CalculationRule rule2 = new CalculationRule("id2", 0, 0, 10);
         BatchProgress progress = new BatchProgress(Arrays.asList(rule1, rule2), rule2, 3);
-        assertThat(progress.totalRules(), is(2));
-        assertThat(progress.currentRule(), is(2));
-        assertThat(progress.currentPass(), is(3));
-        assertThat(progress.passesForCurrentRule(), is(rule2.passCount));
-        assertThat(progress.currentStep(), is(0));
-        assertThat(progress.totalSteps(), is(0));
+        assertThat(progress.ruleProgress().total, is(2));
+        assertThat(progress.ruleProgress().current, is(2));
+        assertThat(progress.passProgress().current, is(3));
+        assertThat(progress.passProgress().total, is(10));
+        assertThat(progress.stepProgress().current, is(0));
+        assertThat(progress.stepProgress().total, is(0));
     }
-    
 }

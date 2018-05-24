@@ -4,6 +4,7 @@ import java.awt.Frame;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
+import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
 public class BatchProgressDialog extends JDialog implements BatchProgressListener {
@@ -160,19 +161,19 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
 
     @Override
     public void updateProgress(BatchProgress progress) {
-        ruleProgress.setMaximum(progress.totalRules());
-        ruleProgress.setValue(progress.currentRule());
-        ruleProgress.setString(progressString(progress.currentRule(), progress.totalRules()));
-        passProgress.setMaximum(progress.passesForCurrentRule());
-        passProgress.setValue(progress.currentPass());
-        passProgress.setString(progressString(progress.currentPass(), progress.passesForCurrentRule()));
-        stepProgress.setMaximum(progress.totalSteps());
-        stepProgress.setValue(progress.currentStep());
-        stepProgress.setString(progressString(progress.currentStep(), progress.totalSteps()));
+        updateProgressBar(ruleProgress, progress.ruleProgress());
+        updateProgressBar(passProgress, progress.passProgress());
+        updateProgressBar(stepProgress, progress.stepProgress());
     }
 
-    public String progressString(int progress, int total) {
-        return progress + " / " + total;
+    private void updateProgressBar(JProgressBar bar, Progress progress) {
+        bar.setMaximum(progress.total);
+        bar.setValue(progress.current);
+        bar.setString(progressString(progress));
+    }
+
+    public String progressString(Progress progress) {
+        return progress.current + " / " + progress.total;
     }
 
     private void initiateStop() {

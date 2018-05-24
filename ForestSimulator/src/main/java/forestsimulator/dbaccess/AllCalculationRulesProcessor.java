@@ -113,7 +113,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 progressListener.aborted();
                 return;
             }
-            publish(new BatchProgress(rules, rule, pass, step, st.temp_Integer));
+            publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer)));
             StopWatch stepTime = new StopWatch("Step " + step).start();
             if (lts.getDurchf() == 1) {
                 st.descspecies();

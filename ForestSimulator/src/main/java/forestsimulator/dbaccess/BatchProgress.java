@@ -4,49 +4,33 @@ import java.util.List;
 
 public class BatchProgress {
 
-    private final List<CalculationRule> rules;
-    private final CalculationRule currentRule;
-    private int currentPass;
-    private final int currentStep;
-    private final int totalSteps;
+    private final Progress stepProgress;
+    private final Progress ruleProgress;
+    private final Progress passProgress;
 
     public BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass) {
-        this(rules, currentRule, currentPass, 0, 0);
+        this(rules, currentRule, currentPass, new Progress(0, 0));
     }
 
-    public BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass, int currentStep, int totalSteps) {
+    public BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass, Progress stepProgress) {
         super();
         if (rules.isEmpty()) {
             throw new IllegalArgumentException("Rules list must not be empty.");
         }
-        this.rules = rules;
-        this.currentRule = currentRule;
-        this.currentPass = currentPass;
-        this.currentStep = currentStep;
-        this.totalSteps = totalSteps;
+        this.ruleProgress = new Progress(rules.indexOf(currentRule) + 1, rules.size());
+        this.passProgress = new Progress(currentPass, currentRule.passCount);
+        this.stepProgress = stepProgress;
     }
     
-    public int totalRules() {
-        return this.rules.size();
+    public Progress ruleProgress() {
+        return ruleProgress;
     }
     
-    public int currentRule() {
-        return rules.indexOf(currentRule) + 1;
-    }
-
-    public int passesForCurrentRule() {
-        return currentRule.passCount;
+    public Progress passProgress() {
+        return passProgress;
     }
     
-    public int currentPass() {
-        return currentPass;
-    }
-    
-    public int currentStep() {
-        return currentStep;
-    }
-    
-    public int totalSteps() {
-        return totalSteps;
+    public Progress stepProgress() {
+        return stepProgress;
     }
 }
