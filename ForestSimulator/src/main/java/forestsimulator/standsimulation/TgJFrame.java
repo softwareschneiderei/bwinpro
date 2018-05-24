@@ -428,7 +428,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             // open Access File
             if (cmd.equals("openAccess")) {
                 LOGGER.info("open NutzungsPlaner Access File");
-                batchProcessingUsingDatabase("forestsimulator.DBAccess.DBAccess");
+                batchProcessingUsingDatabase("forestsimulator.dbaccess.DBAccess");
             }
 
             // Edit Treegross data

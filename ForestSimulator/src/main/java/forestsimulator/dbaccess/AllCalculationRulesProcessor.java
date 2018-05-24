@@ -58,15 +58,15 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 StopWatch oneRule = new StopWatch("One rule").start();
                 logger.log(Level.FINE, "Calculating {0} with auf: {1} and scenario: {2}", new Object[]{rule.edvId, rule.aufId, rule.scenarioId});
                 logger.log(Level.FINE, "Repetitions: {0}", rule.passCount);
-                for (int pass = 0; pass < rule.passCount; pass++) {
+                for (int pass = 1; pass <= rule.passCount; pass++) {
                     if (shouldStop) {
                         logger.log(Level.FINE, "Processing aborted before next pass.");
                         progressListener.aborted();
                         return null;
                     }
-                    publish(new BatchProgress(rules, rule, pass + 1));
+                    publish(new BatchProgress(rules, rule, pass));
                     StopWatch onePass = new StopWatch("One pass").start();
-                    applyCalculationRule(lts, con, rule, pass);
+                    applyCalculationRule(lts, con, rules, rule, pass);
                     onePass.printElapsedTime();
                 }
                 oneRule.printElapsedTime();
@@ -78,7 +78,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         return null;
     }
 
-    private void applyCalculationRule(LoadTreegrossStand lts, final Connection con, CalculationRule rule, int pass) {
+    private void applyCalculationRule(LoadTreegrossStand lts, final Connection con, List<CalculationRule> rules, CalculationRule rule, int pass) {
         st = lts.loadFromDB(con, st, rule.edvId, rule.aufId, true, true);
         StopWatch sortByD = new StopWatch("Sort tree").start();
         st.sortbyd();
@@ -106,27 +106,16 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         st.descspecies();
         Treatment2 t2 = new Treatment2();
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, t2, rule.scenarioId);
-        int ebaum = lts.getEBaum();
-        int baumart = lts.getBaumart();
-        int bestand = lts.getBestand();
-        int durchf = lts.getDurchf();
-        if (ebaum == 1) {
-            lts.saveBaum(con, st, rule.edvId, rule.aufId, 0, pass + 1);
-        }
-        if (baumart == 1) {
-            lts.saveSpecies(con, st, rule.edvId, rule.aufId, 0, pass + 1);
-        }
-        if (bestand == 1) {
-            lts.saveStand(con, st, rule.edvId, rule.aufId, 0, pass + 1);
-        }
-        for (int i = 0; i < st.temp_Integer; i++) {
+        saveStand(con, lts, rule, 0, pass);
+        for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
                 progressListener.aborted();
                 return;
             }
-            StopWatch step = new StopWatch("Step " + i).start();
-            if (durchf == 1) {
+            publish(new BatchProgress(rules, rule, pass, step, st.temp_Integer));
+            StopWatch stepTime = new StopWatch("Step " + step).start();
+            if (lts.getDurchf() == 1) {
                 st.descspecies();
                 st.sortbyd();
                 t2.executeManager2(st);
@@ -135,15 +124,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             st.executeMortality();
             st.descspecies();
             StopWatch save = new StopWatch("Saving").start();
-            if (bestand == 1) {
-                lts.saveStand(con, st, rule.edvId, rule.aufId, i + 1, pass + 1);
-            }
-            if (ebaum == 1) {
-                lts.saveBaum(con, st, rule.edvId, rule.aufId, i + 1, pass + 1);
-            }
-            if (baumart == 1) {
-                lts.saveSpecies(con, st, rule.edvId, rule.aufId, i + 1, pass + 1);
-            }
+            saveStand(con, lts, rule, step + 1, pass);
             save.printElapsedTime();
             StopWatch grow = new StopWatch("Growing").start();
             st.grow(5, st.ingrowthActive);
@@ -151,10 +132,22 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             st.sortbyd();
             st.missingData();
             st.descspecies();
-            step.printElapsedTime();
+            stepTime.printElapsedTime();
         }
-        if (ebaum == 2) {
+        if (lts.getEBaum() == 2) {
             lts.saveBaum(con, st, rule.edvId, rule.aufId, st.temp_Integer, pass + 1);
+        }
+    }
+
+    private void saveStand(Connection con, LoadTreegrossStand lts, CalculationRule rule, int step, int pass) {
+        if (lts.getEBaum() == 1) {
+            lts.saveBaum(con, st, rule.edvId, rule.aufId, step, pass);
+        }
+        if (lts.getBaumart() == 1) {
+            lts.saveSpecies(con, st, rule.edvId, rule.aufId, step, pass);
+        }
+        if (lts.getBestand() == 1) {
+            lts.saveStand(con, st, rule.edvId, rule.aufId, step, pass);
         }
     }
 
