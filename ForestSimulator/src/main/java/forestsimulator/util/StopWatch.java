@@ -1,14 +1,23 @@
 package forestsimulator.util;
 
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class StopWatch {
 
-    private static final Logger logger = Logger.getLogger(StopWatch.class.getName());
+    private static final Logger logger = Logger.getLogger(StopWatch.class.getSimpleName());
     private final String name;
     private long start;
     private long end;
+    
+    static {
+        logger.setLevel(Level.FINE);
+        ConsoleHandler h = new ConsoleHandler();
+        h.setLevel(Level.FINE);
+        logger.addHandler(h);
+    }
     
     public StopWatch(String name) {
         super();

@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
@@ -18,6 +19,13 @@ import treegross.treatment.Treatment2;
 public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgress> implements BatchProcessingControl {
 
     private static final Logger logger = Logger.getLogger(AllCalculationRulesProcessor.class.getName());
+    static {
+        logger.setLevel(Level.FINE);
+        ConsoleHandler h = new ConsoleHandler();
+        h.setLevel(Level.FINE);
+        logger.addHandler(h);
+    }
+    
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
     private final String aktivesDatenfile;
     private Stand st;
