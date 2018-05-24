@@ -6,23 +6,22 @@ public class BatchProgress {
 
     private final List<CalculationRule> rules;
     private final CalculationRule currentRule;
-    private int finishedPasses;
+    private int currentPass;
     private final int currentStep;
     private final int totalSteps;
-
-    BatchProgress(List<CalculationRule> rules) {
-        this(rules, rules.get(0), 0);
-    }
 
     public BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass) {
         this(rules, currentRule, currentPass, 0, 0);
     }
 
-    BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass, int currentStep, int totalSteps) {
+    public BatchProgress(List<CalculationRule> rules, CalculationRule currentRule, int currentPass, int currentStep, int totalSteps) {
         super();
+        if (rules.isEmpty()) {
+            throw new IllegalArgumentException("Rules list must not be empty.");
+        }
         this.rules = rules;
         this.currentRule = currentRule;
-        this.finishedPasses = currentPass;
+        this.currentPass = currentPass;
         this.currentStep = currentStep;
         this.totalSteps = totalSteps;
     }
@@ -40,7 +39,7 @@ public class BatchProgress {
     }
     
     public int currentPass() {
-        return finishedPasses;
+        return currentPass;
     }
     
     public int currentStep() {
