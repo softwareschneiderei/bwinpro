@@ -1,7 +1,6 @@
 package forestsimulator.dbaccess;
 
 import java.text.MessageFormat;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
 

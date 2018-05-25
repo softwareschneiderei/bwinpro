@@ -24,7 +24,6 @@ import treegross.random.RandomNumber;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -49,7 +48,6 @@ public class DBAccessDialog extends JDialog {
         initComponents();
         st = stand;
         databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
-        jPanel1.setVisible(true);
         elsaltoPanel.setVisible(false);
         calculateStandButton.setVisible(false);
         if (st.FileXMLSettings.indexOf("ElSalto") > 0) {
@@ -65,7 +63,7 @@ public class DBAccessDialog extends JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel1 = new javax.swing.JPanel();
         simulationButton = new javax.swing.JButton();
         biDataLabel = new javax.swing.JLabel();
         feDataButton = new javax.swing.JButton();
@@ -82,7 +80,7 @@ public class DBAccessDialog extends JDialog {
         loadSPISButton = new javax.swing.JButton();
         plotNumberLabel = new javax.swing.JLabel();
         plotNumberTextField = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
+        javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         standNameTextField = new javax.swing.JTextField();
         databaseFilenameTextField = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
@@ -115,11 +113,11 @@ public class DBAccessDialog extends JDialog {
             }
         });
 
-        jTextField3.setText(bundle.getString("DBAccessDialog.jTextField3.text")); // NOI18N
+        jTextField3.setText("179-2001-001"); // NOI18N
 
-        jTextField4.setText(bundle.getString("DBAccessDialog.jTextField4.text")); // NOI18N
+        jTextField4.setText("4172"); // NOI18N
 
-        jTextField6.setText(bundle.getString("DBAccessDialog.jTextField6.text")); // NOI18N
+        jTextField6.setText("179-2009-001"); // NOI18N
 
         loadCircleButton.setText(bundle.getString("DBAccessDialog.loadCircleButton.text")); // NOI18N
         loadCircleButton.addActionListener(new java.awt.event.ActionListener() {
@@ -130,7 +128,7 @@ public class DBAccessDialog extends JDialog {
 
         yearsLabel.setText(bundle.getString("DBAccessDialog.yearsLabel.text")); // NOI18N
 
-        yearsTextField.setText(bundle.getString("DBAccessDialog.yearsTextField.text")); // NOI18N
+        yearsTextField.setText("10"); // NOI18N
         yearsTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 yearsTextFieldActionPerformed(evt);
@@ -219,7 +217,7 @@ public class DBAccessDialog extends JDialog {
 
         plotNumberLabel.setText(bundle.getString("DBAccessDialog.plotNumberLabel.text")); // NOI18N
 
-        plotNumberTextField.setText(bundle.getString("DBAccessDialog.plotNumberTextField.text")); // NOI18N
+        plotNumberTextField.setText("1"); // NOI18N
         plotNumberTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 plotNumberTextFieldActionPerformed(evt);
@@ -250,7 +248,7 @@ public class DBAccessDialog extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        standNameTextField.setText(bundle.getString("DBAccessDialog.standNameTextField.text")); // NOI18N
+        standNameTextField.setText("test0001"); // NOI18N
 
         databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
 
@@ -1018,7 +1016,6 @@ public class DBAccessDialog extends JDialog {
                     String id = ixno.toString();
                     for (int j = 0; j < 1; j++) {
                         int age = 20;
-                        Double mixPerc = 1.0;
                         st = etsim.newYTStand(st, id, 0.5);
                         st.ingrowthActive = false;
                         st.riskActive = false;
@@ -1086,8 +1083,6 @@ public class DBAccessDialog extends JDialog {
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
