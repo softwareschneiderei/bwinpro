@@ -995,7 +995,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         File fname = null;
         try {
             URL url = null;
-            String trenn = System.getProperty("file.separator");
             fname = new File(new File(Dir, "models"), st.FileXMLSettings);
             System.out.println("SpeciesDef: URL: " + fname.toURI().toURL());
             try {
@@ -1040,7 +1039,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 }
                 try {
                     st.timeStep = Integer.parseInt(setting.getChild("TimeStep").getText());
-                } catch (Exception e) {
+                } catch (NumberFormatException | NullPointerException e) {
+                    LOGGER.log(Level.FINE, "Could not get TimeStep form configuration.", e);
                     st.timeStep = 5;
                 }
                 break;
@@ -1058,16 +1058,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     public void updatetp(boolean from3D) {
-        StopWatch updateGraph = new StopWatch("Update graph").start();
         gr.neuzeichnen();
-        updateGraph.printElapsedTime();
-        StopWatch updateStand = new StopWatch("Update stand").start();
         st.sortbyd();
         st.descspecies();
-        updateStand.printElapsedTime();
-        StopWatch updateStandMap = new StopWatch("Update standmap").start();
         zf.neuzeichnen();
-        updateStandMap.printElapsedTime();
         StopWatch updateStandView = new StopWatch(("Update view")).start();
         if (grafik3D && !from3D) {
             manager3d.refreshStand();
@@ -1077,15 +1071,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             st.descspecies();
         }
         updateStandView.printElapsedTime();
-        StopWatch updateForm = new StopWatch("Update form").start();
         tsi.formUpdate(st);
-        updateForm.printElapsedTime();
-        StopWatch updateTreamentForm = new StopWatch("Update treamtmen form").start();
         if (tfUpdateTrue) {
             treatmentMan3.formUpdate(st);
             tfUpdateTrue = false;
         }
-        updateTreamentForm.printElapsedTime();
         if (iframe[2].isVisible()) {
             iframe[2].setVisible(false);
             iframe[2].setVisible(true);
@@ -1112,9 +1102,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         iframe[5].setVisible(true);
         iframe[6].setVisible(false);
     }
-//
-// start a stand from other programs
-//     public v        
 
     public void setStand(Stand stl) {
         st = stl;

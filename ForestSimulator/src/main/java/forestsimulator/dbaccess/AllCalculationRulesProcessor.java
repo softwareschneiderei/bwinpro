@@ -46,7 +46,9 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     protected Void doInBackground() throws Exception {
         LoadTreegrossStand lts = new LoadTreegrossStand();
         StopWatch wholeBatchTiming = new StopWatch("Whole batch").start();
+        StopWatch openDatabase = new StopWatch("Open Database").start();
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
+            openDatabase.printElapsedTime();
             List<CalculationRule> rules = gettingRules(con);
             logger.log(Level.FINE, "Number of calculation rules: {0}", rules.size());
             for (CalculationRule rule : rules) {
