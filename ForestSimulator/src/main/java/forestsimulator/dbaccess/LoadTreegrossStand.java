@@ -296,11 +296,7 @@ public class LoadTreegrossStand {
                         stl.random.setRandomType(RandomNumber.PSEUDO);
                     }
                     jj = rs.getInt("Einwuchs");
-                    if (jj == 0) {
-                        stl.ingrowthActive = false;
-                    } else {
-                        stl.ingrowthActive = true;
-                    }
+                    stl.ingrowthActive = jj != 0;
                     stl.temp_Integer = rs.getInt("Schritte");
                     ebaum = rs.getInt("EBaum");
                     bestand = rs.getInt("Bestand");

@@ -14,7 +14,7 @@ public class BatchProgress {
     
     private final List<CalculationRule> rules;
     private final CalculationRule currentRule;
-    private final int currentPass;
+    private final long currentPass;
     private final Progress stepProgress;
     private final Progress ruleProgress;
     private final Progress passProgress;
@@ -76,6 +76,6 @@ public class BatchProgress {
     }
     
     private long finishedPassesOfCurrentRule() {
-        return currentPass - 1;
+        return currentPass - 1L;
     }
 }

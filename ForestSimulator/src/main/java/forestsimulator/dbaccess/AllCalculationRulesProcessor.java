@@ -33,10 +33,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     private volatile boolean shouldStop;
     private final StopWatch wholeBatchTiming = new StopWatch("Whole batch");
 
-    public AllCalculationRulesProcessor(String aktivesDatenfile, Stand st) {
+    public AllCalculationRulesProcessor(String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
         super();
         this.aktivesDatenfile = aktivesDatenfile;
         this.st = st;
+        this.st.notificationsEnabled(notifyStandListeners);
     }
 
     public void setProgressListener(BatchProgressListener l) {
@@ -67,7 +68,6 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                         progressListener.aborted();
                         return null;
                     }
-//                    publish(new BatchProgress(rules, rule, pass, wholeBatchTiming.split()));
                     StopWatch onePass = new StopWatch("One pass").start();
                     applyCalculationRule(lts, con, rules, rule, pass);
                     onePass.printElapsedTime();
@@ -79,6 +79,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             logger.log(Level.SEVERE, "Problem in batch processing", e);
         }
         return null;
+    }
+
+    @Override
+    protected void done() {
+        st.notificationsEnabled(true);
     }
 
     private void applyCalculationRule(LoadTreegrossStand lts, final Connection con, List<CalculationRule> rules, CalculationRule rule, int pass) {

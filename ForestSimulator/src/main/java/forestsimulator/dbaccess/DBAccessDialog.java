@@ -92,6 +92,7 @@ public class DBAccessDialog extends JDialog {
         calculateStandButton = new javax.swing.JButton();
         calculateAllButton = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        updateViewCheckbox = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
@@ -308,6 +309,14 @@ public class DBAccessDialog extends JDialog {
             }
         });
 
+        updateViewCheckbox.setSelected(true);
+        updateViewCheckbox.setText(bundle.getString("DBAccessDialog.updateViewCheckbox.text")); // NOI18N
+        updateViewCheckbox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateViewCheckboxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -322,8 +331,9 @@ public class DBAccessDialog extends JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(calculateAllButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton5)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(updateViewCheckbox)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton5))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -365,7 +375,8 @@ public class DBAccessDialog extends JDialog {
                     .addComponent(loadStandButton)
                     .addComponent(calculateStandButton)
                     .addComponent(calculateAllButton)
-                    .addComponent(jButton5))
+                    .addComponent(jButton5)
+                    .addComponent(updateViewCheckbox))
                 .addContainerGap())
         );
 
@@ -490,7 +501,7 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(aktivesDatenfile, st);
+        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(aktivesDatenfile, st, updateViewCheckbox.isSelected());
         BatchProgressDialog progress = new BatchProgressDialog((Frame) getParent(), new File(aktivesDatenfile).getName(), processor);
         processor.setProgressListener(progress);
         progress.pack();
@@ -1069,6 +1080,10 @@ public class DBAccessDialog extends JDialog {
         }
         dispose();
     }//GEN-LAST:event_simulationButtonActionPerformed
+
+    private void updateViewCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateViewCheckboxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateViewCheckboxActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox beginCheckBox;
@@ -1096,6 +1111,7 @@ public class DBAccessDialog extends JDialog {
     private javax.swing.JButton simulationButton;
     private javax.swing.JButton specialMixtureButton;
     private javax.swing.JTextField standNameTextField;
+    private javax.swing.JCheckBox updateViewCheckbox;
     private javax.swing.JLabel yearsLabel;
     private javax.swing.JTextField yearsTextField;
     // End of variables declaration//GEN-END:variables

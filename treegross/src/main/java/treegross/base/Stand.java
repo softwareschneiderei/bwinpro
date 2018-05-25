@@ -18,6 +18,7 @@ package treegross.base;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.random.RandomNumber;
@@ -271,7 +272,8 @@ public class Stand implements Cloneable {
 
     /*added by jhansen*/
     /* a container to store all added StandChangeListeners*/
-    private final ArrayList<StandChangeListener> StandChangeListeners = new ArrayList<StandChangeListener>();
+    private final List<StandChangeListener> StandChangeListeners = new ArrayList<>();
+    private boolean notifyListeners = true;
     public double ed = 0;
     public double pd = 0;
     public int water = -99;
@@ -399,9 +401,7 @@ public class Stand implements Cloneable {
                 }
             }
         }
-        for (StandChangeListener StandChangeListener : this.StandChangeListeners) {
-            clone.addStandChangeListener(StandChangeListener);
-        }
+        clone.StandChangeListeners.addAll(StandChangeListeners);
         clone.descspecies();
         return clone;
     }
@@ -1093,22 +1093,13 @@ public class Stand implements Cloneable {
         if (status == 0) {
             status = 1;
         }
-        int i;
         // Start risk model
         if (riskActive) {
             try {
                 String modelPlugIn = "treegross.base.Risk";
                 PlugInRisk risk = (PlugInRisk) Class.forName(modelPlugIn).newInstance();
                 risk.applyRisk(this);
-            } catch (ClassNotFoundException e) {
-                if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-            } catch (IllegalAccessException e) {
-                if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-            } catch (InstantiationException e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 if (debug) {
                     LOGGER.log(Level.WARNING, null, e);
                 }
@@ -1310,11 +1301,11 @@ public class Stand implements Cloneable {
                             }
                             GenerateXY gxy = new GenerateXY();
                             gxy.zufall(this);
-                        } catch (Exception ex) {
+                        } catch (SpeciesNotDefinedException ex) {
                             LOGGER.log(Level.SEVERE, "", ex);
                         }
                     }
-                }// new
+                }
             }
         }
     }
@@ -1918,12 +1909,14 @@ public class Stand implements Cloneable {
 
     /*added by jhansen*/
     public void notifyStandChanged(String action, Object sender) {
+        if (!notifyListeners) {
+            return;
+        }
         if (StandChangeListeners.isEmpty()) {
             return;
         }
         StandChangeEvent sce = new StandChangeEvent(this, "StandChangeEvent", action, sender);
-        ArrayList vtemp = (ArrayList) StandChangeListeners.clone();
-        for (Object vtemp1 : vtemp) {
+        for (Object vtemp1 : StandChangeListeners.toArray()) {
             StandChangeListener target;
             target = (StandChangeListener) vtemp1;
             target.StandChanged(sce);
@@ -2053,7 +2046,7 @@ public class Stand implements Cloneable {
      */
     public int cleanTreeArrayReg() {
         Collection trees = getDeadRegTrees();
-        ArrayList<Tree> treelist = new ArrayList<Tree>();
+        List<Tree> treelist = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             treelist.add(tr[i]);
         }
@@ -2074,7 +2067,7 @@ public class Stand implements Cloneable {
      */
     public boolean deleteTree(int index, boolean decspecies) {
         int oldN = ntrees;
-        ArrayList<Tree> treelist = new ArrayList<Tree>();
+        List<Tree> treelist = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             if (i != index) {
                 treelist.add(tr[i]);
@@ -2089,7 +2082,7 @@ public class Stand implements Cloneable {
     }
 
     private Collection getDeadRegTrees() {
-        ArrayList<Tree> treestoremove = new ArrayList<Tree>();
+        List<Tree> treestoremove = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
             if (tr[i].d < 7 && tr[i].out > -1) {
                 treestoremove.add(tr[i]);
@@ -2170,11 +2163,7 @@ public class Stand implements Cloneable {
             String modelPlugIn = "treegross.base.Mortality";
             PlugInMortality mo = (PlugInMortality) Class.forName(modelPlugIn).newInstance();
             mo.mortalityByInfluenceZone(this);   // check for mortality
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
-        } catch (IllegalAccessException e) {
-            LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
-        } catch (InstantiationException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
         }
         for (int i = 0; i < ntrees; i++) {
@@ -2182,5 +2171,9 @@ public class Stand implements Cloneable {
                 tr[i].ageBasedMortality();
             }
         }
+    }
+    
+    public void notificationsEnabled(boolean on) {
+        this.notifyListeners = on;
     }
 }
