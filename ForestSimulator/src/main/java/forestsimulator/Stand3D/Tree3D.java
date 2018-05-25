@@ -22,7 +22,7 @@ import treegross.base.Tree;
  */
 public class Tree3D {
 
-    private BranchGroup bgtree;
+    private final BranchGroup bgtree;
     private RenderingAttributes ra;
     private RenderingAttributes ramarker;
     private RenderingAttributes ramarkercrown;
@@ -31,8 +31,8 @@ public class Tree3D {
     private Material mamarker;
     private TextureUnitState[] tustrunk;
     private TextureUnitState[] tuscrown;
-    private Appearance apcrown;
-    private Appearance aptrunk;
+    private final Appearance apcrown;
+    private final Appearance aptrunk;
     private Appearance apmarker;
     private Color3f speciescolor;
     private Color3f naturalcolor;
@@ -41,16 +41,20 @@ public class Tree3D {
     private boolean wascolored;
     private boolean showstatus;
     public UserData userdata;
-    private double x,y,z; //coordinates of tree in virtual universe
-    /** Creates a new instance of Tree3D */
+    private final double x;
+    private final double y; //coordinates of tree in virtual universe
+    private final double z; //coordinates of tree in virtual universe
     
     public Tree3D(Tree tgtree, Texture2D[] bltexture, boolean speciescolor, boolean textured, Group parent, StandBase3D base) {       
          //init the tree  
          x=-1*(tgtree.x-base.corrx);
          z= tgtree.y-base.getCorrY();
-         if(base==null) y=tgtree.z;
-         else y=base.getHeightAtPoint(x, z, false);
-         
+         if (base == null) {
+            y = tgtree.z;
+        } else {
+            y = base.getHeightAtPoint(x, z, false);
+        }
+
          userdata=new UserData(tgtree,1, x, z);//stores treedata
          initColors(tgtree);
          initAppearObj(bltexture, tgtree);
@@ -126,9 +130,10 @@ public class Tree3D {
         tustrunk[0]= new TextureUnitState(bltexture[5], texAttr1, null);
         tustrunk[1]= new TextureUnitState(bltexture[1], texAttr2, null);        
         // textures crown:
-        int tex1=0;
-        if(tr.sp.spDef.crownType==1) tex1=2;//conifer
-        else tex1=0; //bl
+        int tex1 = 0;
+        if (tr.sp.spDef.crownType == 1) {
+            tex1 = 2;//conifer
+        }
         tuscrown = new TextureUnitState[2];       
         TextureAttributes texAttr1c = new TextureAttributes();
         texAttr1c.setTextureMode(TextureAttributes.MODULATE);                    
@@ -266,22 +271,22 @@ public class Tree3D {
     }
     
     public void updateMarker(){
-        if(userdata.marker==userdata.THINNING){
+        if(userdata.marker==UserData.THINNING){
             mamarker.setDiffuseColor (new Color3f(1.0f, 0.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(1.0f, 0.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.6f, 0.0f, 0.0f));
         }
-        if(userdata.marker==userdata.CROP){
+        if(userdata.marker==UserData.CROP){
             mamarker.setDiffuseColor (new Color3f(0.0f, 1.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(0.0f, 1.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.0f, 0.6f, 0.0f));
         }
-        if(userdata.marker==userdata.TEMP_CROP){
+        if(userdata.marker==UserData.TEMP_CROP){
             mamarker.setDiffuseColor (new Color3f(1.0f, 1.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(1.0f, 1.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.3f, 3.0f, 0.0f));
         }
-        if(userdata.marker==userdata.HABITAT){
+        if(userdata.marker==UserData.HABITAT){
             mamarker.setDiffuseColor (new Color3f(0.0f, 0.0f, 1.0f));
             mamarker.setSpecularColor(new Color3f(0.0f, 0.0f, 1.0f));
             mamarker.setEmissiveColor(new Color3f(0.0f, 0.0f, 0.6f));
@@ -314,7 +319,7 @@ public class Tree3D {
         if(bgtree!=null){
             double randangle=Math.random()*0.25*Math.PI;
             UserData u=(UserData)bgtree.getUserData();
-            u.marker=u.NOT;
+            u.marker= UserData.NOT;
             u.living=false;
             u.standing=false;
             Transform3D transrot= new Transform3D();
@@ -466,5 +471,4 @@ public class Tree3D {
     public void deleteTree(){         
          bgtree.detach();
     }
-    
 }

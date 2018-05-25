@@ -172,14 +172,14 @@ public class Tree3DList {
     }
 
     public void detachAllTrees() {
-        if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                trees[i].deleteTree();
-                trees[i] = null;
-            }
-            trees = null;
+        if (trees == null) {
+            return;
         }
-        System.gc();
+        for (int i = 0; i < trees.length; i++) {
+            trees[i].deleteTree();
+            trees[i] = null;
+        }
+        trees = null;
     }
 
     public void clear() {

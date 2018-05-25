@@ -55,8 +55,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     FileHandler logHandler = null;
 
-    String bwinproVersion = "Version 7.8-0.1";
-    String bwinproLastUpdate = "18.04.2018";
+    String bwinproVersion = "Version 7.8-0.2";
+    String bwinproLastUpdate = "25.05.2018";
     private boolean accessInput = true;
     static Stand st = new Stand();
     SpeciesDefMap SDM = new SpeciesDefMap();
@@ -85,7 +85,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgGrafikMenu tgGrafikMenu;
     TgToolbar toolbar;
     TgScreentoolbar tgScreentoolbar;
-    TgInternalFrame[] iframe = new TgInternalFrame[8];
+    private final TgInternalFrame[] iframe = new TgInternalFrame[8];
     JDesktopPane dp = new JDesktopPane();
     TgUser user;
     private JFrame owner;
@@ -884,8 +884,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     @Override
-    public void StandChanged(treegross.base.StandChangeEvent evt) {
-        System.out.println("stand changed " + evt.getName());
+    public void StandChanged(StandChangeEvent evt) {
+        LOGGER.log(Level.FINE, "stand changed {0}", evt.getName());
         StopWatch update = new StopWatch("Updating tp").start();
         updatetp(false);
         update.printElapsedTime();
@@ -1058,10 +1058,17 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     public void updatetp(boolean from3D) {
+        StopWatch updateGraph = new StopWatch("Update graph").start();
         gr.neuzeichnen();
+        updateGraph.printElapsedTime();
+        StopWatch updateStand = new StopWatch("Update stand").start();
         st.sortbyd();
         st.descspecies();
+        updateStand.printElapsedTime();
+        StopWatch updateStandMap = new StopWatch("Update standmap").start();
         zf.neuzeichnen();
+        updateStandMap.printElapsedTime();
+        StopWatch updateStandView = new StopWatch(("Update view")).start();
         if (grafik3D && !from3D) {
             manager3d.refreshStand();
         } else {
@@ -1069,12 +1076,17 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             st.sortbyd();
             st.descspecies();
         }
+        updateStandView.printElapsedTime();
+        StopWatch updateForm = new StopWatch("Update form").start();
         tsi.formUpdate(st);
-        if (tfUpdateTrue == true) {
+        updateForm.printElapsedTime();
+        StopWatch updateTreamentForm = new StopWatch("Update treamtmen form").start();
+        if (tfUpdateTrue) {
             treatmentMan3.formUpdate(st);
             tfUpdateTrue = false;
         }
-        if (iframe[2].isVisible() == true) {
+        updateTreamentForm.printElapsedTime();
+        if (iframe[2].isVisible()) {
             iframe[2].setVisible(false);
             iframe[2].setVisible(true);
         }
@@ -1130,6 +1142,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             LOGGER.info(e.toString());
         }
         return sbuffer;
+    }
+    
+    public void showAddTreesWindow() {
+        this.iframe[3].setVisible(true);
+    }
+
+    public void hideAddTreesWindow() {
+        this.iframe[3].setVisible(false);
     }
 
     public class MyInternalFrameListener extends InternalFrameAdapter {

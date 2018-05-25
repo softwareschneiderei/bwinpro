@@ -73,32 +73,33 @@ class TgGrafik extends JPanel {
     }
 
     public void drawGraph() {
-        if (st.ntrees > 0) {
-            if (graphType == 0) {
-                GraphicSpeciesByCrownSurfaceArea chart = new GraphicSpeciesByCrownSurfaceArea(preferredLanguage);
-                jfreeChart = chart.createChart(st);
-                chartPanel = new ChartPanel(jfreeChart);
-            }
-            if (graphType == 1) {
-                GraphicDiameterDistribution chart = new GraphicDiameterDistribution(preferredLanguage);
-                jfreeChart = chart.createChart(st);
-                chartPanel = new ChartPanel(jfreeChart);
-
-            }
-            if (graphType == 2) {
-                GraphicDiameterDistributionCT chart = new GraphicDiameterDistributionCT(preferredLanguage);
-                jfreeChart = chart.createChart(st);
-                chartPanel = new ChartPanel(jfreeChart);
-            }
-            if (graphType == 3) {
-                GraphicHeightDiameterPlot chart = new GraphicHeightDiameterPlot(preferredLanguage);
-                jfreeChart = chart.createChart(st);
-                chartPanel = new ChartPanel(jfreeChart);
-            }
-            chartPanel.setPreferredSize(new Dimension(600, 400));
-            this.removeAll();
-            this.add(chartPanel);
+        if (st.ntrees == 0) {
+            return;
         }
+        if (graphType == 0) {
+            GraphicSpeciesByCrownSurfaceArea chart = new GraphicSpeciesByCrownSurfaceArea(preferredLanguage);
+            jfreeChart = chart.createChart(st);
+            chartPanel = new ChartPanel(jfreeChart);
+        }
+        if (graphType == 1) {
+            GraphicDiameterDistribution chart = new GraphicDiameterDistribution(preferredLanguage);
+            jfreeChart = chart.createChart(st);
+            chartPanel = new ChartPanel(jfreeChart);
+
+        }
+        if (graphType == 2) {
+            GraphicDiameterDistributionCT chart = new GraphicDiameterDistributionCT(preferredLanguage);
+            jfreeChart = chart.createChart(st);
+            chartPanel = new ChartPanel(jfreeChart);
+        }
+        if (graphType == 3) {
+            GraphicHeightDiameterPlot chart = new GraphicHeightDiameterPlot(preferredLanguage);
+            jfreeChart = chart.createChart(st);
+            chartPanel = new ChartPanel(jfreeChart);
+        }
+        chartPanel.setPreferredSize(new Dimension(600, 400));
+        this.removeAll();
+        this.add(chartPanel);
     }
 
     public void neuzeichnen() {

@@ -491,7 +491,7 @@ public class TgDesign extends JPanel {
                 }
             }
         } else {
-            frame.iframe[3].setVisible(false);
+            frame.hideAddTreesWindow();
             frame.menubar.cmi[3].setSelected(false);
             /*                    JDialog newstand = new TgNewStand(frame, true, frame.st, frame, frame.language );   
                     Model mo =new Model();
@@ -499,7 +499,7 @@ public class TgDesign extends JPanel {
                     newstand.setVisible(true);
                     frame.tfUpdateTrue=true;  
              */ if (st.size > 0) {
-                frame.iframe[3].setVisible(true);
+                frame.showAddTreesWindow();
                 frame.menubar.cmi[3].setSelected(true);
             }
         }
