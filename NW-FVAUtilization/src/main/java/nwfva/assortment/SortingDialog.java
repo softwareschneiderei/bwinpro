@@ -16,10 +16,12 @@ GNU General Public License for more details.
  */
 package nwfva.assortment;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JDialog;
@@ -49,8 +51,9 @@ public class SortingDialog extends JDialog {
                 handler.setFormatter(new SimpleFormatter());
                 log.addHandler(logHandler);
                 log.info("Sortierungs-Dialog gestartet");
-            } catch (Exception e) {
-            };
+            } catch (IOException | SecurityException e) {
+                log.log(Level.WARNING, "Could not add file handler for logging.", e);
+            }
         } else {
             log.addHandler(logHandler);
         }

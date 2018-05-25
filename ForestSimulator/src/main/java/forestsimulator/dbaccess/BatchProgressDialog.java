@@ -3,7 +3,6 @@ package forestsimulator.dbaccess;
 import forestsimulator.util.DurationFormatter;
 import java.awt.Frame;
 import java.text.MessageFormat;
-import java.time.Duration;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;

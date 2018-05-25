@@ -4,6 +4,10 @@ import java.time.Duration;
 import java.util.Optional;
 
 public class DurationFormatter {
+    
+    private DurationFormatter() {
+        super();
+    }
 
     public static String format(Optional<Duration> d) {
         if (!d.isPresent()) {

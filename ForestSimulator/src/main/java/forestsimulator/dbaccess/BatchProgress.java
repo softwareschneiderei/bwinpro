@@ -63,12 +63,12 @@ public class BatchProgress {
     }
     
     public Optional<Duration> estimatedRemainingNanos() {
-        int totalPasses = rules.stream().map(rule -> rule.passCount).reduce(0, sumInts);
-        int finishedPasses = rules.stream().limit(rules.indexOf(currentRule)).map(rule -> rule.passCount).reduce(0, sumInts) + finishedPassesOfCurrentRule();
+        long totalPasses = rules.stream().map(rule -> rule.passCount).reduce(0, sumInts);
+        long finishedPasses = rules.stream().limit(rules.indexOf(currentRule)).map(rule -> rule.passCount).reduce(0, sumInts) + finishedPassesOfCurrentRule();
         return nanosPerPass(finishedPasses).map(duration -> duration.multipliedBy(totalPasses - finishedPasses));
     }
 
-    private Optional<Duration> nanosPerPass(int finishedPasses) {
+    private Optional<Duration> nanosPerPass(long finishedPasses) {
         if (finishedPasses == 0) {
             return Optional.empty();
         }
