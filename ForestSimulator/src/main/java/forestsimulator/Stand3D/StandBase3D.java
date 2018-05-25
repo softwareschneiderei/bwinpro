@@ -4,7 +4,6 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 import treegross.base.Corners;
 import com.sun.j3d.utils.geometry.GeometryInfo;
-import com.sun.j3d.utils.geometry.Triangulator;
 import com.sun.j3d.utils.geometry.NormalGenerator;
 import com.sun.j3d.utils.geometry.Stripifier;
 import com.sun.j3d.utils.picking.PickTool;
@@ -26,8 +25,8 @@ public class StandBase3D {
     private double ymax=0;
     private double ymin=0;
     private double xmin=0;
-    double corry=0;
-    double corrx= 0;
+    double corry =0;
+    double corrx = 0;
     private Corners[] cp;
     /**
      * Creates a new instance of StandBase3D 
