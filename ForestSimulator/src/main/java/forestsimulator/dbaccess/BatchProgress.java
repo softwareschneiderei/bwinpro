@@ -75,7 +75,7 @@ public class BatchProgress {
         return Optional.of(elapsed.dividedBy(finishedPasses));
     }
     
-    private int finishedPassesOfCurrentRule() {
+    private long finishedPassesOfCurrentRule() {
         return currentPass - 1;
     }
 }
