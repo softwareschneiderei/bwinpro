@@ -6,6 +6,7 @@ build/
 /gradle/caches/
 /gradle/daemon/
 /gradle/native/
+/gradle/wrapper/dists/*/
 /.nb-gradle/private/
 /.nb-gradle/profiles/private/
 /.idea/
