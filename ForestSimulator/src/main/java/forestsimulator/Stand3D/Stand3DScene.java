@@ -37,11 +37,11 @@ import java.awt.image.BufferedImage;
 public class Stand3DScene extends JPanel {
 
     private Stand st;
-    private SimpleUniverse universe;
+    private final SimpleUniverse universe;
     private Texture2D[] textures = null;
-    private Point3d atpoint = new Point3d(); // starting point the user looks at
+    private final Point3d atpoint = new Point3d(); // starting point the user looks at
     private Point3d frompoint = new Point3d(); // starting point of the user's position 
-    private PickCanvas pickCanvas;
+    private final PickCanvas pickCanvas;
     private TransformGroup pickgroup;
     private TransformGroup forestergroup;
     private Shape3D mesh = null;
@@ -50,7 +50,7 @@ public class Stand3DScene extends JPanel {
     private TransformGroup sceneTG;
     private int[] sts;             // the species codes of the species to show
     private StandBase3D base;
-    private FieldSquares meshconstructor;
+    private final FieldSquares meshconstructor;
     private KoordSystem3D coord;
     private LinearFog fog;
     private String selectedTree = "";
@@ -84,7 +84,7 @@ public class Stand3DScene extends JPanel {
         initSwing();
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
         Canvas3D canvas = new Canvas3D(config);
-        this.add("Center", canvas);
+        add("Center", canvas);
         universe = new SimpleUniverse(canvas);
         copyTextures(alltextures);
         // add orbit behavior
@@ -108,6 +108,7 @@ public class Stand3DScene extends JPanel {
         pickCanvas.setMode(PickCanvas.GEOMETRY);
         pickCanvas.setTolerance(0f);
         canvas.addMouseListener(new javax.swing.event.MouseInputAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 pick(e);
             }
@@ -229,7 +230,7 @@ public class Stand3DScene extends JPanel {
 
     private void makeForester() {
         Appearance a = new Appearance();
-        a.setCapability(a.ALLOW_COLORING_ATTRIBUTES_WRITE);
+        a.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
         ColoringAttributes ca = new ColoringAttributes();
         ca.setColor(0.6f, 0.3f, 0.0f);
         a.setColoringAttributes(ca);
@@ -445,41 +446,40 @@ public class Stand3DScene extends JPanel {
             movePickMarker(-tud.x, base.getHeightAtPoint(-tud.x, tud.y, false) + tud.h + 1.4, tud.y);
             //if(showtreeinfo) hud3d.setText2D("Baum: "+tud.name.trim()+" BHD: "+Math.round(tud.dbh)+" Höhe: "+Math.round(tud.h));
             selectedTree = tud.name;
-            if (showtreeinfo && e.getButton() == e.BUTTON1) {
+            if (showtreeinfo && e.getButton() == MouseEvent.BUTTON1) {
                 TransparentWindow treeinfowindow = new TransparentWindow(tud, this, e.getX(), e.getY());
             }
-            if (e.getButton() == e.BUTTON3 && tud.living) {
+            if (e.getButton() == MouseEvent.BUTTON3 && tud.living) {
                 switch (tud.marker) {
                     case 0:
-                        tud.marker = tud.THINNING;
+                        tud.marker = UserData.THINNING;
                         treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
                         break;
                     case 1:
-                        tud.marker = tud.CROP;
-                        if (st.standname.indexOf("SIMWALD") > -1) {
-                            tud.marker = tud.NOT;
+                        tud.marker = UserData.CROP;
+                        if (st.standname.contains("SIMWALD")) {
+                            tud.marker = UserData.NOT;
                         }
                         treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
                         setTreeStatusInStand(tud);
                         break;
                     case 3:
-                        tud.marker = tud.TEMP_CROP;
+                        tud.marker = UserData.TEMP_CROP;
                         treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
                         setTreeStatusInStand(tud);
                         break;
                     case 4:
-                        tud.marker = tud.HABITAT;
+                        tud.marker = UserData.HABITAT;
                         treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
                         setTreeStatusInStand(tud);
                         break;
                     default:
-                        tud.marker = tud.NOT;
+                        tud.marker = UserData.NOT;
                         treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
                         setTreeStatusInStand(tud);
                         break;
                 }
             }
-
         } else {
             movePickMarker(0, 0, 0);
         }
@@ -529,12 +529,11 @@ public class Stand3DScene extends JPanel {
     public void harvestAllMarkedTrees() {
         movePickMarker(0, 0, 0);
         Enumeration e = sceneTG.getAllChildren();
-        BranchGroup dummy = new BranchGroup();
-        UserData ud = null;
+        UserData ud;
         while (e.hasMoreElements()) {
             Object o = e.nextElement();
             if (o.getClass() == BranchGroup.class) {
-                dummy = (BranchGroup) o;
+                BranchGroup dummy = (BranchGroup) o;
                 Object u = dummy.getUserData();
                 if (u != null && u.getClass() == UserData.class) {
                     ud = (UserData) dummy.getUserData();
@@ -542,7 +541,7 @@ public class Stand3DScene extends JPanel {
                     ud = null;
                 }
                 if (ud != null) {
-                    if ((ud.marker == ud.THINNING || ud.marker == ud.HARVESTING) && ud.type == 1) {
+                    if ((ud.marker == UserData.THINNING || ud.marker == UserData.HARVESTING) && ud.type == 1) {
                         harvestTreeInStand(dummy);
                     }
                 }
