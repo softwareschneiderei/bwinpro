@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -31,6 +32,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     private Stand st;
     private BatchProgressListener progressListener;
     private volatile boolean shouldStop;
+    private final StopWatch wholeBatchTiming = new StopWatch("Whole batch");
 
     public AllCalculationRulesProcessor(String aktivesDatenfile, Stand st) {
         super();
@@ -45,10 +47,10 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     @Override
     protected Void doInBackground() throws Exception {
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        StopWatch wholeBatchTiming = new StopWatch("Whole batch").start();
         StopWatch openDatabase = new StopWatch("Open Database").start();
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             openDatabase.printElapsedTime();
+            wholeBatchTiming.start();
             List<CalculationRule> rules = gettingRules(con);
             logger.log(Level.FINE, "Number of calculation rules: {0}", rules.size());
             for (CalculationRule rule : rules) {
@@ -66,17 +68,17 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                         progressListener.aborted();
                         return null;
                     }
-                    publish(new BatchProgress(rules, rule, pass));
+//                    publish(new BatchProgress(rules, rule, pass, wholeBatchTiming.split()));
                     StopWatch onePass = new StopWatch("One pass").start();
                     applyCalculationRule(lts, con, rules, rule, pass);
                     onePass.printElapsedTime();
                 }
                 oneRule.printElapsedTime();
             }
+            wholeBatchTiming.printElapsedTime();
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Problem in batch processing", e);
         }
-        wholeBatchTiming.printElapsedTime();
         return null;
     }
 
@@ -115,7 +117,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 progressListener.aborted();
                 return;
             }
-            publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer)));
+            publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));
             StopWatch stepTime = new StopWatch("Step " + step).start();
             if (lts.getDurchf() == 1) {
                 st.descspecies();

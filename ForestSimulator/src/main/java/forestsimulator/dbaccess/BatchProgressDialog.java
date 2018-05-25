@@ -1,7 +1,10 @@
 package forestsimulator.dbaccess;
 
+import forestsimulator.util.DurationFormatter;
 import java.awt.Frame;
 import java.text.MessageFormat;
+import java.time.Duration;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
@@ -41,6 +44,10 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
         stepProgressLabel = new javax.swing.JLabel();
         stepProgress = new javax.swing.JProgressBar();
         stopButton = new javax.swing.JButton();
+        elapsedTimeLabel = new javax.swing.JLabel();
+        elapsedTimeDisplay = new javax.swing.JLabel();
+        remainingTimeLabel = new javax.swing.JLabel();
+        remainingTimeDisplay = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
@@ -77,6 +84,16 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
             }
         });
 
+        elapsedTimeLabel.setText(bundle.getString("BatchProgressDialog.elapsedTimeLabel.text")); // NOI18N
+
+        elapsedTimeDisplay.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        elapsedTimeDisplay.setText("--:--:--"); // NOI18N
+
+        remainingTimeLabel.setText(bundle.getString("BatchProgressDialog.remainingTimeLabel.text")); // NOI18N
+
+        remainingTimeDisplay.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        remainingTimeDisplay.setText("--:--:--");
+
         javax.swing.GroupLayout progressPanelLayout = new javax.swing.GroupLayout(progressPanel);
         progressPanel.setLayout(progressPanelLayout);
         progressPanelLayout.setHorizontalGroup(
@@ -84,25 +101,34 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
             .addGroup(progressPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(progressPanelLayout.createSequentialGroup()
-                        .addComponent(infoLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(progressPanelLayout.createSequentialGroup()
-                        .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(currentRuleLabel)
-                            .addComponent(ruleProgressLabel)
-                            .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(passProgressLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(stepProgressLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                        .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stepProgress, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                            .addComponent(passProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ruleProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(currentRuleDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, progressPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(stopButton)))
+                        .addComponent(stopButton))
+                    .addGroup(progressPanelLayout.createSequentialGroup()
+                        .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(elapsedTimeLabel)
+                            .addComponent(remainingTimeLabel)
+                            .addComponent(currentRuleLabel))
+                        .addGap(16, 16, 16)
+                        .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(currentRuleDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(elapsedTimeDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(remainingTimeDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(progressPanelLayout.createSequentialGroup()
+                        .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(progressPanelLayout.createSequentialGroup()
+                                .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ruleProgressLabel)
+                                    .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(passProgressLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(stepProgressLabel, javax.swing.GroupLayout.Alignment.LEADING)))
+                                .addGap(66, 66, 66)
+                                .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(passProgress, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
+                                    .addComponent(ruleProgress, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(stepProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(infoLabel))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         progressPanelLayout.setVerticalGroup(
@@ -114,7 +140,15 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
                 .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(currentRuleLabel)
                     .addComponent(currentRuleDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(elapsedTimeLabel)
+                    .addComponent(elapsedTimeDisplay))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(remainingTimeLabel)
+                    .addComponent(remainingTimeDisplay))
+                .addGap(18, 18, 18)
                 .addGroup(progressPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(ruleProgressLabel)
                     .addComponent(ruleProgress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -156,10 +190,14 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel currentRuleDisplay;
     private javax.swing.JLabel currentRuleLabel;
+    private javax.swing.JLabel elapsedTimeDisplay;
+    private javax.swing.JLabel elapsedTimeLabel;
     private javax.swing.JLabel infoLabel;
     private javax.swing.JProgressBar passProgress;
     private javax.swing.JLabel passProgressLabel;
     private javax.swing.JPanel progressPanel;
+    private javax.swing.JLabel remainingTimeDisplay;
+    private javax.swing.JLabel remainingTimeLabel;
     private javax.swing.JProgressBar ruleProgress;
     private javax.swing.JLabel ruleProgressLabel;
     private javax.swing.JProgressBar stepProgress;
@@ -170,6 +208,10 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     @Override
     public void updateProgress(BatchProgress progress) {
         currentRuleDisplay.setText(progress.currentRuleText());
+        elapsedTimeDisplay.setText(DurationFormatter.format(Optional.of(progress.elapsedNanos())));
+        if (progress.stepProgress().current == 0) {
+            remainingTimeDisplay.setText(DurationFormatter.format(progress.estimatedRemainingNanos()));
+        }
         updateProgressBar(ruleProgress, progress.ruleProgress());
         updateProgressBar(passProgress, progress.passProgress());
         updateProgressBar(stepProgress, progress.stepProgress());

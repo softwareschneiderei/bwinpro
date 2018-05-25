@@ -1,5 +1,6 @@
 package forestsimulator.util;
 
+import java.time.Duration;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,15 +35,19 @@ public class StopWatch {
     
     public StopWatch printElapsedTime() {
         stop();
-        logger.log(Level.FINE, "{0}: {1} ms passed.", new Object[]{name, deltaNanos() / 1e6});
+        logger.log(Level.FINE, "{0}: {1} ms passed.", new Object[]{name, deltaNanos().toMillis()});
         return this;
     }
     
-    public long deltaNanos() {
+    public Duration deltaNanos() {
         final long delta = this.end - this.start;
         if (delta < 0) {
             throw new IllegalStateException("Stop must be called before computing delta.");
         }
-        return delta;
+        return Duration.ofNanos(delta);
+    }
+
+    public Duration split() {
+        return Duration.ofNanos(System.nanoTime() - this.start);
     }
 }
