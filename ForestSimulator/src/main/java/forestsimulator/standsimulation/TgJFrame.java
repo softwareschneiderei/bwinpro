@@ -92,7 +92,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
     private Manager3D manager3d;
 
-    boolean grafik3D = false;
+    private boolean grafik3D = false;
     boolean StandardColors = false;
     boolean tfUpdateTrue = true;
     File programDir;
@@ -136,21 +136,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             LOGGER.log(Level.INFO, "Modell :{0}", plugIn);
         }
         setTitle(getTitle() + "Forest Simulator BWINPro 7 " + bwinproVersion + " - Modell: " + plugIn);
-        boolean available3d = false;
-        PackageInfo info3d = new PackageInfo();
-        if (info3d.isJ3DInstalled()) {
-            new Query3DProperties().print();
-            available3d = true;
-        }
+        boolean available3d = is3dAvailable();
         if (plugIn.indexOf("nwfva") > 0) {
             accessInput = true;
         }
         zf = new TgStandMap(st, this); //add standmap class
         pp = new TgPPmap(st, this); //add prallel projection class
         gr = new TgGrafik(st);
-        if (user.grafik3D == 0 && available3d) {
-            grafik3D = true;
-        }
+        grafik3D = user.getGrafik3D() && is3dAvailable();
 
         programDir = user.getProgramDir();
         SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings).getAbsolutePath());
@@ -191,7 +184,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             tgPPMapMenus.add(tgPPMapMenu);
             ppneu.add(tgPPMapMenus, BorderLayout.NORTH);
             ppneu.add(pp, BorderLayout.CENTER);
-            grafik3D = false;
         }
         tsi = new TgStandInfo(language.locale());
 
@@ -294,6 +286,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                     messages.getString("TgJFrame.updateCheck.title"),
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private boolean is3dAvailable() {
+        PackageInfo info3d = new PackageInfo();
+        if (info3d.isJ3DInstalled()) {
+            new Query3DProperties().print();
+            return true;
+        }
+        return false;
     }
 
     @Override

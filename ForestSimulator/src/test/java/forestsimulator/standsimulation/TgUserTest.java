@@ -32,7 +32,7 @@ public class TgUserTest {
         assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
         assertThat(userSettings.getXMLSettings(), is("ForestSimulatorSettingsBW.xml"));
         assertThat(userSettings.getPlugIn(), is("ForestSimulatorSettingsBW.xml"));
-        assertThat(userSettings.getGrafik3D(), is(0));
+        assertThat(userSettings.getGrafik3D(), is(false));
     }
     
     @Test

@@ -122,8 +122,8 @@ class TgUser {
         return plugIn;
     }
 
-    public int getGrafik3D() {
-        return grafik3D;
+    public boolean getGrafik3D() {
+        return grafik3D == 1;
     }
 
     public Locale getLanguageShort() {
