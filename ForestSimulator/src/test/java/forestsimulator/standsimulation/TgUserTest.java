@@ -71,7 +71,14 @@ public class TgUserTest {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(new StringReader("language.code="));
         assertThat(userSettings.getLanguageShort(), is(new Locale("fr")));
-   }
+    }
+    
+    @Test
+    public void graphicSettingParsedCorrectly() throws IOException {
+        TgUser userSettings = new TgUser(BASE_DIRECTORY);
+        userSettings.loadSettings(new StringReader("graphics3d=1"));
+        assertThat(userSettings.getGrafik3D(), is(true));
+    }
 
     private static String makeAbsolute(String absolutePath) {
         if (new File(absolutePath).isAbsolute()) {
