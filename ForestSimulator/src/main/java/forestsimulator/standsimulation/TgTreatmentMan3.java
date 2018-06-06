@@ -32,9 +32,8 @@ import treegross.treatment.*;
 public class TgTreatmentMan3 extends JPanel {
     private final DefaultTableModel data;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    Stand st = null;
+    private final Stand st;
     Object[] rowData={" "," "," "," "," "," "};
-    NumberFormat f=NumberFormat.getInstance();
     TgYieldTable  yt  = null;
     Treatment2 treat = new Treatment2();
     
@@ -136,7 +135,6 @@ public class TgTreatmentMan3 extends JPanel {
         speciesSettingsLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -403,19 +401,6 @@ public class TgTreatmentMan3 extends JPanel {
         jPanel2.add(jPanel5);
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
-
-        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 856, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 100, Short.MAX_VALUE)
-        );
-
-        add(jPanel3, java.awt.BorderLayout.SOUTH);
     }// </editor-fold>//GEN-END:initComponents
 
 private void harvestingAmountMaximumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harvestingAmountMaximumTextFieldActionPerformed
@@ -514,7 +499,7 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         } else {
             useRandomEffectsCheckBox.setSelected(false);
         } 
-        f=NumberFormat.getInstance(new Locale("en","US"));
+        NumberFormat f=NumberFormat.getInstance(new Locale("en", "US"));
         f.setMaximumFractionDigits(0);
         f.setMinimumFractionDigits(0);
         f.setGroupingUsed(false);
@@ -625,7 +610,6 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;

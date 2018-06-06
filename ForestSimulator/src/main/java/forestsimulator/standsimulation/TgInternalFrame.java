@@ -18,33 +18,24 @@ GNU General Public License for more details.
  *
  * @author  sschimpf
  */
-
-
-
 package forestsimulator.standsimulation;
-import treegross.base.*;
+
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.*;
 
-public class TgInternalFrame extends JInternalFrame
-{
-   
-    
-    /** Creates a new instance of tginternalframe */
+public class TgInternalFrame extends JInternalFrame {
+
     public TgInternalFrame(JPanel p, String title) {
-       super(title);
+        super(title);
 
-       //getContentPane().add(p,BorderLayout.CENTER);
-       getContentPane().add(p);
-       setVisible(true);
-       setResizable(true);
-       setIconifiable(true);
-       setMaximizable(true);
-       setClosable(true);
-       setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-       pack();
+        //getContentPane().add(p,BorderLayout.CENTER);
+        getContentPane().add(p);
+        setVisible(true);
+        setResizable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setClosable(true);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        pack();
     }
-    
+
 }
