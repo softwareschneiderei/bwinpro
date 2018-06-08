@@ -136,7 +136,7 @@ public class TgDesign extends JPanel {
         jPanel2.add(basalAreaLabel);
         basalAreaLabel.setBounds(20, 190, 130, 14);
 
-        td2.setText(bundle.getString("TgDesign.td2.text")); // NOI18N
+        td2.setText("50"); // NOI18N
         td2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 td2KeyPressed(evt);
@@ -145,11 +145,11 @@ public class TgDesign extends JPanel {
         jPanel2.add(td2);
         td2.setBounds(220, 70, 40, 20);
 
-        td3.setText(bundle.getString("TgDesign.td3.text")); // NOI18N
+        td3.setText("30.0"); // NOI18N
         jPanel2.add(td3);
         td3.setBounds(220, 100, 40, 20);
 
-        td4.setText(bundle.getString("TgDesign.td4.text")); // NOI18N
+        td4.setText("25.0"); // NOI18N
         td4.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 td4KeyPressed(evt);
@@ -158,11 +158,11 @@ public class TgDesign extends JPanel {
         jPanel2.add(td4);
         td4.setBounds(220, 130, 40, 20);
 
-        td5.setText(bundle.getString("TgDesign.td5.text")); // NOI18N
+        td5.setText("38.0"); // NOI18N
         jPanel2.add(td5);
         td5.setBounds(220, 160, 40, 20);
 
-        td6.setText(bundle.getString("TgDesign.td6.text")); // NOI18N
+        td6.setText("18.0"); // NOI18N
         jPanel2.add(td6);
         td6.setBounds(220, 190, 40, 20);
         jPanel2.add(speciesCodeComboBox);
@@ -183,7 +183,7 @@ public class TgDesign extends JPanel {
         jPanel2.add(siteIndexLabel);
         siteIndexLabel.setBounds(20, 220, 140, 14);
 
-        jTextField1.setText(bundle.getString("TgDesign.jTextField1.text")); // NOI18N
+        jTextField1.setText("-9.0"); // NOI18N
         jPanel2.add(jTextField1);
         jTextField1.setBounds(220, 220, 40, 20);
 
@@ -209,11 +209,11 @@ public class TgDesign extends JPanel {
         jPanel2.add(typeComboBox);
         typeComboBox.setBounds(20, 10, 270, 20);
 
-        rasterXTextField.setText(bundle.getString("TgDesign.rasterXTextField.text")); // NOI18N
+        rasterXTextField.setText("5.0"); // NOI18N
         jPanel2.add(rasterXTextField);
         rasterXTextField.setBounds(160, 400, 40, 20);
 
-        rasterYTextField.setText(bundle.getString("TgDesign.rasterYTextField.text")); // NOI18N
+        rasterYTextField.setText("5.0"); // NOI18N
         jPanel2.add(rasterYTextField);
         rasterYTextField.setBounds(210, 400, 40, 20);
 
@@ -221,11 +221,11 @@ public class TgDesign extends JPanel {
         jPanel2.add(startPositionLabel);
         startPositionLabel.setBounds(30, 430, 120, 14);
 
-        startXTextField.setText(bundle.getString("TgDesign.startXTextField.text")); // NOI18N
+        startXTextField.setText("2.5"); // NOI18N
         jPanel2.add(startXTextField);
         startXTextField.setBounds(160, 430, 40, 20);
 
-        startYTextField.setText(bundle.getString("TgDesign.startYTextField.text")); // NOI18N
+        startYTextField.setText("0.5"); // NOI18N
         jPanel2.add(startYTextField);
         startYTextField.setBounds(210, 430, 40, 20);
 
@@ -238,7 +238,7 @@ public class TgDesign extends JPanel {
         jPanel2.add(distanceLabel);
         distanceLabel.setBounds(50, 490, 60, 14);
 
-        distanceTextField.setText(bundle.getString("TgDesign.distanceTextField.text")); // NOI18N
+        distanceTextField.setText("20.0"); // NOI18N
         jPanel2.add(distanceTextField);
         distanceTextField.setBounds(110, 490, 40, 20);
 
@@ -246,7 +246,7 @@ public class TgDesign extends JPanel {
         jPanel2.add(widthLabel);
         widthLabel.setBounds(160, 490, 60, 14);
 
-        widthTextField.setText(bundle.getString("TgDesign.widthTextField.text")); // NOI18N
+        widthTextField.setText("4.0"); // NOI18N
         jPanel2.add(widthTextField);
         widthTextField.setBounds(220, 490, 30, 20);
 
