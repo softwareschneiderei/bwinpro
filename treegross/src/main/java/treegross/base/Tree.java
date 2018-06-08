@@ -1,6 +1,6 @@
 /** TreeGrOSS : class Tree defines the trees for class stand
-    http://treegross.sourceforge.net
-    Version 05-Apr-2005 */
+ * http://treegross.sourceforge.net
+ * Version 05-Apr-2005 */
 /*   (c) 2002-2008 Juergen Nagel, Northwest German Forest Research Station , 
        Grätzelstr.2, 37079 Göttingen, Germany
        E-Mail: Juergen.Nagel@nw-fva.de
@@ -20,68 +20,193 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.random.RandomNumber;
 
-/** TreeGrOSS : class tree defines the trees for class stand*/
-public class Tree implements Cloneable{
-    public long universalID=0;
-    /** species Code according to Lower Saxony */ public int code; 
-    /** tree number */  public String no; 
-    /** age */ public int age; 
-    /** if living -1, else the year when died or taken out */ public int out; 
-    /** 0=standing, 1= fallen, 2=thinned, 3=harvested */ public int outtype; 
-    /** diameter, height, volume */ public double d, h, v; 
-    /** crown base and crown width */ public double cb, cw ; 
-    /** relative tree position coordinates , z=vertical height of ground */ public double x,y,z ; 
-    /** crop tree */ public boolean crop; 
-    /** temporary crop tree*/ public boolean tempcrop;
-    /** habitat tree*/ public boolean habitat;
-    /** competition index c66 c66xy c66c and c66cxy */ public double c66, c66c, c66xy, c66cxy; 
-    /** weight factor for concentric sample plots */ public double fac; 
-    /** site index */ public double si;
-    /** reference to species */ public Species sp;
-    /** reference to stand */ public Stand st;
-    /** tree layer 1=upper, 2=middel, 3=lower*/ public int layer;
-    /** last diameter amd height increment */ public double bhdinc, hinc;
-    /** year, tree grew into stand*/ public int year;
-    /** 0= unknown, 1=planting, 2=natural regeneration*/ public int origin;
-    /** remarks */ public String remarks;
+/**
+ * TreeGrOSS : class tree defines the trees for class stand
+ */
+public class Tree implements Cloneable {
+
+    public long universalID = 0;
+    /**
+     * species Code according to Lower Saxony
+     */
+    public int code;
+    /**
+     * tree number
+     */
+    public String no;
+    /**
+     * age
+     */
+    public int age;
+    /**
+     * if living -1, else the year when died or taken out
+     */
+    public int out;
+    /**
+     * 0=standing, 1= fallen, 2=thinned, 3=harvested
+     */
+    public int outtype;
+    /**
+     * diameter, height, volume
+     */
+    public double d, h, v;
+    /**
+     * crown base and crown width
+     */
+    public double cb, cw;
+    /**
+     * relative tree position coordinates , z=vertical height of ground
+     */
+    public double x, y, z;
+    /**
+     * crop tree
+     */
+    public boolean crop;
+    /**
+     * temporary crop tree
+     */
+    public boolean tempcrop;
+    /**
+     * habitat tree
+     */
+    public boolean habitat;
+    /**
+     * competition index c66 c66xy c66c and c66cxy
+     */
+    public double c66, c66c, c66xy, c66cxy;
+    /**
+     * weight factor for concentric sample plots
+     */
+    public double fac;
+    /**
+     * site index
+     */
+    public double si;
+    /**
+     * reference to species
+     */
+    public Species sp;
+    /**
+     * reference to stand
+     */
+    public Stand st;
+    /**
+     * tree layer 1=upper, 2=middel, 3=lower
+     */
+    public int layer;
+    /**
+     * last diameter amd height increment
+     */
+    public double bhdinc, hinc;
+    /**
+     * year, tree grew into stand
+     */
+    public int year;
+    /**
+     * 0= unknown, 1=planting, 2=natural regeneration
+     */
+    public int origin;
+    /**
+     * remarks
+     */
+    public String remarks;
     public double hMeasuredValue;
-    /** Erlös pro Baum in Euro: getProceeds (get from auxilliaries.SingletreeAsset*/public double proceeds;
-    /** erntekostenfreier Erlös pro Baum in Euro: getPwoh (get from auxilliaries.TreeValudation*/public double pwohc;
-    /** Stammholzanteil in EFm: getSharelog (get from auxilliaries.TreeValudation*/ public double sharelog;
-    /** Kosten pro Baum in Euro: getCosts (get from auxilliaries.TreeValudation*/public double costs;
-    /** X-Holzanteil: getShareXtimber (get from auxilliaries.TreeValudation*/public double shareXtimber;
-    /** Totholz Zersetzungsgrad */ public int zGrad = 0;
-    /** Volume of deadwood */ public double volumeDeadwood =0.0;
-    /** Volume of deadwood nature conservation */ public double volumeDeadwoodConservation =0.0;
-    /** Volume of harvested */ public double volumeHarvested =0.0;
-    /** Degree of Decay */ public double degreeOfDecay =0;
-    /** maximum number of neighbor trees */ public int maxNeighbor = 15;
-    /** neighbor tree indices in radius of 2*crowthwidth */ public int[] neighbor = new int[maxNeighbor];
-    /** number of neighbor trees */ public int nNeighbor;
-    /** group */ public int group;
+    /**
+     * Erlös pro Baum in Euro: getProceeds (get from auxilliaries.SingletreeAsset
+     */
+    public double proceeds;
+    /**
+     * erntekostenfreier Erlös pro Baum in Euro: getPwoh (get from auxilliaries.TreeValudation
+     */
+    public double pwohc;
+    /**
+     * Stammholzanteil in EFm: getSharelog (get from auxilliaries.TreeValudation
+     */
+    public double sharelog;
+    /**
+     * Kosten pro Baum in Euro: getCosts (get from auxilliaries.TreeValudation
+     */
+    public double costs;
+    /**
+     * X-Holzanteil: getShareXtimber (get from auxilliaries.TreeValudation
+     */
+    public double shareXtimber;
+    /**
+     * Totholz Zersetzungsgrad
+     */
+    public int zGrad = 0;
+    /**
+     * Volume of deadwood
+     */
+    public double volumeDeadwood = 0.0;
+    /**
+     * Volume of deadwood nature conservation
+     */
+    public double volumeDeadwoodConservation = 0.0;
+    /**
+     * Volume of harvested
+     */
+    public double volumeHarvested = 0.0;
+    /**
+     * Degree of Decay
+     */
+    public double degreeOfDecay = 0;
+    /**
+     * maximum number of neighbor trees
+     */
+    public int maxNeighbor = 15;
+    /**
+     * neighbor tree indices in radius of 2*crowthwidth
+     */
+    public int[] neighbor = new int[maxNeighbor];
+    /**
+     * number of neighbor trees
+     */
+    public int nNeighbor;
+    /**
+     * group
+     */
+    public int group;
     public int ihpot;
 // für experimetal version
-    /** width and height of light crown*/ public double cbLightCrown =-9; 
-    /** width and height of light crown*/ public double cwLightCrown =-9; 
-    /** year of removal in reality */ int yearOfRemovalinReality=0;
+    /**
+     * width and height of light crown
+     */
+    public double cbLightCrown = -9;
+    /**
+     * width and height of light crown
+     */
+    public double cwLightCrown = -9;
+    /**
+     * year of removal in reality
+     */
+    int yearOfRemovalinReality = 0;
 // for Viswin 
     /* Ober- u. Unterstand */ public int ou = 0;
-    /** mortality reason 1= thinned or harvested, 2= dry and standing, 3= wind throw, 4= other*/
+    /**
+     * mortality reason 1= thinned or harvested, 2= dry and standing, 3= wind
+     * throw, 4= other
+     */
     public int mortalityReason = 0;
     //for ried
-    /**index of vitality*/ public double vitality=1;
+    /**
+     * index of vitality
+     */    public double vitality = 1;
 
-    public boolean outBySkidtrail=false;
-    public int bioMass=0; // kg   
-    
+    public boolean outBySkidtrail = false;
+    public int bioMass = 0; // kg   
+
     private final static Logger LOGGER = Logger.getLogger(Tree.class.getName());
-    
 
-    /** empty tree contructor  */  
-    public Tree(){} 
+    /**
+     * empty tree contructor
+     */
+    public Tree() {
+    }
 
     /**
      * Fill tree with data, fille missing information with negative value
+     *
      * @param codex
      * @param nox
      * @param cbx
@@ -107,7 +232,7 @@ public class Tree implements Cloneable{
             double six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
             boolean habitatTreex, int treeLayerx, double volumeDeadwoodx, String remarksx) {
         code = codex;
-        no = nox;       
+        no = nox;
         out = outx;
         outtype = outtypex;
         d = dx;
@@ -115,80 +240,84 @@ public class Tree implements Cloneable{
         age = agex;
         cb = cbx;
         cw = cwx;
-        si= six;
+        si = six;
         fac = facx;
-        x=xx;
-        y=yx;
-        z=zx;
+        x = xx;
+        y = yx;
+        z = zx;
         habitat = habitatTreex;
         crop = cropTreex;
         tempcrop = tempCropTreex;
         layer = treeLayerx;
         volumeDeadwood = volumeDeadwoodx;
-        remarks = remarksx;         
+        remarks = remarksx;
     }
-    
-    /** this function clones the Tree
-    *  the fields Stand and SpeciesDef will not be cloned!!!
-    *  The Stand and SpeciesDef must be added after cloning a Tree.
-    *  if Tree.clone() is used in Stand.clone() the new cloned Stand
-    *  must be added to the new cloned tree by writing adiditonal code!
+
+    /**
+     * this function clones the Tree the fields Stand and SpeciesDef will not be
+     * cloned!!! The Stand and SpeciesDef must be added after cloning a Tree. if
+     * Tree.clone() is used in Stand.clone() the new cloned Stand must be added
+     * to the new cloned tree by writing adiditonal code!
+     *
      * @return clone of this tree
-    */ 
+     */
     @Override
-    public Tree clone(){
-        Tree clone= new Tree();
-        clone.universalID=this.universalID;
-        clone.age= this.age;
-        clone.bhdinc= this.bhdinc;
-        clone.c66= this.c66;
-        clone.c66c= this.c66c;
-        clone.c66cxy= this.c66cxy;
-        clone.c66xy= this.c66xy;
-        clone.cb= this.cb;
-        clone.cbLightCrown= this.cbLightCrown;
+    public Tree clone() {
+        Tree clone = new Tree();
+        clone.universalID = this.universalID;
+        clone.age = this.age;
+        clone.bhdinc = this.bhdinc;
+        clone.c66 = this.c66;
+        clone.c66c = this.c66c;
+        clone.c66cxy = this.c66cxy;
+        clone.c66xy = this.c66xy;
+        clone.cb = this.cb;
+        clone.cbLightCrown = this.cbLightCrown;
         //clone.ci= new Double(this.ci);
-        clone.code= this.code;
-        clone.costs= this.costs;
-        clone.crop= this.crop;
-        clone.cw= this.cw;
-        clone.cwLightCrown= this.cwLightCrown;
-        clone.d= this.d;
-        clone.fac= this.fac;
-        clone.h= this.h;
-        clone.hMeasuredValue= this.hMeasuredValue;
-        clone.habitat= this.habitat;
-        clone.hinc= this.hinc;
-        clone.layer= this.layer;
-        clone.no= this.no;
-        clone.origin= this.origin;
-        clone.ou= this.ou;
-        clone.out= this.out;
-        clone.outtype= this.outtype;
-        clone.proceeds= this.proceeds;
-        clone.pwohc= this.pwohc;
-        if(remarks!=null) clone.remarks= this.remarks;
-        else clone.remarks="";
-        clone.shareXtimber= this.shareXtimber;
-        clone.sharelog= this.sharelog;
-        clone.si= this.si;
-        clone.sp=sp.clone();
+        clone.code = this.code;
+        clone.costs = this.costs;
+        clone.crop = this.crop;
+        clone.cw = this.cw;
+        clone.cwLightCrown = this.cwLightCrown;
+        clone.d = this.d;
+        clone.fac = this.fac;
+        clone.h = this.h;
+        clone.hMeasuredValue = this.hMeasuredValue;
+        clone.habitat = this.habitat;
+        clone.hinc = this.hinc;
+        clone.layer = this.layer;
+        clone.no = this.no;
+        clone.origin = this.origin;
+        clone.ou = this.ou;
+        clone.out = this.out;
+        clone.outtype = this.outtype;
+        clone.proceeds = this.proceeds;
+        clone.pwohc = this.pwohc;
+        if (remarks != null) {
+            clone.remarks = this.remarks;
+        } else {
+            clone.remarks = "";
+        }
+        clone.shareXtimber = this.shareXtimber;
+        clone.sharelog = this.sharelog;
+        clone.si = this.si;
+        clone.sp = sp.clone();
         //clone.st has to be added in the super clone call
-        clone.v= this.v;
-        clone.x= this.x;
-        clone.y= this.y;
-        clone.year= this.year;
-        clone.yearOfRemovalinReality=this.yearOfRemovalinReality;
-        clone.z= this.z;
-        clone.zGrad= this.zGrad;
-        clone.volumeDeadwood= this.volumeDeadwood;
-        clone.degreeOfDecay= this.degreeOfDecay;
-        clone.vitality=vitality;
-        clone.outBySkidtrail=this.outBySkidtrail;        
-        clone.bioMass=this.bioMass;
-        clone.group=this.group;
-        return clone;        
-    }    
+        clone.v = this.v;
+        clone.x = this.x;
+        clone.y = this.y;
+        clone.year = this.year;
+        clone.yearOfRemovalinReality = this.yearOfRemovalinReality;
+        clone.z = this.z;
+        clone.zGrad = this.zGrad;
+        clone.volumeDeadwood = this.volumeDeadwood;
+        clone.degreeOfDecay = this.degreeOfDecay;
+        clone.vitality = vitality;
+        clone.outBySkidtrail = this.outBySkidtrail;
+        clone.bioMass = this.bioMass;
+        clone.group = this.group;
+        return clone;
+    }
 
     /**
      *
@@ -248,7 +377,7 @@ public class Tree implements Cloneable{
         }
         return erg;
     }
-    
+
     /**
      *
      * @return
@@ -284,7 +413,7 @@ public class Tree implements Cloneable{
         }
         return cberg;
     }
-    
+
     /**
      *
      * @return
@@ -320,7 +449,7 @@ public class Tree implements Cloneable{
         }
         return erg;
     }
-    
+
     /**
      *
      * @return
@@ -342,7 +471,7 @@ public class Tree implements Cloneable{
         erg = fi.getValueForTree(this, sp.spDef.maximumDensityXML);
         return erg;
     }
-    
+
     /**
      *
      */
@@ -402,11 +531,12 @@ public class Tree implements Cloneable{
             v = calculateVolume();
         }
     }
-    
+
     /**
-     * grows a single tree for the length of up to 5 years, with and without random
-    *  effects. If the years is < 5 then the increment is set to increment*years/5
-    */  
+     * grows a single tree for the length of up to 5 years, with and without
+     * random effects. If the years is < 5 then the increment is set to
+     * increment*years/5
+     */
     void grow(int years, /*boolean randomEffects*/ RandomNumber rn) {
         //if(code== 999)
         //    return;       
@@ -552,11 +682,11 @@ public class Tree implements Cloneable{
             xtree.grow(years, rnOff);
             //System.out.println("grow back: d,h "+xtree.bhdinc+"  "+xtree.hinc);
             double newH = h - years * xtree.hinc / ts;
-            if(newH < h){
+            if (newH < h) {
                 h = newH;
             }
             double newD = d - years * xtree.bhdinc / ts;
-            if(newD < d){
+            if (newD < d) {
                 d = newD;
             }
             if (d < 7.0 || h < 5.0) {
@@ -591,7 +721,7 @@ public class Tree implements Cloneable{
             cb = h / 2.0;
         }
     }
-    
+
     /**
      * update the competition indices, should be called after growing, thinning,
      * and mortality
@@ -620,7 +750,7 @@ public class Tree implements Cloneable{
             }
         }
     }
-    
+
     /**
      * setGroup to assign the tree to an individual group
      *

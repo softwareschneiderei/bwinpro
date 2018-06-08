@@ -22,7 +22,7 @@ dependencies {
     compile name: 'swing-layout-1.0'
     compile name: 'jogamp-fat-2.3.2'
     testCompile name: 'junit-4.12'
-    testCompile name: 'hamcrest-core-1.3'
+    testCompile name: 'hamcrest-all-1.3'
     runtime name: 'sqlitejdbc-v056'
     runtime name: 'ucanaccess-4.0.4'
     runtime name: 'hsqldb-2.4.0'

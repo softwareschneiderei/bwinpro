@@ -14,12 +14,11 @@ import treegross.treatment.*;
  */
 public class LoadTreegrossStand {
 
-    int schritte = 0;
-    int ebaum = 0;
-    int bestand = 0;
-    int baumart = 0;
-    int durchforstung_an = 0;
-    int scenario = 0;
+    private int ebaum = 0;
+    private int bestand = 0;
+    private int baumart = 0;
+    private int durchforstung_an = 0;
+    private int scenario = 0;
 
     public LoadTreegrossStand() {
     }
@@ -541,17 +540,14 @@ public class LoadTreegrossStand {
                 Double dd100 = st.sp[i].d100;
                 Double hh100 = st.sp[i].h100;
                 Double nnha = st.sp[i].nha;
-                Double nnhaa = st.sp[i].nhaout;
-                Double gghaa = st.sp[i].ghaout;
                 Double aalt = st.sp[i].h100age;
-                Double vvhaa = st.sp[i].vhaout;
                 Double gpro = 100.0 * st.sp[i].gha / st.bha;
                 int art = st.sp[i].code;
 
 // SUMME Grundfläche und Volumen der Nutzung  
-                vvhaa = 0.0;
-                gghaa = 0.0;
-                nnhaa = 0.0;
+                double nnhaa = 0.0;
+                double gghaa = 0.0;
+                double vvhaa = 0.0;
                 for (int ik = 0; ik < st.ntrees; ik++) {
                     if (st.tr[ik].out > 0 && st.tr[ik].code == st.sp[i].code) {
                         nnhaa = nnhaa + 1.0 * st.tr[ik].fac / st.size;

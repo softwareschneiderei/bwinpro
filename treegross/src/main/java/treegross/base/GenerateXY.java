@@ -20,18 +20,16 @@ import treegross.random.RandomNumber;
 
 public class GenerateXY {
 
-    boolean skidtrail = false;
-    double skidtrailDistance = 0.0;
-    double skidtrailWidth = 0.0;
+    private final boolean skidtrail;
+    private final double skidtrailDistance;
+    private final double skidtrailWidth;
     double groupRadius = 0.0;
     double groupCoverArea = 0.0;
     double oldpositionX = 0.0;
     double oldpositionY = 0.0;
 
-    /**
-     * Standard constructor
-     */
     public GenerateXY() {
+        this(false, 0.0, 0.0);
     }
 
     /**
@@ -65,11 +63,8 @@ public class GenerateXY {
         // determin xmin, xmax, ymin and ymax of area defined by corners
         xmin = ymin = Double.POSITIVE_INFINITY;
         xmax = ymax = Double.NEGATIVE_INFINITY;
-        int i, j, ic;
         double e;//=0.0;
-        double emin = 0.0;
-        //ic=0;
-        for (i = 0; i < st.ncpnt; i++) {
+        for (int i = 0; i < st.ncpnt; i++) {
             if (st.cpnt[i].x < xmin) {
                 xmin = st.cpnt[i].x;
             }
@@ -90,11 +85,11 @@ public class GenerateXY {
         double xg = 0.0;
         double yg = 0.0;
         double ntry;
-        int m3 = 0;
         double maxtry = 40;
-        for (i = 0; i < st.ntrees; i++) {
+        for (int i = 0; i < st.ntrees; i++) {
             if (st.tr[i].x <= 0.0 && st.tr[i].y <= 0.0) {
                 ntry = 0;
+                int ic;
                 do {
                     if (skidtrail == false || skidtrailDistance == 0.0) {
                         if (groupRadius == 0.0 || groupCoverArea == 0.0) {
@@ -146,10 +141,9 @@ public class GenerateXY {
                             }
                         } while (xlow < xmax);
                     }
-                    emin = 99999.0;
                     ic = 0; // tree has valid coordinate i.e. 1st tree
                     // minimum distance of the new location to a tree
-                    for (j = 0; j < st.ntrees; j++) {
+                    for (int j = 0; j < st.ntrees; j++) {
                         if (j != i && st.tr[j].x > 0.0 && st.tr[j].y > 0.0 && st.tr[j].out < 0) {
                             ic = 1;
                             e = Math.sqrt(Math.pow((xg - st.tr[j].x), 2) + Math.pow((yg - st.tr[j].y), 2));

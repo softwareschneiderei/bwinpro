@@ -7,4 +7,6 @@ repositories {
 dependencies {
     compile name: 'jdom'
     compile name: 'jep-2.4.1'
+    testCompile name: 'junit-4.12'
+    testCompile name: 'hamcrest-all-1.3'
 }

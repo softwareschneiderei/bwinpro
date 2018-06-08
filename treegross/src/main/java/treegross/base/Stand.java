@@ -17,10 +17,13 @@ package treegross.base;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static treegross.base.ScaleManager.SCALE_AUTO;
 import treegross.random.RandomNumber;
 
 /**
@@ -46,22 +49,22 @@ import treegross.random.RandomNumber;
  * http://www.nw-fva.de/~nagel/treegross/
  *
  */
-public class Stand implements Cloneable {
+public class Stand {
 
     public boolean debug = true;
 
     /**
      * maximum number of trees a stand can handle
      */
-    public int maxStandTrees = 8500;
+    public final int maxStandTrees = 8500;
     /**
      * maximum number of species a stand can handle
      */
-    public int maxStandSpecies = 30;
+    public final int maxStandSpecies = 30;
     /**
      * maximum number of corner points a stand can handle
      */
-    public int maxStandCorners = 200;
+    public final int maxStandCorners = 200;
     /**
      * Standortskennziffer
      */
@@ -278,7 +281,9 @@ public class Stand implements Cloneable {
     public double pd = 0;
     public int water = -99;
     
-    /*parallel Competion Update mechanism*/
+    /**
+     * parallel Competion Update mechanism
+     */
     private final ScaleManager scaleMan;
 
     /**
@@ -288,12 +293,8 @@ public class Stand implements Cloneable {
 
     private final static Logger LOGGER = Logger.getLogger(Stand.class.getName());
 
-    /**
-     * construtor stand
-     */      
     public Stand() {
-        scaleMan = new ScaleManager(this);
-        random = new RandomNumber(RandomNumber.PSEUDO);
+        this(SCALE_AUTO);
     }
 
     /**
@@ -305,105 +306,14 @@ public class Stand implements Cloneable {
      * @param scaleMethod set the scaling method: 0 = auto, 1 = fixed, 2 = use no scaling
      */
     public Stand(int scaleMethod) {
-        this();
+        super();
+        random = new RandomNumber(RandomNumber.PSEUDO);
+        scaleMan = new ScaleManager(this);
         scaleMan.setScaleMethod(scaleMethod);
     }
 
     public ScaleManager getScaleManager() {
         return scaleMan;
-    }
-
-    /**
-     * clone the current stand
-     * @return a clone of this stand
-     */
-    @Override
-    public Stand clone() {
-        Stand clone = new Stand(this.scaleMan.getScaleMethod());
-        clone.random = random.clone();
-        clone.maxStandTrees = this.maxStandTrees;
-        clone.maxStandSpecies = this.maxStandSpecies;
-        clone.maxStandCorners = this.maxStandCorners;
-        clone.standortsKennziffer = this.standortsKennziffer;
-        clone.programDir = this.programDir;
-        clone.sdm = this.sdm;
-        clone.modelRegion = this.modelRegion;
-        clone.ncpnt = this.ncpnt;
-        clone.standname = this.standname;
-        clone.size = this.size;
-        clone.nha = this.nha;
-        clone.bha = this.bha;
-        clone.nhaout = this.nhaout;
-        clone.bhaout = this.bhaout;
-        clone.nhatotal = this.nhatotal;
-        clone.bhatotal = this.bhatotal;
-        clone.degreeOfDensity = this.degreeOfDensity;
-        clone.year = this.year;
-        clone.monat = this.monat;
-        clone.bt = this.bt;
-        clone.ageclass = this.ageclass;
-        //clone.randomGrowthEffects=this.randomGrowthEffects;
-        clone.riskActive = this.riskActive;
-        clone.distanceDependent = this.distanceDependent;
-        clone.ingrowthActive = this.ingrowthActive;
-        clone.volumeOfDeadwood = this.volumeOfDeadwood;
-        clone.deadwoodModul = this.deadwoodModul;
-        clone.sortingModul = this.sortingModul;
-        clone.biomassModul = this.biomassModul;
-        clone.id = this.id;
-        clone.datenHerkunft = this.datenHerkunft;
-        clone.standort = this.standort;
-        clone.rechtswert_m = this.rechtswert_m;
-        clone.hochwert_m = this.hochwert_m;
-        clone.hoehe_uNN_m = this.hoehe_uNN_m;
-        clone.exposition_Gon = this.exposition_Gon;
-        clone.hangneigungProzent = this.hangneigungProzent;
-        clone.wuchsgebiet = this.wuchsgebiet;
-        clone.wuchsbezirk = this.wuchsbezirk;
-        clone.FileXMLSettings = this.FileXMLSettings;
-        clone.temp_Integer = this.temp_Integer;
-        clone.dg = this.dg;
-        clone.hg = this.hg;
-        clone.dgout = this.dgout;
-        clone.d100 = this.d100;
-        clone.h100 = this.h100;
-        System.arraycopy(this.cpnt, 0, clone.cpnt, 0, this.maxStandCorners);
-        clone.center.no = this.center.no;
-        clone.center.x = this.center.x;
-        clone.center.y = this.center.y;
-        clone.center.z = this.center.z;
-        clone.trule = this.trule.clone();
-        clone.nRegeneration = this.nRegeneration;
-        clone.sizeoftr = this.sizeoftr;
-        clone.status = this.status;
-        clone.riskActive = this.riskActive;
-
-        for (int i = 0; i < this.ntrees; i++) {
-            int crop = 0;
-            int tzb = 0;
-            int hb = 0;
-            if (tr[i].crop) {
-                crop = 1;
-            }
-            if (tr[i].tempcrop) {
-                tzb = 1;
-            }
-            if (tr[i].habitat) {
-                hb = 1;
-            }
-            try {
-                clone.addtreefac(tr[i].code, tr[i].no, tr[i].age, tr[i].out, tr[i].d, tr[i].h, tr[i].cb, tr[i].cw, tr[i].si, tr[i].x, tr[i].y, tr[i].z, crop, tzb, hb, tr[i].fac);
-                clone.tr[i].outtype = tr[i].outtype;
-                clone.tr[i].layer = tr[i].layer;
-            } catch (SpeciesNotDefinedException e) {
-                if (debug) {
-                    LOGGER.log(Level.WARNING, null, e);
-                }
-            }
-        }
-        clone.StandChangeListeners.addAll(StandChangeListeners);
-        clone.descspecies();
-        return clone;
     }
 
     /**
@@ -843,61 +753,58 @@ public class Stand implements Cloneable {
      * sort trees by d
      */
     public void sortbyd() {
-        for (int i = 0; i < ntrees - 1; i++) {
-            for (int j = i + 1; j < ntrees; j++) {
-                if (tr[i].d < tr[j].d) {
-                    tr[ntrees + 1] = tr[i];
-                    tr[i] = tr[j];
-                    tr[j] = tr[ntrees + 1];
-                }
+        sortUsing((Tree t1, Tree t2) -> {
+            if (t1.d > t2.d) {
+                return -1;
             }
-        }
+            if (t1.d == t2.d) {
+                return 0;
+            }
+            return 1;
+        });
     }
-
+    
     /**
      * sort trees by h
      */
     public void sortbyh() {
-        int i, j;
-        for (i = 0; i < ntrees - 1; i++) {
-            for (j = i + 1; j < ntrees; j++) {
-                if (tr[i].h < tr[j].h) {
-                    tr[ntrees + 1] = tr[i];
-                    tr[i] = tr[j];
-                    tr[j] = tr[ntrees + 1];
-                }
+        sortUsing((Tree t1, Tree t2) -> {
+            if (t1.h > t2.h) {
+                return -1;
             }
-        }
+            if (t1.h == t2.h) {
+                return 0;
+            }
+            return 1;
+        });
     }
 
     /**
      * sort trees by y-coordinate, this is for the graphical display
      */
     public void sortbyy() {
-        for (int i = 0; i < ntrees - 1; i++) {
-            for (int j = i + 1; j < ntrees; j++) {
-                if (tr[i].y < tr[j].y) {
-                    tr[ntrees + 1] = tr[i];
-                    tr[i] = tr[j];
-                    tr[j] = tr[ntrees + 1];
-                }
+        sortUsing((Tree t1, Tree t2) -> {
+            if (t1.y > t2.y) {
+                return -1;
             }
-        }
+            if (t1.y == t2.y) {
+                return 0;
+            }
+            return 1;
+        });
     }
 
     /**
-     * sort trees by y-coordinate, this is for the graphical display
+     * sort trees by number
      */
     public void sortbyNo() {
-        for (int i = 0; i < ntrees - 1; i++) {
-            for (int j = i + 1; j < ntrees; j++) {
-                if (tr[i].no.compareTo(tr[j].no) > 0) {
-                    tr[ntrees + 1] = tr[i];
-                    tr[i] = tr[j];
-                    tr[j] = tr[ntrees + 1];
-                }
-            }
-        }
+        sortUsing((Tree t1, Tree t2) -> {
+            return t1.no.compareTo(t2.no);
+        });
+    }
+
+    private void sortUsing(Comparator<Tree> comparator) {
+        Arrays.sort(tr, 0, ntrees, comparator);
     }
 
     /**
