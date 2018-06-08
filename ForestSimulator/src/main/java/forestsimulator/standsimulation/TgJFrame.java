@@ -598,7 +598,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             gr.drawGraph();
             repaint();
         }
-
         if (cmd.equals("Treatment")) {
             st.descspecies();
             st.sortbyd();
@@ -609,7 +608,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 //                pp.neuzeichnen();
             gr.drawGraph();
             repaint();
-
         }
         if (cmd.equals("grow_back")) {
             st.sortbyd();
@@ -619,11 +617,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             gr.drawGraph();
             repaint();
         }
-
         if (cmd.equals("Sorting")) {
             SortingDialog sorter = new SortingDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(), language.locale(), logHandler);
             sorter.setVisible(true);
-
         }
         if (cmd.equals("Deadwood")) {
 //                    DeadwoodDialog sorter = new DeadwoodDialog(this, true, st, programDir, false, workingDir);
@@ -632,20 +628,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         if (cmd.equals("NutrientBalance")) {
             BiomassDialog nutrientBalance = new BiomassDialog(this, true, st, programDir.getAbsolutePath(), false, workingDir.getAbsolutePath(), logHandler);
             nutrientBalance.setVisible(true);
-
         }
-
         if (cmd.equals("Roots")) {
             RootBiomassReport rootBiomassReport = new RootBiomassReport();
             rootBiomassReport.report(st, programDir.getAbsolutePath(), workingDir.getAbsolutePath());
-
         }
         if (cmd.equals("RootingDialog")) {
             RootingDialog rootingDialog = new RootingDialog(this, true, st);
             rootingDialog.setVisible(true);
-
         }
-
         if (cmd.equals("Bwin62")) {
             JFileChooser filechooser = new JFileChooser();
             filechooser.showOpenDialog(this);
@@ -657,9 +648,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             verzeichnisUndDateiName = filechooser.getSelectedFile().getPath();
             TreegrossXML2 txml = new TreegrossXML2();
             txml.saveAsXML(st, verzeichnisUndDateiName);
-
         }
-
         /*           if(cmd.equals("treegross2gml")){
                       JFileChooser fc = new JFileChooser();
                        TxtFileFilter txtFilter = new TxtFileFilter();
@@ -800,18 +789,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             pp.neuzeichnen();
         }
         if (cmd.equals("ppSkyColor")) {
-            javax.swing.JColorChooser cc = new javax.swing.JColorChooser();
-            pp.setSkyColor(cc.showDialog(this, "Choose Sky Color", pp.getSkyColor()));
+            pp.setSkyColor(JColorChooser.showDialog(this, "Choose Sky Color", pp.getSkyColor()));
             pp.neuzeichnen();
         }
         if (cmd.equals("ppGroundColor")) {
-            javax.swing.JColorChooser cc = new javax.swing.JColorChooser();
-            pp.setGroundColor(cc.showDialog(this, "Choose Ground Color", pp.getGroundColor()));
+            pp.setGroundColor(JColorChooser.showDialog(this, "Choose Ground Color", pp.getGroundColor()));
             pp.neuzeichnen();
         }
         if (cmd.equals("ppStandGroundColor")) {
-            javax.swing.JColorChooser cc = new javax.swing.JColorChooser();
-            pp.setStandGroundColor(cc.showDialog(this, "Choose Stand Ground Color", pp.getStandGroundColor()));
+            pp.setStandGroundColor(JColorChooser.showDialog(this, "Choose Stand Ground Color", pp.getStandGroundColor()));
             pp.neuzeichnen();
         }
 // Action commands of Grafik Window 

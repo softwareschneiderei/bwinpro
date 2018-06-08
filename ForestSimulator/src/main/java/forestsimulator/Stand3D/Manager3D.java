@@ -17,6 +17,7 @@ GNU General Public License for more details.
 package forestsimulator.Stand3D;
 
 import com.sun.j3d.utils.image.TextureLoader;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -29,7 +30,10 @@ import java.awt.image.BufferedImage;
 import javax.media.j3d.Texture2D;
 import javax.media.j3d.Canvas3D;
 import java.net.*;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
@@ -56,7 +60,6 @@ public class Manager3D implements ActionListener {
     //new swing components:
     private JPanel jPanel2;
     private ToolBar3D toolbar3d;
-    private String tz = System.getProperty("file.separator");
 
     public boolean isStandLoaded = false;
 
@@ -112,7 +115,6 @@ public class Manager3D implements ActionListener {
 
     private void loadTextures() {
         if (available3d && texpath != null) {
-
             URL url0 = null;
             URL url1 = null;
             URL url2 = null;
@@ -136,12 +138,11 @@ public class Manager3D implements ActionListener {
                 url4 = fname4.toURI().toURL();
                 url5 = fname5.toURI().toURL();
                 url6 = fname6.toURI().toURL();
-            } catch (Exception e) {
+            } catch (MalformedURLException e) {
+                Logger.getLogger(Manager3D.class.getName()).log(Level.WARNING, "Illegal texture path", e);
             }
             try {
-
-//           System.out.println("Manager3D: URL: Ohne");
-                Canvas3D canvas = new Canvas3D(com.sun.j3d.utils.universe.SimpleUniverse.getPreferredConfiguration());
+                Canvas3D canvas = new Canvas3D(SimpleUniverse.getPreferredConfiguration());
                 textures[0] = (Texture2D) (new TextureLoader(url0, canvas)).getTexture();
                 textures[1] = (Texture2D) (new TextureLoader(url1, canvas)).getTexture();
                 textures[2] = (Texture2D) (new TextureLoader(url2, canvas)).getTexture();
@@ -157,35 +158,30 @@ public class Manager3D implements ActionListener {
         }
     }
 
+    public void setStand(Stand stand) {
+        if (stand == null) {
+            return;
+        }
+        setStand(stand, Arrays.stream(stand.sp, 0, stand.nspecies).mapToInt(species -> species.code).toArray());
+    }
+
     public void setStand(Stand stand, int[] species) {
-        if (available3d) {
-            speciestoshow = species;
-            clean3D();
-            st = stand;
-            if (stand != null) {
-                scene = new Stand3DScene(st, speccol, showharvested, textured, treestatus, showinfo, showfog, showmesh, speciestoshow, textures);
-                jPanel2.add(scene);
-                isStandLoaded = true;
-                scene.setPickFocus();
-            }
+        if (!available3d) {
+            return;
+        }
+        speciestoshow = species;
+        clean3D();
+        st = stand;
+        if (stand != null) {
+            add3dScene();
         }
     }
 
-    public void setStand(Stand stand) {
-        if (available3d) {
-            speciestoshow = new int[stand.nspecies];
-            for (int i = 0; i < stand.nspecies; i++) {
-                speciestoshow[i] = stand.sp[i].code;
-            }
-            clean3D();
-            st = stand;
-            if (stand != null) {
-                scene = new Stand3DScene(st, speccol, showharvested, textured, treestatus, showinfo, showfog, showmesh, speciestoshow, textures);
-                jPanel2.add(scene);
-                isStandLoaded = true;
-                scene.setPickFocus();
-            }
-        }
+    private void add3dScene() {
+        scene = new Stand3DScene(st, speccol, showharvested, textured, treestatus, showinfo, showfog, showmesh, speciestoshow, textures);
+        jPanel2.add(scene);
+        isStandLoaded = true;
+        scene.setPickFocus();
     }
 
     public void refreshStand() {
@@ -264,78 +260,79 @@ public class Manager3D implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (scene != null) {
-            // toolbar3d
-            if (e.getActionCommand().equals("setstatus")) {
-                treestatus = !treestatus;
-                scene.setStatus(treestatus);
-                scene.setPickFocus();
-            }
+        if (scene == null) {
+            return;
+        }
+        // toolbar3d
+        if (e.getActionCommand().equals("setstatus")) {
+            treestatus = !treestatus;
+            scene.setStatus(treestatus);
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("settexture")) {
-                textured = !textured;
-                scene.setTextured(textured);
-                scene.setPickFocus();
-            }
+        if (e.getActionCommand().equals("settexture")) {
+            textured = !textured;
+            scene.setTextured(textured);
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("setdead")) {
-                showharvested = !showharvested;
-                scene.setShowDeadTrees(showharvested);
-                scene.setPickFocus();
-            }
+        if (e.getActionCommand().equals("setdead")) {
+            showharvested = !showharvested;
+            scene.setShowDeadTrees(showharvested);
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("setspecies")) {
-                speccol = !speccol;
-                if (textured) {
-                    textured = false;
-                    toolbar3d.jToggleButton3.setSelected(textured);
-                }
-                scene.setSpeciesColor(speccol);
-                scene.setPickFocus();
+        if (e.getActionCommand().equals("setspecies")) {
+            speccol = !speccol;
+            if (textured) {
+                textured = false;
+                toolbar3d.jToggleButton3.setSelected(textured);
             }
+            scene.setSpeciesColor(speccol);
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("harvest")) {
-                scene.harvestAllMarkedTrees();
-                scene.setPickFocus();
-            }
+        if (e.getActionCommand().equals("harvest")) {
+            scene.harvestAllMarkedTrees();
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("showinfo")) {
-                showinfo = !showinfo;
-                scene.showtreeinfo = showinfo;
-                scene.setPickFocus();
-            }
+        if (e.getActionCommand().equals("showinfo")) {
+            showinfo = !showinfo;
+            scene.showtreeinfo = showinfo;
+            scene.setPickFocus();
+        }
 
-            if (e.getActionCommand().equals("goback")) {
-                scene.setViewAndPositionStart();
-                scene.setPickFocus();
-            }
-            if (e.getActionCommand().equals("screenshot")) {
-                scene.setPickFocus();
-                saveScreenShot();
-                scene.setPickFocus();
-            }
-            if (e.getActionCommand().equals("showfog")) {
-                showfog = toolbar3d.jToggleButton6.isSelected();
-                scene.setFogEnable(toolbar3d.jToggleButton6.isSelected());
-            }
-            if (e.getActionCommand().equals("showmesh")) {
-                showmesh = toolbar3d.jToggleButton7.isSelected();
-                scene.setMeshVisible(toolbar3d.jToggleButton7.isSelected());
-            }
-            if (e.getActionCommand().equals("toolpos")) {
-                if (!toolbar3d.isLeft) {
-                    home.remove(toolbar3d);
-                    toolbar3d.setOrientation(ToolBar3D.VERTICAL);
-                    toolbar3d.isLeft = true;
-                    home.add("West", toolbar3d);
-                    home.revalidate();
-                } else {
-                    home.remove(toolbar3d);
-                    toolbar3d.setOrientation(ToolBar3D.HORIZONTAL);
-                    home.add("North", toolbar3d);
-                    home.revalidate();
-                    toolbar3d.isLeft = false;
-                }
+        if (e.getActionCommand().equals("goback")) {
+            scene.setViewAndPositionStart();
+            scene.setPickFocus();
+        }
+        if (e.getActionCommand().equals("screenshot")) {
+            scene.setPickFocus();
+            saveScreenShot();
+            scene.setPickFocus();
+        }
+        if (e.getActionCommand().equals("showfog")) {
+            showfog = toolbar3d.jToggleButton6.isSelected();
+            scene.setFogEnable(toolbar3d.jToggleButton6.isSelected());
+        }
+        if (e.getActionCommand().equals("showmesh")) {
+            showmesh = toolbar3d.jToggleButton7.isSelected();
+            scene.setMeshVisible(toolbar3d.jToggleButton7.isSelected());
+        }
+        if (e.getActionCommand().equals("toolpos")) {
+            if (!toolbar3d.isLeft) {
+                home.remove(toolbar3d);
+                toolbar3d.setOrientation(ToolBar3D.VERTICAL);
+                toolbar3d.isLeft = true;
+                home.add("West", toolbar3d);
+                home.revalidate();
+            } else {
+                home.remove(toolbar3d);
+                toolbar3d.setOrientation(ToolBar3D.HORIZONTAL);
+                home.add("North", toolbar3d);
+                home.revalidate();
+                toolbar3d.isLeft = false;
             }
         }
     }
@@ -354,7 +351,7 @@ public class Manager3D implements ActionListener {
         if (ok == JOptionPane.YES_OPTION) {
             try {
                 ImageIO.write(img, "JPG", new FileOutputStream(filename));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 System.out.println(e);
             }
         }

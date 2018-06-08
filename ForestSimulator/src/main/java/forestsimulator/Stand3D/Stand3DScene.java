@@ -125,7 +125,7 @@ public class Stand3DScene extends JPanel {
         System.out.println("Stand3DScene: swing components build.");
     }
 
-    public BranchGroup createScene() {
+    public final BranchGroup createScene() {
         BranchGroup rootobj = new BranchGroup();
         BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0);
         fog = new LinearFog(new Color3f(0.8f, 0.8f, 0.9f));
@@ -277,7 +277,7 @@ public class Stand3DScene extends JPanel {
         return img;
     }
 
-    public void setShowingSpecies(int[] spec) {
+    public final void setShowingSpecies(int[] spec) {
         if (spec != null) {
             sts = spec;
         } else {
@@ -380,7 +380,7 @@ public class Stand3DScene extends JPanel {
     }
 
     public void setPickFocus() {
-        this.grabFocus();
+        grabFocus();
     }
 
     public String getSelectedTree() {
@@ -421,10 +421,6 @@ public class Stand3DScene extends JPanel {
         System.out.println("Stand3DScene: scene cleaned");
     }
 
-    /* public void finalize() throws Throwable{
-        super.finalize(); 
-        cleanScene();                       
-    }*/
     private void movePickMarker(double x, double y, double z) {
         Transform3D movepick = new Transform3D();
         movepick.setTranslation(new Vector3d(x, y, z));
