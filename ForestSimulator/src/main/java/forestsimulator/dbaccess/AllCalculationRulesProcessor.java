@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import treegross.base.GenerateXY;
 import treegross.base.Stand;
+import treegross.base.Tree;
 import treegross.treatment.Treatment2;
 
 public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgress> implements BatchProcessingControl {
@@ -96,22 +98,10 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         missingdata.printElapsedTime();
         GenerateXY gxy = new GenerateXY();
         gxy.zufall(st);
-// Test if all trees are in area
-        for (int k = 0; k < st.ntrees; k++) {
-            if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                st.tr[k].out = 1900;
-                st.tr[k].outtype = 1;
-            }
-        }
-        st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth
-        for (int k = 0; k < st.ntrees; k++) {
-            if (st.tr[k].fac == 0.0) {
-                st.tr[k].out = 1900;
-                st.tr[k].outtype = 1;
-            }
-        }
-        st.descspecies();
+        // Test if all trees are in area
+        markTreesAsDead(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0);
+        // Define all trees with fac = 0.0 as dead zu that there is no growth
+        markTreesAsDead(tree -> tree.fac == 0.0);
         Treatment2 t2 = new Treatment2();
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, t2, rule.scenarioId);
         saveStand(con, lts, rule, 0, pass);
@@ -145,6 +135,16 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         if (lts.getEBaum() == 2) {
             lts.saveBaum(con, st, rule.edvId, rule.aufId, st.temp_Integer, pass + 1);
         }
+    }
+
+    private void markTreesAsDead(Predicate<Tree> condition) {
+        for (int k = 0; k < st.ntrees; k++) {
+            if (condition.test(st.tr[k])) {
+                st.tr[k].out = 1900;
+                st.tr[k].outtype = 1;
+            }
+        }
+        st.descspecies();
     }
 
     private void saveStand(Connection con, LoadTreegrossStand lts, CalculationRule rule, int step, int pass) {
