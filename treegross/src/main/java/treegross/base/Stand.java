@@ -2058,13 +2058,6 @@ public class Stand {
         return mean;
     }
 
-    /**
-     * returns the percentage covered by crowns
-     */
-    /*public double getCrownClosure(){
-     CrownProjection cp = new CrownProjection();
-     return cp.getCrownProjectionPercentage(this);
-     }*/
     public void executeMortality() {
         try {
             String modelPlugIn = "treegross.base.Mortality";

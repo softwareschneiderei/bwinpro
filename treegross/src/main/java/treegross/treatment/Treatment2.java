@@ -99,7 +99,7 @@ public class Treatment2 {
             }
 
             // Start minority selection, by choosing one crop tree per species
-            if (st.trule.protectMinorities == true) {
+            if (st.trule.protectMinorities) {
                 //protect minoritys (select one tree per species)
                 te.SelectOneCropTreePerSpecies(st, true);
             }

@@ -450,10 +450,6 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateSiteIndex() {
         double erg;
         FunctionInterpreter fi = new FunctionInterpreter();
@@ -461,20 +457,10 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateMaxBasalArea() {
-        double erg;
-        FunctionInterpreter fi = new FunctionInterpreter();
-        erg = fi.getValueForTree(this, sp.spDef.maximumDensityXML);
-        return erg;
+        return new FunctionInterpreter().getValueForTree(this, sp.spDef.maximumDensityXML);
     }
 
-    /**
-     *
-     */
     public void ageBasedMortality() {
         double ageindex = (1.0 * age / (1.0 * sp.spDef.maximumAge)) - 1.0;
         if (ageindex > st.random.nextUniform()) {

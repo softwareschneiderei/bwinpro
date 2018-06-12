@@ -306,13 +306,11 @@ public class LoadTreegrossStand {
                     } else {
                         scenario = rs.getInt("Szenario");
                     }
-
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println(e);
         }
-
         if (durchforstung_an == 1 && scenario > 0) {
             stl.distanceDependent = true;
             stl.trule.typeOfThinning = 0;
@@ -348,19 +346,19 @@ public class LoadTreegrossStand {
             stmt.setInt(1, scenarioNo);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-// Skidtrails
+                    // Skidtrails
                     boolean skidtrails = rs.getBoolean("Skidtrails");
                     double skidtrailDistance = rs.getDouble("SkidtrailDistance");
                     double skidtrailWidth = rs.getDouble("SkidtrailWidth");
                     t2.setSkidTrails(st, skidtrails, skidtrailDistance, skidtrailWidth);
-// Set thinning  and intensity
+                    // Set thinning  and intensity
                     int thType = rs.getInt("ThinningType");
                     double thIntensity = rs.getDouble("ThinningIntensity");
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
                     t2.setThinningRegime(st, thType, thIntensity, thVolMin, thVolMax, ctreesOnly);
-// set Harvesting Regime
+                    // set Harvesting Regime
                     int hvType = rs.getInt("HarvestType");
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");
                     double hvVolMax = rs.getDouble("HarvestVolumeMax");
@@ -371,14 +369,14 @@ public class LoadTreegrossStand {
                         hvProcess = hvp.toString();
                     }
                     t2.setHarvestRegime(st, hvType, hvVolMin, hvVolMax, hvFinalCut, hvProcess);
-// Set nature conversation
+                    // Set nature conversation
                     int haType = rs.getInt("HabitatType");
                     int haTrees = rs.getInt("HabitatTrees");
                     boolean haMino = rs.getBoolean("HabitatMinority");
                     double haMinCov = rs.getDouble("HabitatMinCoverage");
                     int haBHD = rs.getInt("HabitatBHDProtect");
                     t2.setNatureProtection(st, haTrees, haType, haMino, haMinCov, haBHD);
-// Planting rules
+                    // Planting rules
                     boolean pl = rs.getBoolean("Planting");
                     boolean plRemove = rs.getBoolean("PlantingRemoveAll");
                     double plStart = rs.getDouble("PlantingStart");
