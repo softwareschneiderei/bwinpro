@@ -1012,34 +1012,12 @@ public class Stand {
                 }
             }
         }
-
-        /*for (i = 0; i < ntrees && !stop; i++) {
-            if (tr[i].out < 0) {
-                tr[i].updateCompetition();
-            }
-        }*/
         scaleMan.updateCompetition();
-        /*for (i = 0; i < ntrees && !stop; i++) {
-            if (tr[i].out < 0) {
-                tr[i].grow(period, random);
-            }
-        }*/
         scaleMan.growTrees(period, random);
-        /*for (i = 0; i < ntrees && !stop; i++) {
-            if (tr[i].out < 0) {
-                tr[i].updateCompetition();
-            }
-        }*/
         scaleMan.updateCompetition();
 
         year += period;
         descspecies();         // new spcies description, dl00, h100 etc.
-
-        /*for (i = 0; i < ntrees && !stop; i++) {
-            if (tr[i].out < 0) {
-                tr[i].updateCrown();
-            }
-        }*/
         scaleMan.updateCrown();
 
         if (nspecies > 0 && naturalIngrowth) {
@@ -1055,64 +1033,11 @@ public class Stand {
                 descspecies();
             }
         }
-
         // delete dead regeneration trees
         cleanTreeArrayReg();
         notifyStandChanged("growing", this);
     }
 
-    /**
-     * estimates the stand situattion x years ago, under proer treatment
-     */
-    //@SuppressWarnings("empty-statement")
-    /*public void growBack(int years, boolean gd){
-     // System.out.println("grow back stand "+ntrees);
-     for (int i=0;i<ntrees;i++)
-     if (tr[i].out < 0 || tr[i].out==tr[i].st.year)  {
-     tr[i].growBack(years);
-     }
-     for (int i=0;i<ntrees;i++)
-     for (int ik=0;ik<ntrees;ik++) if (tr[ik].d < 7.0 || tr[ik].h < 5.0 || tr[ik].age <= 10) removeTree(ik);
-     year=year-years;
-     sortbyd();
-     descspecies();         // new spcies description, dl00, h100 etc.
-     for (int i=0;i<ntrees;i++)
-     if ( tr[i].out < 0) {
-     tr[i].cw=tr[i].calculateCw();
-     tr[i].cb=tr[i].calculateCb();
-     //System.out.println("grow back stand "+tr[i].h+"  "+tr[i].cb);
-     };
-     descspecies();         // new spcies description, dl00, h100 etc.
-
-
-     // Bestand auf Sollgrundfläche anreichern
-     if(gd)
-     for (int i=0;i<nspecies;i++){
-     Tree atree = new Tree();
-     atree.st=this;
-     atree.sp=this.sp[i];
-     atree.d =this.sp[i].d100;
-     atree.h =this.sp[i].h100;
-     atree.age =(int) Math.round(this.sp[i].h100age);
-     atree.code=this.sp[i].code;
-     atree.cw=atree.calculateCw();
-     double maxStandBasalArea = atree.calculateMaxBasalArea()*atree.getModerateThinningFactor()*
-     (this.sp[i].percCSA/100.0);
-     double ghaToGen = maxStandBasalArea-this.sp[i].gha;
-     if (ghaToGen > 0 && sp[i].dg > 7.0 && sp[i].h100age > 10 && sp[i].d100 > 9.0){
-     try {
-     System.out.println("Es werden gha generiert: "+ghaToGen);
-     GenDistribution gdb = new GenDistribution();
-     gdb.weibull(this, sp[i].code, (int)Math.round(sp[i].h100age), sp[i].dg, sp[i].hg, sp[i].d100, ghaToGen * this.size);
-     double si_soll =-9;
-     for (int j = 0; j < this.ntrees; j++) if (this.tr[j].si > 0.0 && this.tr[j].code==sp[i].code) si_soll=this.tr[j].si;
-     for (int j = 0; j < this.ntrees; j++) if (this.tr[j].si <= -9) this.tr[j].si=si_soll;
-     GenerateXY gxy = new GenerateXY();
-     gxy.zufall(this);
-     } catch (Exception ex) { }
-     }
-     }
-     }*/
     /**
      * estimates the stand situattion x years ago, under prior treatment
      *
@@ -1981,7 +1906,7 @@ public class Stand {
             }
         }
         ntrees = treelist.size();
-        tr = (Tree[]) treelist.toArray(new Tree[this.maxStandTrees]);
+        tr = treelist.toArray(new Tree[this.maxStandTrees]);
         if (decspecies) {
             descspecies();
         }
