@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import static treegross.base.ScaleManager.SCALE_AUTO;
 import treegross.random.RandomNumber;
 
@@ -295,6 +296,10 @@ public class Stand {
 
     public Stand() {
         this(SCALE_AUTO);
+    }
+    
+    public Iterable<Tree> trees() {
+        return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
     }
 
     /**

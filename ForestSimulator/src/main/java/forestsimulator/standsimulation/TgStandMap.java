@@ -134,39 +134,18 @@ public class TgStandMap extends JPanel implements MouseListener {
         }
 
         // determine scale factor for graph
-        int i;
         xmax = -999.9;
         ymax = -999.9;
         ymin = 99999.9;
         xmin = 99999.9;
-        for (i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].x > xmax) {
-                xmax = st.tr[i].x;
-            }
-            if (st.tr[i].x < xmin) {
-                xmin = st.tr[i].x;
-            }
-            if (st.tr[i].y > ymax) {
-                ymax = st.tr[i].y;
-            }
-            if (st.tr[i].y < ymin) {
-                ymin = st.tr[i].y;
-            }
-        } //end of for loop
-        for (i = 0; i < st.ncpnt; i++) {
-            if (st.cpnt[i].x > xmax) {
-                xmax = st.cpnt[i].x;
-            }
-            if (st.cpnt[i].x < xmin) {
-                xmin = st.cpnt[i].x;
-            }
-            if (st.cpnt[i].y > ymax) {
-                ymax = st.cpnt[i].y;
-            }
-            if (st.cpnt[i].y < ymin) {
-                ymin = st.cpnt[i].y;
-            }
-        } //end of for loop
+        for (int i = 0; i < st.ntrees; i++) {
+            Tree tree = st.tr[i];
+            adjustBoundsFor(tree.x, tree.y);
+        }
+        for (int i = 0; i < st.ncpnt; i++) {
+            Corners corner = st.cpnt[i];
+            adjustBoundsFor(corner.x, corner.y);
+        }
 
         // add 1m for a boundary
         xmin = xmin - 1.0;
@@ -202,7 +181,7 @@ public class TgStandMap extends JPanel implements MouseListener {
         }
         // draw stand area as line by line
         int j, xp, yp, xp2, yp2, ra;
-        for (i = 0; i < st.ncpnt; i++) {
+        for (int i = 0; i < st.ncpnt; i++) {
             if (i == st.ncpnt - 1) {
                 j = 0;
             } else {
@@ -225,7 +204,7 @@ public class TgStandMap extends JPanel implements MouseListener {
 
 // Plot Crown Width or radius only of the living trees
         if (plotCrownWidth == true) {
-            for (i = 0; i < st.ntrees; i++) {
+            for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].out < 0) {
                     xp = 10 + (int) ((st.tr[i].x - xmin) * sk);
                     yp = h - 40 - (int) ((st.tr[i].y - ymin) * sk);
@@ -239,7 +218,7 @@ public class TgStandMap extends JPanel implements MouseListener {
 
         // 2. values of rectangle is the width and height of it
         // draw tree stems as circles slightly enlarged
-        for (i = 0; i < st.ntrees; i++) {
+        for (int i = 0; i < st.ntrees; i++) {
             Tree tree = st.tr[i];
             if (tree.out < 0 || tree.out == st.year) {
                 xp = 10 + (int) ((tree.x - xmin) * sk);
@@ -273,7 +252,7 @@ public class TgStandMap extends JPanel implements MouseListener {
         } // end of for loop for drawing trees
 // Plot Tree Numbers  
         if (plotTreeNumber == true) {
-            for (i = 0; i < st.ntrees; i++) {
+            for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].out < 0 || st.tr[i].out == st.year) {
                     xp = 10 + (int) ((st.tr[i].x - xmin) * sk);
                     yp = h - 40 - (int) ((st.tr[i].y - ymin) * sk);
@@ -308,6 +287,21 @@ public class TgStandMap extends JPanel implements MouseListener {
             g.drawString("select upper corner", 50, h - 5);
         }
 
+    }
+
+    private void adjustBoundsFor(double x, double y) {
+        if (x > xmax) {
+            xmax = x;
+        }
+        if (x < xmin) {
+            xmin = x;
+        }
+        if (y > ymax) {
+            ymax = y;
+        }
+        if (y < ymin) {
+            ymin = y;
+        }
     }
 
     private int drawStemCircle(Graphics g, Color c, int xp, int ra, int yp, Tree tree) {
