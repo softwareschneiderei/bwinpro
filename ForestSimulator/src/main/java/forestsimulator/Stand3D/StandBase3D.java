@@ -199,18 +199,23 @@ public class StandBase3D {
         else applate.setTextureUnitState(null);
     }   
     
-    public double getHeightAtPoint(double x, double z, boolean invinitive){
+    public double getHeightAtPoint(double x, double z, boolean invinitive) {
         double result;
-        if(invinitive) result=Double.NEGATIVE_INFINITY;
-        else result=0.0;
-        Point3d pos= new Point3d(x, 10000, z);
-        PickRay pr= new PickRay(pos, raydir);       
-        PickResult picked=new PickResult(bg.getChild(0), new Transform3D(), pr);
-        if(picked!=null)if(picked.numIntersections()>0){
-            PickIntersection intersect = picked.getIntersection(0);        
-            result=intersect.getPointCoordinates().y;
-        }        
-        return result;    
+        if (invinitive) {
+            result = Double.NEGATIVE_INFINITY;
+        } else {
+            result = 0.0;
+        }
+        Point3d pos = new Point3d(x, 10000, z);
+        PickRay pr = new PickRay(pos, raydir);
+        PickResult picked = new PickResult(bg.getChild(0), new Transform3D(), pr);
+        if (picked != null) {
+            if (picked.numIntersections() > 0) {
+                PickIntersection intersect = picked.getIntersection(0);
+                result = intersect.getPointCoordinates().y;
+            }
+        }
+        return result;
     }
     
     public Vector3f getNormalAtPoint(double x, double z){

@@ -274,27 +274,27 @@ public class Tree3D {
     }
 
     public void updateMarker() {
-        if (userdata.marker == UserData.THINNING) {
+        if (userdata.marker == TreeMarker.THINNING) {
             mamarker.setDiffuseColor(new Color3f(1.0f, 0.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(1.0f, 0.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.6f, 0.0f, 0.0f));
         }
-        if (userdata.marker == UserData.CROP) {
+        if (userdata.marker == TreeMarker.CROP) {
             mamarker.setDiffuseColor(new Color3f(0.0f, 1.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(0.0f, 1.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.0f, 0.6f, 0.0f));
         }
-        if (userdata.marker == UserData.TEMP_CROP) {
+        if (userdata.marker == TreeMarker.TEMP_CROP) {
             mamarker.setDiffuseColor(new Color3f(1.0f, 1.0f, 0.0f));
             mamarker.setSpecularColor(new Color3f(1.0f, 1.0f, 0.0f));
             mamarker.setEmissiveColor(new Color3f(0.3f, 3.0f, 0.0f));
         }
-        if (userdata.marker == UserData.HABITAT) {
+        if (userdata.marker == TreeMarker.HABITAT) {
             mamarker.setDiffuseColor(new Color3f(0.0f, 0.0f, 1.0f));
             mamarker.setSpecularColor(new Color3f(0.0f, 0.0f, 1.0f));
             mamarker.setEmissiveColor(new Color3f(0.0f, 0.0f, 0.6f));
         }
-        if (ra.getVisible() && userdata.marker != UserData.NOT) {
+        if (ra.getVisible() && userdata.marker != TreeMarker.NOT) {
             ramarker.setVisible(true);
         } else {
             ramarker.setVisible(false);
@@ -303,7 +303,7 @@ public class Tree3D {
     }
 
     private void updateMarkerCrown() {
-        if (ra.getVisible() && userdata.marker != UserData.NOT && showstatus) {
+        if (ra.getVisible() && userdata.marker != TreeMarker.NOT && showstatus) {
             ramarkercrown.setVisible(true);
         } else {
             ramarkercrown.setVisible(false);
@@ -328,7 +328,7 @@ public class Tree3D {
         if (bgtree != null) {
             double randangle = Math.random() * 0.25 * Math.PI;
             UserData u = (UserData) bgtree.getUserData();
-            u.marker = UserData.NOT;
+            u.marker = TreeMarker.NOT;
             u.living = false;
             u.standing = false;
             Transform3D transrot = new Transform3D();

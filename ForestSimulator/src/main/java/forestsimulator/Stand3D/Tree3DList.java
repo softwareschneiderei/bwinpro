@@ -93,15 +93,15 @@ public class Tree3DList {
     public void setSpeciesToShow(int[] speciestoshow, boolean showdead) {
         sts = speciestoshow;
         if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                if (showSpecies(trees[i].userdata.spec)) {
-                    if (!showdead && !trees[i].userdata.living && !trees[i].userdata.standing) {
-                        trees[i].setVisible(false);
+            for (Tree3D tree : trees) {
+                if (showSpecies(tree.userdata.spec)) {
+                    if (!showdead && !tree.userdata.living && !tree.userdata.standing) {
+                        tree.setVisible(false);
                     } else {
-                        trees[i].setVisible(true);
+                        tree.setVisible(true);
                     }
                 } else {
-                    trees[i].setVisible(false);
+                    tree.setVisible(false);
                 }
             }
         }
@@ -109,36 +109,36 @@ public class Tree3DList {
 
     public void setTextured(boolean textured) {
         if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                trees[i].setTextured(textured);
+            for (Tree3D tree : trees) {
+                tree.setTextured(textured);
             }
         }
     }
 
     public void setShowStatus(boolean visible) {
         if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                trees[i].setShowTreeStatus(visible);
+            for (Tree3D tree : trees) {
+                tree.setShowTreeStatus(visible);
             }
         }
     }
 
     public void setSpeciesColor(boolean colored) {
         if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                trees[i].setSpeciesColorOn(colored);
+            for (Tree3D tree : trees) {
+                tree.setSpeciesColorOn(colored);
             }
         }
     }
 
     public void setShowDead(boolean showdead) {
         if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                if (showSpecies(trees[i].userdata.spec)) {
-                    if (!showdead && !trees[i].userdata.living && !trees[i].userdata.standing) {
-                        trees[i].setVisible(false);
+            for (Tree3D tree : trees) {
+                if (showSpecies(tree.userdata.spec)) {
+                    if (!showdead && !tree.userdata.living && !tree.userdata.standing) {
+                        tree.setVisible(false);
                     } else {
-                        trees[i].setVisible(true);
+                        tree.setVisible(true);
                     }
                 }
             }

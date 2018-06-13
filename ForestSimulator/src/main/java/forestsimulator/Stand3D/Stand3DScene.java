@@ -446,61 +446,67 @@ public class Stand3DScene extends JPanel {
                 TransparentWindow treeinfowindow = new TransparentWindow(tud, this, e.getX(), e.getY());
             }
             if (e.getButton() == MouseEvent.BUTTON3 && tud.living) {
-                switch (tud.marker) {
-                    case 0:
-                        tud.marker = UserData.THINNING;
-                        treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
-                        break;
-                    case 1:
-                        tud.marker = UserData.CROP;
-                        if (st.standname.contains("SIMWALD")) {
-                            tud.marker = UserData.NOT;
-                        }
-                        treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
-                        setTreeStatusInStand(tud);
-                        break;
-                    case 3:
-                        tud.marker = UserData.TEMP_CROP;
-                        treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
-                        setTreeStatusInStand(tud);
-                        break;
-                    case 4:
-                        tud.marker = UserData.HABITAT;
-                        treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
-                        setTreeStatusInStand(tud);
-                        break;
-                    default:
-                        tud.marker = UserData.NOT;
-                        treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
-                        setTreeStatusInStand(tud);
-                        break;
-                }
+                updateMarker(st, tud, treelist);
             }
         } else {
             movePickMarker(0, 0, 0);
         }
     }
 
-    private void setTreeStatusInStand(UserData ud) {
+    // This is static for easier testing. If creation and testing of Stand3DScene is improved
+    // this can become an instance method again...
+    static void updateMarker(Stand st, UserData tud, Tree3DList treelist) {
+        switch (tud.marker) {
+            case NOT:
+                tud.marker = TreeMarker.THINNING;
+                treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
+                break;
+            case THINNING:
+                tud.marker = TreeMarker.CROP;
+                if (st.standname.contains("SIMWALD")) {
+                    tud.marker = TreeMarker.NOT;
+                }
+                treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
+                setTreeStatusInStand(st, tud);
+                break;
+            case CROP:
+                tud.marker = TreeMarker.TEMP_CROP;
+                treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
+                setTreeStatusInStand(st, tud);
+                break;
+            case TEMP_CROP:
+                tud.marker = TreeMarker.HABITAT;
+                treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
+                setTreeStatusInStand(st, tud);
+                break;
+            default:
+                tud.marker = TreeMarker.NOT;
+                treelist.trees[treelist.findTreeByUserData(tud)].updateMarker();
+                setTreeStatusInStand(st, tud);
+                break;
+        }
+    }
+
+    private static void setTreeStatusInStand(Stand st, UserData ud) {
         boolean crop = false;
         boolean tempcrop = false;
         boolean habitat = false;
         for (int i = 0; i < st.ntrees; i++) {
             String name = ud.name;
             if (st.tr[i].no.compareTo(name) == 0) {
-                if (ud.marker == UserData.CROP) {
+                if (ud.marker == TreeMarker.CROP) {
                     crop = true;
                 }
-                if (ud.marker == UserData.TEMP_CROP) {
+                if (ud.marker == TreeMarker.TEMP_CROP) {
                     tempcrop = true;
                 }
-                if (ud.marker == UserData.HABITAT) {
+                if (ud.marker == TreeMarker.HABITAT) {
                     habitat = true;
                 }
                 st.tr[i].crop = crop;
                 st.tr[i].tempcrop = tempcrop;
                 st.tr[i].habitat = habitat;
-                st.notifyStandChanged("treestatus changed", this);
+                st.notifyStandChanged("treestatus changed");
                 i = st.ntrees; // sofortiger abbruch
             }
         }
@@ -519,8 +525,9 @@ public class Stand3DScene extends JPanel {
         }
     }
 
-    /* removes all marked trees from the stand
-    * and let them fall in the view
+    /**
+     * removes all marked trees from the stand
+     * and let them fall in the view
      */
     public void harvestAllMarkedTrees() {
         movePickMarker(0, 0, 0);
@@ -537,12 +544,12 @@ public class Stand3DScene extends JPanel {
                     ud = null;
                 }
                 if (ud != null) {
-                    if ((ud.marker == UserData.THINNING || ud.marker == UserData.HARVESTING) && ud.type == 1) {
+                    if ((ud.marker == TreeMarker.THINNING || ud.marker == TreeMarker.HARVESTING) && ud.type == 1) {
                         harvestTreeInStand(dummy);
                     }
                 }
             }
         }
-        st.notifyStandChanged("trees harvested", this);
+        st.notifyStandChanged("trees harvested");
     }
 }

@@ -26,21 +26,11 @@ public class StandChangeEvent extends EventObject {
 
     private final String name;
     private final String action;
-    private final Object sender;
 
-    /**
-     * Creates a new instance of StandChangeEvent
-     *
-     * @param source
-     * @param newname
-     * @param action
-     * @param sender
-     */
-    public StandChangeEvent(Object source, String newname, String action, Object sender) {
+    public StandChangeEvent(Object source, String newname, String action) {
         super(source);
         name = newname;
         this.action = action;
-        this.sender = sender;
     }
 
     public String getName() {
@@ -49,9 +39,5 @@ public class StandChangeEvent extends EventObject {
 
     public String getAction() {
         return action;
-    }
-
-    public Object getSender() {
-        return sender;
     }
 }

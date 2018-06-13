@@ -1035,7 +1035,7 @@ public class Stand {
         }
         // delete dead regeneration trees
         cleanTreeArrayReg();
-        notifyStandChanged("growing", this);
+        notifyStandChanged("growing");
     }
 
     /**
@@ -1740,14 +1740,14 @@ public class Stand {
     }
 
     /*added by jhansen*/
-    public void notifyStandChanged(String action, Object sender) {
+    public void notifyStandChanged(String action) {
         if (!notifyListeners) {
             return;
         }
         if (StandChangeListeners.isEmpty()) {
             return;
         }
-        StandChangeEvent sce = new StandChangeEvent(this, "StandChangeEvent", action, sender);
+        StandChangeEvent sce = new StandChangeEvent(this, "StandChangeEvent", action);
         for (Object vtemp1 : StandChangeListeners.toArray()) {
             StandChangeListener target;
             target = (StandChangeListener) vtemp1;
