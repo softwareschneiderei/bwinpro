@@ -5,6 +5,7 @@ import javax.media.j3d.Texture2D;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import treegross.base.Species;
 import treegross.base.Stand;
 import treegross.base.Tree;
@@ -43,16 +44,10 @@ public class Stand3DSceneTest {
     }
 
     private static Tree3DList mockTreeList(UserData userdata) {
-        Tree3DList result = new Tree3DList();
-        result.trees = new Tree3D[1];
-        Tree3D t = new Tree3D(sampleTree(), new Texture2D[6], false, false, new Group(), new StandBase3D(null, 0, null, true, null) {
-            @Override
-            public double getHeightAtPoint(double x, double z, boolean invinitive) {
-                return 0d;
-            }
-        });
+        Tree3D t = mock(Tree3D.class);
         t.userdata = userdata;
-        result.trees[0] = t;
+        Tree3DList result = new Tree3DList();
+        result.trees = new Tree3D[] { t };
         return result;
     }
 }

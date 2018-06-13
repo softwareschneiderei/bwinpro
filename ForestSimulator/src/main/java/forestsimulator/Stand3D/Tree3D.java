@@ -36,14 +36,13 @@ public class Tree3D {
     private Color3f speciescolor;
     private Color3f naturalcolor;
     private Color3f trunkcolor;
-    private Color3f grey;
     private boolean wascolored;
     private boolean showstatus;
     public UserData userdata;
     private final double x;
     private final double y; //coordinates of tree in virtual universe
     private final double z; //coordinates of tree in virtual universe
-
+    
     public Tree3D(Tree tgtree, Texture2D[] bltexture, boolean speciescolor, boolean textured, Group parent, StandBase3D base) {
         //init the tree  
         x = -(tgtree.x - base.corrx);
@@ -102,7 +101,6 @@ public class Tree3D {
         } else {
             trunkcolor = RealisticColors3D.getTrunkColor(tr.code, tr.sp.spDef.crownType);
         }
-        grey = new Color3f(0.8f, 0.8f, 0.8f);
     }
 
     private void initAppearObj(Texture2D[] bltexture, Tree tr) {
