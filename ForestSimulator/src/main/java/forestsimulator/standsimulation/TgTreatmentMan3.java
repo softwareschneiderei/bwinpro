@@ -418,24 +418,18 @@ private void simulationDurationTextFieldActionPerformed(java.awt.event.ActionEve
 private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSimulationButtonActionPerformed
     loadSettingsToStandRule();
 
-//    HessRied_Steuerung hrs = new HessRied_Steuerung() ;
-//    hrs.setTreatment(st, 1, 1);
-//    st.ingrowthActive=true;
-
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
-    int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText())/st.timeStep);
+    int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
+    Simulation simulation = new Simulation(st, treat);
     for (int i = 0; i < nSimSteps; i++){
-        st.descspecies();
-        st.executeMortality();
-
-        st.descspecies();
-        treat.executeManager2(st);
-        st.descspecies();
         int time = st.timeStep;
-        if (simTime < st.timeStep) time= simTime;
-        yt.enterStandDesc(st);
-        st.grow(time,st.ingrowthActive);
-        simTime = simTime -st.timeStep;
+        if (simTime < st.timeStep) {
+            time = simTime;
+        }
+        simulation.executeStep(time, (t) -> {
+            yt.enterStandDesc(t);
+        });
+        simTime -= st.timeStep;
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
 

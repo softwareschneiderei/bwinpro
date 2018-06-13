@@ -237,8 +237,6 @@ public class Stand {
     public int temp_Integer;
 
     public double dg, hg, dgout, d100, h100;
-    //warum ne schleifen variable global deklarieren? führt zu fehlern!
-    //private int i;
 
     /**
      * array for all trees of Stand

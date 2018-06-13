@@ -151,7 +151,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         workingDir = user.getWorkingDir();
         currentFile = user.getDataDir();
         st.setProgramDir(programDir);
-        loadGenralSettings(programDir);
+        loadGeneralSettings(programDir);
 
 
         JPanel zfneu = new JPanel();
@@ -978,7 +978,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
          */
     }
 
-    private void loadGenralSettings(File Dir) {
+    private void loadGeneralSettings(File Dir) {
         File fname = null;
         try {
             URL url = null;

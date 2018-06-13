@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import forestsimulator.standsimulation.Simulation;
 import forestsimulator.util.StandGeometry;
 import forestsimulator.util.StopWatch;
 import java.sql.Connection;
@@ -88,7 +89,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         st.notificationsEnabled(true);
     }
 
-    private void applyCalculationRule(LoadTreegrossStand lts, final Connection con, List<CalculationRule> rules, CalculationRule rule, int pass) {
+    private void applyCalculationRule(final LoadTreegrossStand lts, final Connection con, List<CalculationRule> rules, final CalculationRule rule, final int pass) {
         st = lts.loadFromDB(con, st, rule.edvId, rule.aufId, true, true);
         StopWatch sortByD = new StopWatch("Sort tree").start();
         st.sortbyd();
@@ -102,9 +103,10 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0);
         // Define all trees with fac = 0.0 as dead zu that there is no growth
         markTreesAsDead(tree -> tree.fac == 0.0);
-        Treatment2 t2 = new Treatment2();
-        st = lts.loadRules(con, st, rule.edvId, rule.aufId, t2, rule.scenarioId);
-        saveStand(con, lts, rule, 0, pass);
+        Treatment2 treat = new Treatment2();
+        st = lts.loadRules(con, st, rule.edvId, rule.aufId, treat, rule.scenarioId);
+        saveStand(con, st, lts, rule, 0, pass);
+        Simulation simulation = new Simulation(st, treat);
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
@@ -112,21 +114,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 return;
             }
             publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));
+            final int currentStep = step;
             StopWatch stepTime = new StopWatch("Step " + step).start();
-            if (lts.getDurchf() == 1) {
-                st.descspecies();
-                st.sortbyd();
-                t2.executeManager2(st);
-                st.descspecies();
-            }
-            st.executeMortality();
-            st.descspecies();
-            StopWatch save = new StopWatch("Saving").start();
-            saveStand(con, lts, rule, step + 1, pass);
-            save.printElapsedTime();
-            StopWatch grow = new StopWatch("Growing").start();
-            st.grow(5, st.ingrowthActive);
-            grow.printElapsedTime();
+            simulation.executeStep(lts.getDurchf(), 5, (Stand t) -> {
+                saveStand(con, t, lts, rule, currentStep + 1, pass);
+            });
             st.sortbyd();
             st.missingData();
             st.descspecies();
@@ -147,7 +139,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         st.descspecies();
     }
 
-    private void saveStand(Connection con, LoadTreegrossStand lts, CalculationRule rule, int step, int pass) {
+    private void saveStand(Connection con, Stand st, LoadTreegrossStand lts, CalculationRule rule, int step, int pass) {
         if (lts.getEBaum() == 1) {
             lts.saveBaum(con, st, rule.edvId, rule.aufId, step, pass);
         }

@@ -438,8 +438,8 @@ public class LoadTreegrossStand {
         return baumart;
     }
 
-    public int getDurchf() {
-        return durchforstung_an;
+    public boolean getDurchf() {
+        return durchforstung_an == 1;
     }
 
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
