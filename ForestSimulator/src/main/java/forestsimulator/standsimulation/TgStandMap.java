@@ -33,7 +33,6 @@ import javax.imageio.ImageIO;
  */
 public class TgStandMap extends JPanel implements MouseListener {
 
-    private int x = -100, y = -100;
     Stand st = new Stand();
 
     /**
@@ -241,50 +240,33 @@ public class TgStandMap extends JPanel implements MouseListener {
         // 2. values of rectangle is the width and height of it
         // draw tree stems as circles slightly enlarged
         for (i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 0 || st.tr[i].out == st.year) {
-                xp = 10 + (int) ((st.tr[i].x - xmin) * sk);
-                yp = h - 40 - (int) ((st.tr[i].y - ymin) * sk);
-                ra = (int) (dbhFactor * 2 * sk * st.tr[i].d / 200);
+            Tree tree = st.tr[i];
+            if (tree.out < 0 || tree.out == st.year) {
+                xp = 10 + (int) ((tree.x - xmin) * sk);
+                yp = h - 40 - (int) ((tree.y - ymin) * sk);
+                ra = (int) (dbhFactor * 2 * sk * tree.d / 200);
                 if (ra == 0) {
                     ra = 1;
                 }
                 //oval second values is the width and height
-                g.setColor(new java.awt.Color(st.tr[i].sp.spDef.colorRed,
-                        st.tr[i].sp.spDef.colorGreen, st.tr[i].sp.spDef.colorBlue));
-                if (st.tr[i].out == st.year) {
+                g.setColor(new Color(tree.sp.spDef.colorRed,
+                        tree.sp.spDef.colorGreen, tree.sp.spDef.colorBlue));
+                if (tree.out == st.year) {
                     g.drawRect(xp - ra, yp - ra, 2 * ra, 2 * ra);
 
                 }
-                if (st.tr[i].out <= 0) {
+                if (tree.out <= 0) {
                     g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
                 }
 
-                if (st.tr[i].crop == true) {
-                    g.setColor(Color.red);
-                    g.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
-                    g.drawOval(xp - ra + 1, yp - ra - 1, 2 * ra - 1, 2 * ra + 1);
-                    g.drawOval(xp - ra + 2, yp - ra - 2, 2 * ra - 2, 2 * ra + 2);
-                    ra = (int) (dbhFactor * sk * st.tr[i].d / 200);
-                    g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
-
+                if (tree.crop) {
+                    ra = drawStemCircle(g, Color.red, xp, ra, yp, tree);
                 }
-
-                if (st.tr[i].tempcrop == true) {
-                    g.setColor(Color.green);
-                    g.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
-                    g.drawOval(xp - ra + 1, yp - ra - 1, 2 * ra - 1, 2 * ra + 1);
-                    g.drawOval(xp - ra + 2, yp - ra - 2, 2 * ra - 2, 2 * ra + 2);
-                    ra = (int) (dbhFactor * sk * st.tr[i].d / 200);
-                    g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
+                if (tree.tempcrop) {
+                    ra = drawStemCircle(g, Color.green, xp, ra, yp, tree);
                 }
-                if (st.tr[i].habitat == true) {
-                    g.setColor(Color.yellow);
-                    g.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
-                    g.drawOval(xp - ra + 1, yp - ra - 1, 2 * ra - 1, 2 * ra + 1);
-                    g.drawOval(xp - ra + 2, yp - ra - 2, 2 * ra - 2, 2 * ra + 2);
-                    ra = (int) (dbhFactor * sk * st.tr[i].d / 200);
-                    g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
-
+                if (tree.habitat) {
+                    drawStemCircle(g, Color.yellow, xp, ra, yp, tree);
                 }
             }
 
@@ -328,6 +310,16 @@ public class TgStandMap extends JPanel implements MouseListener {
 
     }
 
+    private int drawStemCircle(Graphics g, Color c, int xp, int ra, int yp, Tree tree) {
+        g.setColor(c);
+        g.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
+        g.drawOval(xp - ra + 1, yp - ra - 1, 2 * ra - 1, 2 * ra + 1);
+        g.drawOval(xp - ra + 2, yp - ra - 2, 2 * ra - 2, 2 * ra + 2);
+        ra = (int) (dbhFactor * sk * tree.d / 200);
+        g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
+        return ra;
+    }
+
     /**
      * method to thin by mouse
      *
@@ -336,8 +328,8 @@ public class TgStandMap extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         int i;
-        x = e.getX();
-        y = e.getY();
+        int x = e.getX();
+        int y = e.getY();
         if (zoomStatus > 0) {
             if (zoomStatus == 1) {
                 xlzoom = ((x - 10) / sk) + xmin;

@@ -1,7 +1,5 @@
 package forestsimulator.Stand3D;
 
-import javax.media.j3d.Group;
-import javax.media.j3d.Texture2D;
 import static org.hamcrest.CoreMatchers.is;
 import org.junit.Test;
 import static org.junit.Assert.*;
