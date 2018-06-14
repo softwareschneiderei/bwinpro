@@ -3,9 +3,11 @@ package forestsimulator.dbaccess;
 import forestsimulator.util.DurationFormatter;
 import java.awt.Frame;
 import java.text.MessageFormat;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
@@ -234,5 +236,15 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     @Override
     public void aborted() {
         dispose();
+    }
+
+    @Override
+    public void finished(Duration elapsedTime) {
+        dispose();
+        JOptionPane.showMessageDialog(
+                getParent(),
+                MessageFormat.format(messages.getString("BatchProgressDialog.finishedMessage.text"), DurationFormatter.format(Optional.of(elapsedTime))),
+                messages.getString("BatchProgressDialog.finishedMessage.title"),
+                JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -78,6 +78,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 oneRule.printElapsedTime();
             }
             wholeBatchTiming.printElapsedTime();
+            
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Problem in batch processing", e);
         }
@@ -86,6 +87,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
 
     @Override
     protected void done() {
+        progressListener.finished(wholeBatchTiming.deltaNanos());
         st.notificationsEnabled(true);
     }
 
