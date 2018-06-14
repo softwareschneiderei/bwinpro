@@ -154,7 +154,7 @@ public class Tree implements Cloneable {
     /**
      * maximum number of neighbor trees
      */
-    public int maxNeighbor = 15;
+    public final int maxNeighbor = 15;
     /**
      * neighbor tree indices in radius of 2*crowthwidth
      */
