@@ -13,6 +13,8 @@ import treegross.treatment.*;
  * @author nagel
  */
 public class LoadTreegrossStand {
+    
+    private static final Logger logger = Logger.getLogger(LoadTreegrossStand.class.getName());
 
     private int ebaum = 0;
     private int bestand = 0;
@@ -36,8 +38,8 @@ public class LoadTreegrossStand {
                     abtName = rs.getObject("abt").toString();
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load area from database", e);
         }
         String SAuf = String.valueOf(selectedAufn);
         stl.addName(flaechenName + " " + abtName + " Auf: " + SAuf);
@@ -50,8 +52,8 @@ public class LoadTreegrossStand {
                     stl.addsize(rs.getDouble("flha"));
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load stand recording from database", e);
         }
         stl.ntrees = 0;
         stl.nspecies = 0;
@@ -179,8 +181,8 @@ public class LoadTreegrossStand {
                     }
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException | SpeciesNotDefinedException e) {
+            logger.log(Level.SEVERE, "Could not load tree from database", e);
         }
         System.out.println("fertig");
 //
@@ -203,8 +205,8 @@ public class LoadTreegrossStand {
                     }
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load root directory from database", e);
         }
 //
 //  Eckpunkte hinzufügen
@@ -215,16 +217,15 @@ public class LoadTreegrossStand {
                 while (rs.next()) {
                     double xp = rs.getDouble("x");
                     double yp = rs.getDouble("y");
-                    String nox = rs.getObject("nr").toString();
-                    nox = nox.trim();
+                    String nox = rs.getString("nr").trim();
                     if (nox.contains("ECK")) {
                         stl.addcornerpoint(nox, xp, yp, 0.0);
                         stl.center.no = "polygon";
                     }
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load root directory from database", e);
         }
 //data quality
 /*            for (int i=0; i<stl.ntrees;i++) {
@@ -309,7 +310,7 @@ public class LoadTreegrossStand {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, "Could not load rules from database", e);
         }
         if (durchforstung_an == 1 && scenario > 0) {
             stl.distanceDependent = true;
@@ -389,8 +390,8 @@ public class LoadTreegrossStand {
                     t2.setAutoPlanting(st, pl, plRemove, plStart, plSpecies);
                 }
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load scenario from database", e);
         }
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from SzenarioArt where (SzenarioArtIndex = ?)")) {
             StopWatch scenarioArt = new StopWatch("Scenario art").start();
@@ -420,8 +421,8 @@ public class LoadTreegrossStand {
                 }
             }
             scenarioArt.printElapsedTime();
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load species scenario from database", e);
         }
         loadScenario.printElapsedTime();
     }
@@ -446,51 +447,37 @@ public class LoadTreegrossStand {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBaum "
                 + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66,c66c, c66xy, c66cxy, si,x,y, zb) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            for (int i = 0; i < st.ntrees; i++) {
-                if (!st.tr[i].no.contains("_")) {
-                    Double dd = st.tr[i].d;
-                    Double hh = st.tr[i].h;
-                    Double ka = st.tr[i].cb;
-                    Double kb = st.tr[i].cw;
-                    Double vv = st.tr[i].v;
-                    Double cc66 = st.tr[i].c66;
-                    Double cc66c = st.tr[i].c66c;
-                    Double cc66xy = st.tr[i].c66xy;
-                    Double cc66cxy = st.tr[i].c66cxy;
-                    Double ssi = st.tr[i].si;
-                    Double xx = st.tr[i].x;
-                    Double yy = st.tr[i].y;
-                    int zbx = 0;
-                    if (st.tr[i].crop == true) {
-                        zbx = 1;
-                    }
-                    stmt.setString(1, ids);
-                    stmt.setInt(2, aufs);
-                    stmt.setInt(3, sims);
-                    stmt.setInt(4, nwieder);
-                    stmt.setInt(5, scenario);
-                    stmt.setString(6, st.tr[i].no);
-                    stmt.setInt(7, st.tr[i].code);
-                    stmt.setInt(8, st.tr[i].age);
-                    stmt.setInt(9, st.tr[i].out);
-                    stmt.setDouble(10, dd);
-                    stmt.setDouble(11, hh);
-                    stmt.setDouble(12, ka);
-                    stmt.setDouble(13, kb);
-                    stmt.setDouble(14, vv);
-                    stmt.setDouble(15, cc66);
-                    stmt.setDouble(16, cc66c);
-                    stmt.setDouble(17, cc66xy);
-                    stmt.setDouble(18, cc66cxy);
-                    stmt.setDouble(19, ssi);
-                    stmt.setDouble(20, xx);
-                    stmt.setDouble(21, yy);
-                    stmt.setInt(22, zbx);
-                    stmt.execute();
+            for (Tree tree : st.trees()) {
+                if (tree.no.contains("_")) {
+                    continue;
                 }
+                stmt.setString(1, ids);
+                stmt.setInt(2, aufs);
+                stmt.setInt(3, sims);
+                stmt.setInt(4, nwieder);
+                stmt.setInt(5, scenario);
+                stmt.setString(6, tree.no);
+                stmt.setInt(7, tree.code);
+                stmt.setInt(8, tree.age);
+                stmt.setInt(9, tree.out);
+                stmt.setDouble(10, tree.d);
+                stmt.setDouble(11, tree.h);
+                stmt.setDouble(12, tree.cb);
+                stmt.setDouble(13, tree.cw);
+                stmt.setDouble(14, tree.v);
+                stmt.setDouble(15, tree.c66);
+                stmt.setDouble(16, tree.c66c);
+                stmt.setDouble(17, tree.c66xy);
+                stmt.setDouble(18, tree.c66cxy);
+                stmt.setDouble(19, tree.si);
+                stmt.setDouble(20, tree.x);
+                stmt.setDouble(21, tree.y);
+                stmt.setInt(22, boolToDB(tree.crop));
+                stmt.addBatch();
             }
-        } catch (Exception e) {
-            System.out.println("Datenbank Stammv :" + e);
+            stmt.executeBatch();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Tree could not be saved to database", e);
         }
     }
 
@@ -521,7 +508,7 @@ public class LoadTreegrossStand {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            System.out.println("Datenbank Stammv :" + e);
+            logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
 
@@ -575,7 +562,7 @@ public class LoadTreegrossStand {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            System.out.println("Datenbank Stammv :" + e);
+            logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
 
@@ -605,7 +592,7 @@ public class LoadTreegrossStand {
                 
             stmt.execute();
         } catch (SQLException e) {
-            System.out.println("Datenbank Stammv :" + e);
+            logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }
 
@@ -649,7 +636,7 @@ public class LoadTreegrossStand {
                 
             stmt.execute();
         } catch (SQLException e) {
-            System.out.println("Datenbank Stammv :" + e);
+            logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }
 
@@ -722,7 +709,7 @@ public class LoadTreegrossStand {
                 stmt.execute();
             }
         } catch (SQLException e) {
-            System.out.println("Datenbank Stammv :" + e);
+            logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }
 
@@ -741,16 +728,16 @@ public class LoadTreegrossStand {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     hg = rs.getDouble("Hg");
-                    dg = Double.parseDouble(rs.getObject("Dg").toString());
-                    d100 = Double.parseDouble(rs.getObject("Dmax").toString());
-                    h100 = Double.parseDouble(rs.getObject("H100").toString());
-                    g = Double.parseDouble(rs.getObject("G").toString());
-                    alt = (int) (Double.parseDouble(rs.getObject("Alter").toString()));
-                    art = (int) (Double.parseDouble(rs.getObject("Art").toString()));
+                    dg = rs.getDouble("Dg");
+                    d100 = rs.getDouble("Dmax");
+                    h100 = rs.getDouble("H100");
+                    g = rs.getDouble("G");
+                    alt = rs.getInt("Alter");
+                    art = rs.getInt("Art");
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, "Could not load starting values from database", e);
         }
         if (hg > 5.0 && dg > 7.0 && g > 0.0) {
             try {
@@ -789,7 +776,7 @@ public class LoadTreegrossStand {
                 st.sortbyd();
                 st.descspecies();
             } catch (SpeciesNotDefinedException ex) {
-                Logger.getLogger(LoadTreegrossStand.class.getName()).log(Level.SEVERE, "Could not get layer.", ex);
+                logger.log(Level.SEVERE, "Could not get layer.", ex);
             }
         }
         return st;
@@ -813,5 +800,12 @@ public class LoadTreegrossStand {
         st.center.y = len / 2.0;
         st.center.z = 0.0;
         return st;
+    }
+    
+    private int boolToDB(boolean b) {
+        if (b) {
+            return 1;
+        }
+        return 0;
     }
 }

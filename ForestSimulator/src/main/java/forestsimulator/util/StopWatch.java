@@ -30,6 +30,9 @@ public class StopWatch {
     }
     
     public void stop() {
+        if (this.end != 0L) {
+            return;
+        }
         this.end = System.nanoTime();
     }
     

@@ -88,6 +88,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
 
     @Override
     protected void done() {
+        wholeBatchTiming.stop();
         progressListener.finished(wholeBatchTiming.deltaNanos());
         st.notificationsEnabled(true);
     }

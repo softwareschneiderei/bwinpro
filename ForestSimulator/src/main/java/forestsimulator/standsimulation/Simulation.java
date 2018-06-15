@@ -29,11 +29,11 @@ public class Simulation {
         st.descspecies();
         st.executeMortality();
         st.descspecies();
-        StopWatch save = new StopWatch("Publishing stand").start();
-        save.printElapsedTime();
         StopWatch grow = new StopWatch("Growing").start();
         st.grow(time, st.ingrowthActive);
         grow.printElapsedTime();
+        StopWatch save = new StopWatch("Publishing stand").start();
         publishStand.accept(st);
+        save.printElapsedTime();
     }
 }
