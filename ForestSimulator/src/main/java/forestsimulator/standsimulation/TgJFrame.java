@@ -56,7 +56,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     FileHandler logHandler = null;
 
     String bwinproVersion = "Version 7.8-0.3";
-    String bwinproLastUpdate = "06.06.2018";
+    String bwinproLastUpdate = "15.06.2018";
     private boolean accessInput = true;
     static Stand st = new Stand();
     SpeciesDefMap SDM = new SpeciesDefMap();
