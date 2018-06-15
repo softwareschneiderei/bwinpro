@@ -55,7 +55,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     FileHandler logHandler = null;
 
-    String bwinproVersion = "Version 7.8-0.3";
+    String bwinproVersion = "Version 7.8-0.4";
     String bwinproLastUpdate = "15.06.2018";
     private boolean accessInput = true;
     static Stand st = new Stand();
