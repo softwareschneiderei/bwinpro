@@ -13,6 +13,7 @@ import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.geometry.Sphere;
 import javax.media.j3d.*;
 import javax.vecmath.*;
+import treegross.base.OutType;
 import treegross.base.Tree;
 
 /**
@@ -68,7 +69,7 @@ public class Tree3D {
         double cw = tgtree.cw;
         double cb = tgtree.cb;
         // add all elements of the tree to roottg:        
-        if ((tgtree.outtype == 0 && tgtree.out == -1) || (tgtree.outtype != 0 && tgtree.out != -1)) {
+        if ((tgtree.outtype == OutType.STANDING && tgtree.out == -1) || (tgtree.outtype != OutType.STANDING && tgtree.out != -1)) {
             roottg.addChild(new SimpleCrownSchadow3D(tgtree, 18, ra, base).getShadow());
             if (tgtree.sp.spDef.crownType == 1) {
                 roottg.addChild(this.makeCrownConi(x, y, z, h, cw, cb));
@@ -96,7 +97,7 @@ public class Tree3D {
     private void initColors(Tree tr) {
         speciescolor = makeSpeciesColor(tr);
         naturalcolor = RealisticColors3D.getCrownColor(tr.code, tr.sp.spDef.crownType);
-        if (tr.out != -1 && tr.outtype == 0) {
+        if (tr.out != -1 && tr.outtype == OutType.STANDING) {
             trunkcolor = new Color3f(0.15f, 0.15f, 0.15f);
         } else {
             trunkcolor = RealisticColors3D.getTrunkColor(tr.code, tr.sp.spDef.crownType);

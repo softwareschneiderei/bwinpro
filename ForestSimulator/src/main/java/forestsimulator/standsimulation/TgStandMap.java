@@ -363,10 +363,10 @@ public class TgStandMap extends JPanel implements MouseListener {
             if (emin < 1.0 && mouseThinning == true) {
                 if (st.tr[merk].out < 0) {
                     st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = 2;
+                    st.tr[merk].outtype = OutType.THINNED;
                 } else {
                     st.tr[merk].out = -1;
-                    st.tr[merk].outtype = 0;
+                    st.tr[merk].outtype = OutType.STANDING;
                 }
 //                    frame.updatetp(false);
                 st.notifyStandChanged("tree thinned");

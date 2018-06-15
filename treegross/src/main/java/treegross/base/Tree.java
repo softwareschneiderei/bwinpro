@@ -45,7 +45,7 @@ public class Tree implements Cloneable {
     /**
      * 0=standing, 1= fallen, 2=thinned, 3=harvested
      */
-    public int outtype;
+    public OutType outtype;
     /**
      * diameter, height, volume
      */
@@ -228,7 +228,7 @@ public class Tree implements Cloneable {
      * @param volumeDeadwoodx
      * @param remarksx
      */
-    public Tree(int codex, String nox, int agex, int outx, int outtypex, double dx, double hx, double cbx, double cwx,
+    public Tree(int codex, String nox, int agex, int outx, OutType outtypex, double dx, double hx, double cbx, double cwx,
             double six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
             boolean habitatTreex, int treeLayerx, double volumeDeadwoodx, String remarksx) {
         code = codex;
@@ -465,7 +465,7 @@ public class Tree implements Cloneable {
         double ageindex = (1.0 * age / (1.0 * sp.spDef.maximumAge)) - 1.0;
         if (ageindex > st.random.nextUniform()) {
             out = st.year;
-            outtype = 1;
+            outtype = OutType.FALLEN;
         }
     }
 
@@ -637,7 +637,7 @@ public class Tree implements Cloneable {
         double ts = st.timeStep;
         if (out == st.year) {
             out = -1;
-            outtype = 0;
+            outtype = OutType.STANDING;
         }
         RandomNumber rnOff = new RandomNumber(RandomNumber.OFF);
         if (out < 0) {
@@ -727,11 +727,7 @@ public class Tree implements Cloneable {
                     c66xy = -99;
                     c66cxy = -99;
                 }
-            } catch (ClassNotFoundException e) {
-                LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
-            } catch (IllegalAccessException e) {
-                LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
-            } catch (InstantiationException e) {
+            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                 LOGGER.log(Level.WARNING, "ERROR in Class tree updateCompetition!", e);
             }
         }

@@ -47,7 +47,7 @@ class Risk implements PlugInRisk {
                 }
                 if (st.random.nextUniform() <= rate * 5) {
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 1;
+                    st.tr[i].outtype = OutType.FALLEN;
                 }
             }
         }

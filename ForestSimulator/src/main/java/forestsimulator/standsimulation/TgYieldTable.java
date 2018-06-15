@@ -71,12 +71,12 @@ class TgYieldTable {
 //	      yt[merk].vhaout=st.sp[i].vhaout;
             for (int j = 0; j < st.ntrees; j++) {
                 if (st.tr[j].out == st.year && st.tr[j].code == yt[merk].code) {
-                    if (st.tr[j].out == st.year && st.tr[j].outtype > 1) {
+                    if (st.tr[j].out == st.year && st.tr[j].outtype.treated()) {
                         yt[merk].nhaout = yt[merk].nhaout + st.tr[j].fac;
                         yt[merk].ghaout = yt[merk].ghaout + Math.PI * Math.pow((st.tr[j].d / 200.0), 2.0) * st.tr[j].fac;
                         yt[merk].vhaout = yt[merk].vhaout + st.tr[j].v * st.tr[j].fac;
                     }
-                    if (st.tr[j].out == st.year && st.tr[j].outtype == 1) {
+                    if (st.tr[j].out == st.year && st.tr[j].outtype == OutType.FALLEN) {
                         yt[merk].nhamort = yt[merk].nhamort + st.tr[j].fac;
                         yt[merk].ghamort = yt[merk].ghamort + Math.PI * Math.pow((st.tr[j].d / 200.0), 2.0) * st.tr[j].fac;
                         yt[merk].vhamort = yt[merk].vhamort + st.tr[j].v * st.tr[j].fac;
@@ -105,7 +105,7 @@ class TgYieldTable {
                         yt[merk].ghaz = yt[merk].ghaz + Math.PI * Math.pow((st.tr[j].d / 200.0), 2.0) * st.tr[j].fac;
                         yt[merk].vhaz = yt[merk].vhaz + st.tr[j].v * st.tr[j].fac;
                     }
-                    if (st.tr[j].out == st.year && st.tr[j].outtype > 1) {
+                    if (st.tr[j].out == st.year && st.tr[j].outtype.treated()) {
                         yt[merk].nhaaz = yt[merk].nhaaz + st.tr[j].fac;
                         yt[merk].ghaaz = yt[merk].ghaaz + Math.PI * Math.pow((st.tr[j].d / 200.0), 2.0) * st.tr[j].fac;
                         yt[merk].vhaaz = yt[merk].vhaaz + st.tr[j].v * st.tr[j].fac;

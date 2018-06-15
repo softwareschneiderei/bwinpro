@@ -34,9 +34,10 @@ public class Stand3DSceneTest {
         Stand3DScene.updateMarker(new Stand(), d, mockTreeList(d));
         assertThat(d.marker, is(TreeMarker.NOT));
     }
-
+    
     private static Tree sampleTree() {
         Tree result = new Tree();
+        result.no = "aTree";
         result.sp = new Species();
         return result;
     }

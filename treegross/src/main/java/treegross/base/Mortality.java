@@ -110,7 +110,7 @@ class Mortality implements PlugInMortality {
             // take first tree out
             if (numberOfCandidates > 0) {
                 st.tr[treeNo[0]].out = st.year;
-                st.tr[treeNo[0]].outtype = 1;
+                st.tr[treeNo[0]].outtype = OutType.FALLEN;
             }
         } while (numberOfCandidates > 0);
     }

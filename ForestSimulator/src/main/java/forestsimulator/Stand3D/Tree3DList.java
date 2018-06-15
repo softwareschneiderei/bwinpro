@@ -10,6 +10,7 @@
 package forestsimulator.Stand3D;
 
 import javax.media.j3d.*;
+import treegross.base.OutType;
 import treegross.base.Tree;
 
 /**
@@ -70,7 +71,7 @@ public class Tree3DList {
     /*check if tree is dead and is not removed before standyear - 5  or is standing and dead*/
     private boolean outBefore5(Tree tr, int standyear) {
         boolean result = false;
-        if (tr.out != -1 && tr.out < (standyear - 5) && tr.outtype != 0) {
+        if (tr.out != -1 && tr.out < (standyear - 5) && tr.outtype != OutType.STANDING) {
             result = true;
         }
         return result;

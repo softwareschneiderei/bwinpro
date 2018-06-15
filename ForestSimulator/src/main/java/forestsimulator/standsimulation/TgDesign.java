@@ -462,7 +462,7 @@ public class TgDesign extends JPanel {
                     double gx = 0.0;
                     if (d < 7.0) {
 // get crown width at dbh= 7 cm of species at point of ingrowth            
-                        Tree atree = new Tree(artx, "atree", 20, -1, 0, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
+                        Tree atree = new Tree(artx, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
                                 false, 3, 0.0, "");
                         try {
                             atree.sp = st.addspecies(atree);

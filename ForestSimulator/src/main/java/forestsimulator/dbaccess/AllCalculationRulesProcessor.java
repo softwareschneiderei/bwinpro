@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import treegross.base.GenerateXY;
+import treegross.base.OutType;
 import treegross.base.Stand;
 import treegross.base.Tree;
 import treegross.treatment.Treatment2;
@@ -135,7 +136,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         for (int k = 0; k < st.ntrees; k++) {
             if (condition.test(st.tr[k])) {
                 st.tr[k].out = 1900;
-                st.tr[k].outtype = 1;
+                st.tr[k].outtype = OutType.FALLEN;
             }
         }
         st.descspecies();

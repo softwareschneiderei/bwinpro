@@ -28,7 +28,6 @@ import javax.imageio.ImageIO;
 /** draws a parallel stand projection */
 class TgPPmap extends JPanel implements MouseListener
 {	
-        private int x=-100,y=-100;
         Stand st =new Stand(); 
 	
         /** variables for scaling the graph */
@@ -64,9 +63,7 @@ class TgPPmap extends JPanel implements MouseListener
 
             st=stl; 
             frame = parent;
-            
             setLocation(cwidth,0); 
-	    
 //            Toolkit tk = Toolkit.getDefaultToolkit();
 //	    img1 = tk.createImage("sky.jpg");
 //	    img2 = tk.createImage("grass.jpg");
@@ -76,13 +73,10 @@ class TgPPmap extends JPanel implements MouseListener
 	    
 //            try { tracker.waitForAll(); }
 //	       catch (InterruptedException e ) {}
-            
-            
         }
-            
-        
-        
-	/** draws graph */
+
+        /** draws graph */
+        @Override
 	public void paintComponent (Graphics g)
 	{	
                 double redu=1/(Math.tan(30*Math.PI/180.0)); 
@@ -221,14 +215,13 @@ class TgPPmap extends JPanel implements MouseListener
 		//
 		for (i=0; i<st.ntrees; i++)
 		if (st.tr[i].out<1 || (st.tr[i].out>=st.year-10 
-		    && st.tr[i].outtype==1) || (st.tr[i].out==st.year && st.tr[i].outtype==2)  )
-		  
+		    && st.tr[i].outtype == OutType.FALLEN) || (st.tr[i].out==st.year && st.tr[i].outtype == OutType.THINNED))
 		{
                 // decide if tree to plot
                    boolean plotTree = false;
                    if (st.tr[i].out < 0 && livingTrees==true) plotTree=true;
-                   if (st.tr[i].out == st.year && st.tr[i].outtype==2 && thinnedTrees==true) plotTree=true;
-                   if (st.tr[i].out > st.year-10 && st.tr[i].outtype==1 && deadTrees==true) plotTree=true;
+                   if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.THINNED && thinnedTrees==true) plotTree=true;
+                   if (st.tr[i].out > st.year-10 && st.tr[i].outtype == OutType.FALLEN && deadTrees==true) plotTree=true;
                    if (plotTree==true){ 
                 //get Tree Color from Color.txt
                     Color treecolor = new java.awt.Color(st.tr[i].sp.spDef.colorRed, 
@@ -260,7 +253,7 @@ class TgPPmap extends JPanel implements MouseListener
 			if (st.tr[i].code < 500) g.setColor(clightb); 
 			if (st.tr[i].code > 500) g.setColor(cbrowne); 
 		// dead wood draw stems
-			if (st.tr[i].out>0 && st.tr[i].outtype==1) 
+			if (st.tr[i].out>0 && st.tr[i].outtype == OutType.FALLEN) 
                         {
                             g.setColor(cSilver);
                         }
@@ -268,7 +261,7 @@ class TgPPmap extends JPanel implements MouseListener
 			g.fillPolygon(xpoly,ypoly,4);
                         
 //wenn der Baum ausgezeichnet ist eine rote Markierung
-			if (st.tr[i].out==st.year && st.tr[i].outtype==2)
+			if (st.tr[i].out==st.year && st.tr[i].outtype == OutType.THINNED)
 			{ 
                               g.setColor(Color.yellow); 
                               xpoly[0]=x1; ypoly[0]=(int)(yp-sk*1.3); 
@@ -279,7 +272,7 @@ class TgPPmap extends JPanel implements MouseListener
                         } 
                         
 // zeichnen der Kronen Dreieck für eine Fichte, Oval für Buche 
-			if (st.tr[i].sp.spDef.crownType>0 && (st.tr[i].out<0 || st.tr[i].outtype>1))  //conifer
+			if (st.tr[i].sp.spDef.crownType>0 && (st.tr[i].out<0 || st.tr[i].outtype.treated()))  //conifer
 			{ 
                             xpoly[0]=(int)(xp); 
                             ypoly[0]=(int)(yp-sk*st.tr[i].h);
@@ -298,7 +291,7 @@ class TgPPmap extends JPanel implements MouseListener
                             g.drawPolygon(xpoly,ypoly,3);
 		
 			}
-			if (st.tr[i].sp.spDef.crownType==0 && (st.tr[i].out<0 || st.tr[i].outtype>1))  //Laubbaum
+			if (st.tr[i].sp.spDef.crownType==0 && (st.tr[i].out<0 || st.tr[i].outtype.treated()))  //Laubbaum
 			{ 
                             xpoly[0]=(int)(xp); 
                             ypoly[0]=(int)(yp-sk*(st.tr[i].h-((st.tr[i].h-st.tr[i].cb)/2.0)));
@@ -320,30 +313,21 @@ class TgPPmap extends JPanel implements MouseListener
 
 //-----------------------------------------------------------------------------                
 //Copy to JPEG
-  
-               if (doJPEG==true)
-               {
-                   try
-                   {
-                       Integer nrx = new Integer(st.year);
-                       File outputfile= new File(frame.workingDir, "sv"+nrx.toString()+".jpg");
-                       ImageIO.write(img, "jpg", outputfile);
-                       doJPEG=false;
-                       neuzeichnen();
-
-                   }
-                   catch (Exception e)
-                   {
-                       System.out.println(e); 
-                   }		 
-                }                
-                
+            if (doJPEG == true) {
+                try {
+                    Integer nrx = st.year;
+                    File outputfile = new File(frame.workingDir, "sv" + nrx.toString() + ".jpg");
+                    ImageIO.write(img, "jpg", outputfile);
+                    doJPEG = false;
+                    neuzeichnen();
+                } catch (IOException e) {
+                    System.out.println(e);
+                }
+            }
  // Zoom controll
-           
            g.setColor(Color.red); 
            if (zoomStatus==1) g.drawString("select lower left corner",50,h-5); 
            if (zoomStatus==2) g.drawString("select upper right corner",50,h-5); 
-               
 	}
 	/** method to renew the graph */
 	public void neuzeichnen()	
@@ -356,7 +340,8 @@ class TgPPmap extends JPanel implements MouseListener
 		cwidth=dx; 
 	}
         
-        	/** method to zoom by mouse */
+        /** method to zoom by mouse */
+        @Override
 	public void mousePressed (MouseEvent e)
 	{	int x=e.getX(); int y=e.getY(); 
                 if (zoomStatus>0){
@@ -376,9 +361,13 @@ class TgPPmap extends JPanel implements MouseListener
                 
         }
         	/** empty methods */
+        @Override
 	public void mouseReleased (MouseEvent e) {	}
+        @Override
 	public void mouseEntered (MouseEvent e) {	}
+        @Override
 	public void mouseExited (MouseEvent e) {	}
+        @Override
 	public void mouseClicked (MouseEvent e) {	}
         public void setLivingTrees(boolean status) {livingTrees=status; }
         public void setThinnedTrees(boolean status){thinnedTrees=status; }

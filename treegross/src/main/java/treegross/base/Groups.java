@@ -111,7 +111,7 @@ public class Groups {
         HeightCurve hc = new HeightCurve();
         if (dg > 0) {
     // Vorsicht Einheitshöhenkurve        
-            if (st.sp[merk].heightcurveUsed.indexOf("Einh")>=0){
+            if (st.sp[merk].heightcurveUsed.contains("Einh")){
                     Tree tree = new Tree();
                     tree.d = dg;
                     tree.sp = st.sp[merk];
@@ -145,10 +145,10 @@ public class Groups {
         return age;
     }
 
-    public double getVaus(int gr, int typ, int fromYear) {
+    public double getVaus(int gr, OutType typ, int fromYear) {
         double vha = 0.0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype >= typ && st.tr[i].out >= fromYear) {
+            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype.atLeast(typ) && st.tr[i].out >= fromYear) {
                 vha += st.tr[i].fac * st.tr[i].v;
             }
         }
@@ -156,10 +156,10 @@ public class Groups {
         return vha;
     }
     
-    public double getNaus(int gr, int typ, int fromYear) {
+    public double getNaus(int gr, OutType typ, int fromYear) {
         double nha = 0.0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype >= typ && st.tr[i].out >= fromYear) {
+            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype.atLeast(typ) && st.tr[i].out >= fromYear) {
                 nha += st.tr[i].fac ;
             }
         }
@@ -167,10 +167,10 @@ public class Groups {
         return nha;
     }
     
-    public double getGaus(int gr, int typ, int fromYear) {
+    public double getGaus(int gr, OutType typ, int fromYear) {
         double Gha = 0.0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype >= typ && st.tr[i].out >= fromYear) {
+            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].outtype.atLeast(typ) && st.tr[i].out >= fromYear) {
                 Gha += st.tr[i].fac * Math.PI * (st.tr[i].d / 200.0) * (st.tr[i].d / 200.0);
             }
         }

@@ -22,7 +22,6 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.input.*;
 //import org.jdom.DocType;
 import java.net.*;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -143,7 +142,7 @@ public class TreegrossXML2 {
             elt = addString(elt, "Lebend", Boolean.toString(lebend));
 
             boolean entnommen = false;
-            if (st.tr[i].outtype >= 2) {
+            if (st.tr[i].outtype.ordinal() >= 2) {
                 entnommen = true;
             }
 
@@ -152,16 +151,16 @@ public class TreegrossXML2 {
             elt = addString(elt, "AusscheideJahr", Integer.toString(st.tr[i].out));
 
             String grund = "";
-            if (st.tr[i].outtype == 1) {
+            if (st.tr[i].outtype == OutType.FALLEN) {
                 grund = "Mortalität";
             }
-            if (st.tr[i].outtype == 2) {
+            if (st.tr[i].outtype == OutType.THINNED) {
                 grund = "Durchforstung";
             }
-            if (st.tr[i].outtype == 3) {
+            if (st.tr[i].outtype == OutType.HARVESTED) {
                 grund = "Ernte";
             }
-            if (st.tr[i].outtype > 3) {
+            if (st.tr[i].outtype.ordinal() > 3) {
                 grund = "anderer";
             }
             elt = addString(elt, "AusscheideGrund", grund);
@@ -275,22 +274,11 @@ public class TreegrossXML2 {
                 int out;// = -1 ;
                 //if (Boolean.parseBoolean(baum.getChild("Entnommen").getText())==false) // wenn so dann muss hier flase nuss hier mit true abgeglichen werden
                 out = Integer.parseInt(baum.getChild("AusscheideJahr").getText());
-                int outtype = 0;
-                String ausGrund = baum.getChild("AusscheideGrund").getText();
-                if (ausGrund.contains("Mort")) {
-                    outtype = 1;
-                }
-                if (ausGrund.contains("Durch")) {
-                    outtype = 2;
-                }
-                if (ausGrund.contains("Ernte")) {
-                    outtype = 3;
-                }
                 try {
                     st.addXMLTree(Integer.parseInt(baum.getChild("BaumartcodeLokal").getText()),
                             baum.getChild("Kennung").getText(),
                             Integer.parseInt(baum.getChild("Alter_Jahr").getText()),
-                            out, outtype,
+                            out, outReason(baum),
                             Double.parseDouble(baum.getChild("BHD_mR_cm").getText()),
                             Double.parseDouble(baum.getChild("Hoehe_m").getText()),
                             Double.parseDouble(baum.getChild("Kronenansatz_m").getText()),
@@ -311,16 +299,24 @@ public class TreegrossXML2 {
                     System.err.println("ERROR while parseing numeric tree data for tree: " + baum.getChild("Kennung").getText());
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (JDOMException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | JDOMException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
         return st;
+    }
+
+    private OutType outReason(Element baum) {
+        String ausGrund = baum.getChild("AusscheideGrund").getText();
+        if (ausGrund.contains("Mort")) {
+            return OutType.FALLEN;
+        }
+        if (ausGrund.contains("Durch")) {
+            return OutType.THINNED;
+        }
+        if (ausGrund.contains("Ernte")) {
+            return OutType.HARVESTED;
+        }
+        return OutType.STANDING;
     }
 
     private Element addString(Element elt, String variable, String text) {

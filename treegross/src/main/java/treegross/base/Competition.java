@@ -66,7 +66,7 @@ public class Competition implements PlugInCompetition {
         double c66 = 0.0;
         double cri;
         for (int i = 0; i < t.st.ntrees; i++) {
-            if (t.st.tr[i].out >= t.st.year && t.st.tr[i].outtype != 1) {
+            if (t.st.tr[i].out >= t.st.year && t.st.tr[i].outtype != OutType.FALLEN) {
                 if (t.st.tr[i].cb >= h66) {
                     cri = t.st.tr[i].cw / 2.0;
                 } else {
@@ -146,7 +146,7 @@ public class Competition implements PlugInCompetition {
                     percOverlapInStand = getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x, t.st.tr[j].y, t.st);
                     t.c66xy += t.st.tr[j].fac * (overlap * percOverlapInStand);
                 }
-            } else if (e < influenceZoneRadius + t.st.tr[j].cw / 2.0 && t.st.tr[j].h > h66 && t.st.tr[j].out >= t.st.year && t.st.tr[j].outtype != 1) {
+            } else if (e < influenceZoneRadius + t.st.tr[j].cw / 2.0 && t.st.tr[j].h > h66 && t.st.tr[j].out >= t.st.year && t.st.tr[j].outtype != OutType.FALLEN) {
                 if (t.st.tr[j].cb >= h66) {
                     cri = t.st.tr[j].cw / 2.0;
                 } else {

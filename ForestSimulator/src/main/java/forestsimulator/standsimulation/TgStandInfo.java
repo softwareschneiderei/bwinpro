@@ -152,7 +152,7 @@ class TgStandInfo extends JPanel {
             }
             for (int i = 0; i < st.nspecies; i++) {
                 int grp = i * 4 + l;
-                if (gr.getNha(grp) > 0 || gr.getVaus(grp, 1, st.year) > 0) {
+                if (gr.getNha(grp) > 0 || gr.getVaus(grp, OutType.FALLEN, st.year) > 0) {
                     yieldTable.addRow(rowData);
                     jTable1.setValueAt(st.sp[i].spDef.shortName, nrow, 0);
                     jTable1.setValueAt(la, nrow, 1);
@@ -164,16 +164,16 @@ class TgStandInfo extends JPanel {
                     jTable1.setValueAt(f.format(gr.getNha(grp)), nrow, 7);
                     jTable1.setValueAt(f.format(gr.getGha(grp)), nrow, 8);
                     jTable1.setValueAt(f.format(gr.getVha(grp)), nrow, 9);
-                    jTable1.setValueAt(f.format(gr.getNaus(grp, 1, st.year)), nrow, 10);
-                    jTable1.setValueAt(f.format(gr.getGaus(grp, 1, st.year)), nrow, 11);
-                    jTable1.setValueAt(f.format(gr.getVaus(grp, 1, st.year)), nrow, 12);
+                    jTable1.setValueAt(f.format(gr.getNaus(grp, OutType.FALLEN, st.year)), nrow, 10);
+                    jTable1.setValueAt(f.format(gr.getGaus(grp, OutType.FALLEN, st.year)), nrow, 11);
+                    jTable1.setValueAt(f.format(gr.getVaus(grp, OutType.FALLEN, st.year)), nrow, 12);
                     jTable1.setValueAt(f.format(gr.getFlAnteilCS(grp)), nrow, 13);
                     sum_nha = sum_nha + gr.getNha(grp);
                     sum_gha = sum_gha + gr.getGha(grp);
                     sum_vol = sum_vol + gr.getVha(grp);
-                    sum_nhaout = sum_nhaout + gr.getNaus(grp, 1, st.year);
-                    sum_ghaout = sum_ghaout + gr.getGaus(grp, 1, st.year);
-                    sum_vhaout = sum_vhaout + gr.getVaus(grp, 1, st.year);
+                    sum_nhaout = sum_nhaout + gr.getNaus(grp, OutType.FALLEN, st.year);
+                    sum_ghaout = sum_ghaout + gr.getGaus(grp, OutType.FALLEN, st.year);
+                    sum_vhaout = sum_vhaout + gr.getVaus(grp, OutType.FALLEN, st.year);
                     nrow = nrow + 1;
                 }
                 // layer 3 trees under 7cm

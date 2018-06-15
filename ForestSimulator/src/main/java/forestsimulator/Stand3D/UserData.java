@@ -1,5 +1,6 @@
 package forestsimulator.Stand3D;
 
+import treegross.base.OutType;
 import treegross.base.Tree;
 
 /**
@@ -44,6 +45,6 @@ public class UserData {
             marker = TreeMarker.HABITAT;
         }
         living = tr.out == -1;
-        standing = tr.outtype == 0;
+        standing = tr.outtype == OutType.STANDING;
     }
 }

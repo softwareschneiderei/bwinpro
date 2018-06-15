@@ -174,7 +174,7 @@ public class LoadTreegrossStand {
                             stl.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, ou, fac, rm);
                         }
                         if (out > 0) {
-                            stl.tr[stl.ntrees - 1].outtype = 2;
+                            stl.tr[stl.ntrees - 1].outtype = OutType.THINNED;
                         }
                     }
                 }
@@ -623,7 +623,7 @@ public class LoadTreegrossStand {
                 if (st.tr[ik].out > 0) {
                     gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
                     vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
-                    if (st.tr[ik].outtype == 1) {
+                    if (st.tr[ik].outtype == OutType.FALLEN) {
                         vvhaaz = vvhaaz + st.tr[ik].v * st.tr[ik].fac / st.size;
                     }
                 }

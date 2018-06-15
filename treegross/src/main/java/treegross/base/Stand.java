@@ -503,7 +503,7 @@ public class Stand {
             z = 0.0;
         }
         tr[ntrees].z = z;
-        tr[ntrees].outtype = 0;
+        tr[ntrees].outtype = OutType.STANDING;
         tr[ntrees].fac = 1.0;
         tr[ntrees].si = si; // no site index set at this point
         tr[ntrees].group = -1;
@@ -574,7 +574,7 @@ public class Stand {
         tr[ntrees - 1].layer = 3;
     }
 
-    public void addTreeFromDB(int co, String num, double fac, int age, int out, int outtype, double d, double h, double v, double cb, double cw,
+    public void addTreeFromDB(int co, String num, double fac, int age, int out, OutType outtype, double d, double h, double v, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, int layer) throws SpeciesNotDefinedException {
 
         //if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;} 
@@ -645,7 +645,7 @@ public class Stand {
             z = 0.0;
         }
         tr[ntrees].z = z;
-        tr[ntrees].outtype = 0;
+        tr[ntrees].outtype = OutType.STANDING;
         tr[ntrees].fac = fac;
         tr[ntrees].si = si; // no site index set at this point
         tr[ntrees].group = -1; // no site index set at this point
@@ -659,7 +659,7 @@ public class Stand {
     }
 
     /* add a tree to the stand including factor*/
-    public void addXMLTree(int codenumber, String number, int age, int out, int outtype,
+    public void addXMLTree(int codenumber, String number, int age, int out, OutType outtype,
             double d, double h, double cb, double cw,
             double si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
             int layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
@@ -734,7 +734,7 @@ public class Stand {
         tr[ntrees].x = x;
         tr[ntrees].y = y;
         tr[ntrees].z = z;
-        tr[ntrees].outtype = 0;
+        tr[ntrees].outtype = OutType.STANDING;
         tr[ntrees].fac = fac;
         tr[ntrees].origin = 0;
         tr[ntrees].year = this.year;
@@ -875,7 +875,7 @@ public class Stand {
     public double getVhaTargetDiameter(int spe) {
         double vha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].outtype == 3 && tr[i].out == year
+            if (tr[i].outtype == OutType.HARVESTED && tr[i].out == year
                     && ((tr[i].code == spe) || (spe == 0))) {
                 vha = vha + tr[i].fac * tr[i].v;
             }
@@ -893,7 +893,7 @@ public class Stand {
     public double getVhaThinning(int spe) {
         double vha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].outtype == 2 && tr[i].out == year
+            if (tr[i].outtype == OutType.THINNED && tr[i].out == year
                     && ((tr[i].code == spe) || (spe == 0))) {
                 vha += +tr[i].fac * tr[i].v;
             }

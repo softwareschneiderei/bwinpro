@@ -56,17 +56,20 @@ public class Competition2 implements PlugInCompetition {
 
     @Override
     public double getc66c(Tree t) {
-        double h66=t.h-(2.0*(t.h-t.cb)/3.0);
-        double c66=0.0;
+        double h66 = t.h - (2.0 * (t.h - t.cb) / 3.0);
+        double c66 = 0.0;
         double cri;
-            for (int i=0; i< t.st.ntrees; i++){
-                if ( t.st.tr[i].out>=t.st.year && t.st.tr[i].outtype!=1) {
-                    if (t.st.tr[i].cb >= h66) cri= t.st.tr[i].cw/2.0;
-                    else cri=t.st.tr[i].calculateCwAtHeight(h66)/2.0;
-                    c66=c66+t.st.tr[i].fac*Math.PI*cri*cri;
+        for (int i = 0; i < t.st.ntrees; i++) {
+            if (t.st.tr[i].out >= t.st.year && t.st.tr[i].outtype != OutType.FALLEN) {
+                if (t.st.tr[i].cb >= h66) {
+                    cri = t.st.tr[i].cw / 2.0;
+                } else {
+                    cri = t.st.tr[i].calculateCwAtHeight(h66) / 2.0;
                 }
+                c66 = c66 + t.st.tr[i].fac * Math.PI * cri * cri;
             }
-        c66 = c66/(10000*t.st.size);
+        }
+        c66 = c66 / (10000 * t.st.size);
         return c66;
     }
     
@@ -139,7 +142,7 @@ public class Competition2 implements PlugInCompetition {
                     t.c66xy+=t.st.tr[j].fac*(overlap * percOverlapInStand)*gewicht;
                 }
             }
-            else if (e<influenceZoneRadius+t.st.tr[j].cw/2.0 && t.st.tr[j].h>h66 && t.st.tr[j].out>=t.st.year && t.st.tr[j].outtype!=1 ){
+            else if (e<influenceZoneRadius+t.st.tr[j].cw/2.0 && t.st.tr[j].h>h66 && t.st.tr[j].out>=t.st.year && t.st.tr[j].outtype != OutType.FALLEN){
                 if (t.st.tr[j].cb >= h66)
                     cri= t.st.tr[j].cw/2.0;
                 else

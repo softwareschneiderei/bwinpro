@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import treegross.base.GenerateXY;
+import treegross.base.OutType;
 import treegross.base.Stand;
 
 /**
@@ -315,7 +316,7 @@ public class JPanelPlots extends JPanel {
                         ps.setDouble(9, st.tr[i].cb);
                         ps.setDouble(10, st.tr[i].cw);
                         ps.setInt(11, st.tr[i].out);
-                        ps.setInt(12, st.tr[i].outtype);
+                        ps.setInt(12, st.tr[i].outtype.ordinal());
                         ps.setInt(13, w);
                         ps.setDouble(14, ent);
                         ps.setDouble(15, st.tr[i].z);
@@ -544,7 +545,7 @@ public class JPanelPlots extends JPanel {
                     double ccb = Double.parseDouble(rs.getString("cb"));
                     double ccw = Double.parseDouble(rs.getString("cw"));
                     int oout = rs.getInt("alive");
-                    int oouttype = rs.getInt("status");
+                    OutType oouttype = OutType.values()[rs.getInt("status")];
                     boolean ccrop = Boolean.parseBoolean(rs.getString("crop"));
                     boolean hhabitat = Boolean.parseBoolean(rs.getString("habitat"));
                     boolean tz = false;

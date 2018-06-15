@@ -161,7 +161,7 @@ public class CropTreeSelection {
                             // higher than min crop tree height
                             if (ctsp[i].code == st.tr[j].code
                                     && st.tr[j].d >= 7.0
-                                    && st.tr[j].outtype <= 0
+                                    && st.tr[j].outtype == OutType.STANDING
                                     && st.tr[j].crop == false
                                     && st.tr[j].habitat == false
                                     && st.tr[j].h > st.tr[j].sp.trule.minCropTreeHeight) {
@@ -170,8 +170,8 @@ public class CropTreeSelection {
                                 double distNearest = Double.POSITIVE_INFINITY;
                                 // find nearest crop or habitat tree alive (remember distance)                                
                                 for (int m = 0; m < st.ntrees; m++) {
-                                    if ((st.tr[m].crop && st.tr[m].outtype <= 0)
-                                            || (st.tr[m].habitat && st.tr[m].outtype <= 0)) {
+                                    if ((st.tr[m].crop && st.tr[m].outtype == OutType.STANDING)
+                                            || (st.tr[m].habitat && st.tr[m].outtype == OutType.STANDING)) {
                                         //distance potential crop tree to considered tree
                                         double dist = Math.sqrt(Math.pow(st.tr[j].x - st.tr[m].x, 2.0)
                                                 + Math.pow(st.tr[j].y - st.tr[m].y, 2.0));
@@ -341,7 +341,7 @@ public class CropTreeSelection {
                             // no habitat tree
                             // higher than min temp crop tree height
                             if (ctsp[i].code == st.tr[j].code
-                                    && st.tr[j].outtype <= 0
+                                    && st.tr[j].outtype == OutType.STANDING
                                     && st.tr[j].crop == false
                                     && st.tr[j].tempcrop == false
                                     && st.tr[j].habitat == false) {
@@ -350,9 +350,9 @@ public class CropTreeSelection {
                                 double distNearest = 99999.9;
                                 // find nearest (temp)crop or habitat tree alive (remember distance)                                
                                 for (int m = 0; m < st.ntrees; m++) {
-                                    if ((st.tr[m].crop == true && st.tr[m].outtype <= 0)
-                                            || (st.tr[m].tempcrop == true && st.tr[m].outtype <= 0)
-                                            || (st.tr[m].habitat == true && st.tr[m].outtype <= 0)) {
+                                    if ((st.tr[m].crop == true && st.tr[m].outtype == OutType.STANDING)
+                                            || (st.tr[m].tempcrop == true && st.tr[m].outtype == OutType.STANDING)
+                                            || (st.tr[m].habitat == true && st.tr[m].outtype == OutType.STANDING)) {
                                         //distance potential temp crop tree to considered tree
                                         double dist = Math.sqrt(Math.pow(st.tr[j].x - st.tr[m].x, 2.0)
                                                 + Math.pow(st.tr[j].y - st.tr[m].y, 2.0));

@@ -20,6 +20,7 @@ import java.net.*;
 import java.text.*;
 import java.util.*;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 import nwfva.assortment.LoggingSortiment;
 import nwfva.assortment.TimeEstimateFunction;
 import org.jdom.DocType;
@@ -98,9 +99,8 @@ public class BiomassPanel extends javax.swing.JPanel {
             log.info(e.toString());
         }
 
-
-       proDir=programDir+System.getProperty("file.separator")+"moduls"+System.getProperty("file.separator")+"biomass";
-       fname=proDir+System.getProperty("file.separator")+st.biomassModul;
+        proDir=programDir+System.getProperty("file.separator")+"moduls"+System.getProperty("file.separator")+"biomass";
+        fname=proDir+System.getProperty("file.separator")+st.biomassModul;
         if ( m < 0 && m2 <0 ) fname="file:"+System.getProperty("file.separator")+System.getProperty("file.separator")+System.getProperty("file.separator")+fname;
         try{
           URL url = new URL(fname);
@@ -109,8 +109,6 @@ public class BiomassPanel extends javax.swing.JPanel {
         catch (IOException e){
             log.info(e.toString());
         }
-
-
 
         loadTableDf(st);
         loadTableAssortment(st);
@@ -858,7 +856,6 @@ public class BiomassPanel extends javax.swing.JPanel {
        
     }
 
-//
     private void loadTableDf(Stand st){
         int dfjahr = -99;
         int ndf =0;
@@ -871,7 +868,7 @@ public class BiomassPanel extends javax.swing.JPanel {
            Double vConifer =0.0;
            if (dfjahr >0 && dfjahr<9000){
               for (int i=0;i < st.ntrees;i++)
-                  if (st.tr[i].out ==dfjahr && st.tr[i].outtype > 1){
+                  if (st.tr[i].out ==dfjahr && st.tr[i].outtype.treated()){
                       if (st.tr[i].code <500) vHardwood=vHardwood+st.tr[i].v*st.tr[i].fac;
                       else vConifer=vConifer+st.tr[i].v*st.tr[i].fac;
                   }
@@ -920,11 +917,10 @@ public class BiomassPanel extends javax.swing.JPanel {
                     ls[i].ausgewaehlt = true; 
             } }
 
-        LoggingSortiment temp = new LoggingSortiment();
         for (int i=0;i< nls-1;i++)
            for (int j=i+1;j< nls;j++)
                if (ls[j].ausgewaehlt) {
-                   temp=ls[i];
+                   LoggingSortiment temp=ls[i];
                    ls[i]=ls[j];
                    ls[j]=temp;
                }
@@ -936,7 +932,7 @@ public class BiomassPanel extends javax.swing.JPanel {
          for (int i=0;i< nls-1;i++)
            for (int j=i+1;j< nls;j++)
                if (ls[j].gewicht > ls[i].gewicht) {
-                   temp=ls[i];
+                   LoggingSortiment temp=ls[i];
                    ls[i]=ls[j];
                    ls[j]=temp;
                }
@@ -971,7 +967,7 @@ public class BiomassPanel extends javax.swing.JPanel {
     }
     
        private void initJTable(){
-           dataNb= new javax.swing.table.DefaultTableModel(
+           dataNb= new DefaultTableModel(
             new Object [][] {  },
             new String [] {
                "Jahr", "C", "N", "S", "P", "K",  "Ca", "Mg", "Mn", "Fe", "BoUP", "BNH4","BNO3"

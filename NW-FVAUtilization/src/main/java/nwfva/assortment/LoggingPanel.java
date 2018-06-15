@@ -818,9 +818,8 @@ public class LoggingPanel extends JPanel {
                             double volumen = 0.0;
                             double volumenToth = 0.0;
                             double volumenEntn = 0.0;
-                            double biomasse = 0.0;
 // use stem volume function
-                            double vol = 0.0;
+                            double vol;
 
                             FunctionInterpreter fi = new FunctionInterpreter();
                             if (st.tr[i].sp.spDef.volumeFunctionXML.getFunctionText().length() > 5) {
@@ -832,7 +831,7 @@ public class LoggingPanel extends JPanel {
                             if (st.tr[i].out < 0) {
                                 volumen = vol;
                             } else {
-                                if (st.tr[i].outtype == 1) {
+                                if (st.tr[i].outtype == OutType.FALLEN) {
                                     volumenToth = volumenToth + vol;
                                 } else { // Sotierung
 // alle ausgewählten Sortimente durchlaufen
@@ -856,7 +855,7 @@ public class LoggingPanel extends JPanel {
                                         elt3 = addString(elt3, "BHD", f.format(st.tr[i].d));
                                         elt3 = addString(elt3, "Name", tl[jj].sortName);
                                         elt3 = addString(elt3, "Entnahmejahr", Integer.toString(st.tr[i].out));
-                                        elt3 = addString(elt3, "Entnahmetyp", Integer.toString(st.tr[i].outtype));
+                                        elt3 = addString(elt3, "Entnahmetyp", st.tr[i].outtype.toString());
                                         elt3 = addString(elt3, "Starthoehe", f.format(tl[jj].startHeight));
                                         elt3 = addString(elt3, "Laenge", f.format(tl[jj].length));
                                         elt3 = addString(elt3, "VolHuber_mR", f.format(tl[jj].volHuber_mR * st.tr[i].fac / st.size));

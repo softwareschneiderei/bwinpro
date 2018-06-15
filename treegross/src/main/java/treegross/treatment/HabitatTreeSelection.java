@@ -102,7 +102,7 @@ public class HabitatTreeSelection {
                 // no habitat tree yet (habitat==false)
                 // no crop tree yet (crop==false)
                 // distance to crop trees in in range (see "for"-loop)
-                if (st.tr[n].h > st.tr[n].sp.trule.minCropTreeHeight && ntcriteria < (int) (100 * st.size) && st.tr[n].outtype == 0 && st.tr[n].habitat == false
+                if (st.tr[n].h > st.tr[n].sp.trule.minCropTreeHeight && ntcriteria < (int) (100 * st.size) && st.tr[n].outtype == OutType.STANDING && st.tr[n].habitat == false
                         && st.tr[n].crop == false && st.tr[n].code < habspecies) {
 
                     //reset mindistance
@@ -172,7 +172,7 @@ public class HabitatTreeSelection {
     public int getNHabitatTrees(Stand st) {
         int n = 0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].outtype == 0 && st.tr[i].habitat) {
+            if (st.tr[i].outtype == OutType.STANDING && st.tr[i].habitat) {
                 n++;
             }
         }
@@ -206,7 +206,7 @@ public class HabitatTreeSelection {
     public double getVolHabitatTrees(Stand st) {
         double fm = 0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].outtype == 0 && st.tr[i].habitat) {
+            if (st.tr[i].outtype == OutType.STANDING && st.tr[i].habitat) {
                 fm += st.tr[i].v * st.tr[i].fac;
             }
         }

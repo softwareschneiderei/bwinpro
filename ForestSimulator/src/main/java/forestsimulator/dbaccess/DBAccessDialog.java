@@ -448,16 +448,14 @@ public class DBAccessDialog extends JDialog {
             // Test if all trees are in area           
             for (int k = 0; k < st.ntrees; k++) {
                 if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                    st.tr[k].out = 1900;
-                    st.tr[k].outtype = 1;
+                    killTree(k);
                 }
             }
             st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
             for (int k = 0; k < st.ntrees; k++) {
                 if (st.tr[k].fac == 0.0) {
-                    st.tr[k].out = 1900;
-                    st.tr[k].outtype = 1;
+                    killTree(k);
                 }
             }
             st.descspecies();
@@ -583,16 +581,14 @@ public class DBAccessDialog extends JDialog {
                     // Test if all trees are in area           
                     for (int k = 0; k < st.ntrees; k++) {
                         if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                            st.tr[k].out = 1900;
-                            st.tr[k].outtype = 1;
+                            killTree(k);
                         }
                     }
                     st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
                     for (int k = 0; k < st.ntrees; k++) {
                         if (st.tr[k].fac == 0.0) {
-                            st.tr[k].out = 1900;
-                            st.tr[k].outtype = 1;
+                            killTree(k);
                         }
                     }
                     st.descspecies();
@@ -612,6 +608,11 @@ public class DBAccessDialog extends JDialog {
         }
         dispose();
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
+
+    private void killTree(int k) {
+        st.tr[k].out = 1900;
+        st.tr[k].outtype = OutType.FALLEN;
+    }
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
@@ -774,7 +775,7 @@ public class DBAccessDialog extends JDialog {
                     st.missingData();
                     for (int i = 0; i < st.ntrees; i++) {
                         if (st.tr[i].out > 0) {
-                            st.tr[i].outtype = 2;
+                            st.tr[i].outtype = OutType.THINNED;
                         }
                     }
                     GenerateXY gxy = new GenerateXY();

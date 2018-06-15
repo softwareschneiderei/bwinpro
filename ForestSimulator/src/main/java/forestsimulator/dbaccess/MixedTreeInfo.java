@@ -3,6 +3,7 @@ package forestsimulator.dbaccess;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import treegross.base.OutType;
 import treegross.base.Stand;
 import treegross.base.Tree;
 
@@ -153,7 +154,7 @@ public class MixedTreeInfo {
                         percOverlapInStand = getPercOverlapInStand(influenceZoneRadius, t.x, t.y, cri, t.st.tr[j].x, t.st.tr[j].y, t.st);
                         c66a += t.st.tr[j].fac * (overlap * percOverlapInStand);
                     }
-                } else if (e < influenceZoneRadius + t.st.tr[j].cw / 2.0 && t.st.tr[j].h > h66 && t.st.tr[j].out >= t.st.year && t.st.tr[j].outtype != 1) {
+                } else if (e < influenceZoneRadius + t.st.tr[j].cw / 2.0 && t.st.tr[j].h > h66 && t.st.tr[j].out >= t.st.year && t.st.tr[j].outtype != OutType.FALLEN) {
                     if (t.st.tr[j].cb >= h66) {
                         cri = t.st.tr[j].cw / 2.0;
                     } else {

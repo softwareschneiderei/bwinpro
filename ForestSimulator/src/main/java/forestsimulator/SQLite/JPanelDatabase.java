@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import treegross.base.GenerateXY;
+import treegross.base.OutType;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
 
@@ -42,7 +43,7 @@ public class JPanelDatabase extends JPanel {
         java.io.File f1 = new java.io.File("");
         try {
             localPath = f1.getCanonicalPath();
-        } catch (Exception e) {
+        } catch (IOException e) {
         }
         if (dir.exists()) {
             filenameLabel.setText(dir.getCanonicalPath());
@@ -241,18 +242,19 @@ public class JPanelDatabase extends JPanel {
         DBFileFilter dbFilter = new DBFileFilter();
         dbFilter.setExtension("db");
         fc.addChoosableFileFilter(dbFilter);
-        fc.setFileFilter(dbFilter); 
+        fc.setFileFilter(dbFilter);
         fc.setAcceptAllFileFilterUsed(true);
         fc.setCurrentDirectory(dir);
-                       
+
         int auswahl = fc.showOpenDialog(this);
         try {
-           dir = fc.getSelectedFile();
-           filenameLabel.setText(dir.getCanonicalPath());
-           setVisible(true);
+            dir = fc.getSelectedFile();
+            filenameLabel.setText(dir.getCanonicalPath());
+            setVisible(true);
 //           nBestaende=loadBestaende();
+        } catch (IOException eio) {
+            System.out.println(eio);
         }
-        catch (Exception eio){System.out.println(eio);}  
     }//GEN-LAST:event_changeDatabaseButtonActionPerformed
 
     private void saveActiveStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveActiveStandButtonActionPerformed
@@ -318,7 +320,7 @@ public class JPanelDatabase extends JPanel {
                     ps.setDouble(9, st.tr[i].cb);
                     ps.setDouble(10, st.tr[i].cw);
                     ps.setInt(11, st.tr[i].out);
-                    ps.setInt(12, st.tr[i].outtype);
+                    ps.setInt(12, st.tr[i].outtype.ordinal());
                     ps.setDouble(13, st.tr[i].x);
                     ps.setDouble(14, st.tr[i].y);
                     ps.setDouble(15, st.tr[i].z);
@@ -567,7 +569,7 @@ public class JPanelDatabase extends JPanel {
                         double ccb = Double.parseDouble(rs.getString("cb"));
                         double ccw = Double.parseDouble(rs.getString("cw"));
                         int oout = rs.getInt("alive");
-                        int oouttype = rs.getInt("status");
+                        OutType oouttype = OutType.values()[rs.getInt("status")];
                         boolean ccrop = Boolean.parseBoolean(rs.getString("crop"));
                         boolean hhabitat = Boolean.parseBoolean(rs.getString("habitat"));
                         boolean tz = false;

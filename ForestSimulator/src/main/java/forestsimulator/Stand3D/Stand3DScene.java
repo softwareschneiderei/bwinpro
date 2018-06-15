@@ -23,6 +23,7 @@ import com.sun.j3d.utils.picking.*;
 import com.sun.j3d.utils.geometry.Cone;
 import forestsimulator.util.StopWatch;
 import java.awt.image.BufferedImage;
+import treegross.base.OutType;
 
 /**
  *
@@ -389,9 +390,9 @@ public class Stand3DScene extends JPanel {
 
     public void harvestTreeInStand(String treeno) {
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].no.compareTo(treeno) == 0) {
+            if (st.tr[i].no.equals(treeno)) {
                 st.tr[i].out = st.year;
-                st.tr[i].outtype = 2;
+                st.tr[i].outtype = OutType.THINNED;
                 treelist.trees[treelist.findTreeByName(treeno)].harvestTree(base);
                 i = st.ntrees; // sofortiger Abbruch
             }
@@ -518,7 +519,7 @@ public class Stand3DScene extends JPanel {
             String name = ud.name;
             if (st.tr[i].no.compareTo(name) == 0) {
                 st.tr[i].out = st.year;
-                st.tr[i].outtype = 2;
+                st.tr[i].outtype = OutType.THINNED;
                 treelist.trees[treelist.findTreeByUserData(ud)].harvestTree(base);
                 i = st.ntrees; // sofortiger Abbruch
             }

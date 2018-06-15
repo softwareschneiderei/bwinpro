@@ -22,6 +22,7 @@ package treegross.treatment;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.GenerateXY;
+import treegross.base.OutType;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
@@ -331,7 +332,7 @@ public class TreatmentElements2 {
                     vout = vout + st.tr[i].fac * st.tr[i].v;
                     harvested += st.tr[i].fac * st.tr[i].v;
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 3;
+                    st.tr[i].outtype = OutType.HARVESTED;
                     //st.tr[i].no+="_zs";
                 }
             }
@@ -398,7 +399,7 @@ public class TreatmentElements2 {
                             vout += st.tr[i].fac * st.tr[i].v;
                             harvested += st.tr[i].fac * st.tr[i].v;
                             st.tr[i].out = st.year;
-                            st.tr[i].outtype = 3;
+                            st.tr[i].outtype = OutType.HARVESTED;
                         }
                     }
                 }
@@ -416,7 +417,7 @@ public class TreatmentElements2 {
                     vout += st.tr[i].fac * st.tr[i].v;
                     harvested += st.tr[i].fac * st.tr[i].v;
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 3;
+                    st.tr[i].outtype = OutType.HARVESTED;
                 }
             }
         }
@@ -497,7 +498,7 @@ public class TreatmentElements2 {
                                     && dist_trees < dist_min
                                     && (st.tr[j].sp.trule.targetDiameter - st.tr[j].d) <= (st.tr[i].sp.trule.targetDiameter - st.tr[i].d)) {
                                 st.tr[j].out = st.year;
-                                st.tr[j].outtype = 3;
+                                st.tr[j].outtype = OutType.HARVESTED;
                                 vout += st.tr[j].fac * st.tr[j].v;
                                 harvested += st.tr[j].fac * st.tr[j].v;
                             }
@@ -521,7 +522,7 @@ public class TreatmentElements2 {
                     break;
                 }
                 st.tr[i].out = st.year;
-                st.tr[i].outtype = 3;
+                st.tr[i].outtype = OutType.HARVESTED;
                 //st.tr[i].no+="_ks";
             }
         }
@@ -533,7 +534,7 @@ public class TreatmentElements2 {
                         break;
                     }
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 3;
+                    st.tr[i].outtype = OutType.HARVESTED;
                     //st.tr[i].no+="_ks";
                 }
             }
@@ -612,7 +613,7 @@ public class TreatmentElements2 {
                     break;
                 }
                 st.tr[merk].out = st.year;
-                st.tr[merk].outtype = 3;
+                st.tr[merk].outtype = OutType.HARVESTED;
                 //st.tr[merk].no+="_ss";
                 baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
             }
@@ -698,7 +699,7 @@ public class TreatmentElements2 {
                     }
                 }
                 st.tr[merk].out = st.year;
-                st.tr[merk].outtype = 3;
+                st.tr[merk].outtype = OutType.HARVESTED;
                 baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
             }           
             //
@@ -723,7 +724,7 @@ public class TreatmentElements2 {
                     break;
                 }
                 st.tr[merk].out = st.year;
-                st.tr[merk].outtype = 3;
+                st.tr[merk].outtype = OutType.HARVESTED;
                 //st.tr[merk].no+="_ss";
                 baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
             }
@@ -754,7 +755,7 @@ public class TreatmentElements2 {
                     }
                 }
                 st.tr[merk].out = st.year;
-                st.tr[merk].outtype = 3;
+                st.tr[merk].outtype = OutType.HARVESTED;
                 baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
             }     
         }
@@ -798,7 +799,7 @@ public class TreatmentElements2 {
             if (!overstoryOnly) {
                 if (st.tr[i].code == 999) {
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 3;
+                    st.tr[i].outtype = OutType.HARVESTED;
                 }
             }
             if (st.tr[i].out < 1 && st.tr[i].h >= hx && st.tr[i].habitat == false) {
@@ -814,7 +815,7 @@ public class TreatmentElements2 {
                 }
 
                 st.tr[i].out = st.year;
-                st.tr[i].outtype = 3;
+                st.tr[i].outtype = OutType.HARVESTED;
             }
         }
         st.status = 1;
@@ -980,7 +981,7 @@ public class TreatmentElements2 {
                             doNotEndThinning = false;
                         } else {
                             st.tr[merk].out = st.year;
-                            st.tr[merk].outtype = 2;
+                            st.tr[merk].outtype = OutType.THINNED;
                             thinned += (st.tr[merk].fac * st.tr[merk].v);
                             maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
                             if (maxBasalAreaOut <= 0.0) {
@@ -1019,13 +1020,13 @@ public class TreatmentElements2 {
                         if (st.tr[i].h > st.tr[i].si * 0.8) {
                             if (ent < 0.9 * (st.tr[i].cw + st.tr[j].cw) / 2.0 && st.tr[j].h * 1.1 > st.tr[i].cb) {
                                 st.tr[j].out = st.year;
-                                st.tr[j].outtype = 2;
+                                st.tr[j].outtype = OutType.THINNED;
                             }
                         }
                         if (st.tr[i].h > st.tr[i].si * 0.3 && st.tr[i].h < st.tr[i].si * 0.8) {
                             if (ent < 0.20 + (st.tr[i].cw + st.tr[j].cw) / 2.0) {
                                 st.tr[j].out = st.year;
-                                st.tr[j].outtype = 2;
+                                st.tr[j].outtype = OutType.THINNED;
                             }
                         }
                     }
@@ -1114,7 +1115,7 @@ public class TreatmentElements2 {
                         doNotEndThinning = false;
                     } else {
                         st.tr[merk].out = st.year;
-                        st.tr[merk].outtype = 2;
+                        st.tr[merk].outtype = OutType.THINNED;
                         volRem = volRem - (st.tr[merk].fac * st.tr[merk].v) / st.size;
                         if (volRem >= volout) {
                             doNotEndThinning = false;
@@ -1130,7 +1131,7 @@ public class TreatmentElements2 {
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].out < 0 && st.tr[i].crop == false && st.tr[i].code == species) {
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 2;
+                    st.tr[i].outtype = OutType.THINNED;
                     volRem = volRem - (st.tr[i].fac * st.tr[i].v) / st.size;
                     if (volRem >= volout) {
                         break;
@@ -1143,7 +1144,7 @@ public class TreatmentElements2 {
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].out < 0 && st.tr[i].crop && st.tr[i].code == species) {
                     st.tr[i].out = st.year;
-                    st.tr[i].outtype = 2;
+                    st.tr[i].outtype = OutType.THINNED;
                     volRem = volRem - (st.tr[i].fac * st.tr[i].v) / st.size;
                     if (volRem >= volout) {
                         break;
@@ -1264,7 +1265,7 @@ public class TreatmentElements2 {
                             doNotEndThinning = false;
                         } else {
                             st.tr[merk].out = st.year;
-                            st.tr[merk].outtype = 2;
+                            st.tr[merk].outtype = OutType.THINNED;
                             thinned = thinned + (st.tr[merk].fac * st.tr[merk].v);
                             maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
                             if (maxBasalAreaOut <= 0.0) {
@@ -1356,7 +1357,7 @@ public class TreatmentElements2 {
                         doNotEndThinning = false;
                     } else {
                         st.tr[indextree].out = st.year;
-                        st.tr[indextree].outtype = 2;
+                        st.tr[indextree].outtype = OutType.THINNED;
                         thinned = thinned + (st.tr[indextree].fac * st.tr[indextree].v);
                         maxBasalAreaOut = maxBasalAreaOut - (st.tr[indextree].fac * Math.PI * Math.pow(st.tr[indextree].d / 200.0, 2.0)) / st.size;
                         if (maxBasalAreaOut <= 0.0) {
@@ -1413,7 +1414,7 @@ public class TreatmentElements2 {
                 // Baum entfernen, sofern eine Überlappung besteht
                 if (merk > -1 && baout < baToTakeOut) {
                     st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = 2;
+                    st.tr[merk].outtype = OutType.THINNED;
                     thinned = thinned + st.tr[merk].fac * st.tr[merk].v;
                     baout = baout + (st.tr[merk].fac * Math.PI * Math.pow((st.tr[merk].d / 200.0), 2.0)) / st.size;
                 } else {
@@ -1454,7 +1455,7 @@ public class TreatmentElements2 {
         double volume = 0.0;
         for (int i = 0; i < st.ntrees; i++) //volume sum of outaken (thinned or harvested) trees in the current year            
         {
-            if (st.tr[i].out == st.year && st.tr[i].outtype > 1) {
+            if (st.tr[i].out == st.year && st.tr[i].outtype.treated()) {
                 volume = volume + st.tr[i].fac * st.tr[i].v;
             }
         }
@@ -1471,7 +1472,7 @@ public class TreatmentElements2 {
         double volume = 0.0;
         for (int i = 0; i < st.ntrees; i++) //volume sum of harvested trees in the current year               
         {
-            if (st.tr[i].out == st.year && st.tr[i].outtype == 3) {
+            if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.HARVESTED) {
                 volume = volume + st.tr[i].fac * st.tr[i].v;
             }
         }
@@ -1488,7 +1489,7 @@ public class TreatmentElements2 {
         double volume = 0.0;
         for (int i = 0; i < st.ntrees; i++) //volume sum of thinned trees in the current year               
         {
-            if (st.tr[i].out == st.year && st.tr[i].outtype == 2) {
+            if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.THINNED) {
                 volume = volume + st.tr[i].fac * st.tr[i].v;
             }
         }
@@ -1521,9 +1522,9 @@ public class TreatmentElements2 {
         if (getHarvestedOutVolume(st) < st.trule.minHarvestVolume) {
             for (int i = 0; i < st.ntrees; i++) {
                 //reset harvested trees in the current year
-                if (st.tr[i].out == st.year && st.tr[i].outtype == 3 && !st.tr[i].outBySkidtrail) {
+                if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.HARVESTED && !st.tr[i].outBySkidtrail) {
                     st.tr[i].out = -1;
-                    st.tr[i].outtype = 0;
+                    st.tr[i].outtype = OutType.STANDING;
                 }
             }
         }
@@ -1536,12 +1537,12 @@ public class TreatmentElements2 {
      * @param st treegross.base.stand object
      */
     public void checkMinThinningVolume(Stand st) {
-        if (this.getThinnedOutVolume(st) < st.trule.minThinningVolume) {
+        if (getThinnedOutVolume(st) < st.trule.minThinningVolume) {
             for (int i = 0; i < st.ntrees; i++) {
                 //reset thinned trees in the current year
-                if (st.tr[i].out == st.year && st.tr[i].outtype == 2 && !st.tr[i].outBySkidtrail) {
+                if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.THINNED && !st.tr[i].outBySkidtrail) {
                     st.tr[i].out = -1;
-                    st.tr[i].outtype = 0;
+                    st.tr[i].outtype = OutType.STANDING;
                 }
             }
         }
@@ -1557,9 +1558,9 @@ public class TreatmentElements2 {
         if (this.getTreatmentOutVolume(st) < st.trule.minOutVolume * st.size) {
             for (int i = 0; i < st.ntrees; i++) {
                 //reset (thinned or harvested) trees in the current year
-                if (st.tr[i].out == st.year && st.tr[i].outtype > 1 && !st.tr[i].outBySkidtrail) {
+                if (st.tr[i].out == st.year && st.tr[i].outtype.treated() && !st.tr[i].outBySkidtrail) {
                     st.tr[i].out = -1;
-                    st.tr[i].outtype = 0;
+                    st.tr[i].outtype = OutType.STANDING;
                 }
             }
         }
@@ -1635,9 +1636,9 @@ public class TreatmentElements2 {
                         st.tr[i].out = st.year;
                         st.tr[i].outBySkidtrail = true;
                         if (st.tr[i].d < st.tr[i].sp.spDef.targetDiameter) {
-                            st.tr[i].outtype = 2;
+                            st.tr[i].outtype = OutType.THINNED;
                         } else {
-                            st.tr[i].outtype = 3;
+                            st.tr[i].outtype = OutType.HARVESTED;
                         }
                     }
                 }
@@ -1745,7 +1746,7 @@ public class TreatmentElements2 {
                                     && dist_trees < dist_min
                                     && (st.tr[j].sp.trule.targetDiameter - st.tr[j].d) <= (st.tr[i].sp.trule.targetDiameter - st.tr[i].d)) {
                                 st.tr[j].out = st.year;
-                                st.tr[j].outtype = 3;
+                                st.tr[j].outtype = OutType.HARVESTED;
                                 vout = vout + st.tr[j].fac * st.tr[j].v;
                                 harvested += st.tr[j].fac * st.tr[j].v;
                             }
@@ -1826,7 +1827,7 @@ public class TreatmentElements2 {
             }
             double spcov = getDegreeOfCover(art, st, false);
             // get crown width at dbh = 7 cm of species at point of ingrowth            
-            Tree atree = new Tree(art, "atree", 20, -1, 0, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
+            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
                     false, 3, 0.0, "");
             try {
                 atree.sp = st.addspecies(atree);
