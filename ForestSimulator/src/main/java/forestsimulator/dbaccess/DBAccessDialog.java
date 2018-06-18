@@ -14,6 +14,8 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.dbaccess;
+import forestsimulator.standsimulation.Simulation;
+import static forestsimulator.standsimulation.Simulation.publishNothing;
 import forestsimulator.util.StandGeometry;
 import java.awt.Frame;
 import java.io.File;
@@ -84,7 +86,7 @@ public class DBAccessDialog extends JDialog {
         javax.swing.JPanel jPanel3 = new javax.swing.JPanel();
         standNameTextField = new javax.swing.JTextField();
         databaseFilenameTextField = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        recordingComboBox = new javax.swing.JComboBox();
         searchButton = new javax.swing.JButton();
         selectFileButton = new javax.swing.JButton();
         specialMixtureButton = new javax.swing.JButton();
@@ -343,7 +345,7 @@ public class DBAccessDialog extends JDialog {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(standNameTextField)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(recordingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(databaseFilenameTextField)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(562, 562, 562)
@@ -369,7 +371,7 @@ public class DBAccessDialog extends JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(recordingComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(searchButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -419,7 +421,7 @@ public class DBAccessDialog extends JDialog {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     standFound = true;
-                    jComboBox1.addItem(rs.getInt("auf"));
+                    recordingComboBox.addItem(rs.getInt("auf"));
                 }
             }
         } catch (SQLException e) {
@@ -436,7 +438,7 @@ public class DBAccessDialog extends JDialog {
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ids = standNameTextField.getText();
-        Object txt = jComboBox1.getSelectedItem();
+        Object txt = recordingComboBox.getSelectedItem();
 
         int aufs = Integer.parseInt(txt.toString());
 
@@ -470,27 +472,27 @@ public class DBAccessDialog extends JDialog {
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
-            Treatment2 t2 = new Treatment2();
+            Treatment2 treat = new Treatment2();
             LoadTreegrossStand lts = new LoadTreegrossStand();
-            String ids = standNameTextField.getText();
-            Object txt = jComboBox1.getSelectedItem();
+            String edvId = standNameTextField.getText();
+            int aufId = Integer.parseInt(recordingComboBox.getSelectedItem().toString());
 
-            int aufs = Integer.parseInt(txt.toString());
-
-            st = lts.loadFromDB(con, st, ids, aufs, true, true);
+            st = lts.loadFromDB(con, st, edvId, aufId, true, true);
             st.sortbyd();
             st.missingData();
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
             st.descspecies();
-            st = lts.loadRules(con, st, ids, aufs, t2, 0);
-            lts.saveBaum(con, st, ids, aufs, 0, 0);
-            for (int i = 0; i < st.temp_Integer; i++) {
-                st.grow(5, false);
+            st = lts.loadRules(con, st, edvId, aufId, treat, 0);
+            // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
+            lts.saveBaum(con, st, edvId, aufId, 0, 0);
+            Simulation simulation = new Simulation(st, treat);
+            for (int step = 0; step < st.temp_Integer; step++) {
+                simulation.executeStep(false, 5, publishNothing);
                 st.sortbyd();
                 st.missingData();
                 st.descspecies();
-                lts.saveBaum(con, st, ids, aufs, i + 1, 0);
+                lts.saveBaum(con, st, edvId, aufId, step + 1, 0);
             }
         } catch (SQLException e) {
             System.out.println("Problem: " + " " + e);
@@ -1100,7 +1102,6 @@ public class DBAccessDialog extends JDialog {
     private javax.swing.JButton feDataButton;
     private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
@@ -1109,6 +1110,7 @@ public class DBAccessDialog extends JDialog {
     private javax.swing.JButton loadStandButton;
     private javax.swing.JLabel plotNumberLabel;
     private javax.swing.JTextField plotNumberTextField;
+    private javax.swing.JComboBox recordingComboBox;
     private javax.swing.JButton searchButton;
     private javax.swing.JButton selectFileButton;
     private javax.swing.JButton simulationButton;

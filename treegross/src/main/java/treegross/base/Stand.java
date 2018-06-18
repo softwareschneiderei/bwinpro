@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1199,6 +1200,7 @@ public class Stand {
         // note:
         // a backward loop (j--) is faster because the computation time for j<=0 is much faster
         // then for checking j>= a int number, java has a special algorithm to compare numbers with 0.
+        // TODO: benchmark against a for-each-loop
         for (int j = startindex; j >= 0; j--) {
             if (tr[j].out < 1) {
                 nTreesAlive++;
@@ -1994,10 +1996,16 @@ public class Stand {
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
         }
-        for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0) {
-                tr[i].ageBasedMortality();
+        forAllTrees(tree -> {
+            if (tree.out < 0) {
+                tree.ageBasedMortality();
             }
+        });
+    }
+    
+    public void forAllTrees(Consumer<Tree> operation) {
+        for (Tree tree : trees()) {
+            operation.accept(tree);
         }
     }
     

@@ -6,6 +6,7 @@ import treegross.base.Stand;
 import treegross.treatment.Treatment2;
 
 public class Simulation {
+    public static final Consumer<Stand> publishNothing = stand -> {};
 
     private final Stand st;
     private final Treatment2 treat;

@@ -318,7 +318,7 @@
                                       <Group type="102" attributes="0">
                                           <Component id="standNameTextField" max="32767" attributes="1"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="jComboBox1" min="-2" pref="149" max="-2" attributes="1"/>
+                                          <Component id="recordingComboBox" min="-2" pref="149" max="-2" attributes="1"/>
                                       </Group>
                                       <Component id="databaseFilenameTextField" max="32767" attributes="0"/>
                                   </Group>
@@ -356,7 +356,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="standNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="recordingComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="searchButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="10" max="32767" attributes="0"/>
@@ -385,7 +385,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="jComboBox1">
+        <Component class="javax.swing.JComboBox" name="recordingComboBox">
         </Component>
         <Component class="javax.swing.JButton" name="searchButton">
           <Properties>
