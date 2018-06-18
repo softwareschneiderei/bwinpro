@@ -9,6 +9,7 @@
  */
 package forestsimulator.Stand3D;
 
+import java.util.Arrays;
 import javax.media.j3d.*;
 import treegross.base.OutType;
 import treegross.base.Tree;
@@ -34,7 +35,7 @@ public class Tree3DList {
         setListData(tgtrees, ntrees, bltexture, speciescolor, textured, sstatus, parent, speciestoshow, showdead, base, year);
     }
 
-    public void setListData(Tree[] tgtrees, int ntrees, Texture2D[] bltexture, boolean speciescolor, boolean textured, boolean sstatus, Group parent, int[] speciestoshow, boolean showdead, StandBase3D base, int year) {
+    public final void setListData(Tree[] tgtrees, int ntrees, Texture2D[] bltexture, boolean speciescolor, boolean textured, boolean sstatus, Group parent, int[] speciestoshow, boolean showdead, StandBase3D base, int year) {
         clear();
         standyear = year;
         sts = speciestoshow;
@@ -94,7 +95,7 @@ public class Tree3DList {
     public void setSpeciesToShow(int[] speciestoshow, boolean showdead) {
         sts = speciestoshow;
         if (trees != null) {
-            for (Tree3D tree : trees) {
+            for (Tree3D tree : trees()) {
                 if (showSpecies(tree.userdata.spec)) {
                     if (!showdead && !tree.userdata.living && !tree.userdata.standing) {
                         tree.setVisible(false);
@@ -107,7 +108,11 @@ public class Tree3DList {
             }
         }
     }
-
+    
+    public Iterable<Tree3D> trees() {
+        return Arrays.asList(trees);
+    }
+    
     public void setTextured(boolean textured) {
         if (trees != null) {
             for (Tree3D tree : trees) {
@@ -163,7 +168,7 @@ public class Tree3DList {
         int result = -1;
         if (trees != null) {
             for (int i = 0; i < trees.length; i++) {
-                if (treename == trees[i].userdata.name) {
+                if (treename.equals(trees[i].userdata.name)) {
                     result = i;
                     break;
                 }

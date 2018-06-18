@@ -9,10 +9,23 @@
  */
 package forestsimulator.dbaccess;
 
+import forestsimulator.gui.TaskSpinner;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -26,9 +39,16 @@ public class ConnectionFactory {
     private String charset = "UTF-8";
 
     Properties props = new Properties();
+    private final RootPaneContainer parent;
 
     public ConnectionFactory() {
+        this(null);
+    }
+
+    ConnectionFactory(RootPaneContainer parent) {
+        super();
         props.put("charSet", charset);
+        this.parent = parent;
     }
 
     public final void setConnectionCharSet(String cs) {
@@ -37,7 +57,7 @@ public class ConnectionFactory {
     }
 
     public Connection openDBConnection(String database, String username, String password) {
-        return openDBConnection(ACCESS, database, username, password);
+        return new TaskSpinner<Connection>(parent).execute(() -> openDBConnection(ACCESS, database, username, password));
     }
     
     public Connection openDBConnection(int dbtype, String database, String username, String password) {

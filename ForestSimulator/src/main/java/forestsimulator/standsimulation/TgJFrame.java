@@ -22,6 +22,7 @@ import nwfva.biomass.BiomassDialog;
 import forestsimulator.Stand3D.PackageInfo;
 import forestsimulator.Stand3D.Manager3D;
 import forestsimulator.Stand3D.Query3DProperties;
+import forestsimulator.gui.BlockingSpinner;
 import forestsimulator.language.UserLanguage;
 import forestsimulator.util.StopWatch;
 import java.util.logging.Level;

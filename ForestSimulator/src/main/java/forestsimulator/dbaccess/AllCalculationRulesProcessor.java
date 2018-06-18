@@ -30,15 +30,16 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         logger.addHandler(h);
     }
     
-    private final ConnectionFactory connectionFactory = new ConnectionFactory();
+    private final ConnectionFactory connectionFactory;
     private final String aktivesDatenfile;
     private Stand st;
     private BatchProgressListener progressListener;
     private volatile boolean shouldStop;
     private final StopWatch wholeBatchTiming = new StopWatch("Whole batch");
 
-    public AllCalculationRulesProcessor(String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
+    public AllCalculationRulesProcessor(ConnectionFactory connectionFactory, String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
         super();
+        this.connectionFactory = connectionFactory;
         this.aktivesDatenfile = aktivesDatenfile;
         this.st = st;
         this.st.notificationsEnabled(notifyStandListeners);

@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.RootPaneContainer;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -499,12 +500,13 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(aktivesDatenfile, st, updateViewCheckbox.isSelected());
+        System.out.println("Parent: " + getParent());
+        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(new ConnectionFactory((RootPaneContainer) getParent()), aktivesDatenfile, st, updateViewCheckbox.isSelected());
         BatchProgressDialog progress = new BatchProgressDialog((Frame) getParent(), new File(aktivesDatenfile).getName(), processor);
         processor.setProgressListener(progress);
         progress.pack();
         progress.setLocationRelativeTo(getOwner());
-        progress.setVisible(true);
+//        progress.setVisible(true);
         processor.execute();
         dispose();
     }//GEN-LAST:event_calculateAllButtonActionPerformed

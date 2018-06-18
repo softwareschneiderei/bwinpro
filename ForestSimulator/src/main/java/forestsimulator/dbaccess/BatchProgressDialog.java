@@ -53,6 +53,7 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
         setTitle(bundle.getString("BatchProgressDialog.title")); // NOI18N
+        setModal(true);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -208,6 +209,7 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
 
     @Override
     public void updateProgress(BatchProgress progress) {
+        setVisible(true);
         currentRuleDisplay.setText(progress.currentRuleText());
         elapsedTimeDisplay.setText(DurationFormatter.format(Optional.of(progress.elapsedNanos())));
         if (progress.stepProgress().current == 0) {
