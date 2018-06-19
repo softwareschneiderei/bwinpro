@@ -5,6 +5,8 @@ import java.util.function.DoubleFunction;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class StandTest {
@@ -68,6 +70,47 @@ public class StandTest {
         stand.sortbyNo();
         
         assertThat(Arrays.stream(stand.tr, 0, stand.ntrees)).extracting(tree -> tree.no).containsExactly("12", "15", "183", "23", "99");
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void clearResetsArrayCounts() {
+        Stand stand = new Stand();
+        stand.ntrees = 17;
+        stand.ncpnt = 4;
+        stand.nspecies = 2;
+        
+        stand.clear();
+        assertThat(stand.ntrees).isEqualTo(0);
+        assertThat(stand.ncpnt).isEqualTo(0);
+        assertThat(stand.nspecies).isEqualTo(0);
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void addingTreesToFullStandThrows() throws SpeciesNotDefinedException {
+        Stand stand = new Stand();
+        stand.ntrees = stand.maxStandTrees;
+        
+        assertThatThrownBy(() -> {
+            stand.addtreefac(1, "", 10, 0, 5, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        }).hasMessage("Maximum tree number reached! Tree not added! no name 0 d=5 species=1 height=7");
+    }
+
+    /*
+     * #Pinning
+    */
+    @Test
+    public void addTreeWorksAsExpected() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.clear();
+        
+        s.addtreeNFV(0, "number", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "remark");
+        assertThat(s.trees()).size().isEqualTo(1);
     }
 
     private Tree[] treesWith(DoubleFunction<Tree> mapper, double... diameters) {

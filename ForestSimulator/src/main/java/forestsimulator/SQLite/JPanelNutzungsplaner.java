@@ -338,7 +338,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         st.ncpnt=0;
         st.nspecies=0;
         st.ntrees=0;
-        st.addsize(size);
+        st.setSize(size);
         st.standname=standNameTextField.getText();
         st.year=2015;
         double len = Math.sqrt(10000*st.size);  

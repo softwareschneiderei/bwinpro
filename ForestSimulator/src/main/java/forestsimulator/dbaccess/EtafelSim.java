@@ -18,7 +18,7 @@ public class EtafelSim {
         st.ncpnt = 0;
         st.nspecies = 0;
         st.ntrees = 0;
-        st.addsize(size);
+        st.setSize(size);
         st.standname = name;
         st.year = 2014;
         double len = Math.sqrt(10000 * st.size);

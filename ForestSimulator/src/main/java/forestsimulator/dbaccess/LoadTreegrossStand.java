@@ -2,6 +2,8 @@ package forestsimulator.dbaccess;
 
 import forestsimulator.util.StopWatch;
 import java.sql.*;
+import java.text.MessageFormat;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -13,7 +15,7 @@ import treegross.treatment.*;
  * @author nagel
  */
 public class LoadTreegrossStand {
-    
+
     private static final Logger logger = Logger.getLogger(LoadTreegrossStand.class.getName());
 
     private int ebaum = 0;
@@ -22,47 +24,71 @@ public class LoadTreegrossStand {
     private int durchforstung_an = 0;
     private int scenario = 0;
 
-    public LoadTreegrossStand() {
+    public Stand loadFromDB(Connection connection, Stand stand, String edvId, int selectedAufn, boolean missingDataAutomatisch, boolean missingDataReplace) {
+        StopWatch loadFromDB = new StopWatch("Load from Database").start();
+        stand.setMetaData(standMetadata(connection, edvId, selectedAufn, stand));
+        stand.clear();
+        addTrees(connection, edvId, selectedAufn, stand);
+        addCoordinatesToTrees(connection, edvId, stand);
+        addCornerPoints(connection, edvId, stand);
+// Ersatz fehlender Daten Ende             
+        int nxx = 0;
+        for (int i = 1; i < stand.ntrees; i++) {
+            if (stand.tr[i].ou == 2) {
+                nxx = nxx + 1;
+            }
+        }
+        loadFromDB.printElapsedTime();
+        return stand;
     }
 
-    public Stand loadFromDB(Connection connection, Stand stl, String idx, int selectedAufn, boolean missingDataAutomatisch,
-            boolean missingDataReplace) {
-        StopWatch loadFromDB = new StopWatch("Load from Database").start();
-        String flaechenName = "";
-        String abtName = "";
-        try (PreparedStatement stmt = connection.prepareStatement("select * from Versfl where edv_id = ?")) {
-            stmt.setString(1, idx.substring(0, 6));
+    private void addCornerPoints(Connection connection, String edvId, Stand stand) {
+        try (PreparedStatement stmt = connection.prepareStatement("select * from Stammv where edvid = ? order by nr")) {
+            stmt.setString(1, edvId);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    flaechenName = rs.getObject("forstamt").toString();
-                    abtName = rs.getObject("abt").toString();
+                while (rs.next()) {
+                    double xp = rs.getDouble("x");
+                    double yp = rs.getDouble("y");
+                    String nox = rs.getString("nr").trim();
+                    if (nox.contains("ECK")) {
+                        stand.addcornerpoint(nox, xp, yp, 0.0);
+                        stand.center.no = "polygon";
+                    }
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not load area from database", e);
+            logger.log(Level.SEVERE, "Could not load root directory from database", e);
         }
-        String SAuf = String.valueOf(selectedAufn);
-        stl.addName(flaechenName + " " + abtName + " Auf: " + SAuf);
-        try (PreparedStatement stmt = connection.prepareStatement("select * from Auf where edvid = ? And auf = ?")) {
-            stmt.setString(1, idx);
-            stmt.setInt(2, selectedAufn);
+    }
+
+    private void addCoordinatesToTrees(Connection connection, String edvId, Stand stand) {
+        try (PreparedStatement stmt = connection.prepareStatement("select * from Stammv where edvid = ? ORDER BY nr")) {
+            stmt.setString(1, edvId);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    stl.year = rs.getInt("Jahr");
-                    stl.addsize(rs.getDouble("flha"));
+                while (rs.next()) {
+                    double xp = rs.getDouble("x");
+                    double yp = rs.getDouble("y");
+                    String nox = rs.getString("nr").trim();
+                    int artx = rs.getInt("art");
+                    for (int i = 0; i < stand.ntrees; i++) {
+                        if ((nox.compareTo(stand.tr[i].no.trim()) == 0) && (artx == stand.tr[i].code)) {
+                            stand.tr[i].x = xp;
+                            stand.tr[i].y = yp;
+                        }
+                    }
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not load stand recording from database", e);
+            logger.log(Level.SEVERE, "Could not load root directory from database", e);
         }
-        stl.ntrees = 0;
-        stl.nspecies = 0;
-        stl.ncpnt = 0;
-        int ndh = 0;
-        // Bäume hinzufügen       
-        try (PreparedStatement stmt = connection.prepareStatement("select * from Baum where edvid = ? And auf = ?")) {
-            stmt.setString(1, idx);
+    }
+
+    private void addTrees(Connection connection, String edvId, int selectedAufn, Stand stand) {
+        // Bäume hinzufügen
+        try (PreparedStatement stmt = connection.prepareStatement("select * from Baum where edvid = ? and auf = ?")) {
+            stmt.setString(1, edvId);
             stmt.setInt(2, selectedAufn);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     String edv = rs.getObject("edvid").toString();
@@ -70,215 +96,159 @@ public class LoadTreegrossStand {
                     if (edv == null || edv.length() < 1) {
                         break;
                     }
-                    int art = rs.getInt("art");
-                    String nr = rs.getObject("nr").toString();
-                    int anzahl = rs.getInt("anzahl");
-                    int age = (int) Math.round((rs.getDouble("alt")));
-                    String aus = "";
-                    Object auso = rs.getObject("a");
-                    if (auso != null) {
-                        aus = auso.toString().trim();
-                    }
-                    String ein = "";
-                    Object eino = rs.getObject("e");
-                    if (eino != null) {
-                        ein = eino.toString().trim();
-                    }
-                    int g0 = rs.getInt("g0");
-                    int g5 = rs.getInt("g5");
-                    int g10 = rs.getInt("g10");
-                    int g15 = rs.getInt("g15");
-                    int g20 = rs.getInt("g20");
-                    int g25 = rs.getInt("g25");
-                    int g30 = rs.getInt("g30");
-                    int g35 = rs.getInt("g35");
-                    double kb = (g0 + g5 + g10 + g15 + g20 + g25 + g30 + g35) / 40.0;
-                    String zfx = "";
-                    Object zfxo = rs.getObject("zf");
-                    if (zfxo != null) {
-                        zfx = zfxo.toString().trim();
-                    }
-                    int zf = 0;
-                    if (zfx.compareTo("z") == 0 || zfx.compareTo("Z") == 0) {
-                        zf = 1;
-                    }
-                    String oux = "";
-                    Object ouxo = rs.getObject("ou");
-                    if (ouxo != null) {
-                        oux = ouxo.toString().trim();
-                    }
-                    int ou = 0;
-                    if (oux.contains("o") || oux.contains("O")) {
-                        ou = 1;
-                    }
-                    if (oux.compareTo("u") > -1 || oux.compareTo("U") > -1) {
-                        ou = 2;
-                    }
-                    if (aus != null) {
-                        aus = aus.trim();
-                    } else {
-                        aus = "";
-                    }
-                    String rx = "";
-                    Object rxo = rs.getObject("r");
-                    if (rxo != null) {
-                        rx = rxo.toString().trim();
-                    }
-                    int r = 0;
-                    if (rx.compareTo("r") == 0 || rx.compareTo("R") == 0) {
-                        r = 1;
-                    }
-                    if (ein != null) {
-                        ein = ein.trim();
-                    } else {
-                        ein = "";
-                    }
-                    aus = aus.trim();
-                    int out = -1;
-// Der einfache Einwachser wurde mit -99 kodiert, jetzt als Einw
-// Der einfache ausscheidende mit der Jahreszahl             
-                    String rm = "";
-                    if (aus.trim().length() > 0) {
-                        out = stl.year;
-                    }
-                    if (ein.trim().length() > 0) {
-                        rm = "Einw";
-                    }
-//           double d = ex.getDouble("dmess")/10.0;
-                    double d = rs.getDouble("d") / 10.0;
-                    double h = rs.getDouble("h") / 10.0;
-                    double ka = rs.getDouble("k") / 10.0;
-                    double fac = rs.getDouble("repfl");
-                    if (anzahl == 0) {
-                        anzahl = 1;
-                        fac = 0.0;
-                    }
-// Bäume mit höherem Repräsentationsfaktor als 1 klonen
-//
-                    if (fac >= 2.0) {
-                        int az = (int) fac;
-                        fac = fac / az;
-                        anzahl = anzahl * az;
-                    }
-                    if (r == 1) {
-                        fac = 0;
-                    }
-                    int nx = 0;
-                    if (h > 0) {
-                        ndh = ndh + 1;
-                    }
-                    if (d > 0) {
-                        for (int i = 0; i < anzahl; i++) {
-                            String nrx = nr;
-                            if (i > 0) {
-                                nrx = nr + "_" + i;
-                            }
-                            stl.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, ou, fac, rm);
-                        }
-                        if (out > 0) {
-                            stl.tr[stl.ntrees - 1].outtype = OutType.THINNED;
-                        }
-                    }
+                    addTree(rs, stand);
                 }
             }
         } catch (SQLException | SpeciesNotDefinedException e) {
             logger.log(Level.SEVERE, "Could not load tree from database", e);
         }
-        System.out.println("fertig");
+        logger.log(Level.INFO, "Added trees to stand");
+    }
+
+    private void addTree(final ResultSet rs, Stand stand) throws SpeciesNotDefinedException, SQLException {
+        int art = rs.getInt("art");
+        String nr = rs.getObject("nr").toString();
+        int anzahl = rs.getInt("anzahl");
+        int age = (int) Math.round((rs.getDouble("alt")));
+        String aus = "";
+        Object auso = rs.getObject("a");
+        if (auso != null) {
+            aus = auso.toString().trim();
+        }
+        String ein = "";
+        Object eino = rs.getObject("e");
+        if (eino != null) {
+            ein = eino.toString().trim();
+        }
+        int g0 = rs.getInt("g0");
+        int g5 = rs.getInt("g5");
+        int g10 = rs.getInt("g10");
+        int g15 = rs.getInt("g15");
+        int g20 = rs.getInt("g20");
+        int g25 = rs.getInt("g25");
+        int g30 = rs.getInt("g30");
+        int g35 = rs.getInt("g35");
+        double kb = (g0 + g5 + g10 + g15 + g20 + g25 + g30 + g35) / 40.0;
+        String zfx = "";
+        Object zfxo = rs.getObject("zf");
+        if (zfxo != null) {
+            zfx = zfxo.toString().trim();
+        }
+        int zf = 0;
+        if (zfx.compareTo("z") == 0 || zfx.compareTo("Z") == 0) {
+            zf = 1;
+        }
+        String oux = "";
+        Object ouxo = rs.getObject("ou");
+        if (ouxo != null) {
+            oux = ouxo.toString().trim();
+        }
+        int ou = 0;
+        if (oux.contains("o") || oux.contains("O")) {
+            ou = 1;
+        }
+        if (oux.compareTo("u") > -1 || oux.compareTo("U") > -1) {
+            ou = 2;
+        }
+        if (aus != null) {
+            aus = aus.trim();
+        } else {
+            aus = "";
+        }
+        String rx = "";
+        Object rxo = rs.getObject("r");
+        if (rxo != null) {
+            rx = rxo.toString().trim();
+        }
+        int r = 0;
+        if (rx.compareTo("r") == 0 || rx.compareTo("R") == 0) {
+            r = 1;
+        }
+        if (ein != null) {
+            ein = ein.trim();
+        } else {
+            ein = "";
+        }
+        aus = aus.trim();
+        int out = -1;
+        // Der einfache Einwachser wurde mit -99 kodiert, jetzt als Einw
+// Der einfache ausscheidende mit der Jahreszahl
+        String rm = "";
+        if (aus.trim().length() > 0) {
+            out = stand.year;
+        }
+        if (ein.trim().length() > 0) {
+            rm = "Einw";
+        }
+//           double d = ex.getDouble("dmess")/10.0;
+        double d = rs.getDouble("d") / 10.0;
+        double h = rs.getDouble("h") / 10.0;
+        double ka = rs.getDouble("k") / 10.0;
+        double fac = rs.getDouble("repfl");
+        if (anzahl == 0) {
+            anzahl = 1;
+            fac = 0.0;
+        }
+// Bäume mit höherem Repräsentationsfaktor als 1 klonen
 //
-//  koordinaten hinzufügen
-//        
-        try (PreparedStatement stmt = connection.prepareStatement("select * from Stammv where edvid = ? ORDER BY nr")) {
-            stmt.setString(1, idx);
+        if (fac >= 2.0) {
+            int az = (int) fac;
+            fac = fac / az;
+            anzahl = anzahl * az;
+        }
+        if (r == 1) {
+            fac = 0;
+        }
+        int nx = 0;
+        if (d > 0) {
+            for (int i = 0; i < anzahl; i++) {
+                String nrx = nr;
+                if (i > 0) {
+                    nrx = nr + "_" + i;
+                }
+                stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, fac, ou, rm);
+            }
+            if (out > 0) {
+                stand.tr[stand.ntrees - 1].outtype = OutType.THINNED;
+            }
+        }
+    }
+
+    private StandMetaData standMetadata(Connection connection, String edvId, int selectedAufn, Stand stand) {
+        Optional<Integer> year = Optional.empty();
+        Optional<Double> size = Optional.empty();
+        try (PreparedStatement stmt = connection.prepareStatement("select * from Auf where edvid = ? and auf = ?")) {
+            stmt.setString(1, edvId);
+            stmt.setInt(2, selectedAufn);
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    double xp = rs.getDouble("x");
-                    double yp = rs.getDouble("y");
-                    String nox = rs.getObject("nr").toString();
-                    nox = nox.trim();
-                    int artx = rs.getInt("art");
-                    for (int i = 0; i < stl.ntrees; i++) {
-                        if ((nox.compareTo(stl.tr[i].no.trim()) == 0) && (artx == stl.tr[i].code)) {
-                            stl.tr[i].x = xp;
-                            stl.tr[i].y = yp;
-                        }
-                    }
+                if (rs.next()) {
+                    year = Optional.of(rs.getInt("Jahr"));
+                    stand.setSize(rs.getDouble("flha"));
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not load root directory from database", e);
+            logger.log(Level.SEVERE, "Could not load stand recording from database", e);
         }
-//
-//  Eckpunkte hinzufügen
-//
-        try (PreparedStatement stmt = connection.prepareStatement("select * from Stammv where edvid = ? order by nr")) {
-            stmt.setString(1, idx);
+        return new StandMetaData(standName(connection, edvId, selectedAufn), year, size);
+    }
+
+    private static String standName(Connection connection, String edvId, int selectedAufn) {
+        try (PreparedStatement stmt = connection.prepareStatement("select * from Versfl where edv_id = ?")) {
+            stmt.setString(1, edvId.substring(0, 6));
+
+            String flaechenName = "";
+            String abtName = "";
             try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    double xp = rs.getDouble("x");
-                    double yp = rs.getDouble("y");
-                    String nox = rs.getString("nr").trim();
-                    if (nox.contains("ECK")) {
-                        stl.addcornerpoint(nox, xp, yp, 0.0);
-                        stl.center.no = "polygon";
-                    }
+                if (rs.next()) {
+                    flaechenName = rs.getObject("forstamt").toString();
+                    abtName = rs.getObject("abt").toString();
                 }
             }
+            return MessageFormat.format("{0} {1} Auf: {2}", flaechenName, abtName, selectedAufn).trim();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Could not load root directory from database", e);
+            logger.log(Level.SEVERE, "Could not load area from database", e);
+            return MessageFormat.format("Auf: {0}", selectedAufn);
         }
-//data quality
-/*            for (int i=0; i<stl.ntrees;i++) {
-                if (stl.tr[i].d > 0) stl.tr[i].remarks=stl.tr[i].remarks+"D;";
-                else stl.tr[i].remarks=stl.tr[i].remarks+"d";
-                if (stl.tr[i].h > 0) stl.tr[i].remarks=stl.tr[i].remarks+"H;";
-                else stl.tr[i].remarks=stl.tr[i].remarks+"h;";
-                if (stl.tr[i].cb > 0) stl.tr[i].remarks=stl.tr[i].remarks+"A;";
-                else stl.tr[i].remarks=stl.tr[i].remarks+"a;";
-                if (stl.tr[i].cw > 0) stl.tr[i].remarks=stl.tr[i].remarks+"B;";
-                else stl.tr[i].remarks=stl.tr[i].remarks+"b;";
-                if (stl.tr[i].x > -9.0 && stl.tr[i].y > -9.0 ) stl.tr[i].remarks=stl.tr[i].remarks+"X";
-                else stl.tr[i].remarks=stl.tr[i].remarks+"x";
-            }
-         */
-// an dieser Stelle werden alle gemessenen Höhen nach hmeasured in Tree gespeichert.
-// Dadurch wird es möglich später verschiedene Höhenkurven zu erzeugen           
-/*        for (int i=0;i<stl.ntrees;i++) if(stl.tr[i].h > 0) 
-            stl.tr[i].hMeasuredValue=stl.tr[i].h; else stl.tr[i].hMeasuredValue=0.0;
-       if (missingDataReplace)
-             for (int i=0;i<stl.ntrees;i++) if(stl.tr[i].h > 0) stl.tr[i].h=0.0;
-         */
-//
-// replace missing data at all             
-//       if (missingDataReplace){      
-// update missing data automatically
-/*        if (missingDataAutomatisch!= true) {
-            MissingDataDialog mdDialog = new MissingDataDialog(jFrame,true,stl);
-            mdDialog.setVisible(true);
-        }
-        else {  
-            GenerateMissingHeights gmh = new GenerateMissingHeights();
-            gmh.replaceMissingHeights(stl,true);
-        }
-         */
- /*        stl.sortbyd();
-        stl.missingData();
-        stl.descspecies();
-        int kk=0;
-        GenerateXY genxy = new GenerateXY();
-        genxy.zufall(stl);
-        stl.descspecies();
-       }
-         */
-// Ersatz fehlender Daten Ende             
-        int nxx = 0;
-        for (int i = 1; i < stl.ntrees; i++) {
-            if (stl.tr[i].ou == 2) {
-                nxx = nxx + 1;
-            }
-        }
-        loadFromDB.printElapsedTime();
-        return stl;
     }
 
     public Stand loadRules(Connection dbconn, Stand stl, String idx, int auf, Treatment2 t2, int scen) {
@@ -431,15 +401,15 @@ public class LoadTreegrossStand {
         return ebaum;
     }
 
-    public int getBestand() {
-        return bestand;
+    public boolean updateStand() {
+        return bestand == 1;
     }
 
-    public int getBaumart() {
-        return baumart;
+    public boolean updateSpecies() {
+        return baumart == 1;
     }
 
-    public boolean getDurchf() {
+    public boolean thinningActive() {
         return durchforstung_an == 1;
     }
 
@@ -484,8 +454,8 @@ public class LoadTreegrossStand {
     public void saveSpecies(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement(
                 "INSERT INTO ProgArt (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
-                        + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
-                        + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
                 stmt.setString(1, ids);
                 stmt.setInt(2, aufs);
@@ -558,7 +528,7 @@ public class LoadTreegrossStand {
                 stmt.setDouble(16, nnhaa);
                 stmt.setDouble(17, gghaa);
                 stmt.setDouble(18, vvhaa);
-                
+
                 stmt.execute();
             }
         } catch (SQLException e) {
@@ -568,7 +538,7 @@ public class LoadTreegrossStand {
 
     public void saveStand(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha, dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
-                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             st.descspecies();
             double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0);
 
@@ -589,7 +559,7 @@ public class LoadTreegrossStand {
             stmt.setDouble(15, st.bhaout);
             stmt.setDouble(16, vvhaa);
             stmt.setDouble(17, st.getVhaTargetDiameter(0));
-                
+
             stmt.execute();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not save stand to database", e);
@@ -598,8 +568,8 @@ public class LoadTreegrossStand {
 
     public void saveStandV2(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder, int scena) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha,"
-                    + " dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
-                    + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + " dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             st.descspecies();
 
             // SUMME Grundfläche und Volumen der Nutzung  
@@ -633,7 +603,7 @@ public class LoadTreegrossStand {
             stmt.setDouble(15, gghaa);
             stmt.setDouble(16, vvhaa);
             stmt.setDouble(17, vvhaaz);
-                
+
             stmt.execute();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not save stand to database", e);
@@ -643,25 +613,25 @@ public class LoadTreegrossStand {
     public void saveXMLToDB(Connection dbconn, Stand st) {
         try {
             try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Stammv (edvid, nr, art, auf, x, y, z)"
-                            + " values (?, ?, -99, 1, ?, ?, 0.0)")) {
+                    + " values (?, ?, -99, 1, ?, ?, 0.0)")) {
                 for (int i = 0; i < st.ncpnt; i++) {
                     stmt.setString(1, st.standname);
                     stmt.setString(2, "ECK" + i);
                     stmt.setDouble(3, st.cpnt[i].x);
                     stmt.setDouble(4, st.cpnt[i].y);
-        
+
                     stmt.execute();
                 }
             }
             try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Stammv (edvid, nr, art, auf, x, y, z)"
-                            + " values (?, ?, ?, 1, ?, ?, 0.0)")) {
+                    + " values (?, ?, ?, 1, ?, ?, 0.0)")) {
                 for (int i = 0; i < st.ntrees; i++) {
                     stmt.setString(1, st.standname);
                     stmt.setString(2, st.tr[i].no);
                     stmt.setInt(3, st.tr[i].code);
                     stmt.setDouble(4, st.tr[i].x);
                     stmt.setDouble(5, st.tr[i].y);
-                    
+
                     stmt.execute();
                 }
             }
@@ -700,12 +670,12 @@ public class LoadTreegrossStand {
 // In auf Datei schreiben
             String idx = st.standname + " 1";
             try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Auf (id, edvid, auf, monat, jahr, flha)"
-                        + " values (?, ?, 1, 1, ?, ?)")) {
+                    + " values (?, ?, 1, 1, ?, ?)")) {
                 stmt.setString(1, idx);
                 stmt.setString(2, st.standname);
                 stmt.setInt(3, st.year);
                 stmt.setDouble(4, st.size);
-                
+
                 stmt.execute();
             }
         } catch (SQLException e) {
@@ -787,7 +757,7 @@ public class LoadTreegrossStand {
         st.ncpnt = 0;
         st.nspecies = 0;
         st.ntrees = 0;
-        st.addsize(size);
+        st.setSize(size);
         st.standname = name;
         st.year = 2014;
         double len = Math.sqrt(10000 * st.size);
@@ -801,7 +771,7 @@ public class LoadTreegrossStand {
         st.center.z = 0.0;
         return st;
     }
-    
+
     private int boolToDB(boolean b) {
         if (b) {
             return 1;

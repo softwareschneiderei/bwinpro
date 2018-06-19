@@ -216,8 +216,8 @@ public class TreegrossXML2 {
             //DocType docType = doc.getDocType();     
             Element bestand = doc.getRootElement();
             st.id = bestand.getChild("Id").getText();
-            st.addName(bestand.getChild("Kennung").getText());
-            st.addsize(Double.parseDouble(bestand.getChild("Flaechengroesse_m2").getText()) / 10000.0);
+            st.setName(bestand.getChild("Kennung").getText());
+            st.setSize(Double.parseDouble(bestand.getChild("Flaechengroesse_m2").getText()) / 10000.0);
             st.monat = Integer.parseInt(bestand.getChild("AufnahmeMonat").getText());
             st.year = Integer.parseInt(bestand.getChild("AufnahmeJahr").getText());
             st.datenHerkunft = bestand.getChild("DatenHerkunft").getText();

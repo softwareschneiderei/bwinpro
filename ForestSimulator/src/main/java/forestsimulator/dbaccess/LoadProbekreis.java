@@ -77,7 +77,6 @@ public class LoadProbekreis {
                         double win = rs.getDouble("DatPh2_Vorr_Richtung");
                         double ent = rs.getDouble("DatPh2_Vorr_Abstand");
                         double d2 = 0.0;
-                        double d2k = 0.0;
                         double k2 = 0.0;
                         double h2 = 0.0;
                         int out = -1;
@@ -91,7 +90,7 @@ public class LoadProbekreis {
                                     if (rs2.next()) {
                                         int artx = rs2.getInt("DatPh2_Vorr_BA");
                                         d2 = rs2.getDouble("DatPh2_Vorr_BHD") / 10.0;
-                                        d2k = rs2.getDouble("DatPh2_Vorr_BHDKlup") / 10.0;
+                                        double d2k = rs2.getDouble("DatPh2_Vorr_BHDKlup") / 10.0;
                                         if (d2k > 0) {
                                             d2 = (d2 + d2k) / 2.0;
                                         }
@@ -174,16 +173,7 @@ public class LoadProbekreis {
                         if (art == 420) {
                             art = 421;
                         }
-                        int anzahl = 0;
-// Bäume mit höherem Repräsentationsfaktor als 1 klonen
-//
-/*                   if (fac >= 1.0){
-                      int az = (int) fac;
-                      fac = fac /az;
-                      anzahl = az;
-                   }
-                         */
-                        anzahl = 1;
+                        int anzahl = 1;
                         if (ka <= 0.1) {
                             ka = -9.0;
                         }
@@ -199,9 +189,8 @@ public class LoadProbekreis {
                                     yp = -9.0;
                                 }
 
-                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, -9.0, xp, yp, -9.0, 0, 0, 0, 0, fac, "");
+                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, -9.0, xp, yp, -9.0, 0, 0, 0, fac, 0, "");
                             }
-//                  if (out > 0) stl.tr[stl.ntrees-1].outtype=2;
                         }
                     }
                 }
@@ -280,7 +269,7 @@ public class LoadProbekreis {
                     double xp = 25 + Math.sin(Math.PI * win / 180.0) * ent;
                     double yp = 25 + Math.cos(Math.PI * win / 180.0) * ent;
                     double fac = 1.0;
-                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, -9.0, xp, yp, -9.0, 0, 0, 0, 0, fac, "");
+                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, -9.0, xp, yp, -9.0, 0, 0, 0, fac, 0, "");
                 }
             }
         } catch (Exception e) {

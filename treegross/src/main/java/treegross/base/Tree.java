@@ -319,10 +319,6 @@ public class Tree implements Cloneable {
         return clone;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateCw() {
         double cwerg;
         if (sp.spDef.crownwidthXML.getFunctionText().length() > 2 && d >= 7.0) {

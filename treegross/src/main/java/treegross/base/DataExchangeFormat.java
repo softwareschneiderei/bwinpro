@@ -210,9 +210,9 @@ public class DataExchangeFormat {
             String s;
             st.newStand();
             in.readLine();
-            st.addName(in.readLine());
+            st.setName(in.readLine());
             st.year = Integer.parseInt(tokenizeNextLine(in).nextToken());
-            st.addsize(Double.parseDouble(tokenizeNextLine(in).nextToken()));
+            st.setSize(Double.parseDouble(tokenizeNextLine(in).nextToken()));
 
             // read line with corner coordinates, if not existant than first number =0	
             int nx = Integer.parseInt(tokenizeNextLine(in).nextToken());
@@ -597,7 +597,7 @@ public class DataExchangeFormat {
             st.newStand();
 
             /*s=*/ in.readLine();
-            st.addName(in.readLine());
+            st.setName(in.readLine());
             s = in.readLine();
             StringTokenizer stx;
             String delim = ";";
@@ -605,7 +605,7 @@ public class DataExchangeFormat {
             st.year = Integer.parseInt(stx.nextToken());
             s = in.readLine();
             stx = new StringTokenizer(s, delim);
-            st.addsize(Double.parseDouble(stx.nextToken()));
+            st.setSize(Double.parseDouble(stx.nextToken()));
 
             // read line with corner coordinates, if not existant than first number =0	
             s = in.readLine();
@@ -802,7 +802,7 @@ public class DataExchangeFormat {
             st.ncpnt = 0;
 
             /*s=*/ in.readLine();
-            st.addName(in.readLine());
+            st.setName(in.readLine());
             s = in.readLine();
 
             //			System.out.println("Test  :"+s);
@@ -816,7 +816,7 @@ public class DataExchangeFormat {
             st.year = Integer.parseInt(stx.nextToken());
             s = in.readLine();
             stx = new StringTokenizer(s, delim);
-            st.addsize(Double.parseDouble(stx.nextToken()));
+            st.setSize(Double.parseDouble(stx.nextToken()));
 
             // read line with corner coordinates, if not existant than first number =0	
             s = in.readLine();
@@ -1010,7 +1010,7 @@ public class DataExchangeFormat {
             st.ncpnt = 0;
 
             /*s=*/ in.readLine();
-            st.addName(in.readLine());
+            st.setName(in.readLine());
             s = in.readLine();
 
             //			System.out.println("Test  :"+s);
@@ -1024,7 +1024,7 @@ public class DataExchangeFormat {
             st.year = Integer.parseInt(stx.nextToken());
             s = in.readLine();
             stx = new StringTokenizer(s, delim);
-            st.addsize(Double.parseDouble(stx.nextToken()));
+            st.setSize(Double.parseDouble(stx.nextToken()));
 
             // read line with corner coordinates, if not existant than first number =0	
             s = in.readLine();

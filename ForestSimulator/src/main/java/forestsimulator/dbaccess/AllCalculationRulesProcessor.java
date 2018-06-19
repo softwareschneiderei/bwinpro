@@ -121,7 +121,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));
             final int currentStep = step;
             StopWatch stepTime = new StopWatch("Step " + step).start();
-            simulation.executeStep(lts.getDurchf(), 5, (Stand t) -> {
+            simulation.executeStep(lts.thinningActive(), 5, (Stand t) -> {
                 saveStand(con, t, lts, rule, currentStep + 1, pass);
             });
             st.sortbyd();
@@ -148,10 +148,10 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         if (lts.getEBaum() == 1) {
             lts.saveBaum(con, st, rule.edvId, rule.aufId, step, pass);
         }
-        if (lts.getBaumart() == 1) {
+        if (lts.updateSpecies()) {
             lts.saveSpecies(con, st, rule.edvId, rule.aufId, step, pass);
         }
-        if (lts.getBestand() == 1) {
+        if (lts.updateStand()) {
             lts.saveStand(con, st, rule.edvId, rule.aufId, step, pass);
         }
     }

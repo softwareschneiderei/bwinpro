@@ -16,6 +16,7 @@
 package treegross.base;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -107,7 +108,7 @@ public class Stand {
     /**
      * stand size
      */
-    public double size = 0.00;
+    public double size = 0d;
     /**
      * stand size enterprise: the area reperented by this stand
      */
@@ -297,10 +298,6 @@ public class Stand {
         this(SCALE_AUTO);
     }
     
-    public Iterable<Tree> trees() {
-        return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
-    }
-
     /**
      * Creates a new stand with given scaling method.
      * Scaling is usefull to decrease computation time.
@@ -314,6 +311,10 @@ public class Stand {
         random = new RandomNumber(RandomNumber.PSEUDO);
         scaleMan = new ScaleManager(this);
         scaleMan.setScaleMethod(scaleMethod);
+    }
+
+    public Iterable<Tree> trees() {
+        return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
     }
 
     public ScaleManager getScaleManager() {
@@ -377,8 +378,8 @@ public class Stand {
         }
         setSDM(SDM);
         setProgramDir(localPath);
-        addName(standname);
-        addsize(standsize);
+        setName(standname);
+        setSize(standsize);
         this.year = year;
         // Flächengrenzen festlegen
         double l = Math.sqrt(10000.0 * standsize);
@@ -577,8 +578,6 @@ public class Stand {
 
     public void addTreeFromDB(int co, String num, double fac, int age, int out, OutType outtype, double d, double h, double v, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, int layer) throws SpeciesNotDefinedException {
-
-        //if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;} 
         tr[ntrees] = new Tree();
         tr[ntrees].code = co;
         tr[ntrees].no = num;
@@ -601,9 +600,6 @@ public class Stand {
         tr[ntrees].z = z;
         tr[ntrees].si = si; // no site index set at this point
         tr[ntrees].group = -1; // no site index set at this point
-        /*if (zb>0) tr[ntrees].crop=true; else tr[ntrees].crop=false;
-         if (tzb>0) tr[ntrees].tempcrop=true; else tr[ntrees].tempcrop=false;                
-         if (hb>0) tr[ntrees].habitat=true; else tr[ntrees].habitat=false;*/
         tr[ntrees].crop = (zb > 0);
         tr[ntrees].tempcrop = (tzb > 0);
         tr[ntrees].habitat = (hb > 0);
@@ -611,51 +607,83 @@ public class Stand {
         tr[ntrees].sp = addspecies(tr[ntrees]);
         tr[ntrees].st = this;
         tr[ntrees].layer = layer;
-        //             if (tr[ntrees].cw <= 0.0) tr[ntrees].generatecw();
         ntrees++;
     }
 
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
+        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, out, num);
+//        Tree tree = new Tree();
+//        tree.code = co;
+//        tree.no = num;
+//        tree.age = age;
+//        tree.out = out;
+//        tree.crop = false;
+//        tree.tempcrop = false;
+//        tree.habitat = false;
+//        tree.d = d;
+//        tree.h = h;
+//        tree.cb = cb;
+//        tree.cw = cw;
+//        tree.origin = 0;
+//        tree.year = this.year;
+//        tree.x = x;
+//        tree.y = y;
+//        if (z < 0.0) {
+//            z = 0.0;
+//        }
+//        tree.z = z;
+//        tree.outtype = OutType.STANDING;
+//        tree.fac = fac;
+//        tree.si = si; // no site index set at this point
+//        tree.group = -1; // no site index set at this point
+//        tree.crop = zb > 0;
+//        tree.tempcrop = tzb > 0;
+//        tree.habitat = hb > 0;
+//        tree.sp = addspecies(tree);
+//        tree.st = this;
+//        tr[ntrees] = tree;
+//        ntrees++;
+    }
 
-        if (ntrees + 1 >= maxStandTrees - 1) {
-            if (debug) {
-                LOGGER.log(Level.WARNING, "Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}", new Object[]{standname, trule.targetType, d, co, h});
-            }
-            return;
+    /* add a tree from Dbase NFV*/
+    public void addtreeNFV(int co, String num, int age, int out, double d, double h, double cb, double cw,
+            double si, double x, double y, double z, int zb, int tzb, int hb, double fac, int ou, String rm) throws SpeciesNotDefinedException {
+        if (ntrees + 1 > maxStandTrees) {
+            throw new IllegalStateException(
+                    MessageFormat.format("Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}",
+                            standname, trule.targetType, d, co, h));
         }
-        //if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;} 
-        tr[ntrees] = new Tree();
-        tr[ntrees].code = co;
-        tr[ntrees].no = num;
-        tr[ntrees].age = age;
-        tr[ntrees].out = out;
-        tr[ntrees].crop = false;
-        tr[ntrees].tempcrop = false;
-        tr[ntrees].habitat = false;
-        tr[ntrees].d = d;
-        tr[ntrees].h = h;
-        tr[ntrees].cb = cb;
-        tr[ntrees].cw = cw;
-        tr[ntrees].origin = 0;
-        tr[ntrees].year = this.year;
-        tr[ntrees].x = x;
-        tr[ntrees].y = y;
-        if (z < 0.0) {
-            z = 0.0;
-        }
-        tr[ntrees].z = z;
-        tr[ntrees].outtype = OutType.STANDING;
-        tr[ntrees].fac = fac;
-        tr[ntrees].si = si; // no site index set at this point
-        tr[ntrees].group = -1; // no site index set at this point
-        tr[ntrees].crop = zb > 0;
-        tr[ntrees].tempcrop = tzb > 0;
-        tr[ntrees].habitat = hb > 0;
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
-        //              if (tr[ntrees].cw <= 0.0) tr[ntrees].generatecw();
+        Tree tree = new Tree();
+        tree.code = co;
+        tree.no = num;
+        tree.age = age;
+        tree.out = out;
+        tree.crop = false;
+        tree.d = d;
+        tree.h = h;
+        tree.cb = cb;
+        tree.cw = cw;
+        tree.x = x;
+        tree.y = y;
+        tree.z = z;
+        tree.outtype = OutType.STANDING;
+//        tree.fac = fac;
+//        tree.origin = 0;
+//        tree.year = this.year;
+//        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
+//        tree.ou = ou;
+//        tree.remarks = rm;
+//        tree.si = si; // no site index set at this point
+//        tree.group = -1; // no site index set at this point
+//        tree.crop = zb > 0;
+//        tree.tempcrop = tzb > 0;
+//        tree.habitat = hb > 0;
+//        tree.sp = addspecies(tree);
+//        tr[ntrees].st = this;
+//        
+        tr[ntrees] = tree;
         ntrees++;
     }
 
@@ -676,7 +704,7 @@ public class Stand {
      *
      * @param na
      */
-    public void addName(String na) {
+    public void setName(String na) {
         standname = na;
     }
 
@@ -694,10 +722,8 @@ public class Stand {
      *
      * @param ha
      */
-    public void addsize(double ha) {
+    public void setSize(double ha) {
         size = ha;
-        // hat hier nichts zu suchen        
-        // trule.selectHabiatPart=selHabitat.selectHabitatPartByStandSize(this);        
     }
 
     /**
@@ -717,41 +743,6 @@ public class Stand {
         ncpnt = ncpnt + 1;
     }
 
-    /* add a tree from Dbase NFV*/
-    public void addtreeNFV(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, int ou, double fac, String rm) throws SpeciesNotDefinedException {
-
-        //if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;} 
-        tr[ntrees] = new Tree();
-        tr[ntrees].code = co;
-        tr[ntrees].no = num;
-        tr[ntrees].age = age;
-        tr[ntrees].out = out;
-        tr[ntrees].crop = false;
-        tr[ntrees].d = d;
-        tr[ntrees].h = h;
-        tr[ntrees].cb = cb;
-        tr[ntrees].cw = cw;
-        tr[ntrees].x = x;
-        tr[ntrees].y = y;
-        tr[ntrees].z = z;
-        tr[ntrees].outtype = OutType.STANDING;
-        tr[ntrees].fac = fac;
-        tr[ntrees].origin = 0;
-        tr[ntrees].year = this.year;
-        tr[ntrees].layer = ou;  //0=no layer, 1 upperstory, 2= understory
-        tr[ntrees].ou = ou;
-        tr[ntrees].remarks = rm;
-        tr[ntrees].si = si; // no site index set at this point
-        tr[ntrees].group = -1; // no site index set at this point
-        tr[ntrees].crop = zb > 0;
-        tr[ntrees].tempcrop = tzb > 0;
-        tr[ntrees].habitat = hb > 0;
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
-        //              if (tr[ntrees].cw <= 0.0) tr[ntrees].generatecw();
-        ntrees++;
-    }
 
     /**
      * sort trees by d
@@ -2011,5 +2002,18 @@ public class Stand {
     
     public void notificationsEnabled(boolean on) {
         this.notifyListeners = on;
+    }
+
+    public void setMetaData(StandMetaData standMetadata) {
+        this.standname = standMetadata.name;
+        // XXX: Why use 2009? 
+        this.year = standMetadata.year.orElse(2009);
+        setSize(standMetadata.area.orElse(0d));
+    }
+
+    public void clear() {
+        ntrees = 0;
+        nspecies = 0;
+        ncpnt = 0;
     }
 }

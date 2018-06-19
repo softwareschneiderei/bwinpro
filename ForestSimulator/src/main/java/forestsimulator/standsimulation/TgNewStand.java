@@ -145,7 +145,7 @@ public class TgNewStand extends JDialog {
                  st.ncpnt=0;
                  st.nspecies=0;
                  st.ntrees=0;
-                 st.addsize(Double.parseDouble(tf0.getText()));
+                 st.setSize(Double.parseDouble(tf0.getText()));
                  st.standname=standNameTextField.getText();
                  st.year=2008;
                  
