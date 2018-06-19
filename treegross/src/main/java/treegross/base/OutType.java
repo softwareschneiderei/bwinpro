@@ -14,7 +14,7 @@ public enum OutType {
     THINNED("OutType.thinned", true),
     HARVESTED("OutType.harvested", true);
     
-    private static final ResourceBundle bundle = ResourceBundle.getBundle("forestsimulator/gui");
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("treegross/treegross");
     private final String resourceKey;
     private final boolean treated;
      
