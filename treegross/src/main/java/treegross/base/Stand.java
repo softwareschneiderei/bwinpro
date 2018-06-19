@@ -613,38 +613,43 @@ public class Stand {
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
-        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, out, num);
-//        Tree tree = new Tree();
-//        tree.code = co;
-//        tree.no = num;
-//        tree.age = age;
-//        tree.out = out;
-//        tree.crop = false;
-//        tree.tempcrop = false;
-//        tree.habitat = false;
-//        tree.d = d;
-//        tree.h = h;
-//        tree.cb = cb;
-//        tree.cw = cw;
-//        tree.origin = 0;
-//        tree.year = this.year;
-//        tree.x = x;
-//        tree.y = y;
-//        if (z < 0.0) {
-//            z = 0.0;
-//        }
-//        tree.z = z;
-//        tree.outtype = OutType.STANDING;
-//        tree.fac = fac;
-//        tree.si = si; // no site index set at this point
-//        tree.group = -1; // no site index set at this point
-//        tree.crop = zb > 0;
-//        tree.tempcrop = tzb > 0;
-//        tree.habitat = hb > 0;
-//        tree.sp = addspecies(tree);
-//        tree.st = this;
-//        tr[ntrees] = tree;
-//        ntrees++;
+//        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, out, num);
+        if (ntrees + 1 > maxStandTrees) {
+            throw new IllegalStateException(
+                    MessageFormat.format("Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}",
+                            standname, trule.targetType, d, co, h));
+        }
+        Tree tree = new Tree();
+        tree.code = co;
+        tree.no = num;
+        tree.age = age;
+        tree.out = out;
+        tree.crop = false;
+        tree.tempcrop = false;
+        tree.habitat = false;
+        tree.d = d;
+        tree.h = h;
+        tree.cb = cb;
+        tree.cw = cw;
+        tree.origin = 0;
+        tree.year = this.year;
+        tree.x = x;
+        tree.y = y;
+        if (z < 0.0) {
+            z = 0.0;
+        }
+        tree.z = z;
+        tree.outtype = OutType.STANDING;
+        tree.fac = fac;
+        tree.si = si; // no site index set at this point
+        tree.group = -1; // no site index set at this point
+        tree.crop = zb > 0;
+        tree.tempcrop = tzb > 0;
+        tree.habitat = hb > 0;
+        tree.sp = addspecies(tree);
+        tree.st = this;
+        
+        addTree(tree);
     }
 
     /* add a tree from Dbase NFV*/
@@ -669,20 +674,24 @@ public class Stand {
         tree.y = y;
         tree.z = z;
         tree.outtype = OutType.STANDING;
-//        tree.fac = fac;
-//        tree.origin = 0;
-//        tree.year = this.year;
-//        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
-//        tree.ou = ou;
-//        tree.remarks = rm;
-//        tree.si = si; // no site index set at this point
-//        tree.group = -1; // no site index set at this point
-//        tree.crop = zb > 0;
-//        tree.tempcrop = tzb > 0;
-//        tree.habitat = hb > 0;
-//        tree.sp = addspecies(tree);
-//        tr[ntrees].st = this;
-//        
+        tree.fac = fac;
+        tree.origin = 0;
+        tree.year = this.year;
+        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
+        tree.ou = ou;
+        tree.remarks = rm;
+        tree.si = si; // no site index set at this point
+        tree.group = -1; // no site index set at this point
+        tree.crop = zb > 0;
+        tree.tempcrop = tzb > 0;
+        tree.habitat = hb > 0;
+        tree.sp = addspecies(tree);
+        tree.st = this;
+        
+        addTree(tree);
+    }
+
+    private void addTree(Tree tree) {
         tr[ntrees] = tree;
         ntrees++;
     }

@@ -101,16 +101,44 @@ public class StandTest {
         }).hasMessage("Maximum tree number reached! Tree not added! no name 0 d=5 species=1 height=7");
     }
 
+        /*
+     * #Pinning
+    */
+    @Test
+    public void addingTreefacWorksAsExpected() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.year = 2014;
+        s.clear();
+        addSpeciesDef(s, 9);
+        
+        s.addtreefac(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -1.9, 0, 1, 1, 1.5);
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat")
+                .containsExactly(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, 0.0,
+                        OutType.STANDING, 1.5, 0, 2014, 0, 0, null, 15.1, -1,
+                        false, true, true);
+    }
+
     /*
      * #Pinning
     */
     @Test
-    public void addTreeWorksAsExpected() throws SpeciesNotDefinedException {
+    public void addingTreeNFVWorksAsExpected() throws SpeciesNotDefinedException {
         Stand s = new Stand();
+        s.year = 2015;
         s.clear();
+        addSpeciesDef(s, 1);
         
-        s.addtreeNFV(0, "number", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "remark");
-        assertThat(s.trees()).size().isEqualTo(1);
+        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, 4.31, 1, 0, 1, 1.5, 2, "remark");
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat")
+                .containsExactly(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, 4.31,
+                        OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
+                        true, false, true);
     }
 
     private Tree[] treesWith(DoubleFunction<Tree> mapper, double... diameters) {
@@ -144,5 +172,17 @@ public class StandTest {
     private void setTrees(Stand stand, final Tree[] trees) {
         System.arraycopy(trees, 0, stand.tr, 0, trees.length);
         stand.ntrees = trees.length;
+    }
+
+    private void addSpeciesDef(Stand s, int code) {
+        s.setSDM(new SpeciesDefMap() {
+            @Override
+            public SpeciesDef insertSpecies(int code) {
+                SpeciesDef spec= new SpeciesDef();
+                spcdef.put(code, spec);
+                return spec;
+            }
+        });
+        s.getSDM().insertSpecies(code);
     }
 }

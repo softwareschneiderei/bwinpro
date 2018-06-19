@@ -20,6 +20,7 @@ import org.jdom.input.*;
 import org.jdom.DocType;
 import java.io.*;
 import java.net.*;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.JDOMException;
@@ -29,15 +30,15 @@ import org.jdom.JDOMException;
  * @author jhansen
  */
 public class SpeciesDefMap {
-    private HashMap<Integer,SpeciesDef> spcdef;
+    protected final Map<Integer,SpeciesDef> spcdef;
     private URL actualurl;
-    private boolean loaded=false;    
+    private boolean loaded = false;    
     private final String stdModel="ForestSimulatorNWGermanyBC4";
     
     private final static Logger LOGGER = Logger.getLogger(SpeciesDefMap.class.getName());
 
     public SpeciesDefMap(){
-        spcdef = null;
+        spcdef = new HashMap<>();
         loaded=false;
         actualurl=null;
     }
@@ -70,9 +71,7 @@ public class SpeciesDefMap {
         try{
            readXML(url);   
            actualurl=url;
-        } catch(IOException e){
-            LOGGER.log(Level.SEVERE, "reading xml file: ",e);
-        } catch (JDOMException e) {
+        } catch(IOException | JDOMException e){
             LOGGER.log(Level.SEVERE, "reading xml file: ",e);
         }
     }
@@ -84,7 +83,6 @@ public class SpeciesDefMap {
     }
 
     public void readXMLStream(InputStream imps) throws IOException, org.jdom.JDOMException{
-        spcdef = new HashMap<Integer,SpeciesDef>();        
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(imps);         
         DocType docType = doc.getDocType();   
@@ -302,7 +300,7 @@ public class SpeciesDefMap {
 
     @Override
     public String toString(){
-        return "SpeciedDefMap [size: "+getSize()+"; URL:"+getActualURL().toString()+"]";
+        return "SpeciedDefMap [size: " + getSize() + "; URL:" + getActualURL() + "]";
     }
     
     /* writes species information for all species of one stand to a html file in
@@ -318,9 +316,7 @@ public class SpeciesDefMap {
             LOGGER.log(Level.SEVERE, null, ex);
             return null;
         }
-        PrintWriter out=null;
-        try {
-            out= new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)));
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>"+"Simulator Species Definition"+"</H2> ");
             for (int i=0;i<st.nspecies;i++){
@@ -353,9 +349,6 @@ public class SpeciesDefMap {
         } catch (FileNotFoundException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             return null;
-        } finally{
-            if(out!=null)
-                out.close();
         }
         return filename;
     }
@@ -367,50 +360,50 @@ public class SpeciesDefMap {
         File file= new File(path, fname);
         String filename=file.getCanonicalPath();
         OutputStream os=new FileOutputStream(filename);
-	PrintWriter out= new PrintWriter(new OutputStreamWriter(os));
-	out.println("<HTML>");
-	out.println("<H2><P align=center>"+"Simulator Species Definition"+"</H2> ");
-        if (st.nspecies>0 && st.ingrowthActive==true){
-            try {
-               String modelPlugIn="treegross.base."+st.sp[0].spDef.ingrowthXML;
-               PlugInIngrowth ig = (PlugInIngrowth)Class.forName(modelPlugIn).newInstance();
-               out.println("<P><B>Aktivieres Einwuchsmodell : "+ig.getModelName()+"</B>");
+	try (PrintWriter out= new PrintWriter(new OutputStreamWriter(os))) {
+            out.println("<HTML>");
+            out.println("<H2><P align=center>"+"Simulator Species Definition"+"</H2> ");
+            if (st.nspecies>0 && st.ingrowthActive==true){
+                try {
+                   String modelPlugIn="treegross.base."+st.sp[0].spDef.ingrowthXML;
+                   PlugInIngrowth ig = (PlugInIngrowth)Class.forName(modelPlugIn).newInstance();
+                   out.println("<P><B>Aktivieres Einwuchsmodell : "+ig.getModelName()+"</B>");
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                    System.out.println("ERROR in Class Ingrowth2 ");
+                }
             }
-            catch(Exception e){
-                System.out.println(e);
-                System.out.println("ERROR in Class Ingrowth2 ");
+            for (int i=0;i<st.nspecies;i++){
+                out.println("<P>");
+                int m = -9;
+                if(st.sp[i].spDef.latinName.contains("http")){
+                    m = st.sp[i].spDef.latinName.indexOf("http")-1;
+                }
+                String txt= st.sp[i].spDef.latinName;
+                if (m > 1) txt = "<a href="+st.sp[i].spDef.latinName.substring(m+1,st.sp[i].spDef.latinName.length())+">"+st.sp[i].spDef.latinName.substring(0,m)+"</a>";
+                out.println("<P><B>Baumart: "+st.sp[i].code+" "+st.sp[i].spDef.longName+"  "+txt+"</B>");
+                out.println("<BR>   Kronenbreite [m] = "+st.sp[i].spDef.crownwidthXML);
+                out.println("<BR>   Kronenansatz [m] = "+st.sp[i].spDef.crownbaseXML);
+                out.println("<BR>   Bonität      [m] = "+st.sp[i].spDef.siteindexXML);
+                out.println("<BR>   Potentielle Höhenzuwachs [%] = "+st.sp[i].spDef.potentialHeightIncrementXML);
+                out.println("<BR>   Höhenzuwachsmodulation [%] = "+st.sp[i].spDef.heightIncrementXML);
+                out.println("<BR>   Standardabweichung Höhenzuwachs [m] = "+(new Double(st.sp[i].spDef.heightIncrementError)).toString());
+                out.println("<BR>   Grundflächenzuwachs [cm²] = "+st.sp[i].spDef.diameterIncrementXML);
+                out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = "+(new Double(st.sp[i].spDef.diameterIncrementError)).toString());
+                out.println("<BR>   Maximale Dichte [m²/ha] = "+st.sp[i].spDef.maximumDensityXML);
+                out.println("<BR>   Volumenfunktion [m³] = "+st.sp[i].spDef.volumeFunctionXML);
+                out.println("<BR>   Durchmesserverteilung : "+st.sp[i].spDef.diameterDistributionXML);
+                out.println("<BR>   Höhenkurvenfunktion = "+st.sp[i].spDef.heightCurve);
+                out.println("<BR>   Einheitshöhenkurve [m] = "+st.sp[i].spDef.uniformHeightCurveXML);
+                out.println("<BR>   Höhenkurvenvariation [m] = "+st.sp[i].spDef.heightVariationXML);
+                out.println("<BR>   Totholzzerfall [%] = "+st.sp[i].spDef.decayXML);
+                out.println("<BR>   Kronendarstellung = "+st.sp[i].spDef.crownType);
+                out.println("<BR>   Baumartenfarbe [RGB] = "+st.sp[i].spDef.colorXML);
             }
+            out.println("</TABLE>");
+            out.println("<br>"+"created by ForestSimulatorBWINPro "+st.modelRegion+"</br></HTML>");
         }
-        for (int i=0;i<st.nspecies;i++){
-            out.println("<P>");
-            int m = -9;
-            if(st.sp[i].spDef.latinName.contains("http")){
-                m = st.sp[i].spDef.latinName.indexOf("http")-1;
-            }
-            String txt= st.sp[i].spDef.latinName;
-            if (m > 1) txt = "<a href="+st.sp[i].spDef.latinName.substring(m+1,st.sp[i].spDef.latinName.length())+">"+st.sp[i].spDef.latinName.substring(0,m)+"</a>";
-            out.println("<P><B>Baumart: "+st.sp[i].code+" "+st.sp[i].spDef.longName+"  "+txt+"</B>");
-            out.println("<BR>   Kronenbreite [m] = "+st.sp[i].spDef.crownwidthXML);
-            out.println("<BR>   Kronenansatz [m] = "+st.sp[i].spDef.crownbaseXML);
-            out.println("<BR>   Bonität      [m] = "+st.sp[i].spDef.siteindexXML);
-            out.println("<BR>   Potentielle Höhenzuwachs [%] = "+st.sp[i].spDef.potentialHeightIncrementXML);
-            out.println("<BR>   Höhenzuwachsmodulation [%] = "+st.sp[i].spDef.heightIncrementXML);
-            out.println("<BR>   Standardabweichung Höhenzuwachs [m] = "+(new Double(st.sp[i].spDef.heightIncrementError)).toString());
-            out.println("<BR>   Grundflächenzuwachs [cm²] = "+st.sp[i].spDef.diameterIncrementXML);
-            out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = "+(new Double(st.sp[i].spDef.diameterIncrementError)).toString());
-            out.println("<BR>   Maximale Dichte [m²/ha] = "+st.sp[i].spDef.maximumDensityXML);
-            out.println("<BR>   Volumenfunktion [m³] = "+st.sp[i].spDef.volumeFunctionXML);
-            out.println("<BR>   Durchmesserverteilung : "+st.sp[i].spDef.diameterDistributionXML);
-            out.println("<BR>   Höhenkurvenfunktion = "+st.sp[i].spDef.heightCurve);
-            out.println("<BR>   Einheitshöhenkurve [m] = "+st.sp[i].spDef.uniformHeightCurveXML);
-            out.println("<BR>   Höhenkurvenvariation [m] = "+st.sp[i].spDef.heightVariationXML);
-            out.println("<BR>   Totholzzerfall [%] = "+st.sp[i].spDef.decayXML);
-            out.println("<BR>   Kronendarstellung = "+st.sp[i].spDef.crownType);
-            out.println("<BR>   Baumartenfarbe [RGB] = "+st.sp[i].spDef.colorXML);
-        }
-	out.println("</TABLE>");
-	out.println("<br>"+"created by ForestSimulatorBWINPro "+st.modelRegion+"</br></HTML>");
-	out.close();
 	return filename;
     }
     
@@ -423,9 +416,7 @@ public class SpeciesDefMap {
             LOGGER.log(Level.SEVERE, null, ex);
             return null;
         }
-	PrintWriter out=null;
-        try {
-            out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)));
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)))) {
             out.println("<HTML>");
             out.println("<H2><P align=center>"+"Species Code"+"</P align=center></H2><P> ");
             SpeciesDef sd=this.getByCode(code);
@@ -440,9 +431,6 @@ public class SpeciesDefMap {
             out.println("<br><hr>"+"created by TreeGrOSS</br></HTML>");
 	} catch (FileNotFoundException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
-        } finally{
-            if(out!=null)
-                out.close();
         }
         return filename;            
     }
