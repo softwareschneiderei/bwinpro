@@ -27,18 +27,15 @@ package treegross.base;
 public class GenDistribution {
 
     public void noDist(Stand st, int art, int alter, double dg, double hg, double gfl, boolean correct) throws Exception {
-        double dgen, gsum, g;
-        String nr;//="";
-        gsum = 0.0;
-
-        dgen = dg;
-        g = Math.PI * (dgen / 200.0) * (dgen / 200.0);
-        boolean added;//=true;
+        double gsum = 0d;
+        double g = Math.PI * (dg / 200.0) * (dg / 200.0);
+        
+        boolean added;
         do {
             gsum += g;
             Integer nox = st.ntrees + 2;
-            nr = nox.toString();
-            added = st.addtree(art, nr, alter, -1, dgen, hg, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+            String nr = nox.toString();
+            added = st.addtree(art, nr, alter, -1, dg, hg, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
             if (correct) {
                 checkGAndCorrectFactor(gfl, gsum, st);
             }

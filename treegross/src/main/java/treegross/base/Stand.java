@@ -475,49 +475,12 @@ public class Stand {
      */
     public boolean addtree(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        //Könnte fehlerhaft sein
-        // if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;}
-        // added by jhansen -> +1 -1 empty array place needed
-        if (ntrees + 1 >= maxStandTrees - 1) {
-            if (debug) {
-                LOGGER.log(Level.WARNING, "Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}", new Object[]{standname, trule.targetType, d, co, h});
-            }
+        try {
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, 1.0d, 0, null);
+            return true;
+        } catch (IllegalStateException e) {
             return false;
         }
-
-        tr[ntrees] = new Tree();
-        tr[ntrees].code = co;
-        tr[ntrees].no = num;
-        tr[ntrees].age = age;
-        tr[ntrees].out = out;
-        tr[ntrees].crop = false;
-        tr[ntrees].tempcrop = false;
-        tr[ntrees].habitat = false;
-        tr[ntrees].origin = 0;
-        tr[ntrees].year = this.year;
-        tr[ntrees].d = d;
-        tr[ntrees].h = h;
-        tr[ntrees].cb = cb;
-        tr[ntrees].cw = cw;
-        tr[ntrees].x = x;
-        tr[ntrees].y = y;
-        if (z < 0.0) {
-            z = 0.0;
-        }
-        tr[ntrees].z = z;
-        tr[ntrees].outtype = OutType.STANDING;
-        tr[ntrees].fac = 1.0;
-        tr[ntrees].si = si; // no site index set at this point
-        tr[ntrees].group = -1;
-
-        tr[ntrees].crop = (zb > 0);
-        tr[ntrees].tempcrop = (tzb > 0);
-        tr[ntrees].habitat = (hb > 0);
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
-        //               if (tr[ntrees].cw <= 0.0) tr[ntrees].generatecw();
-        ntrees++;
-        return true;
     }
 
     /**
