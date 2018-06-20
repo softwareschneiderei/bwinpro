@@ -19,6 +19,7 @@ import treegross.base.GenDistribution;
 import treegross.base.GenerateXY;
 import treegross.base.SIofDistrib;
 import treegross.base.Stand;
+import treegross.base.StandFactory;
 import treegross.base.Tree;
 
 /**
@@ -298,16 +299,14 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     }
     
     private void loadBestand(){
-        boolean found = false;
         for (int i = dataTable1.getRowCount(); i > 0; i = i - 1) {
             dataTable1.removeRow(i - 1);
         }
-        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement st = cn.createStatement()) {
+        try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", ""); Statement statement = cn.createStatement()) {
             String name = standNameTextField.getText();
-            try (ResultSet rs = st.executeQuery("SELECT * FROM Nutzungsplanung WHERE name = '" + name + "'")) {
+            try (ResultSet rs = statement.executeQuery("SELECT * FROM Nutzungsplanung WHERE name = '" + name + "'")) {
                 int m = 0;
                 while (rs.next()) {
-                    found = true;
                     dataTable1.addRow(rowData1);
                     String nam = rs.getString("name");
                     jTable1.setValueAt(nam, m, 0);
@@ -332,24 +331,9 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     }
  
     public Stand createStand(){
-        // Make stand
-        
         double size= Double.parseDouble(areaTextField.getText());
-        st.ncpnt=0;
-        st.nspecies=0;
-        st.ntrees=0;
-        st.setSize(size);
-        st.standname=standNameTextField.getText();
+        StandFactory.newStand(st, standNameTextField.getText(), size);
         st.year=2015;
-        double len = Math.sqrt(10000*st.size);  
-        st.addcornerpoint("ECK1",0.0,0.0,0.0);
-        st.addcornerpoint("ECK2",0.0,len,0.0);
-        st.addcornerpoint("ECK3",len,len,0.0);
-        st.addcornerpoint("ECK4",len,0.0,0.0);
-        st.center.no="polygon";
-        st.center.x =len/2.0;
-        st.center.y =len/2.0;
-        st.center.z =0.0;
         //Schichten einlesen
         for (int i=0; i<dataTable1.getRowCount() ; i++){
              int art = Integer.parseInt(jTable1.getValueAt(i,1).toString());
@@ -386,8 +370,7 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
                  for (int j = 0; j < st.ntrees; j++) {
                       st.tr[j].setMissingData();
                  }
-                 GenerateXY gxy = null;
-                 gxy = new GenerateXY();
+                 GenerateXY gxy = new GenerateXY();
                  gxy.setGroupRadius(0.0);
                  gxy.zufall(st);
                  st.sortbyd();
