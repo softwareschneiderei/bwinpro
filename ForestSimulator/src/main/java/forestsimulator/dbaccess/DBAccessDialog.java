@@ -636,7 +636,7 @@ public class DBAccessDialog extends JDialog {
                         Double v511E = 0.0;
                         Double c66B = 0.0;
                         Double c66F = 0.0;
-                        st = lts.newStand(st, "FiBu", 0.5);
+                        st = StandFactory.newStand(st, "FiBu", 0.5);
 
                         double mix1 = mix + i * 0.05;
                         double mix2 = 1.0 - i * 0.05;

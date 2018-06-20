@@ -333,9 +333,7 @@ public class Stand {
      * This method clears the information of Stand.java for reading in a new one
      */
     public void newStand() {
-        ntrees = 0;
-        nspecies = 0;
-        ncpnt = 0;
+        clear();
         distanceDependent = false;
         //randomGrowthEffects=RandomNumber.PSEUDO;
         random = new RandomNumber(RandomNumber.PSEUDO);
