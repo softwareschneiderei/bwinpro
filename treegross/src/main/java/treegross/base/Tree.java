@@ -18,6 +18,7 @@ package treegross.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import treegross.base.thinning.HeightBasedThinning;
 import treegross.random.RandomNumber;
 
 /**
@@ -350,11 +351,6 @@ public class Tree implements Cloneable {
         return cwerg;
     }
 
-    /**
-     *
-     * @param hx
-     * @return
-     */
     public double calculateCwAtHeight(double hx) {
         double erg;
         if (d >= 7.0) {
@@ -374,10 +370,6 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateCb() {
         double cberg = 0.0;
         if (sp.spDef.crownbaseXML.getFunctionText().length() > 4 && d >= 7) {
@@ -410,10 +402,6 @@ public class Tree implements Cloneable {
         return cberg;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateVolume() {
         double erg = 0.0;
         if (d > 3.0 && h > 3.0) {
@@ -429,10 +417,6 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    /**
-     *
-     * @return
-     */
     public double calculateDecay() {
         double erg;
         FunctionInterpreter fi = new FunctionInterpreter();
@@ -471,25 +455,11 @@ public class Tree implements Cloneable {
      * @return the moderate thinning fctor
      */
     public double getModerateThinningFactor() {
-        double tfac = 1.0;
-        if (sp.spDef.moderateThinning.length() > 4) {
-            String zeile = sp.spDef.moderateThinning;
-            String[] tokens;
-            tokens = zeile.split(";");
-            // added by jhansen
-            int end = tokens.length / 3;
+        return new HeightBasedThinning(moderateThinning()).thinningFactorFor(this);
+    }
 
-            for (int i = 0; i < end; i++) {
-                double hu = Double.parseDouble(tokens[i * 3]);
-                double f = Double.parseDouble(tokens[i * 3 + 1]);
-                double ho = Double.parseDouble(tokens[i * 3 + 2]);
-                if (h >= hu && h < ho) {
-                    tfac = f;
-                    break;
-                }
-            }
-        }
-        return tfac;
+    protected String moderateThinning() {
+        return sp.spDef.moderateThinning;
     }
 
     public void setMissingData() {
@@ -520,8 +490,6 @@ public class Tree implements Cloneable {
      * increment*years/5
      */
     void grow(int years, /*boolean randomEffects*/ RandomNumber rn) {
-        //if(code== 999)
-        //    return;       
         FunctionInterpreter fi = new FunctionInterpreter();
         // Jugendwachstum, solange der BHD < 7.0 oder h < 1.3
         if (d < 7) {
