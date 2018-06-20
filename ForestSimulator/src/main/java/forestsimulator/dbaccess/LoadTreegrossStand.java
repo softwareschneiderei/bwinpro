@@ -35,13 +35,6 @@ public class LoadTreegrossStand {
         addTrees(connection, edvId, selectedAufn, stand);
         addCoordinates(connection, edvId, stand);
         addCornerPoints(connection, edvId, stand);
-// Ersatz fehlender Daten Ende             
-        int nxx = 0;
-        for (int i = 1; i < stand.ntrees; i++) {
-            if (stand.tr[i].ou == 2) {
-                nxx = nxx + 1;
-            }
-        }
         loadFromDB.printElapsedTime();
         return stand;
     }
@@ -186,7 +179,7 @@ public class LoadTreegrossStand {
 //
                     if (fac >= 2.0) {
                         int az = (int) fac;
-                        fac = fac / az;
+                        fac = fac / az; //NOSONAR, false positive!
                         anzahl = anzahl * az;
                     }
                     if (r == 1) {
