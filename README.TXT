@@ -12,4 +12,4 @@ The most notable features of this fork to date are:
 Future plans include:
 
 * climate-sensitive growth simulation
-* more flexible batch mode settings
+* more flexible batch mode settings bla
