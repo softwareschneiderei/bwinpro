@@ -16,6 +16,7 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import treegross.base.thinning.ThinningType;
 import java.text.*;
 import java.util.*;
 import javax.swing.DefaultComboBoxModel;
@@ -543,7 +544,7 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         double thIntensity = Double.parseDouble(thtxt);
         boolean ctreesOnly = releaseOnlyCropTreesCheckBox.isSelected();
 
-        treat.setThinningRegime(st, thinningTypeComboBox.getSelectedIndex(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
+        treat.setThinningRegime(st, (ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
                  Double.parseDouble(thinningAmountMaximumTextField.getText()), ctreesOnly) ;
 // set Harvesting Regime
         double clearFak = 0.0;

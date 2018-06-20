@@ -18,6 +18,8 @@
  */
 package treegross.base;
 
+import treegross.base.thinning.ThinningType;
+
 /**
  * Created on 15. Dezember 2004, 13:48
  *
@@ -140,10 +142,9 @@ public class TreatmentRuleStand implements Cloneable {
      */
     public double thinningIntensity = 1.0;
     /**
-     * type of thinning: 0= single tree selection, 1= from above, 2= from below,
-     * 9 = clear cut
+     * type of thinning
      */
-    public int typeOfThinning;
+    public ThinningType typeOfThinning;
     /**
      * year harvesting was started important for Schirmschlag
      */

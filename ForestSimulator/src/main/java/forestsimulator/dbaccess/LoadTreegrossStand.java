@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
+import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 import treegross.treatment.*;
 
@@ -257,7 +258,7 @@ public class LoadTreegrossStand {
         }
         if (durchforstung_an == 1 && scenario > 0) {
             stl.distanceDependent = true;
-            stl.trule.typeOfThinning = 0;
+            stl.trule.typeOfThinning = ThinningType.SingleTreeSelection;
             stl.trule.thinArea = false;
             stl.trule.selectCropTrees = true;
             stl.trule.reselectCropTrees = true;
@@ -301,7 +302,7 @@ public class LoadTreegrossStand {
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
-                    t2.setThinningRegime(st, thType, thIntensity, thVolMin, thVolMax, ctreesOnly);
+                    t2.setThinningRegime(st, ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly);
                     // set Harvesting Regime
                     int hvType = rs.getInt("HarvestType");
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");

@@ -19,6 +19,7 @@
 package treegross.treatment;
 
 import treegross.base.Stand;
+import treegross.base.thinning.ThinningType;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -34,13 +35,6 @@ public class Treatment2 {
     public static final int HT_CLEAR_CUT = 9;
     public static final int HT_BY_GAPS = 3;
     
-    /*constants for thinning types*/
-    public static final int TT_SINGLE_TREE_SELECTION = 0;
-    public static final int TT_FROM_ABOVE = 1;
-    public static final int TT_FROM_BELOW = 2;
-    public static final int TT_QD = 3;
-    public static final int TT_CLEAR_CUT = 9;
-
     TreatmentElements2 te = new TreatmentElements2();
 
     /**
@@ -162,7 +156,7 @@ public class Treatment2 {
             }
 
             // Thinning by releasing the crop trees
-            if (st.trule.releaseCropTrees && st.trule.typeOfThinning == Treatment2.TT_SINGLE_TREE_SELECTION) {
+            if (st.trule.releaseCropTrees && st.trule.typeOfThinning == ThinningType.SingleTreeSelection) {
                 te.thinCropTreeCompetition(st);
                 if (st.trule.thinArea) {
                     te.thinCompetitionFromAbove(st);
@@ -172,7 +166,7 @@ public class Treatment2 {
             // thin area between crop trees
             // selectCropTreesOfAllSpecies auch hier einbeziehen?
             //public double degreeOfThinningArea; 
-            if (st.trule.typeOfThinning == Treatment2.TT_FROM_ABOVE) {
+            if (st.trule.typeOfThinning == ThinningType.ThinningFromAbove) {
                 //System.out.println("temporäre Zwischenfelder durchforsten");
                 //select temp crop trees (wet species)
                 te.resetTempCropTrees(st);
@@ -185,12 +179,12 @@ public class Treatment2 {
             }
 
             // Thinning from below
-            if (st.trule.typeOfThinning == Treatment2.TT_FROM_BELOW) {
+            if (st.trule.typeOfThinning == ThinningType.ThinningFromBelow) {
                 te.thinFromBelow(st);
             }
             
             // Thinning by QD
-            if (st.trule.typeOfThinning == Treatment2.TT_QD) {
+            if (st.trule.typeOfThinning == ThinningType.ThinningQD) {
                 te.thinByQD(st);
             }
 
@@ -271,7 +265,8 @@ public class Treatment2 {
      * @param croptreesOnly Release only crop trees
      *
      */
-    public void setThinningRegime(Stand st, int type, double intensity, double minVolume, double maxVolume, boolean croptreesOnly) {
+    public void setThinningRegime(Stand st, ThinningType type, double intensity, double minVolume, double maxVolume, boolean croptreesOnly) {
+        st.trule.typeOfThinning = type;
         st.trule.thinAreaSpeciesDependent = true;
         st.trule.thinArea = true;
         st.trule.selectCropTrees = false;
@@ -282,8 +277,7 @@ public class Treatment2 {
         st.trule.minThinningVolume = minVolume;
         st.trule.maxThinningVolume = maxVolume;
         st.trule.thinningIntensity = intensity;
-        if (type == 0) {
-            st.trule.typeOfThinning = Treatment2.TT_SINGLE_TREE_SELECTION;
+        if (type == ThinningType.SingleTreeSelection) {
             st.trule.thinArea = true;
             if (croptreesOnly) {
                 st.trule.thinArea = false;
@@ -296,17 +290,11 @@ public class Treatment2 {
             st.trule.releaseCropTreesSpeciesDependent = true;
         }
         // Set thinning from above here by temporay crop trees
-        if (type == 1) {
-            st.trule.typeOfThinning = Treatment2.TT_FROM_ABOVE;
+        if (type == ThinningType.ThinningFromAbove) {
             st.trule.selectCropTreesOfAllSpecies = false;
         }
-        // Set thinning from below
-        if (type == 2) {
-            st.trule.typeOfThinning = Treatment2.TT_FROM_BELOW;
-        }
         // Set Thinning by q-d-rule
-        if (type == 3) {
-            st.trule.typeOfThinning = Treatment2.TT_QD;
+        if (type == ThinningType.ThinningQD) {
             st.trule.thinArea = false;
             if (croptreesOnly) {
                 st.trule.thinArea = false; // oder doch true

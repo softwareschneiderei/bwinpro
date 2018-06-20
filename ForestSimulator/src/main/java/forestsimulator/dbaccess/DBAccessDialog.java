@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
+import treegross.base.thinning.ThinningType;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -908,8 +909,10 @@ public class DBAccessDialog extends JDialog {
         try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(jTextField4.getText());
-            st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(),1);
-        } catch (Exception e){  System.out.println("Problem: "+" "+e); }
+            st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(), 1);
+        } catch (Exception e) {
+            System.out.println("Problem: " + " " + e);
+        }
         st.missingData();
         GenerateXY gxy = new GenerateXY();
         gxy.setGroupRadius(0.0);
@@ -922,9 +925,9 @@ public class DBAccessDialog extends JDialog {
         Treatment2 treatment2 = new Treatment2();
         treatment2.setAutoPlanting(st, false, false, 0.2, "511");
         treatment2.setSkidTrails(st, false, 20.0, 4.0);
-        treatment2.setNatureProtection(st, 0,0,false,0.1,200);
+        treatment2.setNatureProtection(st, 0, 0, false, 0.1, 200);
         treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
-        treatment2.setThinningRegime(st, 2,1.0,10,60,false);
+        treatment2.setThinningRegime(st, ThinningType.ThinningFromBelow, 1.0, 10, 60, false);
 
         dispose();
     }//GEN-LAST:event_loadCircleButtonActionPerformed
@@ -933,29 +936,21 @@ public class DBAccessDialog extends JDialog {
         // TFE Daten
         String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
-        double hg = 0.0;
-        double dg = 0.0;
-        double dmax = 0.0;
-        double g = 0.0;
-        double h100 = 0.0;
         String id = "test";
-        int art = 0;
-        int alt = 0;
-        Integer nummer = 0;
         try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rsx = stmt.executeQuery("select * from BucheRein2 ")) {
                 while (rsx.next()) {
-                    nummer = Integer.parseInt(rsx.getObject("ID").toString());
-                    art = (int) Double.parseDouble(rsx.getObject("art").toString());
-                    alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
-                    hg = rsx.getDouble("hg");
-                    h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
-                    dg = Double.parseDouble(rsx.getObject("dg").toString());
-                    dmax = rsx.getDouble("d100");
-                    g = Double.parseDouble(rsx.getObject("gha").toString());
+                    int nummer = Integer.parseInt(rsx.getObject("ID").toString());
+                    int art = (int) Double.parseDouble(rsx.getObject("art").toString());
+                    int alt = (int) Double.parseDouble(rsx.getObject("alt").toString());
+                    double hg = rsx.getDouble("hg");
+                    double h100 = Double.parseDouble(rsx.getObject("absHAlter100").toString());
+                    double dg = Double.parseDouble(rsx.getObject("dg").toString());
+                    double dmax = rsx.getDouble("d100");
+                    double g = Double.parseDouble(rsx.getObject("gha").toString());
                     if (hg > 5.0 && dg > 7.0 && g > 0.0) {
                         EtafelSim etsim = new EtafelSim();
-                        id = nummer.toString();
+                        id = String.valueOf(nummer);
                         st = etsim.newYTStand(st, id, 0.5);
 
                         GenDistribution gdb = new GenDistribution();
@@ -989,8 +984,7 @@ public class DBAccessDialog extends JDialog {
                         for (int j = 0; j < st.ntrees; j++) {
                             st.tr[j].setMissingData();
                         }
-                        GenerateXY gxy = null;
-                        gxy = new GenerateXY();
+                        GenerateXY gxy = new GenerateXY();
                         gxy.setGroupRadius(0.0);
                         gxy.zufall(st);
                         st.sortbyd();
@@ -1052,7 +1046,7 @@ public class DBAccessDialog extends JDialog {
                         treatment2.setSkidTrails(st, true, 20.0, 4.0);
                         treatment2.setNatureProtection(st, 0, 0, false, 0.1, 200);
                         treatment2.setHarvestRegime(st, 2, 0, 180, 0.0, "0.3;");
-                        treatment2.setThinningRegime(st, 0, 1.0, 0, 120, false);
+                        treatment2.setThinningRegime(st, ThinningType.SingleTreeSelection, 1.0, 0, 120, false);
                         if (st.ntrees > 0) {
                             age = (int) st.tr[0].age;
                             LoadTreegrossStand lts = new LoadTreegrossStand();
