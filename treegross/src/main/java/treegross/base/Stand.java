@@ -473,43 +473,13 @@ public class Stand {
      * @return true if the tree has been added to the stand otherwise false
      * @throws treegross.base.SpeciesNotDefinedException
      */
-    public boolean addtree(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        try {
-            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, 1.0d, 0, null);
-            return true;
-        } catch (IllegalStateException e) {
-            return false;
-        }
-    }
-
-    /**
-     * add a tree to the stand
-     *
-     * @param co = species code
-     * @param num = tree no or name
-     * @param age = age of the tree
-     * @param out = if living -1, else the year when died or taken out
-     * @param d = dbh cm
-     * @param h = height m
-     * @param cb = crown base m
-     * @param cw = crown width
-     * @param si = site index
-     * @param x = x-coordinate
-     * @param y = y = coordinate
-     * @param z = z - coordinate
-     * @param zb = is tree a crop tree: z =1 else 0
-     * @param tzb = is tree a temporary crop tree
-     * @param hb = is tree a habitat tree
-     * @return true if the tree has been added to the stand otherwise false
-     * @throws treegross.base.SpeciesNotDefinedException
-     */
     public boolean addTreeFromPlanting(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        boolean result;
-        result = addtree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb);
-        tr[ntrees - 1].origin = 1;
-        return result;
+        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb)) {
+            tr[ntrees - 1].origin = 1;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -534,9 +504,42 @@ public class Stand {
      */
     public void addTreeFromNaturalIngrowth(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        addtree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb);
-        tr[ntrees - 1].origin = 2;
-        tr[ntrees - 1].layer = 3;
+        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb)) {
+            tr[ntrees - 1].origin = 2;
+            tr[ntrees - 1].layer = 3;
+        }
+    }
+
+    /**
+     * add a tree to the stand
+     *
+     * @param co = species code
+     * @param num = tree no or name
+     * @param age = age of the tree
+     * @param out = if living -1, else the year when died or taken out
+     * @param d = dbh cm
+     * @param h = height m
+     * @param cb = crown base m
+     * @param cw = crown width
+     * @param si = site index
+     * @param x = x-coordinate
+     * @param y = y = coordinate
+     * @param z = z - coordinate
+     * @param zb = is tree a crop tree: z =1 else 0
+     * @param tzb = is tree a temporary crop tree
+     * @param hb = is tree a habitat tree
+     * @return true if the tree has been added to the stand otherwise false
+     * @throws treegross.base.SpeciesNotDefinedException
+     */
+    public boolean addTree(int co, String num, int age, int out, double d, double h, double cb, double cw,
+            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+        try {
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, 1.0d, 0, null);
+            return true;
+        } catch (IllegalStateException e) {
+            LOGGER.log(Level.INFO, "Tree not added.", e);
+            return false;
+        }
     }
 
     /* add a tree to the stand including factor*/
@@ -577,15 +580,8 @@ public class Stand {
         tree.crop = zb > 0;
         tree.tempcrop = tzb > 0;
         tree.habitat = hb > 0;
-        tree.sp = addspecies(tree);
-        tree.st = this;
         
-        addTree(tree);
-    }
-
-    private void addTree(Tree tree) {
-        tr[ntrees] = tree;
-        ntrees++;
+        addTreeToStand(tree);
     }
 
     /* add a tree to the stand including factor*/
@@ -593,10 +589,15 @@ public class Stand {
             double d, double h, double cb, double cw,
             double si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
             int layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
-        tr[ntrees] = new Tree(codenumber, number, age, out, outtype, d, h, cb, cw, si, fac, x, y, z, zb, tzb, hb, layer,
+        Tree tree = new Tree(codenumber, number, age, out, outtype, d, h, cb, cw, si, fac, x, y, z, zb, tzb, hb, layer,
                 volumeDeadwood, remarks);
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
+       addTreeToStand(tree);
+    }
+
+    private void addTreeToStand(Tree tree) throws SpeciesNotDefinedException {
+        tree.sp = addspecies(tree);
+        tree.st = this;
+        tr[ntrees] = tree;
         ntrees++;
     }
 
@@ -614,7 +615,7 @@ public class Stand {
      *
      * @param yr
      */
-    public void addYear(Integer yr) {
+    public void setYear(int yr) {
         year = yr;
     }
 
