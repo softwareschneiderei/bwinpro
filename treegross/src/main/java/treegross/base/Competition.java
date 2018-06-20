@@ -180,8 +180,9 @@ public class Competition implements PlugInCompetition {
 
     /**
      * calculate overlap area of two circle only if they overlap
+     * @return are of overlap 
      */
-    private static double overlap(double r1, double r2, double e) {
+    protected static double overlap(double r1, double r2, double e) {
         double x, y, f, r1s, r2s;
         //f=0.0;
         //r1 should always be the smaller radius
@@ -221,7 +222,7 @@ public class Competition implements PlugInCompetition {
     /**
      * get percentage of influence zone area inside the stand
      */
-    private double getPercCircleInStand(double radius, double x, double y, Stand st) {
+    protected double getPercCircleInStand(double radius, double x, double y, Stand st) {
         int pan = 0; // number of points inside influence zone total
         int pani = 0; //number of points inside influence zone and inside plot area
         double xpx = x - radius + radius / 20;
@@ -260,7 +261,7 @@ public class Competition implements PlugInCompetition {
      *
      * @return returns the percentage of overlap area in stand polygon
      */
-    private double getPercOverlapInStand(double radius_cz, double x_cz, double y_cz,
+    protected double getPercOverlapInStand(double radius_cz, double x_cz, double y_cz,
             double radius_crown, double x_crown, double y_crown, Stand st) {
         int pan = 0; // number of points inside overlap zone total
         int pani = 0; //number of points inside overlap zone and inside plot area
