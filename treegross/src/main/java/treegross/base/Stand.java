@@ -475,49 +475,12 @@ public class Stand {
      */
     public boolean addtree(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        //Könnte fehlerhaft sein
-        // if (sizeoftr<=ntrees) { tr[ntrees]=new tree();sizeoftr=sizeoftr+1;}
-        // added by jhansen -> +1 -1 empty array place needed
-        if (ntrees + 1 >= maxStandTrees - 1) {
-            if (debug) {
-                LOGGER.log(Level.WARNING, "Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}", new Object[]{standname, trule.targetType, d, co, h});
-            }
+        try {
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, 1.0d, 0, null);
+            return true;
+        } catch (IllegalStateException e) {
             return false;
         }
-
-        tr[ntrees] = new Tree();
-        tr[ntrees].code = co;
-        tr[ntrees].no = num;
-        tr[ntrees].age = age;
-        tr[ntrees].out = out;
-        tr[ntrees].crop = false;
-        tr[ntrees].tempcrop = false;
-        tr[ntrees].habitat = false;
-        tr[ntrees].origin = 0;
-        tr[ntrees].year = this.year;
-        tr[ntrees].d = d;
-        tr[ntrees].h = h;
-        tr[ntrees].cb = cb;
-        tr[ntrees].cw = cw;
-        tr[ntrees].x = x;
-        tr[ntrees].y = y;
-        if (z < 0.0) {
-            z = 0.0;
-        }
-        tr[ntrees].z = z;
-        tr[ntrees].outtype = OutType.STANDING;
-        tr[ntrees].fac = 1.0;
-        tr[ntrees].si = si; // no site index set at this point
-        tr[ntrees].group = -1;
-
-        tr[ntrees].crop = (zb > 0);
-        tr[ntrees].tempcrop = (tzb > 0);
-        tr[ntrees].habitat = (hb > 0);
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
-        //               if (tr[ntrees].cw <= 0.0) tr[ntrees].generatecw();
-        ntrees++;
-        return true;
     }
 
     /**
@@ -576,75 +539,10 @@ public class Stand {
         tr[ntrees - 1].layer = 3;
     }
 
-    public void addTreeFromDB(int co, String num, double fac, int age, int out, OutType outtype, double d, double h, double v, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, int layer) throws SpeciesNotDefinedException {
-        tr[ntrees] = new Tree();
-        tr[ntrees].code = co;
-        tr[ntrees].no = num;
-        tr[ntrees].fac = fac;
-        tr[ntrees].age = age;
-        tr[ntrees].out = out;
-        tr[ntrees].outtype = outtype;
-        tr[ntrees].crop = false;
-        tr[ntrees].tempcrop = false;
-        tr[ntrees].habitat = false;
-        tr[ntrees].origin = 0;
-        tr[ntrees].year = this.year;
-        tr[ntrees].d = d;
-        tr[ntrees].h = h;
-        tr[ntrees].v = v;
-        tr[ntrees].cb = cb;
-        tr[ntrees].cw = cw;
-        tr[ntrees].x = x;
-        tr[ntrees].y = y;
-        tr[ntrees].z = z;
-        tr[ntrees].si = si; // no site index set at this point
-        tr[ntrees].group = -1; // no site index set at this point
-        tr[ntrees].crop = (zb > 0);
-        tr[ntrees].tempcrop = (tzb > 0);
-        tr[ntrees].habitat = (hb > 0);
-
-        tr[ntrees].sp = addspecies(tr[ntrees]);
-        tr[ntrees].st = this;
-        tr[ntrees].layer = layer;
-        ntrees++;
-    }
-
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
-        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, out, num);
-//        Tree tree = new Tree();
-//        tree.code = co;
-//        tree.no = num;
-//        tree.age = age;
-//        tree.out = out;
-//        tree.crop = false;
-//        tree.tempcrop = false;
-//        tree.habitat = false;
-//        tree.d = d;
-//        tree.h = h;
-//        tree.cb = cb;
-//        tree.cw = cw;
-//        tree.origin = 0;
-//        tree.year = this.year;
-//        tree.x = x;
-//        tree.y = y;
-//        if (z < 0.0) {
-//            z = 0.0;
-//        }
-//        tree.z = z;
-//        tree.outtype = OutType.STANDING;
-//        tree.fac = fac;
-//        tree.si = si; // no site index set at this point
-//        tree.group = -1; // no site index set at this point
-//        tree.crop = zb > 0;
-//        tree.tempcrop = tzb > 0;
-//        tree.habitat = hb > 0;
-//        tree.sp = addspecies(tree);
-//        tree.st = this;
-//        tr[ntrees] = tree;
-//        ntrees++;
+        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, 0, null);
     }
 
     /* add a tree from Dbase NFV*/
@@ -660,29 +558,32 @@ public class Stand {
         tree.no = num;
         tree.age = age;
         tree.out = out;
-        tree.crop = false;
         tree.d = d;
         tree.h = h;
         tree.cb = cb;
         tree.cw = cw;
         tree.x = x;
         tree.y = y;
-        tree.z = z;
+        tree.z = Math.max(0d, z);
         tree.outtype = OutType.STANDING;
-//        tree.fac = fac;
-//        tree.origin = 0;
-//        tree.year = this.year;
-//        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
-//        tree.ou = ou;
-//        tree.remarks = rm;
-//        tree.si = si; // no site index set at this point
-//        tree.group = -1; // no site index set at this point
-//        tree.crop = zb > 0;
-//        tree.tempcrop = tzb > 0;
-//        tree.habitat = hb > 0;
-//        tree.sp = addspecies(tree);
-//        tr[ntrees].st = this;
-//        
+        tree.fac = fac;
+        tree.origin = 0;
+        tree.year = this.year;
+        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
+        tree.ou = ou;
+        tree.remarks = rm;
+        tree.si = si; // no site index set at this point
+        tree.group = -1; // no site index set at this point
+        tree.crop = zb > 0;
+        tree.tempcrop = tzb > 0;
+        tree.habitat = hb > 0;
+        tree.sp = addspecies(tree);
+        tree.st = this;
+        
+        addTree(tree);
+    }
+
+    private void addTree(Tree tree) {
         tr[ntrees] = tree;
         ntrees++;
     }

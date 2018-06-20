@@ -121,7 +121,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));
             final int currentStep = step;
             StopWatch stepTime = new StopWatch("Step " + step).start();
-            simulation.executeStep(lts.thinningActive(), 5, (Stand t) -> {
+            simulation.executeStep(lts.applyTreatment(), 5, (Stand t) -> {
                 saveStand(con, t, lts, rule, currentStep + 1, pass);
             });
             st.sortbyd();
