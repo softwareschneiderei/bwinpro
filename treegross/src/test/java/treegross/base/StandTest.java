@@ -132,7 +132,7 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 7);
         
-        assertThat(s.addtree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isTrue();
+        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isTrue();
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
@@ -151,7 +151,7 @@ public class StandTest {
         Stand s = new Stand();
         s.ntrees = s.maxStandTrees;
         
-        assertThat(s.addtree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isFalse();
+        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isFalse();
     }
 
     /*

@@ -434,7 +434,7 @@ public class TgDesign extends JPanel {
                             String codex = (String) (speciesCodeComboBox.getSelectedItem());
                             int m = codex.indexOf(":");
                             codex = codex.substring(0, m);
-                            st.addtree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(jTextField1.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
+                            st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(jTextField1.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
                             st.tr[st.ntrees - 1].layer = lay;
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
@@ -479,7 +479,7 @@ public class TgDesign extends JPanel {
                             Integer nox = st.ntrees + 1;
                             String nrAdd = nox.toString();
                             if (d < 7.0) {
-                                st.addtree(artx, nrAdd, Integer.parseInt(td2.getText()), -1, d, hei, hei / 2.0, cbx, bon, -9.0, -9.0, 0.0, 0, 0, 0);
+                                st.addTree(artx, nrAdd, Integer.parseInt(td2.getText()), -1, d, hei, hei / 2.0, cbx, bon, -9.0, -9.0, 0.0, 0, 0, 0);
                                 st.tr[st.ntrees - 1].layer = 3;
                             }
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {

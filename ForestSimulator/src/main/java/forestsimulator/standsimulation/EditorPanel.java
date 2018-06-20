@@ -125,7 +125,7 @@ public class EditorPanel extends JPanel {
             dStr = dStr.trim();
             if (dStr.length() > 0) {
                 try {
-                    st.addtree(getInt((String) jTable2.getValueAt(i, 0)), (String) jTable2.getValueAt(i, 1), getInt((String) jTable2.getValueAt(i, 2)), getInt((String) jTable2.getValueAt(i, 8)), getDouble((String) jTable2.getValueAt(i, 3)), getDouble((String) jTable2.getValueAt(i, 4)), getDouble((String) jTable2.getValueAt(i, 6)), getDouble((String) jTable2.getValueAt(i, 7)), getDouble((String) jTable2.getValueAt(i, 5)), getDouble((String) jTable2.getValueAt(i, 10)), getDouble((String) jTable2.getValueAt(i, 11)), getDouble((String) jTable2.getValueAt(i, 12)), 0, 0, 0);
+                    st.addTree(getInt((String) jTable2.getValueAt(i, 0)), (String) jTable2.getValueAt(i, 1), getInt((String) jTable2.getValueAt(i, 2)), getInt((String) jTable2.getValueAt(i, 8)), getDouble((String) jTable2.getValueAt(i, 3)), getDouble((String) jTable2.getValueAt(i, 4)), getDouble((String) jTable2.getValueAt(i, 6)), getDouble((String) jTable2.getValueAt(i, 7)), getDouble((String) jTable2.getValueAt(i, 5)), getDouble((String) jTable2.getValueAt(i, 10)), getDouble((String) jTable2.getValueAt(i, 11)), getDouble((String) jTable2.getValueAt(i, 12)), 0, 0, 0);
                 } catch (SpeciesNotDefinedException ex) {
                     Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }

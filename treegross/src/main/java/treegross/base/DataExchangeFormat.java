@@ -497,14 +497,14 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, tzb, hb, numberoftrees);
                 } else {
                     for (int i = 0; i < numberoftrees; i++) {
-                        st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                        st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                                 site, x, y, z, zb, tzb, hb);
                     }
 
                 }
                 // Tree which only add a height value, but are not on the plot                         
                 if (no.compareTo("nurH") == 0 && numberoftrees == 0) {
-                    st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                    st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                             site, x, y, z, zb, tzb, hb);
                 }
             }
@@ -761,14 +761,14 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, tzb, hb, numberoftrees);
                 } else {
                     for (int i = 0; i < numberoftrees; i++) {
-                        st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                        st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                                 site, x, y, z, zb, tzb, hb);
                     }
 
                 }
                 // Tree which only add a height value, but are not on the plot                         
                 if (no.compareTo("nurH") == 0 && numberoftrees == 0) {
-                    st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                    st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                             site, x, y, z, zb, tzb, hb);
                 }
             }
@@ -971,14 +971,14 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, tzb, hb, numberoftrees);
                 } else {
                     for (int i = 0; i < numberoftrees; i++) {
-                        st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                        st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                                 site, x, y, z, zb, tzb, hb);
                     }
 
                 }
                 // Tree which only add a height value, but are not on the plot                         
                 if (no.compareTo("nurH") == 0 && numberoftrees == 0) {
-                    st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                    st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                             site, x, y, z, zb, tzb, hb);
                 }
             }
@@ -1070,14 +1070,14 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, 0, 0, numberoftrees);
                 } else {
                     for (int i = 0; i < numberoftrees; i++) {
-                        st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                        st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                                 site, x, y, z, zb, 0, 0);
                     }
                 }
 
                 // Tree which only add a height value, but are not on the plot                         
                 if (no.compareTo("nurH") == 0 && numberoftrees == 0) {
-                    st.addtree(code, no, age, out, dbh, height, crbase, crwidth,
+                    st.addTree(code, no, age, out, dbh, height, crbase, crwidth,
                             site, x, y, z, zb, 0, 0);
                 }
             }
