@@ -310,17 +310,7 @@ public class TreatmentElements2 {
 
         // if there is a amount to be harvested
         if (vmaxharvest > 0) {
-            //Sort st.tr by difference targetdiameter -diameter ascending        
-            Tree trtemp;
-            for (int i = 0; i < st.ntrees - 1; i++) {
-                for (int j = i + 1; j < st.ntrees; j++) {
-                    if ((st.tr[i].sp.trule.targetDiameter - st.tr[i].d) > (st.tr[j].sp.trule.targetDiameter - st.tr[j].d)) {
-                        trtemp = st.tr[i];
-                        st.tr[i] = st.tr[j];
-                        st.tr[j] = trtemp;
-                    }
-                }
-            }
+            sortStandByTargetDiameter(st);
             //see if there are target diameter trees , then harvest those trees
             // conditions: no habitat tree, diameter > target diameter, standing, max harvest volume has not been reached
             for (int i = 0; i < st.ntrees; i++) {
@@ -334,6 +324,20 @@ public class TreatmentElements2 {
                     st.tr[i].out = st.year;
                     st.tr[i].outtype = OutType.HARVESTED;
                     //st.tr[i].no+="_zs";
+                }
+            }
+        }
+    }
+
+    protected void sortStandByTargetDiameter(Stand st) {
+        //Sort st.tr by difference targetdiameter -diameter ascending
+        Tree trtemp;
+        for (int i = 0; i < st.ntrees - 1; i++) {
+            for (int j = i + 1; j < st.ntrees; j++) {
+                if ((st.tr[i].sp.trule.targetDiameter - st.tr[i].d) > (st.tr[j].sp.trule.targetDiameter - st.tr[j].d)) {
+                    trtemp = st.tr[i];
+                    st.tr[i] = st.tr[j];
+                    st.tr[j] = trtemp;
                 }
             }
         }
@@ -444,17 +448,7 @@ public class TreatmentElements2 {
         }
 
         if (vmaxharvest > 0) {
-            //Sort st.tr by difference targetdiameter -diameter ascending        
-            Tree trtemp;
-            for (int i = 0; i < st.ntrees - 1; i++) {
-                for (int j = i + 1; j < st.ntrees; j++) {
-                    if ((st.tr[i].sp.trule.targetDiameter - st.tr[i].d) > (st.tr[j].sp.trule.targetDiameter - st.tr[j].d)) {
-                        trtemp = st.tr[i];
-                        st.tr[i] = st.tr[j];
-                        st.tr[j] = trtemp;
-                    }
-                }
-            }
+            sortStandByTargetDiameter(st);
 
             /**
              * distance of two trees
@@ -1696,17 +1690,7 @@ public class TreatmentElements2 {
         }
         selectNCropTrees(st);
         if (vmaxharvest > 0) {
-            //Sort st.tr by difference targetdiameter -diameter ascending        
-            Tree trtemp;
-            for (int i = 0; i < st.ntrees - 1; i++) {
-                for (int j = i + 1; j < st.ntrees; j++) {
-                    if ((st.tr[i].sp.trule.targetDiameter - st.tr[i].d) > (st.tr[j].sp.trule.targetDiameter - st.tr[j].d)) {
-                        trtemp = st.tr[i];
-                        st.tr[i] = st.tr[j];
-                        st.tr[j] = trtemp;
-                    }
-                }
-            }
+            sortStandByTargetDiameter(st);
 
             /**
              * distance of two trees
