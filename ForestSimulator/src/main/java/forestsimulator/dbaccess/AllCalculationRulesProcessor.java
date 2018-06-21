@@ -61,7 +61,6 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             for (CalculationRule rule : rules) {
                 if (shouldStop) {
                     logger.log(Level.FINE, "Processing aborted before next rule.");
-                    progressListener.aborted();
                     return null;
                 }
                 StopWatch oneRule = new StopWatch("One rule").start();
@@ -70,7 +69,6 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
                 for (int pass = 1; pass <= rule.passCount; pass++) {
                     if (shouldStop) {
                         logger.log(Level.FINE, "Processing aborted before next pass.");
-                        progressListener.aborted();
                         return null;
                     }
                     StopWatch onePass = new StopWatch("One pass").start();
@@ -90,7 +88,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     @Override
     protected void done() {
         wholeBatchTiming.stop();
-        progressListener.finished(wholeBatchTiming.deltaNanos());
+        if (shouldStop) {
+            progressListener.aborted(wholeBatchTiming.deltaNanos());
+        } else {
+            progressListener.finished(wholeBatchTiming.deltaNanos());
+        }
         st.notificationsEnabled(true);
     }
 
@@ -114,7 +116,6 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
-                progressListener.aborted();
                 return;
             }
             publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));

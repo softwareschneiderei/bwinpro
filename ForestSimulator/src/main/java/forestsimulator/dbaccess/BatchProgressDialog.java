@@ -2,6 +2,7 @@ package forestsimulator.dbaccess;
 
 import forestsimulator.util.DurationFormatter;
 import java.awt.Frame;
+import java.awt.HeadlessException;
 import java.text.MessageFormat;
 import java.time.Duration;
 import java.util.Optional;
@@ -236,17 +237,22 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     }
     
     @Override
-    public void aborted() {
+    public void aborted(Duration elapsedTime) {
         dispose();
+        showEndDialog(elapsedTime, "BatchProgressDialog.abortedMessage.title", "BatchProgressDialog.abortedMessage.text", JOptionPane.WARNING_MESSAGE);
     }
 
     @Override
     public void finished(Duration elapsedTime) {
         dispose();
+        showEndDialog(elapsedTime, "BatchProgressDialog.finishedMessage.title", "BatchProgressDialog.finishedMessage.text", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void showEndDialog(Duration elapsedTime, String titleKey, String messageKey, int messageType) throws HeadlessException {
         JOptionPane.showMessageDialog(
                 getParent(),
-                MessageFormat.format(messages.getString("BatchProgressDialog.finishedMessage.text"), DurationFormatter.format(Optional.of(elapsedTime))),
-                messages.getString("BatchProgressDialog.finishedMessage.title"),
-                JOptionPane.INFORMATION_MESSAGE);
+                MessageFormat.format(messages.getString(messageKey), DurationFormatter.format(Optional.of(elapsedTime))),
+                messages.getString(titleKey),
+                messageType);
     }
 }
