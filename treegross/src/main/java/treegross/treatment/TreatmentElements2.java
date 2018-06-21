@@ -563,23 +563,9 @@ public class TreatmentElements2 {
      * @param st stand object
      */
     public void harvestSchirmschlag(Stand st) {
-        double degree = 0.0;
         String rp = st.trule.regenerationProcess;
         String[] rpArray = rp.split(";");
-        int index = st.status - 1;
-        if (index >= 0 && index < rpArray.length) {
-            if (rpArray[index] != null) {
-                try {
-                    degree = Double.parseDouble(rpArray[index]);
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        if (degree == 0.0) {
-            st.status = 98;
-        }
-
-        st.status++;
+        double degree = harvestingDegree(st, rpArray);
         double baHarv = 0.0;
         double baOut;
         if (degree > 0.0) {
@@ -640,22 +626,9 @@ public class TreatmentElements2 {
      * @param st stand object
      */
     public void harvestTargetDiameterInPeriod(Stand st) {
-        double degree = 0.0;
         String rp = st.trule.regenerationProcess;
         String[] rpArray = rp.split(";");
-        int index = st.status - 1;
-        if (index >= 0 && index < rpArray.length) {
-            if (rpArray[index] != null) {
-                try {
-                    degree = Double.parseDouble(rpArray[index]);
-                } catch (NumberFormatException e) {
-                }
-            }
-        }
-        if (degree == 0.0) {
-            st.status = 98;
-        }
-        st.status++;
+        double degree = harvestingDegree(st, rpArray);
         double baHarv = 0.0;
         double baOut, baOut50;
         if (degree > 0.0) {
@@ -707,6 +680,24 @@ public class TreatmentElements2 {
                 st.trule.standTypeAtStatus1 = -1;
             }
         }
+    }
+
+    protected double harvestingDegree(Stand st, String[] rpArray) {
+        double degree = 0d;
+        int index = st.status - 1;
+        if (index >= 0 && index < rpArray.length) {
+            if (rpArray[index] != null) {
+                try {
+                    degree = Double.parseDouble(rpArray[index]);
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+        if (degree == 0.0) {
+            st.status = 98;
+        }
+        st.status++;
+        return degree;
     }
 
     protected double harvestCropTrees(double baHarv, double baOutLimit, Stand st) {
