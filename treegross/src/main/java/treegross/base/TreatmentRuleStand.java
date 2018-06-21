@@ -227,8 +227,8 @@ public class TreatmentRuleStand implements Cloneable {
     // max percentage of harvested/thinned wood has to be added
     // added by jhansen
     @Override
-    public TreatmentRuleStand clone() {
-        TreatmentRuleStand clone = new TreatmentRuleStand();
+    public TreatmentRuleStand clone() throws CloneNotSupportedException {
+        TreatmentRuleStand clone = (TreatmentRuleStand) super.clone();
         clone.cutCompetingCropTrees = this.cutCompetingCropTrees;
         clone.harvestLayerFromBelow = this.harvestLayerFromBelow;
         clone.harvestingYears = this.harvestingYears;

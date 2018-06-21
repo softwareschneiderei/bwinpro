@@ -40,15 +40,8 @@ public class DataExchangeFormat {
     private static final String DELIM = ";";
 
     public void save(Stand st, String fn) {
-        try {
-            int i;
-            int pm = 0;
-            NumberFormat f;
-            f = NumberFormat.getInstance(new Locale("en", "US"));
-            f.setMaximumFractionDigits(2);
-            f.setMinimumFractionDigits(2);
-            OutputStream os = new FileOutputStream(fn);
-            PrintWriter out = new PrintWriter(new OutputStreamWriter(os));
+        int pm = 0;
+        try (PrintWriter out = new PrintWriter(new FileWriter(fn))) {
             Date datum = new Date();
             out.println("TreeGrOSS Exchange Data :" + datum + " by Waldplaner2");
             out.println(st.standname);
@@ -56,7 +49,10 @@ public class DataExchangeFormat {
             out.println(st.size + ";Flaechengroesse ha");
             out.println(st.ncpnt + ";Eckpunkte");
             out.println("No;x;y;z;");
-            for (i = 0; i < st.ncpnt; i++) {
+            NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
+            f.setMaximumFractionDigits(2);
+            f.setMinimumFractionDigits(2);
+            for (int i = 0; i < st.ncpnt; i++) {
                 out.println(st.cpnt[i].no + ";" + f.format(st.cpnt[i].x) + ";"
                         + f.format(st.cpnt[i].y) + ";" + f.format(st.cpnt[i].z) + ";");
             }
@@ -169,7 +165,7 @@ public class DataExchangeFormat {
             }
             out.println("Code;N;No;Age;DBH;Height;Site index;Crown Base;Crown width;alive;"
                     + "Removal Code;x-Coord.;y-Coord.;z-Coord.;Crop tree; Temp Crop tree, Habitat tree");
-            for (i = 0; i < st.ntrees; i++) {
+            for (int i = 0; i < st.ntrees; i++) {
                 if ("".equals(st.tr[i].no)) {
                     st.tr[i].no = " ";
                 }
@@ -197,10 +193,10 @@ public class DataExchangeFormat {
                         + f.format(st.tr[i].x) + ";" + f.format(st.tr[i].y) + ";" + f.format(st.tr[i].z)
                         + ";" + zb + ";" + tzb + ";" + hb);
             }
-
-            out.close();
         } catch (FileNotFoundException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
+        } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, "Problem writing exchange format", ex);
         }
     }
 
@@ -235,15 +231,8 @@ public class DataExchangeFormat {
                 st.random.setRandomType(rge);
             }
 
-            s = in.readLine();
-            stx = new StringTokenizer(s, DELIM);
-            int dd = Integer.parseInt(stx.nextToken());
-            st.distanceDependent = dd == 1;
-
-            s = in.readLine();
-            stx = new StringTokenizer(s, DELIM);
-            int ia = Integer.parseInt(stx.nextToken());
-            st.ingrowthActive = ia == 1;
+            st.distanceDependent = parseIntToBoolean(in);
+            st.ingrowthActive = parseIntToBoolean(in);
 
             //read treatment options 
             s = in.readLine();
@@ -298,10 +287,7 @@ public class DataExchangeFormat {
             stx = new StringTokenizer(s, DELIM);
             st.trule.maxHarvestingPeriode = Integer.parseInt(stx.nextToken());
 
-            s = in.readLine();
-            stx = new StringTokenizer(s, DELIM);
-            pm = Integer.parseInt(stx.nextToken());
-            st.trule.harvestLayerFromBelow = pm == 1;
+            st.trule.harvestLayerFromBelow = parseIntToBoolean(in);
 
             s = in.readLine();
             stx = new StringTokenizer(s, DELIM);
@@ -395,11 +381,7 @@ public class DataExchangeFormat {
             } else {
                 st.trule.harvestLayerFromBelow = false;
             }
-
-            s = in.readLine();
-            stx = new StringTokenizer(s, DELIM);
-            pm = Integer.parseInt(stx.nextToken());
-            st.trule.protectMinorities = pm == 1;
+            st.trule.protectMinorities = parseIntToBoolean(in);
 
             //get number of species
             s = in.readLine();
@@ -522,16 +504,17 @@ public class DataExchangeFormat {
                         st.sp[i].trule.numberCropTreesWanted = nCT[j];
                         st.sp[i].trule.targetRang = tR[j];
                     }
-
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
+    }
+
+    protected boolean parseIntToBoolean(final BufferedReader in) throws IOException, NumberFormatException {
+        StringTokenizer stx = new StringTokenizer(in.readLine(), DELIM);
+        int dd = Integer.parseInt(stx.nextToken());
+        return dd == 1;
     }
 
     private StringTokenizer tokenizeNextLine(final BufferedReader in) throws IOException {
