@@ -533,9 +533,9 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
       st.riskActive = useRiskModelCheckBox.isSelected();
       st.distanceDependent=true;
 // Planting rules
-      treat.setAutoPlanting(st,plantingCheckbox.isSelected(),  unterstoryRemovalCheckBox.isSelected(), Double.parseDouble(plantAtTextField.getText()), speciesCodeTextField.getText() );
+      st.trule.setAutoPlanting(plantingCheckbox.isSelected(), unterstoryRemovalCheckBox.isSelected(), Double.parseDouble(plantAtTextField.getText()), speciesCodeTextField.getText());
 // Skidtrails      
-      treat.setSkidTrails(st,developmentCheckBox.isSelected(),Double.parseDouble(skidtrailDistanceTextField.getText()),Double.parseDouble(skidtrailWidthTextField.getText()));
+      st.trule.setSkidTrails(developmentCheckBox.isSelected(), Double.parseDouble(skidtrailDistanceTextField.getText()), Double.parseDouble(skidtrailWidthTextField.getText()));
       developmentCheckBox.setSelected(false);
       if (st.ntrees > 0) {  
 // Set thinning  and intensity
@@ -544,17 +544,17 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         double thIntensity = Double.parseDouble(thtxt);
         boolean ctreesOnly = releaseOnlyCropTreesCheckBox.isSelected();
 
-        treat.setThinningRegime(st, (ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
+        st.trule.setThinningRegime((ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
                  Double.parseDouble(thinningAmountMaximumTextField.getText()), ctreesOnly) ;
 // set Harvesting Regime
         double clearFak = 0.0;
         if (harvestingTypeComboBox.getSelectedIndex() == 0) {
             clearFak = Double.parseDouble(clearingTextField.getText());
         }
-        treat.setHarvestRegime(st, harvestingTypeComboBox.getSelectedIndex(), Double.parseDouble(harvestingAmountMinimumTextField.getText()),
+        st.trule.setHarvestRegime(harvestingTypeComboBox.getSelectedIndex(), Double.parseDouble(harvestingAmountMinimumTextField.getText()),
                 Double.parseDouble(harvestingAmountMaximumTextField.getText()), clearFak, clearingTextField.getText());
 // Set nature conversation
-        treat.setNatureProtection(st, Integer.parseInt(habitatTreesTextField.getText()), woodTypeComboBox.getSelectedIndex(), 
+        st.trule.setNatureProtection(Integer.parseInt(habitatTreesTextField.getText()), woodTypeComboBox.getSelectedIndex(), 
                 minorityProtectionCheckBox.isSelected(),Double.parseDouble(minimumCoverTextField.getText()),Integer.parseInt(protectionThicknessTextField.getText()));
       }
       for (int i=0; i < jTable1.getRowCount(); i++){

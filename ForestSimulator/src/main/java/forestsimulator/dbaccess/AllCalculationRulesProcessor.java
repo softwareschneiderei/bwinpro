@@ -108,10 +108,9 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0);
         // Define all trees with fac = 0.0 as dead zu that there is no growth
         markTreesAsDead(tree -> tree.fac == 0.0);
-        Treatment2 treat = new Treatment2();
-        st = lts.loadRules(con, st, rule.edvId, rule.aufId, treat, rule.scenarioId);
+        st = lts.loadRules(con, st, rule.edvId, rule.aufId, rule.scenarioId);
         saveStand(con, st, lts, rule, 0, pass);
-        Simulation simulation = new Simulation(st, treat);
+        Simulation simulation = new Simulation(st, new Treatment2());
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");

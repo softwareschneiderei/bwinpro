@@ -473,7 +473,6 @@ public class DBAccessDialog extends JDialog {
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
-            Treatment2 treat = new Treatment2();
             LoadTreegrossStand lts = new LoadTreegrossStand();
             String edvId = standNameTextField.getText();
             int aufId = Integer.parseInt(recordingComboBox.getSelectedItem().toString());
@@ -484,10 +483,10 @@ public class DBAccessDialog extends JDialog {
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
             st.descspecies();
-            st = lts.loadRules(con, st, edvId, aufId, treat, 0);
+            st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            Simulation simulation = new Simulation(st, treat);
+            Simulation simulation = new Simulation(st, new Treatment2());
             for (int step = 0; step < st.temp_Integer; step++) {
                 simulation.executeStep(false, 5, publishNothing);
                 st.sortbyd();
@@ -806,9 +805,6 @@ public class DBAccessDialog extends JDialog {
         String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();
         try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
-            String bi = "179-2001-001";
-            String pk = "4172";
-
             String orga[] = new String[900];
             int norga = 0;
 
@@ -827,10 +823,8 @@ public class DBAccessDialog extends JDialog {
             } catch (SQLException e) {
                 System.out.println("Problem: " + " " + e);
             }
-
             for (int inventur = 0; inventur < norga; inventur++) {
-
-                bi = orga[inventur];
+                String bi = orga[inventur];
                 int kr[] = new int[90000];
                 int nkr = 0;
                 try (PreparedStatement stmt = con.prepareStatement("SELECT * FROM tblDatPh2 WHERE DatOrga_Key = ?")) {
@@ -922,12 +916,11 @@ public class DBAccessDialog extends JDialog {
 
         st.random.setRandomType(RandomNumber.PSEUDO);
 
-        Treatment2 treatment2 = new Treatment2();
-        treatment2.setAutoPlanting(st, false, false, 0.2, "511");
-        treatment2.setSkidTrails(st, false, 20.0, 4.0);
-        treatment2.setNatureProtection(st, 0, 0, false, 0.1, 200);
-        treatment2.setHarvestRegime(st, 0, 0, 80, 0.1, "0.3;");
-        treatment2.setThinningRegime(st, ThinningType.ThinningFromBelow, 1.0, 10, 60, false);
+        st.trule.setAutoPlanting(false, false, 0.2, "511");
+        st.trule.setSkidTrails(false, 20.0, 4.0);
+        st.trule.setNatureProtection(0, 0, false, 0.1, 200);
+        st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
+        st.trule.setThinningRegime(ThinningType.ThinningFromBelow, 1.0, 10, 60, false);
 
         dispose();
     }//GEN-LAST:event_loadCircleButtonActionPerformed
@@ -1041,12 +1034,11 @@ public class DBAccessDialog extends JDialog {
                         st.sp[0].trule.numberCropTreesWanted = 120;
                         st.sp[0].spDef.targetDiameter = 100.0;
                         st.sp[0].spDef.cropTreeNumber = 110;
-                        Treatment2 treatment2 = new Treatment2();
-                        treatment2.setAutoPlanting(st, false, false, 0.1, "511");
-                        treatment2.setSkidTrails(st, true, 20.0, 4.0);
-                        treatment2.setNatureProtection(st, 0, 0, false, 0.1, 200);
-                        treatment2.setHarvestRegime(st, 2, 0, 180, 0.0, "0.3;");
-                        treatment2.setThinningRegime(st, ThinningType.SingleTreeSelection, 1.0, 0, 120, false);
+                        st.trule.setAutoPlanting(false, false, 0.1, "511");
+                        st.trule.setSkidTrails(true, 20.0, 4.0);
+                        st.trule.setNatureProtection(0, 0, false, 0.1, 200);
+                        st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
+                        st.trule.setThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false);
                         if (st.ntrees > 0) {
                             age = (int) st.tr[0].age;
                             LoadTreegrossStand lts = new LoadTreegrossStand();
@@ -1056,7 +1048,7 @@ public class DBAccessDialog extends JDialog {
                             st.missingData();
                             st.descspecies();
 
-                            //
+                            Treatment2 treatment2 = new Treatment2();
                             for (int jj = 0; jj < 20; jj++) {
                                 treatment2.executeManager2(st);
                                 st.executeMortality();
@@ -1068,7 +1060,6 @@ public class DBAccessDialog extends JDialog {
                                 st.grow(5, false);
                                 st.descspecies();
                                 System.out.println(jj + "  " + age);
-
                             }
                         }
                     }

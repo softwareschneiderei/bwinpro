@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
-import treegross.treatment.*;
 
 /**
  *
@@ -225,7 +224,7 @@ public class LoadTreegrossStand {
         return new StandMetaData(standName(connection, edvId, selectedAufn), year, size);
     }
 
-    public Stand loadRules(Connection dbconn, Stand stl, String idx, int auf, Treatment2 t2, int scen) {
+    public Stand loadRules(Connection dbconn, Stand stl, String idx, int auf, int scen) {
         durchforstung_an = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ? AND Szenario = ?)")) {
             stmt.setString(1, idx);
@@ -259,7 +258,7 @@ public class LoadTreegrossStand {
         if (applyTreatment() && scenario > 0) {
             stl.distanceDependent = true;
             applyTreatmentRulesTo(stl);
-            loadScenario(dbconn, stl, t2, scenario);
+            loadScenario(dbconn, stl, scenario);
         }
         return stl;
     }
@@ -277,7 +276,7 @@ public class LoadTreegrossStand {
                 6);
     }
 
-    public void loadScenario(Connection dbconn, Stand st, Treatment2 t2, int scenarioNo) {
+    public void loadScenario(Connection dbconn, Stand st, int scenarioNo) {
         StopWatch loadScenario = new StopWatch("Load scenario").start();
         int szArtIndex = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Szenario where (SzenarioNr = ?)")) {
@@ -288,14 +287,14 @@ public class LoadTreegrossStand {
                     boolean skidtrails = rs.getBoolean("Skidtrails");
                     double skidtrailDistance = rs.getDouble("SkidtrailDistance");
                     double skidtrailWidth = rs.getDouble("SkidtrailWidth");
-                    t2.setSkidTrails(st, skidtrails, skidtrailDistance, skidtrailWidth);
+                    st.trule.setSkidTrails(skidtrails, skidtrailDistance, skidtrailWidth);
                     // Set thinning  and intensity
                     int thType = rs.getInt("ThinningType");
                     double thIntensity = rs.getDouble("ThinningIntensity");
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
-                    t2.setThinningRegime(st, ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly);
+                    st.trule.setThinningRegime(ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly);
                     // set Harvesting Regime
                     int hvType = rs.getInt("HarvestType");
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");
@@ -306,14 +305,14 @@ public class LoadTreegrossStand {
                     if (hvp != null) {
                         hvProcess = hvp.toString();
                     }
-                    t2.setHarvestRegime(st, hvType, hvVolMin, hvVolMax, hvFinalCut, hvProcess);
+                    st.trule.setHarvestRegime(hvType, hvVolMin, hvVolMax, hvFinalCut, hvProcess);
                     // Set nature conversation
                     int haType = rs.getInt("HabitatType");
                     int haTrees = rs.getInt("HabitatTrees");
                     boolean haMino = rs.getBoolean("HabitatMinority");
                     double haMinCov = rs.getDouble("HabitatMinCoverage");
                     int haBHD = rs.getInt("HabitatBHDProtect");
-                    t2.setNatureProtection(st, haTrees, haType, haMino, haMinCov, haBHD);
+                    st.trule.setNatureProtection(haTrees, haType, haMino, haMinCov, haBHD);
                     // Planting rules
                     boolean pl = rs.getBoolean("Planting");
                     boolean plRemove = rs.getBoolean("PlantingRemoveAll");
@@ -324,7 +323,7 @@ public class LoadTreegrossStand {
                         plSpecies = pls.toString();
                     }
                     szArtIndex = rs.getInt("SzenarioArtIndex");
-                    t2.setAutoPlanting(st, pl, plRemove, plStart, plSpecies);
+                    st.trule.setAutoPlanting(pl, plRemove, plStart, plSpecies);
                 }
             }
         } catch (SQLException e) {
