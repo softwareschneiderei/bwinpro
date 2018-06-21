@@ -256,32 +256,25 @@ public class LoadTreegrossStand {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not load rules from database", e);
         }
-        if (durchforstung_an == 1 && scenario > 0) {
+        if (applyTreatment() && scenario > 0) {
             stl.distanceDependent = true;
-            stl.trule.typeOfThinning = ThinningType.SingleTreeSelection;
-            stl.trule.thinArea = false;
-            stl.trule.selectCropTrees = true;
-            stl.trule.reselectCropTrees = true;
-            stl.trule.selectCropTreesOfAllSpecies = false;
-            stl.trule.releaseCropTrees = true;
-            stl.trule.cutCompetingCropTrees = false;
-            stl.trule.releaseCropTreesSpeciesDependent = true;
-            stl.trule.minThinningVolume = 0;
-            stl.trule.maxThinningVolume = 80;
-            stl.trule.thinAreaSpeciesDependent = true;
-            stl.trule.thinningIntensityArea = 0.0;
-            stl.trule.minHarvestVolume = 0.0;
-            stl.trule.maxHarvestVolume = 250.0;
-            stl.trule.typeOfHarvest = 0;
-            stl.trule.harvestLayerFromBelow = false;
-            stl.trule.maxHarvestingPeriode = 6;
-            stl.trule.lastTreatment = 0;
-            stl.trule.protectMinorities = false;
-            stl.trule.nHabitat = 0;
-            stl.trule.thinningIntensity = 1.0;
+            applyTreatmentRulesTo(stl);
             loadScenario(dbconn, stl, t2, scenario);
         }
         return stl;
+    }
+
+    protected void applyTreatmentRulesTo(Stand stl) {
+        stl.trule = TreatmentRuleStand.rulesWith(
+                ThinningType.SingleTreeSelection,
+                true,
+                true,
+                true,
+                true,
+                80d,
+                true,
+                250d,
+                6);
     }
 
     public void loadScenario(Connection dbconn, Stand st, Treatment2 t2, int scenarioNo) {

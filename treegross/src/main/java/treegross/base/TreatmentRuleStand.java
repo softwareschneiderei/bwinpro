@@ -223,6 +223,55 @@ public class TreatmentRuleStand implements Cloneable {
      * 2nd Period cut Stand to 0.4, then 0.2 and then remove the rest
      */
     public String regenerationProcess = "";
+    
+    public static TreatmentRuleStand rulesWith(
+            ThinningType thinningType,
+            boolean selectCropTrees,
+            boolean reselectCropTrees,
+            boolean releaseCropTrees,
+            boolean releaseCropTreesSpeciesDependent,
+            double maxThinningVolume,
+            boolean thinAreaSpeciesDependent,
+            double maxHarvestVolume,
+            int maxHarvestingPeriode) {
+        return new TreatmentRuleStand(
+                thinningType,
+                selectCropTrees,
+                reselectCropTrees,
+                releaseCropTrees,
+                releaseCropTreesSpeciesDependent,
+                maxThinningVolume,
+                thinAreaSpeciesDependent,
+                maxHarvestVolume,
+                maxHarvestingPeriode
+        );
+    }
+    
+    public TreatmentRuleStand() {
+        this(null, false, false, false, false, 0d, false, 0d, 0);
+    }
+
+    private TreatmentRuleStand(
+            ThinningType thinningType,
+            boolean selectCropTrees,
+            boolean reselectCropTrees,
+            boolean releaseCropTrees,
+            boolean releaseCropTreesSpeciesDependent,
+            double maxThinningVolume,
+            boolean thinAreaSpeciesDependent,
+            double maxHarvestVolume,
+            int maxHarvestingPeriode) {
+        super();
+        this.typeOfThinning = thinningType;
+        this.selectCropTrees = selectCropTrees;
+        this.reselectCropTrees = reselectCropTrees;
+        this.releaseCropTrees = releaseCropTrees;
+        this.releaseCropTreesSpeciesDependent = releaseCropTreesSpeciesDependent;
+        this.maxThinningVolume = maxThinningVolume;
+        this.thinAreaSpeciesDependent = thinAreaSpeciesDependent;
+        this.maxHarvestVolume = maxHarvestVolume;
+        this.maxHarvestingPeriode = maxHarvestingPeriode;
+    }
 
     // max percentage of harvested/thinned wood has to be added
     // added by jhansen

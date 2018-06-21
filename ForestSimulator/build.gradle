@@ -27,6 +27,7 @@ dependencies {
     testCompile name: 'byte-buddy-1.8.10'
     testCompile name: 'byte-buddy-agent-1.8.10'
     testCompile name: 'objenesis-2.6'
+    testCompile name: 'assertj-core-3.10.0'
     runtime name: 'sqlitejdbc-v056'
     runtime name: 'ucanaccess-4.0.4'
     runtime name: 'hsqldb-2.4.0'
