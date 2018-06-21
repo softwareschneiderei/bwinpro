@@ -666,43 +666,14 @@ public class TreatmentElements2 {
                 baOut = 0.0;
             }
             baOut50 = baOut * 0.5;
-            int merk, kill, count;
-            while (baHarv < baOut50) {
-                // Harvest crop trees
-                //double max = Double.NEGATIVE_INFINITY;
-                merk = -9;
-                // remove first 50% basal area of non crop trees
-                count = 0;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
-                        count++;
-                    }
-                }
-                // break if degree to small or no harvest tree found (merk=-9)
-                if ((getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) || count <= 0) {
-                    break;
-                }
-                kill = (int) Math.floor(st.random.nextUniform() * count);
-                count = 0;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
-                        if (count == kill) {
-                            merk = i;
-                        }
-                        count++;
-                    }
-                }
-                st.tr[merk].out = st.year;
-                st.tr[merk].outtype = OutType.HARVESTED;
-                baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
-            }           
+            baHarv = harvestCropTrees(baHarv, baOut50, st);           
             //
             // Entnahme der Crop Trees von unten
             //            
             while (baHarv < baOut) {
                 // Harvest crop trees
                 double min = Double.POSITIVE_INFINITY;
-                merk = -9;
+                int merk = -9;
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].out < 0 && st.tr[i].d >= 7.0
                             && !st.tr[i].habitat && st.tr[i].crop) {
@@ -722,36 +693,10 @@ public class TreatmentElements2 {
                 //st.tr[merk].no+="_ss";
                 baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
             }
-            ///
-            while (baHarv < baOut) {
-                // Harvest crop trees
-                //double max = Double.NEGATIVE_INFINITY;
-                merk = -9;
-                // remove first 50% basal area of non crop trees
-                count = 0;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
-                        count++;
-                    }
-                }
-                // break if degree to small or no harvest tree found (merk=-9)
-                if ((getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) || count <= 0) {
-                    break;
-                }
-                kill = (int) Math.floor(st.random.nextUniform() * count);
-                count = 0;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
-                        if (count == kill) {
-                            merk = i;
-                        }
-                        count++;
-                    }
-                }
-                st.tr[merk].out = st.year;
-                st.tr[merk].outtype = OutType.HARVESTED;
-                baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
-            }     
+            harvestCropTrees(baHarv, baOut, st); // Harvest crop trees
+            //double max = Double.NEGATIVE_INFINITY;
+            // remove first 50% basal area of non crop trees
+            // break if degree to small or no harvest tree found (merk=-9)
         }
         //20.05.2014
         if (degree == 0.0) {
@@ -762,6 +707,39 @@ public class TreatmentElements2 {
                 st.trule.standTypeAtStatus1 = -1;
             }
         }
+    }
+
+    protected double harvestCropTrees(double baHarv, double baOutLimit, Stand st) {
+        while (baHarv < baOutLimit) {
+            // Harvest crop trees
+            //double max = Double.NEGATIVE_INFINITY;
+            int merk = -9;
+            // remove first 50% basal area of non crop trees
+            int count = 0;
+            for (int i = 0; i < st.ntrees; i++) {
+                if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
+                    count++;
+                }
+            }
+            // break if degree to small or no harvest tree found (merk=-9)
+            if ((getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) || count <= 0) {
+                break;
+            }
+            int kill = (int) Math.floor(st.random.nextUniform() * count);
+            count = 0;
+            for (int i = 0; i < st.ntrees; i++) {
+                if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
+                    if (count == kill) {
+                        merk = i;
+                    }
+                    count++;
+                }
+            }
+            st.tr[merk].out = st.year;
+            st.tr[merk].outtype = OutType.HARVESTED;
+            baHarv += Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0) * (st.tr[merk].fac / st.size);
+        }
+        return baHarv;
     }
 
     /**
