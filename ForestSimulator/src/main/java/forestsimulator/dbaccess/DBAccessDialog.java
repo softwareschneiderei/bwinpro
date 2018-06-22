@@ -1027,7 +1027,6 @@ public class DBAccessDialog extends JDialog {
                         st.random.setRandomType(RandomNumber.PSEUDO);
                         st = etsim.addLayerFromTable(con, st, 711, ekl, age, 1.0);
                         st.descspecies();
-                        //             st.sp[0].spDef.moderateThinning="12.0;0;1.0;120.0;1.0;130;130;1.0;140";
                         st.sp[0].trule.minCropTreeHeight = 12.0;
                         st.sp[0].trule.targetDiameter = 85.0;
                         st.sp[0].trule.targetCrownPercent = 100.0;
