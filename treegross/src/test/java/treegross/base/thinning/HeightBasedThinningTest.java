@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 import treegross.base.Tree;
 
-public class HeightBasedThinnigTest {
+public class HeightBasedThinningTest {
     
     /*
      * #Pinning
@@ -21,6 +21,18 @@ public class HeightBasedThinnigTest {
     @Test
     public void reducingHeightIsInfinityWithIncompleteDefinition() {
         assertThat(Double.isInfinite(new HeightBasedThinning("10.0;0.9;").startReducingAHeight())).isTrue();
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void shouldReduce() {
+        HeightBasedThinning thinning = new HeightBasedThinning("10.0;0.9;22.0");
+        
+        assertThat(thinning.shouldReduce(21.9)).isFalse();
+        assertThat(thinning.shouldReduce(22)).isTrue();
+        assertThat(thinning.shouldReduce(22.1)).isTrue();
     }
     
     /*

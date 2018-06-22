@@ -1,6 +1,5 @@
 package treegross.base.thinning;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import treegross.base.Tree;
@@ -13,7 +12,7 @@ public class HeightBasedThinning implements ModerateThinning {
     public HeightBasedThinning(String thinningDefinition) {
         super();
         this.thinningDefinition = thinningDefinition;
-        ranges = parseDefinition();
+        ranges = new ThinningDefinitionParser().parseDefinition(thinningDefinition);
     }
 
     @Override
@@ -27,24 +26,6 @@ public class HeightBasedThinning implements ModerateThinning {
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
     
-    private List<ThinningFactorRange> parseDefinition() throws NumberFormatException {
-        List<ThinningFactorRange> result = new ArrayList<>();
-        if (thinningDefinition.length() > 4) {
-            String[] tokens = thinningDefinition.split(";");
-            // added by jhansen
-            int end = tokens.length / 3;
-
-            for (int i = 0; i < end; i++) {
-                ThinningFactorRange range = new ThinningFactorRange(
-                        Double.parseDouble(tokens[i * 3]),
-                        Double.parseDouble(tokens[i * 3 + 2]),
-                        Double.parseDouble(tokens[i * 3 + 1]));
-                result.add(range);
-            }
-        }
-        return result;
-    }
-
     @Override
     public boolean shouldReduce(double h100) {
         return h100 >= startReducingAHeight();
