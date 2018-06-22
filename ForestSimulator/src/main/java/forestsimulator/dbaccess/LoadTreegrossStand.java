@@ -278,7 +278,7 @@ public class LoadTreegrossStand {
 
     public void loadScenario(Connection dbconn, Stand st, int scenarioNo) {
         StopWatch loadScenario = new StopWatch("Load scenario").start();
-        int szArtIndex = 0;
+        int scenarioSpeciesIndex = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Szenario where (SzenarioNr = ?)")) {
             stmt.setInt(1, scenarioNo);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -322,7 +322,7 @@ public class LoadTreegrossStand {
                     if (pls != null) {
                         plSpecies = pls.toString();
                     }
-                    szArtIndex = rs.getInt("SzenarioArtIndex");
+                    scenarioSpeciesIndex = rs.getInt("SzenarioArtIndex");
                     st.trule.setAutoPlanting(pl, plRemove, plStart, plSpecies);
                 }
             }
@@ -331,29 +331,21 @@ public class LoadTreegrossStand {
         }
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from SzenarioArt where (SzenarioArtIndex = ?)")) {
             StopWatch scenarioArt = new StopWatch("Scenario art").start();
-            stmt.setInt(1, szArtIndex);
-            try (ResultSet rs2 = stmt.executeQuery()) {
-                while (rs2.next()) {
-                    int artx = rs2.getInt("Code");
-                    int heightx = rs2.getInt("height");
-                    int targetx = rs2.getInt("targetDBH");
-                    int cropx = rs2.getInt("CropTrees");
-                    int mixx = rs2.getInt("Mix");
-                    int merk = -9;
-                    String moderateTh = rs2.getObject("ModerateThinning").toString();
-                    for (int j = 0; j < st.nspecies; j++) {
-                        if (st.sp[j].code == artx) {
-                            merk = j;
-                        }
-                    }
-                    if (merk > -9) {
-                        st.sp[merk].trule.minCropTreeHeight = heightx;
-                        st.sp[merk].trule.targetDiameter = targetx;
-                        double mixxx = mixx * 1.0;
-                        st.sp[merk].trule.targetCrownPercent = mixxx;
-                        st.sp[merk].trule.numberCropTreesWanted = cropx;
-                        st.sp[merk].spDef.moderateThinning = moderateTh;
-                    }
+            stmt.setInt(1, scenarioSpeciesIndex);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int height = rs.getInt("height");
+                    int target = rs.getInt("targetDBH");
+                    int crop = rs.getInt("CropTrees");
+                    int mix = rs.getInt("Mix");
+                    String moderateTh = rs.getString("ModerateThinning");
+                    st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
+                        species.trule.minCropTreeHeight = height;
+                        species.trule.targetDiameter = target;
+                        species.trule.targetCrownPercent = mix;
+                        species.trule.numberCropTreesWanted = crop;
+                        species.spDef.moderateThinning = moderateTh;
+                    });
                 }
             }
             scenarioArt.printElapsedTime();

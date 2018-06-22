@@ -27,6 +27,8 @@ import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import static treegross.base.ScaleManager.SCALE_AUTO;
 import treegross.random.RandomNumber;
 
@@ -1897,7 +1899,7 @@ public class Stand {
             LOGGER.log(Level.SEVERE, "PlugIn Mortality", e);
         }
         forAllTrees(tree -> {
-            if (tree.out < 0) {
+            if (tree.isLiving()) {
                 tree.ageBasedMortality();
             }
         });
@@ -1910,12 +1912,11 @@ public class Stand {
     }
     
     public Optional<Species> speciesFor(int code) {
-        for (int j = 0; j < nspecies; j++) {
-            if (sp[j].code == code) {
-                return Optional.of(sp[j]);
-            }
-        }
-        return Optional.empty();
+        return streamOf(species()).filter(species -> species.code == code).findFirst();
+    }
+
+    private static <T> Stream<T> streamOf(Iterable<T> elements) {
+        return StreamSupport.stream(elements.spliterator(), false);
     }
     
     public void notificationsEnabled(boolean on) {

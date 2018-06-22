@@ -705,4 +705,8 @@ public class Tree implements Cloneable {
     public void setGroup(int group) {
         this.group = group;
     }
+
+    boolean isLiving() {
+        return out < 0;
+    }
 }
