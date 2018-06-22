@@ -70,6 +70,12 @@ public class Species implements Cloneable {
      * Creates a new instance of species
      */
     public Species() {
+        this(Integer.MIN_VALUE);
+    }
+
+    Species(int code) {
+        super();
+        this.code = code;
     }
 
     @Override

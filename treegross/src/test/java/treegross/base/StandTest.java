@@ -173,6 +173,30 @@ public class StandTest {
                         OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
                         true, false, true);
     }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void speciesForCodeFindsExisting() {
+        Stand s = new Stand();
+        s.addSpeciesToStand(new Species(109));
+        s.addSpeciesToStand(new Species(110));
+        
+        assertThat(s.speciesFor(110)).isPresent().get().extracting("code").containsExactly(110);
+    }
+
+    /*
+     * #Pinning
+    */
+    @Test
+    public void speciesForCodeReturnsEmptyWhenNotFound() {
+        Stand s = new Stand();
+        s.addSpeciesToStand(new Species(209));
+        s.addSpeciesToStand(new Species(210));
+        
+        assertThat(s.speciesFor(110)).isEmpty();
+    }
 
     private Tree[] treesWith(DoubleFunction<Tree> mapper, double... diameters) {
         return Arrays.stream(diameters).mapToObj(mapper).collect(Collectors.toList()).toArray(new Tree[0]);
@@ -202,7 +226,7 @@ public class StandTest {
         return t;
     }
     
-    private void setTrees(Stand stand, final Tree[] trees) {
+    private void setTrees(Stand stand, final Tree... trees) {
         System.arraycopy(trees, 0, stand.tr, 0, trees.length);
         stand.ntrees = trees.length;
     }

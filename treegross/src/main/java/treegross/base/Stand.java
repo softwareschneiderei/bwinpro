@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -317,6 +318,10 @@ public class Stand {
         return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
     }
 
+    public Iterable<Species> species() {
+        return Arrays.stream(sp, 0, nspecies).collect(Collectors.toList());
+    }
+
     public ScaleManager getScaleManager() {
         return scaleMan;
     }
@@ -597,6 +602,11 @@ public class Stand {
         tree.st = this;
         tr[ntrees] = tree;
         ntrees++;
+    }
+    
+    protected void addSpeciesToStand(Species s) {
+        sp[nspecies] = s;
+        nspecies++;
     }
 
     /**
@@ -1577,8 +1587,7 @@ public class Stand {
             }
         }
         if (merk == -9) {
-            sp[nspecies] = new Species();
-            sp[nspecies].code = t.code;
+            sp[nspecies] = new Species(t.code);
             sp[nspecies].size = size;
             sp[nspecies].setZero();
 
@@ -1898,6 +1907,15 @@ public class Stand {
         for (Tree tree : trees()) {
             operation.accept(tree);
         }
+    }
+    
+    public Optional<Species> speciesFor(int code) {
+        for (int j = 0; j < nspecies; j++) {
+            if (sp[j].code == code) {
+                return Optional.of(sp[j]);
+            }
+        }
+        return Optional.empty();
     }
     
     public void notificationsEnabled(boolean on) {
