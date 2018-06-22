@@ -23,6 +23,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
+import treegross.base.rule.SkidTrailRules;
 import treegross.treatment.*;
 
 
@@ -534,8 +535,11 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
       st.distanceDependent=true;
 // Planting rules
       st.trule.setAutoPlanting(plantingCheckbox.isSelected(), unterstoryRemovalCheckBox.isSelected(), Double.parseDouble(plantAtTextField.getText()), speciesCodeTextField.getText());
-// Skidtrails      
-      st.trule.setSkidTrails(developmentCheckBox.isSelected(), Double.parseDouble(skidtrailDistanceTextField.getText()), Double.parseDouble(skidtrailWidthTextField.getText()));
+      st.trule.setSkidTrails(
+              new SkidTrailRules(developmentCheckBox.isSelected(),
+                      Double.parseDouble(skidtrailDistanceTextField.getText()),
+                      Double.parseDouble(skidtrailWidthTextField.getText()))
+      );
       developmentCheckBox.setSelected(false);
       if (st.ntrees > 0) {  
 // Set thinning  and intensity

@@ -71,7 +71,7 @@ public class Treatment2 {
         //
         // create skidtrails, this is only done once
         //
-        if (st.trule.skidtrails) {
+        if (st.trule.skidtrails.active) {
             te.createSkidtrails(st);
         }
 

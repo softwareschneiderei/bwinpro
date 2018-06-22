@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
+import treegross.base.rule.SkidTrailRules;
 import treegross.base.thinning.ThinningType;
 
 
@@ -917,7 +918,7 @@ public class DBAccessDialog extends JDialog {
         st.random.setRandomType(RandomNumber.PSEUDO);
 
         st.trule.setAutoPlanting(false, false, 0.2, "511");
-        st.trule.setSkidTrails(false, 20.0, 4.0);
+        st.trule.setSkidTrails(new SkidTrailRules(false));
         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
         st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
         st.trule.setThinningRegime(ThinningType.ThinningFromBelow, 1.0, 10, 60, false);
@@ -1034,7 +1035,7 @@ public class DBAccessDialog extends JDialog {
                         st.sp[0].spDef.targetDiameter = 100.0;
                         st.sp[0].spDef.cropTreeNumber = 110;
                         st.trule.setAutoPlanting(false, false, 0.1, "511");
-                        st.trule.setSkidTrails(true, 20.0, 4.0);
+                        st.trule.setSkidTrails(new SkidTrailRules(true));
                         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
                         st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
                         st.trule.setThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false);

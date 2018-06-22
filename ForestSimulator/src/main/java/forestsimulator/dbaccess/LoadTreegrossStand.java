@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
+import treegross.base.rule.SkidTrailRules;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
@@ -284,11 +285,10 @@ public class LoadTreegrossStand {
             stmt.setInt(1, scenarioNo);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    // Skidtrails
-                    boolean skidtrails = rs.getBoolean("Skidtrails");
-                    double skidtrailDistance = rs.getDouble("SkidtrailDistance");
-                    double skidtrailWidth = rs.getDouble("SkidtrailWidth");
-                    st.trule.setSkidTrails(skidtrails, skidtrailDistance, skidtrailWidth);
+                    st.trule.setSkidTrails(new SkidTrailRules(
+                            rs.getBoolean("Skidtrails"),
+                            rs.getDouble("SkidtrailDistance"),
+                            rs.getDouble("SkidtrailWidth")));
                     // Set thinning  and intensity
                     int thType = rs.getInt("ThinningType");
                     double thIntensity = rs.getDouble("ThinningIntensity");

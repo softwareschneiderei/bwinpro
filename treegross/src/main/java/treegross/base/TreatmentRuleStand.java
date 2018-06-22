@@ -18,6 +18,7 @@
  */
 package treegross.base;
 
+import treegross.base.rule.SkidTrailRules;
 import treegross.base.thinning.ThinningType;
 import treegross.treatment.Treatment2;
 
@@ -172,18 +173,9 @@ public class TreatmentRuleStand {
      * minimum diameter of death log
      */
     public double minDeathDiameter = 20.0;
-    /**
-     * skidtrails
-     */
-    public boolean skidtrails = false;
-    /**
-     * skidtrails distance m
-     */
-    public double skidtrailDistance = 20.0;
-    /**
-     * skidtrails
-     */
-    public double skidtrailWidth = 20.0;
+    
+    public SkidTrailRules skidtrails;
+
     /**
      * degree of stocking to clear overstory stand
      */
@@ -274,19 +266,8 @@ public class TreatmentRuleStand {
         this.maxHarvestingPeriode = maxHarvestingPeriode;
     }
 
-    /**
-     *
-     * @param active true = yes skid trails, false = no skid trails
-     * @param trailDistance Distance from the center to the next center of the
-     * skid trail [m] Default 20m
-     * @param trailWidth Width of the skid trail [m]. Default 4m All trees on
-     * the skid trail will be removed. The method is excuted only once
-     *
-     */
-    public void setSkidTrails(boolean active, double trailDistance, double trailWidth) {
-        this.skidtrails = active;
-        this.skidtrailDistance = trailDistance;
-        this.skidtrailWidth = trailWidth;
+    public void setSkidTrails(SkidTrailRules rules) {
+        this.skidtrails = rules;
     }
 
     /**

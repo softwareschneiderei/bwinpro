@@ -1583,10 +1583,10 @@ public class TreatmentElements2 {
                     xmax = st.cpnt[i].x;
                 }
             }
-            xmin = xmin - st.trule.skidtrailDistance / 2.0;
+            xmin = xmin - st.trule.skidtrails.distance / 2.0;
             do {
-                xmin = xmin + st.trule.skidtrailDistance;
-                double x2 = xmin + st.trule.skidtrailWidth;
+                xmin = xmin + st.trule.skidtrails.distance;
+                double x2 = xmin + st.trule.skidtrails.width;
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].out < 0 && st.tr[i].x > xmin && st.tr[i].x < x2) {
                         st.tr[i].out = st.year;
