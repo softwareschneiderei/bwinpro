@@ -234,6 +234,7 @@ public class BatchProgressDialog extends JDialog implements BatchProgressListene
     private void initiateStop() {
         batchControl.stopProcessing();
         stopButton.setText(messages.getString("BatchProgressDialog.stopButton.stopping.text")); // NOI18N
+        stopButton.setEnabled(false);
     }
     
     @Override
