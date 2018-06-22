@@ -1,37 +1,48 @@
 package treegross.base.thinning;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import treegross.base.Tree;
 
 public class HeightBasedThinning implements ModerateThinning {
 
     private final String thinningDefinition;
+    private final List<ThinningFactorRange> ranges;
 
     public HeightBasedThinning(String thinningDefinition) {
         super();
         this.thinningDefinition = thinningDefinition;
+        ranges = parseDefinition();
     }
 
     @Override
     public double thinningFactorFor(Tree tree) {
-        double tfac = 1.0;
+        return firstFactorFoundFor(tree).orElse(defaultThinningFactor);
+    }
+
+    private Optional<Double> firstFactorFoundFor(Tree tree) {
+        return ranges.stream()
+                .map(range -> range.factorFor(tree.h))
+                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
+    }
+    
+    private List<ThinningFactorRange> parseDefinition() throws NumberFormatException {
+        List<ThinningFactorRange> result = new ArrayList<>();
         if (thinningDefinition.length() > 4) {
-            String zeile = thinningDefinition;
-            String[] tokens;
-            tokens = zeile.split(";");
+            String[] tokens = thinningDefinition.split(";");
             // added by jhansen
             int end = tokens.length / 3;
 
             for (int i = 0; i < end; i++) {
-                double hu = Double.parseDouble(tokens[i * 3]);
-                double f = Double.parseDouble(tokens[i * 3 + 1]);
-                double ho = Double.parseDouble(tokens[i * 3 + 2]);
-                if (tree.h >= hu && tree.h < ho) {
-                    tfac = f;
-                    break;
-                }
+                ThinningFactorRange range = new ThinningFactorRange(
+                        Double.parseDouble(tokens[i * 3]),
+                        Double.parseDouble(tokens[i * 3 + 2]),
+                        Double.parseDouble(tokens[i * 3 + 1]));
+                result.add(range);
             }
         }
-        return tfac;
+        return result;
     }
 
     @Override
@@ -45,11 +56,9 @@ public class HeightBasedThinning implements ModerateThinning {
     }
     
     protected double startReducingAHeight() throws NumberFormatException {
-        double heightStartReducing = Double.POSITIVE_INFINITY;
-        String[] heightStartReducingA = thinningDefinition.split(";");
-        if (heightStartReducingA.length > 2){
-            heightStartReducing = Double.parseDouble(heightStartReducingA[2]);
+        if (ranges.isEmpty()) {
+            return Double.POSITIVE_INFINITY;
         }
-        return heightStartReducing;
+        return ranges.get(0).end;
     }
 }
