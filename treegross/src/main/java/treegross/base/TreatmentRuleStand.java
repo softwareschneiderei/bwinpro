@@ -30,7 +30,7 @@ import treegross.treatment.Treatment2;
  * treatment rules regulating treatments treatment rules that refer to the stand
  * can be defined
  */
-public class TreatmentRuleStand implements Cloneable {
+public class TreatmentRuleStand {
 
     /**
      * treatmentype code 0=LOEWE-Concept of Lower Saxony 1=PNV 2=Net Yield
@@ -272,48 +272,6 @@ public class TreatmentRuleStand implements Cloneable {
         this.thinAreaSpeciesDependent = thinAreaSpeciesDependent;
         this.maxHarvestVolume = maxHarvestVolume;
         this.maxHarvestingPeriode = maxHarvestingPeriode;
-    }
-
-    // max percentage of harvested/thinned wood has to be added
-    // added by jhansen
-    @Override
-    public TreatmentRuleStand clone() throws CloneNotSupportedException {
-        TreatmentRuleStand clone = (TreatmentRuleStand) super.clone();
-        clone.cutCompetingCropTrees = this.cutCompetingCropTrees;
-        clone.harvestLayerFromBelow = this.harvestLayerFromBelow;
-        clone.harvestingYears = this.harvestingYears;
-        clone.lastTreatment = this.lastTreatment;
-        clone.maxHarvestVolume = this.maxHarvestVolume;
-        clone.maxHarvestingPeriode = this.maxHarvestingPeriode;
-        clone.maxOutVolume = this.maxOutVolume;
-        clone.maxThinningVolume = this.maxThinningVolume;
-        clone.minHarvestVolume = this.minHarvestVolume;
-        clone.minOutVolume = this.minOutVolume;
-        clone.minThinningVolume = this.minThinningVolume;
-        clone.nHabitat = this.nHabitat;
-        clone.protectMinorities = this.protectMinorities;
-        clone.releaseCropTrees = this.releaseCropTrees;
-        clone.releaseCropTreesSpeciesDependent = this.releaseCropTreesSpeciesDependent;
-        clone.reselectCropTrees = this.reselectCropTrees;
-        clone.selectCropTrees = this.selectCropTrees;
-        clone.selectCropTreesOfAllSpecies = this.selectCropTreesOfAllSpecies;
-        clone.selectHabiatPart = this.selectHabiatPart;
-        clone.standType = this.standType;
-        clone.targetType = this.targetType;
-        clone.thinArea = this.thinArea;
-        clone.thinAreaSpeciesDependent = this.thinAreaSpeciesDependent;
-        clone.thinningIntensityArea = this.thinningIntensityArea;
-        clone.treatmentStep = this.treatmentStep;
-        clone.treatmentType = this.treatmentType;
-        clone.typeOfHarvest = this.typeOfHarvest;
-        clone.wantedDeathVol = this.wantedDeathVol;
-        clone.minDeathDiameter = this.minDeathDiameter;
-        clone.degreeOfStockingToClearOverStoryStand = this.degreeOfStockingToClearOverStoryStand;
-        clone.habitatTreeType = this.habitatTreeType;
-        clone.plantingString = this.plantingString;
-        clone.regenerationProcess = this.regenerationProcess;
-        clone.standTypeAtStatus1 = this.standTypeAtStatus1;
-        return clone;
     }
 
     /**

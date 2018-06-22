@@ -10,22 +10,11 @@
 package forestsimulator.dbaccess;
 
 import forestsimulator.gui.TaskSpinner;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.RootPaneContainer;
-import javax.swing.SwingUtilities;
 
 /**
  *
