@@ -10,3 +10,4 @@ build/
 /.nb-gradle/private/
 /.nb-gradle/profiles/private/
 /.idea/
+project.properties
