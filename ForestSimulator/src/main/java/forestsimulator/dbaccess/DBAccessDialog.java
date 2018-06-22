@@ -32,6 +32,7 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
 import treegross.base.rule.SkidTrailRules;
+import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.ThinningType;
 
 
@@ -43,6 +44,8 @@ import treegross.base.thinning.ThinningType;
  * It reads a forest stand from the data base structure of the NW-FVA
  */
 public class DBAccessDialog extends JDialog {
+    private static final Logger logger = Logger.getLogger(DBAccessDialog.class.getName());
+    
     private Stand st;
     int growthCycles = 0;
     private final ConnectionFactory connectionFactory = new ConnectionFactory();
@@ -496,7 +499,7 @@ public class DBAccessDialog extends JDialog {
                 lts.saveBaum(con, st, edvId, aufId, step + 1, 0);
             }
         } catch (SQLException e) {
-            System.out.println("Problem: " + " " + e);
+            logger.log(Level.SEVERE, "Problem reading database.", e);
         }
         dispose();
     }//GEN-LAST:event_calculateStandButtonActionPerformed
@@ -509,7 +512,6 @@ public class DBAccessDialog extends JDialog {
         processor.setProgressListener(progress);
         progress.pack();
         progress.setLocationRelativeTo(getOwner());
-//        progress.setVisible(true);
         processor.execute();
         dispose();
     }//GEN-LAST:event_calculateAllButtonActionPerformed
@@ -520,8 +522,8 @@ public class DBAccessDialog extends JDialog {
         try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             LoadTreegrossStand lts = new LoadTreegrossStand();
             lts.saveXMLToDB(con, st);
-        } catch (Exception e) {
-            System.out.println("Problem: " + " " + e);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Problem reading database.", ex);
         }
         dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -723,14 +725,8 @@ public class DBAccessDialog extends JDialog {
         String aktivesDatenfile = databaseFilenameTextField.getText();
         ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
 
-        String bi = "179-2001-001";
-        String bi2 = " ";
-        //        String bi2 = "";
-        String pk = "4172";
-
         String orga[] = new String[300];
         int norga = 0;
-
         try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga")) {
                 while (rs.next()) {
@@ -743,8 +739,8 @@ public class DBAccessDialog extends JDialog {
             }
             for (int inventur = 0; inventur < norga; inventur++) {
 
-                bi = orga[inventur];
-                bi2 = "";
+                String bi = orga[inventur];
+                String bi2 = "";
                 int type = 2;
                 /*        if (beginnPeriode == false){
                 if (bi.indexOf("167") >= 0) bi2="167-2009-001";
@@ -921,7 +917,7 @@ public class DBAccessDialog extends JDialog {
         st.trule.setSkidTrails(new SkidTrailRules(false));
         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
         st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
-        st.trule.setThinningRegime(ThinningType.ThinningFromBelow, 1.0, 10, 60, false);
+        st.trule.setThinningRegime(new ThinningRegime(ThinningType.ThinningFromBelow, 1.0, 10, 60, false));
 
         dispose();
     }//GEN-LAST:event_loadCircleButtonActionPerformed
@@ -1038,7 +1034,7 @@ public class DBAccessDialog extends JDialog {
                         st.trule.setSkidTrails(new SkidTrailRules(true));
                         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
                         st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
-                        st.trule.setThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false);
+                        st.trule.setThinningRegime(new ThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false));
                         if (st.ntrees > 0) {
                             age = (int) st.tr[0].age;
                             LoadTreegrossStand lts = new LoadTreegrossStand();

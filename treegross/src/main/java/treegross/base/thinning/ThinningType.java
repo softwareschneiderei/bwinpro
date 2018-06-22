@@ -2,12 +2,38 @@ package treegross.base.thinning;
 
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
+import treegross.base.TreatmentRuleStand;
 
 public enum ThinningType {
-    SingleTreeSelection("ThinningType.singleTreeSelection", 0),
+    SingleTreeSelection("ThinningType.singleTreeSelection", 0) {
+        @Override
+        public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
+            super.applyTo(rules, cropTreesOnly);
+            rules.thinArea = !cropTreesOnly;
+            rules.selectCropTrees = true;
+            rules.reselectCropTrees = true;
+            rules.releaseCropTrees = true;
+            rules.cutCompetingCropTrees = true;
+            rules.releaseCropTreesSpeciesDependent = true;
+        }
+    },
     ThinningFromAbove("ThinningType.thinningFromAbove", 1),
     ThinningFromBelow("ThinningType.thinningFromBelow", 2),
-    ThinningQD("ThinningType.thinningQD", 3),
+    ThinningQD("ThinningType.thinningQD", 3) {
+        @Override
+        public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
+            super.applyTo(rules, cropTreesOnly);
+            rules.thinArea = false;
+            if (cropTreesOnly) {
+                rules.thinArea = false; // oder doch true
+            }
+            rules.selectCropTrees = true;
+            rules.reselectCropTrees = true;
+            rules.releaseCropTrees = true;
+            rules.cutCompetingCropTrees = true;
+            rules.releaseCropTreesSpeciesDependent = true;
+        }
+    },
     ClearCut("ThinningType.clearCut", 9);
  
     private static final ResourceBundle bundle = ResourceBundle.getBundle("treegross/treegross");
@@ -31,6 +57,10 @@ public enum ThinningType {
 
     public int value() {
         return value;
+    }
+    
+    public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
+        rules.typeOfThinning = this;
     }
  
     @Override

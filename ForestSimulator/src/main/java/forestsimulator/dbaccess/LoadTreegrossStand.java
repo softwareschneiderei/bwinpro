@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
+import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
@@ -295,7 +296,7 @@ public class LoadTreegrossStand {
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
-                    st.trule.setThinningRegime(ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly);
+                    st.trule.setThinningRegime(new ThinningRegime(ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly));
                     // set Harvesting Regime
                     int hvType = rs.getInt("HarvestType");
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");

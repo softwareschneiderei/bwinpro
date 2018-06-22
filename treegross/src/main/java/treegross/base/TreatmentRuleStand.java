@@ -19,6 +19,7 @@
 package treegross.base;
 
 import treegross.base.rule.SkidTrailRules;
+import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.ThinningType;
 import treegross.treatment.Treatment2;
 
@@ -270,58 +271,13 @@ public class TreatmentRuleStand {
         this.skidtrails = rules;
     }
 
-    /**
-     *
-     * @param type 0= single tree selection, 1=thinning from above, 2= thinning
-     * from below,
-     * @param intensity Factor to normal stand density 1.0= normal stand
-     * density, no thinning set intensity = 0.0
-     * @param minVolume Minimum Volume to perform thinning [m³]
-     * @param maxVolume Maximum Volume of thinning [m³]
-     * @param croptreesOnly Release only crop trees
-     *
-     */
-    public void setThinningRegime(ThinningType type, double intensity, double minVolume, double maxVolume, boolean croptreesOnly) {
-        this.typeOfThinning = type;
+    public void setThinningRegime(ThinningRegime regime) {
         this.thinAreaSpeciesDependent = true;
         this.thinArea = true;
-        this.selectCropTrees = false;
-        this.reselectCropTrees = false;
-        this.releaseCropTrees = false;
-        this.cutCompetingCropTrees = false;
-        this.releaseCropTreesSpeciesDependent = false;
-        this.minThinningVolume = minVolume;
-        this.maxThinningVolume = maxVolume;
-        this.thinningIntensity = intensity;
-        if (type == ThinningType.SingleTreeSelection) {
-            this.thinArea = true;
-            if (croptreesOnly) {
-                this.thinArea = false;
-            }
-            this.selectCropTrees = true;
-            this.reselectCropTrees = true;
-            this.selectCropTreesOfAllSpecies = false;
-            this.releaseCropTrees = true;
-            this.cutCompetingCropTrees = true;
-            this.releaseCropTreesSpeciesDependent = true;
-        }
-        // Set thinning from above here by temporay crop trees
-        if (type == ThinningType.ThinningFromAbove) {
-            this.selectCropTreesOfAllSpecies = false;
-        }
-        // Set Thinning by q-d-rule
-        if (type == ThinningType.ThinningQD) {
-            this.thinArea = false;
-            if (croptreesOnly) {
-                this.thinArea = false; // oder doch true
-            }
-            this.selectCropTrees = true;
-            this.reselectCropTrees = true;
-            this.selectCropTreesOfAllSpecies = false;
-            this.releaseCropTrees = true;
-            this.cutCompetingCropTrees = true;
-            this.releaseCropTreesSpeciesDependent = true;
-        }
+        this.minThinningVolume = regime.minVolume;
+        this.maxThinningVolume = regime.maxVolume;
+        this.thinningIntensity = regime.intensity;
+        regime.type.applyTo(this, regime.croptreesOnly);
     }
 
     /*
