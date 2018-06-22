@@ -19,6 +19,7 @@ package treegross.base;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.thinning.HeightBasedThinning;
+import treegross.base.thinning.ModerateThinning;
 import treegross.random.RandomNumber;
 
 /**
@@ -455,10 +456,10 @@ public class Tree implements Cloneable {
      * @return the moderate thinning fctor
      */
     public double getModerateThinningFactor() {
-        return new HeightBasedThinning(moderateThinning()).thinningFactorFor(this);
+        return moderateThinning().thinningFactorFor(this);
     }
 
-    protected String moderateThinning() {
+    protected ModerateThinning moderateThinning() {
         return sp.spDef.moderateThinning;
     }
 

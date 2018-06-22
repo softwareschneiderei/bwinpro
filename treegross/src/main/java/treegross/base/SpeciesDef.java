@@ -16,6 +16,8 @@
  */
 package treegross.base;
 
+import treegross.base.thinning.ModerateThinning;
+
 public class SpeciesDef implements Comparable, Cloneable {
 
     public int code;
@@ -37,7 +39,7 @@ public class SpeciesDef implements Comparable, Cloneable {
     public String modelRegion = "default";
     public double diameterIncrementError = 0.0;
     public double heightIncrementError = 0.0;
-    public String moderateThinning = "";
+    public ModerateThinning moderateThinning;
     public String colorXML = "100,200,300";
     public String competitionXML = "";
     public String ingrowthXML = "";

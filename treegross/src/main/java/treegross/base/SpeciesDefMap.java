@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.JDOMException;
+import treegross.base.thinning.HeightBasedThinning;
 
 /**
  *
@@ -161,7 +162,7 @@ public class SpeciesDefMap {
          if (actual.targetDiameter < 0) actual.targetDiameter =Double.parseDouble(with.getChild("TargetDiameter").getText());
          if (actual.cropTreeNumber < 0) actual.cropTreeNumber =stripCommentsFromInt(with.getChild("CropTreeNumber").getText(),100);
          if (actual.heightOfThinningStart < 0) actual.heightOfThinningStart =Double.parseDouble(with.getChild("HeightOfThinningStart").getText());
-         if (actual.moderateThinning.trim().length() < 1) actual.moderateThinning = with.getChild("ModerateThinning").getText();
+         if (actual.moderateThinning == null) actual.moderateThinning = new HeightBasedThinning(with.getChild("ModerateThinning").getText());
          if (actual.colorXML.trim().length() < 1) actual.colorXML = with.getChild("Color").getText();
          if (actual.competitionXML.trim().length() < 1) actual.competitionXML = with.getChild("Competition").getText();
          if (actual.taperFunctionXML.trim().length() < 1) actual.taperFunctionXML = with.getChild("TaperFunction").getText();
@@ -195,7 +196,7 @@ public class SpeciesDefMap {
         actual.targetDiameter =Double.parseDouble(def.getChild("TargetDiameter").getText());
         actual.cropTreeNumber=stripCommentsFromInt(def.getChild("CropTreeNumber").getText(),-9);
         actual.heightOfThinningStart =Double.parseDouble(def.getChild("HeightOfThinningStart").getText());
-        actual.moderateThinning = def.getChild("ModerateThinning").getText();
+        actual.moderateThinning = new HeightBasedThinning(def.getChild("ModerateThinning").getText());
         actual.colorXML = def.getChild("Color").getText();
         actual.competitionXML = def.getChild("Competition").getText();
         actual.taperFunctionXML = def.getChild("TaperFunction").getText();

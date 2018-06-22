@@ -1,17 +1,18 @@
-package treegross.treatment;
+package treegross.base.thinning;
 
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
+import treegross.base.Tree;
 
-public class TreatmentElements2Test {
+public class HeightBasedThinnigTest {
     
     /*
      * #Pinning
     */
     @Test
     public void obtainReducingHeight() {
-        assertThat(new TreatmentElements2().startReducingAHeight("10.0;0.9;22.0")).isEqualTo(22.0d);
-        assertThat(new TreatmentElements2().startReducingAHeight("11.0;0.9;20.0;20.0;0.7;30.0")).isEqualTo(20.0d);
+        assertThat(new HeightBasedThinning("10.0;0.9;22.0").startReducingAHeight()).isEqualTo(22.0d);
+        assertThat(new HeightBasedThinning("11.0;0.9;20.0;20.0;0.7;30.0").startReducingAHeight()).isEqualTo(20.0d);
     }
     
     /*
@@ -19,6 +20,25 @@ public class TreatmentElements2Test {
     */
     @Test
     public void reducingHeightIsInfinityWithIncompleteDefinition() {
-        assertThat(Double.isInfinite(new TreatmentElements2().startReducingAHeight("10.0;0.9;"))).isTrue();
+        assertThat(Double.isInfinite(new HeightBasedThinning("10.0;0.9;").startReducingAHeight())).isTrue();
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void thinningFactorByHeight() {
+        HeightBasedThinning thinning = new HeightBasedThinning("10.0;0.8;22.0;22.0;0.75;28.0;28.0;0.7;100.0");
+        Tree t = new Tree();
+        t.h = 9.2d;
+        assertThat(thinning.thinningFactorFor(t)).isEqualTo(1d);
+        t.h = 17.6d;
+        assertThat(thinning.thinningFactorFor(t)).isEqualTo(0.8d);
+        t.h = 22d;
+        assertThat(thinning.thinningFactorFor(t)).isEqualTo(0.75d);
+        t.h = 30.6d;
+        assertThat(thinning.thinningFactorFor(t)).isEqualTo(0.7d);
+        t.h = 100d;
+        assertThat(thinning.thinningFactorFor(t)).isEqualTo(1d);
     }
 }

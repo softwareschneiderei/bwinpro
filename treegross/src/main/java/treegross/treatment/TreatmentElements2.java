@@ -789,22 +789,14 @@ public class TreatmentElements2 {
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
-        boolean reduce =  st.sp[0].h100  >= startReducingAHeight(st.sp[0].spDef.moderateThinning);
+        // XXX: why only the first species?
+        boolean reduce = st.sp[0].spDef.moderateThinning.shouldReduce(st.sp[0].h100);
         
         if (baFac > 1.2 && reduce) {
             maxBasalAreaOut = maxBasalAreaOut * (1.2 / baFac);
         }
         return maxBasalAreaOut;
     }    
-
-    protected double startReducingAHeight(String thinningDefinition) throws NumberFormatException {
-        double heightStartReducing = Double.POSITIVE_INFINITY;
-        String[] heightStartReducingA = thinningDefinition.split(";");
-        if (heightStartReducingA.length > 2){
-            heightStartReducing = Double.parseDouble(heightStartReducingA[2]);
-        }
-        return heightStartReducing;
-    }
 
     /**
      * Returns maximum basal area for a treegross stand <code>Stand</code>. If
@@ -1118,8 +1110,6 @@ public class TreatmentElements2 {
                 }
             }
         }
-
-        // System.out.println("");
     }
 
     /**

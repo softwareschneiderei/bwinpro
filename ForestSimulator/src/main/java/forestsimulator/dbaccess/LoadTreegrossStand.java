@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
+import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 
@@ -344,7 +345,7 @@ public class LoadTreegrossStand {
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.spDef.moderateThinning = moderateTh;
+                        species.spDef.moderateThinning = new HeightBasedThinning(moderateTh);
                     });
                 }
             }

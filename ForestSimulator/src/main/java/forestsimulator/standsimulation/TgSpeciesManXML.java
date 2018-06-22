@@ -27,6 +27,7 @@ import java.net.*;
 import java.text.*;
 import java.io.*;
 import java.util.*;
+import treegross.base.thinning.HeightBasedThinning;
 
 
 /**
@@ -467,7 +468,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         spd[m].cropTreeNumber = getInt((String) jTable1.getValueAt(37,1));
         spd[m].targetDiameter = getDouble((String) jTable1.getValueAt(27,1));
         spd[m].heightOfThinningStart = getDouble((String) jTable1.getValueAt(28,1));
-        spd[m].moderateThinning = (String) jTable1.getValueAt(29,1);
+        spd[m].moderateThinning = new HeightBasedThinning((String) jTable1.getValueAt(29,1));
         spd[m].colorXML = (String) jTable1.getValueAt(30,1);
         spd[m].competitionXML = (String) jTable1.getValueAt(31,1);
         spd[m].taperFunctionXML = (String) jTable1.getValueAt(32,1);
@@ -563,7 +564,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
                 spd[nspd].decayXML = sdm.initTGFunction(sortiment.getChild("Decay").getText());
                 spd[nspd].targetDiameter = Double.parseDouble(sortiment.getChild("TargetDiameter").getText());
                 spd[nspd].heightOfThinningStart = Double.parseDouble(sortiment.getChild("HeightOfThinningStart").getText());
-                spd[nspd].moderateThinning = sortiment.getChild("ModerateThinning").getText();
+                spd[nspd].moderateThinning = new HeightBasedThinning(sortiment.getChild("ModerateThinning").getText());
                 spd[nspd].colorXML = sortiment.getChild("Color").getText();
                 spd[nspd].competitionXML = sortiment.getChild("Competition").getText();
                 spd[nspd].taperFunctionXML = sortiment.getChild("TaperFunction").getText();
@@ -708,7 +709,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
             elt = addString(elt, "Decay",spd[i].decayXML.toString());
             elt = addString(elt, "TargetDiameter", Double.toString(spd[i].targetDiameter));
             elt = addString(elt, "HeightOfThinningStart", Double.toString(spd[i].heightOfThinningStart));
-            elt = addString(elt, "ModerateThinning", spd[i].moderateThinning);
+            elt = addString(elt, "ModerateThinning", spd[i].moderateThinning.definition());
             elt = addString(elt, "Color",spd[i].colorXML);
             elt = addString(elt, "Competition",spd[i].competitionXML);
             elt = addString(elt, "TaperFunction",spd[i].taperFunctionXML);

@@ -2,6 +2,8 @@ package treegross.base;
 
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
+import treegross.base.thinning.HeightBasedThinning;
+import treegross.base.thinning.ModerateThinning;
 
 public class TreeTest {
     
@@ -26,8 +28,8 @@ public class TreeTest {
     private static Tree treeWithThinning(final String thinningDefinition) {
         return new Tree() {
             @Override
-            protected String moderateThinning() {
-                return thinningDefinition;
+            protected ModerateThinning moderateThinning() {
+                return new HeightBasedThinning(thinningDefinition);
             }
         };
     }

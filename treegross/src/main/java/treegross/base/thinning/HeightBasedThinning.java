@@ -33,4 +33,23 @@ public class HeightBasedThinning implements ModerateThinning {
         }
         return tfac;
     }
+
+    @Override
+    public boolean shouldReduce(double h100) {
+        return h100 >= startReducingAHeight();
+    }
+
+    @Override
+    public String definition() {
+        return thinningDefinition;
+    }
+    
+    protected double startReducingAHeight() throws NumberFormatException {
+        double heightStartReducing = Double.POSITIVE_INFINITY;
+        String[] heightStartReducingA = thinningDefinition.split(";");
+        if (heightStartReducingA.length > 2){
+            heightStartReducing = Double.parseDouble(heightStartReducingA[2]);
+        }
+        return heightStartReducing;
+    }
 }
