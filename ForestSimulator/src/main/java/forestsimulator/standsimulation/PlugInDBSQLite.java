@@ -14,16 +14,17 @@ GNU General Public License for more details.
 For more information see:
 http://www.nw-fva.de/~nagel/treegross/
 
-*/
+ */
 package forestsimulator.standsimulation;
+
 import java.io.File;
+import javax.swing.JFrame;
 import treegross.base.*;
-/** This plug is for connectin an Access Database*/
-public interface PlugInDBSQLite 
-{ 
-// Interfaces
-/** Interface to get the current competition index c66 of a tree.
-    @param t Tree object*/
-  public void startDialog(java.awt.Frame frame, Stand st, File dir);
- 
+
+/**
+ * This plug is for connectin an Access Database
+ */
+public interface PlugInDBSQLite {
+
+    public void startDialog(JFrame frame, Stand st, File dir);
 }

@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
 import treegross.base.rule.SkidTrailRules;
@@ -48,12 +49,13 @@ public class DBAccessDialog extends JDialog {
     
     private Stand st;
     int growthCycles = 0;
-    private final ConnectionFactory connectionFactory = new ConnectionFactory();
+    private final ConnectionFactory connectionFactory;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     
-    public DBAccessDialog(Frame parent, boolean modal, Stand stand, File dir) {
+    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, File dir) {
         super(parent, modal);
         initComponents();
+        connectionFactory = new ConnectionFactory(parent);
         st = stand;
         databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
         elsaltoPanel.setVisible(false);
@@ -430,7 +432,7 @@ public class DBAccessDialog extends JDialog {
                 }
             }
         } catch (SQLException e) {
-            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", e);
+            logger.log(Level.SEVERE, "Problem with database", e);
         }
         if (!standFound) {
             JOptionPane.showMessageDialog(rootPane, MessageFormat.format(messages.getString("DBAccessDialog.stand.not.found.message"), standName));
@@ -439,7 +441,6 @@ public class DBAccessDialog extends JDialog {
 
     private void loadStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ids = standNameTextField.getText();
@@ -447,7 +448,7 @@ public class DBAccessDialog extends JDialog {
 
         int aufs = Integer.parseInt(txt.toString());
 
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             st = lts.loadFromDB(con, st, ids, aufs, true, true);
             st.sortbyd();
             st.missingData();
@@ -467,8 +468,8 @@ public class DBAccessDialog extends JDialog {
                 }
             }
             st.descspecies();
-        } catch (Exception e) {
-            System.out.println("Problem: " + " " + e);
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Problem with database", e);
         }
 
         dispose();
@@ -518,8 +519,7 @@ public class DBAccessDialog extends JDialog {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             LoadTreegrossStand lts = new LoadTreegrossStand();
             lts.saveXMLToDB(con, st);
         } catch (SQLException ex) {
@@ -545,8 +545,7 @@ public class DBAccessDialog extends JDialog {
 
     private void loadSPISButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadSPISButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(plotNumberTextField.getText());
             st = lpk.loadFromElSalto(con, st, pl);
@@ -565,8 +564,7 @@ public class DBAccessDialog extends JDialog {
 
     private void specialMixtureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_specialMixtureButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             LoadTreegrossStand lts = new LoadTreegrossStand();
             String ids = "95650200";
             int aufs = 8;
@@ -603,7 +601,7 @@ public class DBAccessDialog extends JDialog {
             }
 // Daten speichern        
             aktivesDatenfile = databaseFilenameTextField.getText();
-            try (Connection connection = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+            try (Connection connection = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
                 MixedTreeInfo mti = new MixedTreeInfo();
                 mti.saveTreeInfo(connection, st, ids, aufs);
 
@@ -611,7 +609,7 @@ public class DBAccessDialog extends JDialog {
             }
             System.out.println("edvis auf fertig: " + ids + "  " + aufs);
         } catch (SQLException ex) {
-            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         dispose();
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
@@ -623,9 +621,8 @@ public class DBAccessDialog extends JDialog {
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
         LoadTreegrossStand lts = new LoadTreegrossStand();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             for (int ib = 0; ib < 16; ib++) {
                 int bestand = ib;
                 for (int j = 0; j < 9; j++) {
@@ -709,7 +706,7 @@ public class DBAccessDialog extends JDialog {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DBAccessDialog.class.getName()).log(Level.SEVERE, "Problem with database", ex);
+            logger.log(Level.SEVERE, "Problem with database", ex);
         }
         dispose();
     }//GEN-LAST:event_jButton14ActionPerformed
@@ -723,11 +720,9 @@ public class DBAccessDialog extends JDialog {
         boolean beginnPeriode = beginCheckBox.isSelected();
         LoadTreegrossStand lts = new LoadTreegrossStand();
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-
         String orga[] = new String[300];
         int norga = 0;
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rs = stmt.executeQuery("SELECT * FROM tblDatOrga")) {
                 while (rs.next()) {
                     int stj = rs.getInt("DatOrga_Stj");
@@ -800,8 +795,7 @@ public class DBAccessDialog extends JDialog {
     private void biUpdateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biUpdateButtonActionPerformed
         LoadTreegrossStand lts = new LoadTreegrossStand();
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             String orga[] = new String[900];
             int norga = 0;
 
@@ -896,8 +890,7 @@ public class DBAccessDialog extends JDialog {
     private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
         // BI Probekreis laden
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             LoadProbekreis lpk = new LoadProbekreis();
             int pl = Integer.parseInt(jTextField4.getText());
             st = lpk.loadFromDB(con, st, jTextField3.getText(), pl, jTextField6.getText(), 1);
@@ -925,9 +918,8 @@ public class DBAccessDialog extends JDialog {
     private void feDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_feDataButtonActionPerformed
         // TFE Daten
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        ConnectionFactory dbconnAC = new ConnectionFactory();
         String id = "test";
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             try (Statement stmt = con.createStatement(); ResultSet rsx = stmt.executeQuery("select * from BucheRein2 ")) {
                 while (rsx.next()) {
                     int nummer = Integer.parseInt(rsx.getObject("ID").toString());
@@ -1006,8 +998,7 @@ public class DBAccessDialog extends JDialog {
     private void simulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationButtonActionPerformed
         // Yield table simulation
         String aktivesDatenfile = "C:\\Dokumente und Einstellungen\\nagel\\Eigene Dateien\\jnProgramme\\ForestSimulator\\data_standsimulation\\localdata.mdb";
-        ConnectionFactory dbconnAC = new ConnectionFactory();     // a class to manage the conection to a database
-        try (Connection con = dbconnAC.openDBConnection(aktivesDatenfile, "", "")) {
+        try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             EtafelSim etsim = new EtafelSim();
             for (int iw = 1; iw < 3; iw++) {
                 for (int i = 0; i < 5; i++) {

@@ -23,8 +23,13 @@ public class TaskSpinner<RESULT> {
     private volatile boolean finished = false;
     
     public TaskSpinner(RootPaneContainer parent) {
+        super();
         this.parent = parent;
-        this.originalGlassPane = parent.getGlassPane();
+        if (this.parent != null) {
+            this.originalGlassPane = parent.getGlassPane();
+        } else {
+            this.originalGlassPane = null;
+        }
     }
     
     public RESULT execute(Supplier<RESULT> longRunningTask) {
