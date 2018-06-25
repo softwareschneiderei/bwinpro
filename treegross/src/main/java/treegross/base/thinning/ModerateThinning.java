@@ -1,5 +1,6 @@
 package treegross.base.thinning;
 
+import treegross.base.Species;
 import treegross.base.Tree;
 
 
@@ -8,7 +9,7 @@ public interface ModerateThinning {
     
     double thinningFactorFor(Tree tree);
     
-    boolean shouldReduce(double h100);
+    boolean shouldReduce(Species h100);
 
     String definition();
 

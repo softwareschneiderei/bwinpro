@@ -789,14 +789,17 @@ public class TreatmentElements2 {
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
-        // XXX: why only the first species?
-        boolean reduce = st.sp[0].spDef.moderateThinning.shouldReduce(st.sp[0].h100);
-        
-        if (baFac > 1.2 && reduce) {
+        if (baFac > 1.2 && shouldReduce(st)) {
             maxBasalAreaOut = maxBasalAreaOut * (1.2 / baFac);
         }
         return maxBasalAreaOut;
     }    
+
+    private boolean shouldReduce(Stand st) {
+        // XXX: why only the first species?
+        final Species species = st.sp[0];
+        return species.spDef.moderateThinning.shouldReduce(species);
+    }
 
     /**
      * Returns maximum basal area for a treegross stand <code>Stand</code>. If
@@ -993,7 +996,6 @@ public class TreatmentElements2 {
         }
     }
     
-    /////////// ?????????????? ////////////////
     // Will perform a thinning until given volume is reached        
     public void removethinCropTreeCompetition(Stand st, int species, double volout) {
         // Thinning is done iteratively tree by tree

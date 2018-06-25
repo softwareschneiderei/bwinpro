@@ -18,7 +18,6 @@ package treegross.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ModerateThinning;
 import treegross.random.RandomNumber;
 

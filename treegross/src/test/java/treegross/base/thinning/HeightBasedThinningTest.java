@@ -2,6 +2,7 @@ package treegross.base.thinning;
 
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
+import treegross.base.Species;
 import treegross.base.Tree;
 
 public class HeightBasedThinningTest {
@@ -29,10 +30,16 @@ public class HeightBasedThinningTest {
     @Test
     public void shouldReduce() {
         HeightBasedThinning thinning = new HeightBasedThinning("10.0;0.9;22.0");
+        Species sp = new Species();
+        sp.h100 = 21.9;
         
-        assertThat(thinning.shouldReduce(21.9)).isFalse();
-        assertThat(thinning.shouldReduce(22)).isTrue();
-        assertThat(thinning.shouldReduce(22.1)).isTrue();
+        assertThat(thinning.shouldReduce(sp)).isFalse();
+        
+        sp.h100 = 22;
+        assertThat(thinning.shouldReduce(sp)).isTrue();
+        
+        sp.h100 = 22.1;
+        assertThat(thinning.shouldReduce(sp)).isTrue();
     }
     
     /*

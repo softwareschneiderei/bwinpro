@@ -2,6 +2,7 @@ package treegross.base.thinning;
 
 import java.util.List;
 import java.util.Optional;
+import treegross.base.Species;
 import treegross.base.Tree;
 
 public class HeightBasedThinning implements ModerateThinning {
@@ -27,8 +28,8 @@ public class HeightBasedThinning implements ModerateThinning {
     }
     
     @Override
-    public boolean shouldReduce(double h100) {
-        return h100 >= startReducingAHeight();
+    public boolean shouldReduce(Species species) {
+        return species.h100 >= startReducingAHeight();
     }
 
     @Override
