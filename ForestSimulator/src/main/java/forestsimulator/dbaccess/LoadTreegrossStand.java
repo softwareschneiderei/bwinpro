@@ -9,8 +9,6 @@ import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.HeightBasedThinning;
-import treegross.base.thinning.ModerateThinning;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 
@@ -342,12 +340,13 @@ public class LoadTreegrossStand {
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
                     String moderateThinning = rs.getString("ModerateThinning");
+                    String moderateThinningMode = rs.getString("ThinningMode");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.spDef.moderateThinning = moderateThinningFromConfiguration(moderateThinning);
+                        species.spDef.moderateThinning = ThinningMode.forName(moderateThinningMode, moderateThinning);
                     });
                 }
             }
@@ -356,11 +355,6 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not load species scenario from database", e);
         }
         loadScenario.printElapsedTime();
-    }
-
-    // TODO: Return the configured thinning algorithm for the scenario BWIN-52
-    private static ModerateThinning moderateThinningFromConfiguration(String thinningDefinition) {
-        return new HeightBasedThinning(thinningDefinition);
     }
 
     public int getEBaum() {
