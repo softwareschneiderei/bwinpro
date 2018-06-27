@@ -10,9 +10,6 @@ import org.junit.Test;
 
 public class StandTest {
     
-    public StandTest() {
-    }
-    
     /*
      * #Pinning
     */
@@ -82,6 +79,7 @@ public class StandTest {
         stand.nspecies = 2;
         
         stand.clear();
+        
         assertThat(stand.ntrees).isEqualTo(0);
         assertThat(stand.ncpnt).isEqualTo(0);
         assertThat(stand.nspecies).isEqualTo(0);
@@ -104,7 +102,7 @@ public class StandTest {
      * #Pinning
     */
     @Test
-    public void addingTreefacWorksAsExpected() throws SpeciesNotDefinedException {
+    public void addingTreefacWorksAsExpectedAndCorrectsZ() throws SpeciesNotDefinedException {
         Stand s = new Stand();
         s.year = 2014;
         s.clear();
@@ -125,7 +123,7 @@ public class StandTest {
      * #Pinning
     */
     @Test
-    public void addingTreeWorksAsExpected() throws SpeciesNotDefinedException {
+    public void addingTreeCorrectsZ() throws SpeciesNotDefinedException {
         Stand s = new Stand();
         s.year = 2013;
         s.clear();
@@ -146,6 +144,48 @@ public class StandTest {
      * #Pinning
     */
     @Test
+    public void addingTreeFromPlantingAppliesOriginAndCorrectsZ() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.year = 2013;
+        s.clear();
+        addSpeciesDef(s, 7);
+        
+        assertThat(s.addTreeFromPlanting(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.5, 0, 1, 0)).isTrue();
+        assertThat(s.trees()).size().isEqualTo(1);
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat")
+                .containsExactly(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
+                        OutType.STANDING, 1.0, 1, 2013, 0, 0, null, 15.1, -1,
+                        false, true, false);
+    }
+
+    /*
+     * #Pinning
+    */
+    @Test
+    public void addingTreeFromNaturalIngrowthAppliesOriginAndLayerAndCorrectsZ() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.year = 2013;
+        s.clear();
+        addSpeciesDef(s, 7);
+        
+        s.addTreeFromNaturalIngrowth(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.5, 0, 1, 0);
+        assertThat(s.trees()).size().isEqualTo(1);
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat")
+                .containsExactly(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
+                        OutType.STANDING, 1.0, 2, 2013, 3, 0, null, 15.1, -1,
+                        false, true, false);
+    }
+
+    /*
+     * #Pinning
+    */
+    @Test
     public void addingTreeToFullStandReturnsFalse() throws SpeciesNotDefinedException {
         Stand s = new Stand();
         s.ntrees = s.maxStandTrees;
@@ -157,21 +197,66 @@ public class StandTest {
      * #Pinning
     */
     @Test
-    public void addingTreeNFVWorksAsExpected() throws SpeciesNotDefinedException {
+    public void addingTreeFromDBWorksAndUsesGivenZ() throws SpeciesNotDefinedException {
         Stand s = new Stand();
         s.year = 2015;
         s.clear();
         addSpeciesDef(s, 1);
         
-        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, 4.31, 1, 0, 1, 1.5, 2, "remark");
+        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, 2, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
-                .containsExactly(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, 4.31,
+                .containsExactly(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
                         OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
                         true, false, true);
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void addingTreeNFVWorksAndUsesGivenZ() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.year = 2015;
+        s.clear();
+        addSpeciesDef(s, 1);
+        
+        s.addtreeNFV(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, 2, "remark");
+        assertThat(s.trees()).size().isEqualTo(1);
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat")
+                .containsExactly(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
+                        OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
+                        true, false, true);
+    }
+    
+    /*
+     * #Pinning
+    */
+    @Test
+    public void addingXMLTreeWorksAndUsesGivenZ() throws SpeciesNotDefinedException {
+        Stand s = new Stand();
+        s.year = 2015;
+        s.clear();
+        addSpeciesDef(s, 1);
+        
+        s.addXMLTree(1, "number", 23, 9, OutType.FALLEN,
+                2.4, 12.4, 3.5, 4.3,
+                0.89, 1.7, 15.1, 2.1, -2.22, true, false, false,
+                1, 9.32, "remark");
+        assertThat(s.trees()).size().isEqualTo(1);
+        assertThat(s.trees()).first()
+                .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
+                        "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
+                        "crop", "tempcrop", "habitat", "volumeDeadwood")
+                .containsExactly(1, "number", 23, 9, 2.4, 12.4, 3.5, 4.3, 15.1, 2.1, -2.22,
+                        OutType.FALLEN, 1.7, 0, 0, 1, 0, "remark", 0.89, 0,
+                        true, false, false, 9.32);
     }
     
     /*

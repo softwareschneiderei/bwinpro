@@ -480,7 +480,7 @@ public class Stand {
      */
     public boolean addTreeFromPlanting(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb)) {
+        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 1;
             return true;
         }
@@ -509,7 +509,7 @@ public class Stand {
      */
     public void addTreeFromNaturalIngrowth(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
-        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb)) {
+        if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 2;
             tr[ntrees - 1].layer = 3;
         }
@@ -539,7 +539,7 @@ public class Stand {
     public boolean addTree(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         try {
-            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, 1.0d, 0, null);
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, 0, null);
             return true;
         } catch (IllegalStateException e) {
             LOGGER.log(Level.INFO, "Tree not added.", e);
@@ -550,7 +550,7 @@ public class Stand {
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
-        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, z, zb, tzb, hb, fac, 0, null);
+        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, 0, null);
     }
 
     /* add a tree from Dbase NFV*/
@@ -572,7 +572,7 @@ public class Stand {
         tree.cw = cw;
         tree.x = x;
         tree.y = y;
-        tree.z = Math.max(0d, z);
+        tree.z = z;
         tree.outtype = OutType.STANDING;
         tree.fac = fac;
         tree.origin = 0;
