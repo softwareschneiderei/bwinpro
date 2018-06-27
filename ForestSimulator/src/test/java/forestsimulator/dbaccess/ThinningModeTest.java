@@ -9,6 +9,9 @@ import treegross.base.thinning.HeightBasedThinning;
 public class ThinningModeTest {
     private static final String definition = "1/0.5/2";
     
+    /*
+     * #Requirement http://issuetracker.intranet:20002/browse/BWIN-52
+    */
     @Test
     public void thinningModeReturnsCorrectModerateThinningForName() {
         assertThat(ThinningMode.forName("age", definition)).isInstanceOf(AgeBasedThinning.class)
