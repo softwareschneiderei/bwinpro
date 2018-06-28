@@ -174,14 +174,14 @@ public class DataExchangeFormat {
                 int tzb = 0;
                 int hb = 0;
 
-                if (st.tr[i].crop == true) {
+                if (st.tr[i].crop) {
                     zb = 1;
                 }
-                if (st.tr[i].tempcrop == true) {
+                if (st.tr[i].tempcrop) {
                     tzb = 1;
                 }
 
-                if (st.tr[i].habitat == true) {
+                if (st.tr[i].habitat) {
                     hb = 1;
                 }
 
@@ -513,8 +513,7 @@ public class DataExchangeFormat {
 
     protected boolean parseIntToBoolean(final BufferedReader in) throws IOException, NumberFormatException {
         StringTokenizer stx = new StringTokenizer(in.readLine(), DELIM);
-        int dd = Integer.parseInt(stx.nextToken());
-        return dd == 1;
+        return Integer.parseInt(stx.nextToken()) == 1;
     }
 
     private StringTokenizer tokenizeNextLine(final BufferedReader in) throws IOException {

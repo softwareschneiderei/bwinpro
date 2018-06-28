@@ -95,6 +95,14 @@
             </Property>
           </Properties>
         </Component>
+        <Component class="javax.swing.JCheckBox" name="useMortalityCheckBox">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="forestsimulator/gui.properties" key="TgTreatmentMan3.useMortalityCheckBox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+        </Component>
         <Component class="javax.swing.JCheckBox" name="useRiskModelCheckBox">
           <Properties>
             <Property name="selected" type="boolean" value="true"/>

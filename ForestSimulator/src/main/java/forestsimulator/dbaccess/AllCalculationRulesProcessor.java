@@ -112,7 +112,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> tree.fac == 0.0);
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, rule.scenarioId);
         saveStand(con, st, lts, rule, 0, pass);
-        Simulation simulation = new Simulation(st, new Treatment2());
+        Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality());
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
@@ -121,7 +121,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
             publish(new BatchProgress(rules, rule, pass, new Progress(step, st.temp_Integer), wholeBatchTiming.split()));
             final int currentStep = step;
             StopWatch stepTime = new StopWatch("Step " + step).start();
-            simulation.executeStep(lts.applyTreatment(), 5, (Stand t) -> {
+            simulation.executeStep(5, (Stand t) -> {
                 saveStand(con, t, lts, rule, currentStep + 1, pass);
             });
             st.sortbyd();

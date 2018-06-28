@@ -24,6 +24,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1909,6 +1910,10 @@ public class Stand {
         for (Tree tree : trees()) {
             operation.accept(tree);
         }
+    }
+    
+    public void forTreesMatching(Predicate<Tree> condition, Consumer<Tree> operation) {
+        Arrays.stream(tr, 0, ntrees).filter(condition).forEach(operation);
     }
     
     public Optional<Species> speciesFor(int code) {

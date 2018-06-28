@@ -491,9 +491,9 @@ public class DBAccessDialog extends JDialog {
             st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            Simulation simulation = new Simulation(st, new Treatment2());
+            Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality());
             for (int step = 0; step < st.temp_Integer; step++) {
-                simulation.executeStep(false, 5, publishNothing);
+                simulation.executeStep(5, publishNothing);
                 st.sortbyd();
                 st.missingData();
                 st.descspecies();

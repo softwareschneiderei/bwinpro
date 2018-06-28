@@ -25,9 +25,7 @@ public class LoadTreegrossStand {
     private int baumart = 0;
     private int durchforstung_an = 0;
     private int scenario = 0;
-
-    public LoadTreegrossStand() {
-    }
+    private boolean executeMortality;
 
     public Stand loadFromDB(Connection connection, Stand stand, String edvId, int selectedAufn, boolean missingDataAutomatisch,
             boolean missingDataReplace) {
@@ -67,15 +65,12 @@ public class LoadTreegrossStand {
                 while (rs.next()) {
                     double xp = rs.getDouble("x");
                     double yp = rs.getDouble("y");
-                    String nox = rs.getObject("nr").toString();
-                    nox = nox.trim();
+                    final String nox = rs.getString("nr").trim();
                     int artx = rs.getInt("art");
-                    for (int i = 0; i < stand.ntrees; i++) {
-                        if ((nox.compareTo(stand.tr[i].no.trim()) == 0) && (artx == stand.tr[i].code)) {
-                            stand.tr[i].x = xp;
-                            stand.tr[i].y = yp;
-                        }
-                    }
+                    stand.forTreesMatching(tree -> nox.equals(tree.no.trim()) && (artx == tree.code), tree -> {
+                        tree.x = xp;
+                        tree.y = yp;
+                    });
                 }
             }
         } catch (SQLException e) {
@@ -247,6 +242,7 @@ public class LoadTreegrossStand {
                     bestand = rs.getInt("Bestand");
                     baumart = rs.getInt("Baumart");
                     durchforstung_an = rs.getInt("Durchforstung");
+                    executeMortality = intToBool(rs.getInt("mortality"));
                     if (scen == 0) {
                         scenario = scen;
                     } else {
@@ -373,6 +369,10 @@ public class LoadTreegrossStand {
         return durchforstung_an == 1;
     }
 
+    public boolean executeMortality() {
+        return executeMortality;
+    }
+    
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBaum "
                 + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66,c66c, c66xy, c66cxy, si,x,y, zb) "
@@ -736,5 +736,9 @@ public class LoadTreegrossStand {
             return 1;
         }
         return 0;
+    }
+    
+    private boolean intToBool(int value) {
+        return value != 0;
     }
 }

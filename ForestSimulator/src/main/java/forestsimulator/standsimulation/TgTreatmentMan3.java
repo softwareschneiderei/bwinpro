@@ -38,7 +38,6 @@ public class TgTreatmentMan3 extends JPanel {
     private final Stand st;
     Object[] rowData={" "," "," "," "," "," "};
     TgYieldTable  yt  = null;
-    Treatment2 treat = new Treatment2();
     
     public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent) {
         initComponents();
@@ -84,6 +83,7 @@ public class TgTreatmentMan3 extends JPanel {
         simulationDurationUnitLabel = new javax.swing.JLabel();
         useRandomEffectsCheckBox = new javax.swing.JCheckBox();
         useIngrowthModelCheckBox = new javax.swing.JCheckBox();
+        useMortalityCheckBox = new javax.swing.JCheckBox();
         useRiskModelCheckBox = new javax.swing.JCheckBox();
         startSimulationButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -172,6 +172,10 @@ public class TgTreatmentMan3 extends JPanel {
         useIngrowthModelCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
         useIngrowthModelCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jPanel1.add(useIngrowthModelCheckBox);
+
+        useMortalityCheckBox.setSelected(true);
+        useMortalityCheckBox.setText(bundle.getString("TgTreatmentMan3.useMortalityCheckBox.text")); // NOI18N
+        jPanel1.add(useMortalityCheckBox);
 
         useRiskModelCheckBox.setSelected(true);
         useRiskModelCheckBox.setText(bundle.getString("TgTreatmentMan3.useRiskModelCheckBox.text")); // NOI18N
@@ -423,7 +427,7 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
 
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
-    Simulation simulation = new Simulation(st, treat);
+    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected());
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
         if (simTime < st.timeStep) {
@@ -651,6 +655,7 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JLabel thinningTypeLabel;
     private javax.swing.JCheckBox unterstoryRemovalCheckBox;
     private javax.swing.JCheckBox useIngrowthModelCheckBox;
+    private javax.swing.JCheckBox useMortalityCheckBox;
     private javax.swing.JCheckBox useRandomEffectsCheckBox;
     private javax.swing.JCheckBox useRiskModelCheckBox;
     private javax.swing.JComboBox woodTypeComboBox;
