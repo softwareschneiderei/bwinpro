@@ -1,5 +1,7 @@
 package treegross.dynamic.siteindex;
 
+import java.time.Month;
+
 public class MonthlyMeanTemperature {
     public final Month month;
     public final double meanTemperature;
@@ -7,6 +9,6 @@ public class MonthlyMeanTemperature {
     public MonthlyMeanTemperature(Month month, double meanTemperature) {
         super();
         this.month = month;
-        this.meanTemperature = 0;
+        this.meanTemperature = meanTemperature;
     }
 }

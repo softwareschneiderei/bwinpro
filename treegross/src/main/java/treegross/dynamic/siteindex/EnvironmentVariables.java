@@ -1,10 +1,14 @@
 package treegross.dynamic.siteindex;
 
+import java.time.Year;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class EnvironmentVariables {
     /**
      * Average growing season temperature
      */
-    public double meanTemperature;
+    public final Map<Year, Double> meanTemperature = new LinkedHashMap<>();
     /**
      * Average growing season precipitation sum
      */
