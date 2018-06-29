@@ -1,9 +1,17 @@
 package treegross.dynamic.siteindex;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Regression {
     public double rxy;
-    public List<Double> parameters = new ArrayList<>();
+    private final Map<String, ModelParameters> parameters = new HashMap<>();
+    
+    public void addParametersFor(String speciesCode, ModelParameters parameters) {
+        this.parameters.put(speciesCode, parameters);
+    }
+    
+    public ModelParameters parametersForSpecies(String speciesCode) {
+        return parameters.getOrDefault(speciesCode, new ModelParameters());
+    }
 }

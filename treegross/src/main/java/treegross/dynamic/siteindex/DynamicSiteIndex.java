@@ -1,14 +1,27 @@
 package treegross.dynamic.siteindex;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.Year;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class DynamicSiteIndex {
     public int year;
-    public double si0;
+    public final double si0;
     /**
      * one site index per year
      */
-    public List<Double> siIntermediates = new ArrayList<>();
-    public double siEnd;
+    // TODO: Introduce SiteIndex type instead of double
+    public Map<Year, Double> siIntermediates = new LinkedHashMap<>();
+
+    public DynamicSiteIndex(double initialSiteIndex) {
+        super();
+        si0 = initialSiteIndex;
+    }
+    
+    public double endSiteIndex() {
+        return siIntermediates.entrySet().stream()
+                .max((a, b) -> a.getKey().compareTo(b.getKey()))
+                .map(entry -> entry.getValue())
+                .orElse(si0);
+    }
 }

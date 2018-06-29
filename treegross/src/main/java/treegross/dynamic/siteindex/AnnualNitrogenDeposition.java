@@ -1,10 +1,10 @@
 package treegross.dynamic.siteindex;
 
 public class AnnualNitrogenDeposition {
-    public final double nitrogenDeposition;
+    public final double value;
 
     public AnnualNitrogenDeposition(double nitrogenDeposition) {
         super();
-        this.nitrogenDeposition = nitrogenDeposition;
+        this.value = nitrogenDeposition;
     }
 }
