@@ -29,11 +29,7 @@ public class TGClassFunction implements TGFunction {
         String modelPlugIn = "treegross.plugin." + function;
         try {
             fc = (PlugInFunctionClass) Class.forName(modelPlugIn).newInstance();
-        } catch (ClassNotFoundException e) {
-            LOGGER.log(Level.SEVERE, "function class loading: ", e);
-        } catch (IllegalAccessException e) {
-            LOGGER.log(Level.SEVERE, "function class loading: ", e);
-        } catch (InstantiationException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             LOGGER.log(Level.SEVERE, "function class loading: ", e);
         }
     }

@@ -84,7 +84,7 @@ public class TgDesign extends JPanel {
         speciesCodeComboBox = new javax.swing.JComboBox();
         startButton = new javax.swing.JButton();
         siteIndexLabel = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        siteIndexTextField = new javax.swing.JTextField();
         distributionComboBox = new javax.swing.JComboBox();
         rasterLabel = new javax.swing.JLabel();
         typeComboBox = new javax.swing.JComboBox();
@@ -183,9 +183,9 @@ public class TgDesign extends JPanel {
         jPanel2.add(siteIndexLabel);
         siteIndexLabel.setBounds(20, 220, 140, 14);
 
-        jTextField1.setText("-9.0"); // NOI18N
-        jPanel2.add(jTextField1);
-        jTextField1.setBounds(220, 220, 40, 20);
+        siteIndexTextField.setText("-9.0"); // NOI18N
+        jPanel2.add(siteIndexTextField);
+        siteIndexTextField.setBounds(220, 220, 40, 20);
 
         distributionComboBox.setModel(new DefaultComboBoxModel(CoordinateType.values()));
         distributionComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -285,7 +285,7 @@ public class TgDesign extends JPanel {
         td4.setText("25");
         td6.setText("18.0");
         td3.setVisible(true);
-        jTextField1.setText("-9.0");
+        siteIndexTextField.setText("-9.0");
         diameterLabel.setVisible(true);
         mixtureComboBox.setVisible(true);
         mixtureLabel.setVisible(true);
@@ -315,7 +315,7 @@ public class TgDesign extends JPanel {
             td2.setText("5");
             td4.setText("0.5");
             td6.setText("50.0");
-            jTextField1.setText("30.0");
+            siteIndexTextField.setText("30.0");
             diameterLabel.setVisible(false);
             td3.setVisible(false);
             maxDiameterLabel.setVisible(false);
@@ -359,10 +359,10 @@ public class TgDesign extends JPanel {
                         int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
                         gdb.weibull(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), Double.parseDouble(td5.getText()), Double.parseDouble(td6.getText()) * st.size, false);
 // missing data fuer die Verteilung generieren
-                        if (Double.parseDouble(jTextField1.getText()) > -9) {
+                        if (Double.parseDouble(siteIndexTextField.getText()) > -9) {
                             for (int j = 0; j < st.ntrees; j++) {
                                 if (st.tr[j].si <= -9) {
-                                    st.tr[j].si = Double.parseDouble(jTextField1.getText());
+                                    st.tr[j].si = Double.parseDouble(siteIndexTextField.getText());
                                 }
                             }
                         }
@@ -382,7 +382,6 @@ public class TgDesign extends JPanel {
                                 tree.code = st.tr[j].code;
                                 tree.sp = st.tr[j].sp;
                                 tree.st = st;
-//                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML) + fi.getValueForTree(tree, tree.sp.spDef.heightVariationXML) * nd.value(3.0);
                                 st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                                 st.tr[j].layer = lay;
                             }
@@ -434,7 +433,7 @@ public class TgDesign extends JPanel {
                             String codex = (String) (speciesCodeComboBox.getSelectedItem());
                             int m = codex.indexOf(":");
                             codex = codex.substring(0, m);
-                            st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(jTextField1.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
+                            st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(siteIndexTextField.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
                             st.tr[st.ntrees - 1].layer = lay;
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
@@ -454,7 +453,7 @@ public class TgDesign extends JPanel {
                     String codex = (String) (speciesCodeComboBox.getSelectedItem());
                     int m = codex.indexOf(":");
                     codex = codex.substring(0, m);
-                    double bon = Double.parseDouble(jTextField1.getText());
+                    double bon = Double.parseDouble(siteIndexTextField.getText());
                     double hei = Double.parseDouble(td4.getText());
                     double d = hei;
                     int artx = Integer.parseInt(codex);
@@ -493,12 +492,7 @@ public class TgDesign extends JPanel {
         } else {
             frame.hideAddTreesWindow();
             frame.menubar.cmi[3].setSelected(false);
-            /*                    JDialog newstand = new TgNewStand(frame, true, frame.st, frame, frame.language );   
-                    Model mo =new Model();
-                    frame.st.setModelRegion(mo.getPlugInName(frame.plugIn));
-                    newstand.setVisible(true);
-                    frame.tfUpdateTrue=true;  
-             */ if (st.size > 0) {
+            if (st.size > 0) {
                 frame.showAddTreesWindow();
                 frame.menubar.cmi[3].setSelected(true);
             }
@@ -690,7 +684,6 @@ public class TgDesign extends JPanel {
     private javax.swing.JComboBox jComboBox5;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel layerLabel;
     private javax.swing.JLabel maxDiameterLabel;
     private javax.swing.JComboBox mixtureComboBox;
@@ -699,6 +692,7 @@ public class TgDesign extends JPanel {
     private javax.swing.JTextField rasterXTextField;
     private javax.swing.JTextField rasterYTextField;
     private javax.swing.JLabel siteIndexLabel;
+    private javax.swing.JTextField siteIndexTextField;
     private javax.swing.JComboBox speciesCodeComboBox;
     private javax.swing.JLabel speciesCodeLabel;
     private javax.swing.JButton startButton;

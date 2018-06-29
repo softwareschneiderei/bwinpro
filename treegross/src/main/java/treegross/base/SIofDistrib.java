@@ -17,6 +17,7 @@
 package treegross.base;
 
 public class SIofDistrib {
+    private final FunctionInterpreter fi = new FunctionInterpreter();
 
     /**
      * calcultes the site index of a generated a diameter distribution from
@@ -69,13 +70,11 @@ public class SIofDistrib {
         tree.sp.dg = dg;
         tree.sp.hg = hg;
         tree.age = alter;
-        FunctionInterpreter fi = new FunctionInterpreter();
         h100 = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
         tree = new Tree();
         tree.sp = st.sp[merk];
         tree.sp.h100 = h100;
         tree.age = alter;
-        fi = new FunctionInterpreter();
         siteindex = fi.getValueForTree(tree, st.sp[merk].spDef.siteindexXML);
         // assign all trees an individual site index
         for (i = 0; i < st.ntrees; i++) {

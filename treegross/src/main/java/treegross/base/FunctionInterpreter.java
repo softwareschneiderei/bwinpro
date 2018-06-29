@@ -25,21 +25,6 @@ import treegross.random.RandomNumber;
  */
 public class FunctionInterpreter {
 
-    private JEP jep;
-
-    /**
-     * Creates a new instance of FunctionInterpreter
-     */
-    public FunctionInterpreter() {
-    }
-
-    public String getLastError() {
-        if (jep != null) {
-            return jep.getErrorInfo();
-        }
-        return "JEP not used";
-    }
-
     public double getValueForTree(Tree t, TGFunction func) {
         if (func.getType() == TGFunction.CLASS_FUCNTION) {
             TGClassFunction cf = (TGClassFunction) func;
@@ -52,7 +37,7 @@ public class FunctionInterpreter {
 
     public double getValueForTree(Tree t, String func) {
         String function = func;
-        jep = new JEP();
+        JEP jep = new JEP();
         if (function.contains("t.d")) {
             jep.addVariable("t.d", t.d);
         }
@@ -128,7 +113,7 @@ public class FunctionInterpreter {
         } else {
             String function = func.getFunctionText();
             //RandomNumber zz = new RandomNumber();
-            jep = new JEP();
+            JEP jep = new JEP();
 
             if (function.contains("sp.dg")) {
                 jep.addVariable("sp.dg", sp.dg);

@@ -242,7 +242,7 @@ public class LoadTreegrossStand {
                     bestand = rs.getInt("Bestand");
                     baumart = rs.getInt("Baumart");
                     durchforstung_an = rs.getInt("Durchforstung");
-                    executeMortality = intToBool(rs.getInt("mortality"));
+                    executeMortality = determineMortality(rs);
                     if (scen == 0) {
                         scenario = scen;
                     } else {
@@ -358,6 +358,15 @@ public class LoadTreegrossStand {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not load thinning mode from database. Using default.", ex);
             return ThinningMode.HEIGHT.name();
+        }
+    }
+
+    private boolean determineMortality(final ResultSet rs) {
+        try {
+            return intToBool(rs.getInt("mortality"));
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load mortality from database. Using mortality.", ex);
+            return true;
         }
     }
 

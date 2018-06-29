@@ -11,6 +11,7 @@
  */
 
 package treegross.base;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -234,14 +235,14 @@ public class SpeciesDefMap {
     public TGFunction initTGFunction(String xmlText){
         if(xmlText==null)
             return new TGTextFunction();
-        if(xmlText.length()==0)
+        if(xmlText.isEmpty())
             return new TGTextFunction();
         if(xmlText.startsWith("CLASS:")){
             TGClassFunction f= new TGClassFunction();
             f.init(xmlText);
             return f;
         } else{
-            TGTextFunction f= new TGTextFunction();
+            TGTextFunction f = new TGTextFunction();
             f.init(xmlText);
             return f;
         }

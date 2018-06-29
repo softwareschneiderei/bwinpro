@@ -491,45 +491,7 @@ public class Tree implements Cloneable {
         FunctionInterpreter fi = new FunctionInterpreter();
         // Jugendwachstum, solange der BHD < 7.0 oder h < 1.3
         if (d < 7) {
-            double jh1;
-            double jh2;
-            Tree atree = new Tree();
-            atree.sp = sp;
-            atree.code = sp.code;
-            atree.si = si;
-            atree.age = 30;
-            jh1 = fi.getValueForTree(atree, sp.spDef.siteindexHeightXML);
-            jh2 = jh1;
-            jh1 = jh1 * ((Math.exp(age / 30.0) - 1.0) / (Math.exp(1.0) - 1.0));
-            jh2 = jh2 * ((Math.exp((age + 5) / 30.0) - 1.0) / (Math.exp(1.0) - 1.0));
-            hinc = jh2 - jh1;
-            if (hinc < 0) {
-                hinc = 0;
-            }
-            bhdinc = 0.0;
-            double hd = 1.0;
-            double dneu;
-            if (sp.code < 200) {
-                hd = 1.28;
-            } else if (sp.code >= 200 && sp.code < 300) {
-                hd = 1.40;
-            } else if (sp.code >= 300 && sp.code < 400) {
-                hd = 1.80;
-            } else if (sp.code >= 400 && sp.code < 500) {
-                hd = 1.20;
-            } else if (sp.code >= 500 && sp.code < 600) {
-                hd = 0.95;
-            } else if (sp.code >= 600 && sp.code < 700) {
-                hd = 0.85;
-            } else if (sp.code >= 700 && sp.code < 800) {
-                hd = 1.1;
-            } else if (sp.code >= 800 && sp.code < 900) {
-                hd = 0.95;
-            }
-            dneu = (h + (years * hinc / 5.0)) / hd;
-            if (dneu > d) {
-                d = dneu;
-            }
+            youthGrowth(fi, years);
         } else {
             bhdinc = fi.getValueForTree(this, sp.spDef.diameterIncrementXML);
             if (Double.isInfinite(bhdinc) || Double.isNaN(bhdinc) || bhdinc < 0) {
@@ -594,6 +556,46 @@ public class Tree implements Cloneable {
         v = calculateVolume();
     }
 
+    private void youthGrowth(FunctionInterpreter fi, int years) {
+        Tree atree = new Tree();
+        atree.sp = sp;
+        atree.code = sp.code;
+        atree.si = si;
+        atree.age = 30;
+        double jh1 = fi.getValueForTree(atree, sp.spDef.siteindexHeightXML);
+        double jh2 = jh1;
+        jh1 = jh1 * ((Math.exp(age / 30.0) - 1.0) / (Math.exp(1.0) - 1.0));
+        jh2 = jh2 * ((Math.exp((age + 5) / 30.0) - 1.0) / (Math.exp(1.0) - 1.0));
+        hinc = jh2 - jh1;
+        if (hinc < 0) {
+            hinc = 0;
+        }
+        bhdinc = 0.0;
+        double hd = 1.0;
+        double dneu;
+        if (sp.code < 200) {
+            hd = 1.28;
+        } else if (sp.code >= 200 && sp.code < 300) {
+            hd = 1.40;
+        } else if (sp.code >= 300 && sp.code < 400) {
+            hd = 1.80;
+        } else if (sp.code >= 400 && sp.code < 500) {
+            hd = 1.20;
+        } else if (sp.code >= 500 && sp.code < 600) {
+            hd = 0.95;
+        } else if (sp.code >= 600 && sp.code < 700) {
+            hd = 0.85;
+        } else if (sp.code >= 700 && sp.code < 800) {
+            hd = 1.1;
+        } else if (sp.code >= 800 && sp.code < 900) {
+            hd = 0.95;
+        }
+        dneu = (h + (years * hinc / 5.0)) / hd;
+        if (dneu > d) {
+            d = dneu;
+        }
+    }
+
     void growBack(int years) {
         //System.out.println("grow back Tree");
         double ts = st.timeStep;
@@ -602,7 +604,7 @@ public class Tree implements Cloneable {
             outtype = OutType.STANDING;
         }
         RandomNumber rnOff = new RandomNumber(RandomNumber.OFF);
-        if (out < 0) {
+        if (isLiving()) {
             Tree xtree;
             //explicitly set stand (not included in Tree.clone() -> Tree.grow(...) refers Stand.timeStep)
             xtree = this.clone();

@@ -1375,37 +1375,13 @@ public class Stand {
      * trees are added to the stand
      */
     public void missingData() {
-        // missing cornerpoints
-        if (ncpnt <= 0) {
-            double l = Math.sqrt(size * 10000.0);
-            addcornerpoint("E1", 0.0, l, 0.0);
-            addcornerpoint("E2", l, l, 0.0);
-            addcornerpoint("E3", l, 0.0, 0.0);
-            addcornerpoint("E1", 0.0, 0.0, 0.0);
-            center.no = "polygon";
-            center.x = l / 2.0;
-            center.y = l / 2.0;
-            center.z = 0.0;
-        }
-        // missing center point, calculate a center
-        if (!center.no.contains("polygon") && !center.no.contains("circle")) {
-            double xm = 0.0;
-            double ym = 0.0;
-            double zm = 0.0;
-            for (int i = 0; i < ncpnt; i++) {
-                xm = xm + cpnt[i].x;
-                ym = ym + cpnt[i].y;
-                zm = zm + cpnt[i].z;
-            }
-            center.x = xm / ncpnt;
-            center.y = ym / ncpnt;
-            center.z = zm / ncpnt;
-            center.no = "polygon";
-        }
+        addCornerPoints();
+        calculateCenter();
 
         // 0. update st,bha die Bestandesgrundfläche
         bha = 0.0;
         for (int i = 0; i < ntrees; i++) {
+            // TODO: Why out < 1? -1 means living, what does 0 mean?
             if (tr[i].out < 1 && tr[i].d >= 7.0) {
                 bha = bha + tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
             }
@@ -1566,6 +1542,39 @@ public class Stand {
             tr[j].updateCompetition();
         }*/
         scaleMan.updateCompetition();
+    }
+
+    private void calculateCenter() {
+        // missing center point, calculate a center
+        if (!center.no.contains("polygon") && !center.no.contains("circle")) {
+            double xm = 0.0;
+            double ym = 0.0;
+            double zm = 0.0;
+            for (int i = 0; i < ncpnt; i++) {
+                xm = xm + cpnt[i].x;
+                ym = ym + cpnt[i].y;
+                zm = zm + cpnt[i].z;
+            }
+            center.no = "polygon";
+            center.x = xm / ncpnt;
+            center.y = ym / ncpnt;
+            center.z = zm / ncpnt;
+        }
+    }
+
+    private void addCornerPoints() {
+        // missing cornerpoints
+        if (ncpnt <= 0) {
+            double l = Math.sqrt(size * 10000.0);
+            addcornerpoint("E1", 0.0, l, 0.0);
+            addcornerpoint("E2", l, l, 0.0);
+            addcornerpoint("E3", l, 0.0, 0.0);
+            addcornerpoint("E1", 0.0, 0.0, 0.0);
+            center.no = "polygon";
+            center.x = l / 2.0;
+            center.y = l / 2.0;
+            center.z = 0.0;
+        }
     }
 
     /**
@@ -1827,22 +1836,6 @@ public class Stand {
             }
         }
         return treestoremove;
-    }
-
-    /**
-     * function allows to set the site index for all species (treeCode=0) or for
-     * a specific species with the given code. SiteIndex is expressed in [m] at
-     * age 100
-     *
-     * @param treeCode
-     * @param siteIndex
-     */
-    public void setSiteIndex(int treeCode, double siteIndex) {
-        for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d >= 7.0 && tr[i].out < 0 && (tr[i].code == treeCode || treeCode == 0)) {
-                tr[i].si = siteIndex;
-            }
-        }
     }
 
     /**
