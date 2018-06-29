@@ -336,13 +336,12 @@ public class LoadTreegrossStand {
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
                     String moderateThinning = rs.getString("ModerateThinning");
-                    String moderateThinningMode = rs.getString("ThinningMode");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.spDef.moderateThinning = ThinningMode.forName(moderateThinningMode, moderateThinning);
+                        species.spDef.moderateThinning = ThinningMode.forName(determineThinningMode(rs), moderateThinning);
                     });
                 }
             }
@@ -351,6 +350,15 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not load species scenario from database", e);
         }
         loadScenario.printElapsedTime();
+    }
+
+    private String determineThinningMode(final ResultSet rs) {
+        try {
+            return rs.getString("ThinningMode");
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load thinning mode from database. Using default.", ex);
+            return ThinningMode.HEIGHT.name();
+        }
     }
 
     public int getEBaum() {

@@ -22,7 +22,7 @@ public class AgeBasedThinning implements ModerateThinning {
     }
 
     private Optional<Double> firstFactorFoundFor(Tree tree) {
-        // TODO: verify the condition with domain experts
+        // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
         return ranges.stream()
                 .map(range -> range.factorFor(tree.age))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
@@ -30,7 +30,7 @@ public class AgeBasedThinning implements ModerateThinning {
     
     @Override
     public boolean shouldReduce(Species species) {
-        // TODO: verify the condition with domain experts
+        // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
         return species.h100age >= ranges.get(0).end;
     }
 

@@ -796,7 +796,7 @@ public class TreatmentElements2 {
     }    
 
     private boolean shouldReduce(Stand st) {
-        // XXX: why only the first species?
+        // http://issuetracker.intranet:20002/browse/BWIN-57: why only the first species?
         final Species species = st.sp[0];
         return species.spDef.moderateThinning.shouldReduce(species);
     }

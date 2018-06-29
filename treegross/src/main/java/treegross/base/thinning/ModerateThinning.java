@@ -9,7 +9,7 @@ public interface ModerateThinning {
     
     double thinningFactorFor(Tree tree);
     
-    boolean shouldReduce(Species h100);
+    boolean shouldReduce(Species species);
 
     String definition();
 
