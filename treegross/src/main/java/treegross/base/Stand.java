@@ -276,8 +276,6 @@ public class Stand {
 
     public int nRegeneration = 0;
 
-    int sizeoftr = 0;
-
     /*added by jhansen*/
     /* a container to store all added StandChangeListeners*/
     private final List<StandChangeListener> StandChangeListeners = new ArrayList<>();

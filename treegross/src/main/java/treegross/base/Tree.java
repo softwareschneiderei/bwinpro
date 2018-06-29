@@ -431,10 +431,8 @@ public class Tree implements Cloneable {
     }
 
     public double calculateSiteIndex() {
-        double erg;
         FunctionInterpreter fi = new FunctionInterpreter();
-        erg = fi.getValueForTree(this, sp.spDef.siteindexXML);
-        return erg;
+        return fi.getValueForTree(this, sp.spDef.siteindexXML);
     }
 
     public double calculateMaxBasalArea() {
@@ -489,7 +487,7 @@ public class Tree implements Cloneable {
      * random effects. If the years is < 5 then the increment is set to
      * increment*years/5
      */
-    void grow(int years, /*boolean randomEffects*/ RandomNumber rn) {
+    void grow(int years, RandomNumber rn) {
         FunctionInterpreter fi = new FunctionInterpreter();
         // Jugendwachstum, solange der BHD < 7.0 oder h < 1.3
         if (d < 7) {
