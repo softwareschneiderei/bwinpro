@@ -11,9 +11,13 @@ public class HeightBasedThinning implements ModerateThinning {
     private final List<ThinningFactorRange> ranges;
 
     public HeightBasedThinning(String thinningDefinition) {
+        this(thinningDefinition, new ThinningDefinitionParser().parseDefinition(thinningDefinition));
+    }
+    
+    public HeightBasedThinning(String thinningDefinition, List<ThinningFactorRange> ranges) {
         super();
         this.thinningDefinition = thinningDefinition;
-        ranges = new ThinningDefinitionParser().parseDefinition(thinningDefinition);
+        this.ranges = ranges;
     }
 
     @Override

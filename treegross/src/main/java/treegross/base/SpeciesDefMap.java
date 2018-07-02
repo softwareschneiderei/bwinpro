@@ -11,14 +11,12 @@
  */
 
 package treegross.base;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.StringStack;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.*;
-import org.jdom.DocType;
 import java.io.*;
 import java.net.*;
 import java.util.Map;
@@ -60,9 +58,9 @@ public class SpeciesDefMap {
         readFromURL(url);
     }
     
-    public void readFromPath(String path){
+    public void readFromPath(File path){
         try{
-            URL url = new File(path).toURI().toURL();
+            URL url = path.toURI().toURL();
             readFromURL(url);            
         } catch(MalformedURLException e){
             LOGGER.log(Level.SEVERE, "reading xml file: ",e);
@@ -87,7 +85,6 @@ public class SpeciesDefMap {
     public void readXMLStream(InputStream imps) throws IOException, org.jdom.JDOMException{
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(imps);         
-        DocType docType = doc.getDocType();   
         Element rm =  doc.getRootElement();  
         List  list= rm.getChildren("SpeciesDefinition");
         Iterator i = list.iterator();        

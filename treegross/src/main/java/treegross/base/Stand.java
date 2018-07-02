@@ -371,7 +371,7 @@ public class Stand {
 
         if (localPath != null && xmlSettingsFile != null) {
             try {
-                SDM.readFromPath(localPath + "\\" + xmlSettingsFile);
+                SDM.readFromPath(new File(localPath, xmlSettingsFile));
                 //SDM.readFromURL(new URL(localPath, st.FileXMLSettings));
             } catch (Exception ex) {
                 LOGGER.log(Level.SEVERE, "loading species definitions", ex);
@@ -397,11 +397,6 @@ public class Stand {
         center.y = l * 0.5;
         center.z = 0.0;
         scaleMan.setScaleMethod(ScaleManager.SCALE_FIXED);
-    }
-
-    public void loadSDM(String path) {
-        sdm = new SpeciesDefMap();
-        sdm.readFromPath(path);
     }
 
     /**

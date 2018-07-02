@@ -1,25 +1,33 @@
 package treegross.base.thinning;
 
-import java.util.ArrayList;
+import static java.lang.Double.parseDouble;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import static java.util.stream.Collectors.toList;
 
 public class ThinningDefinitionParser {
 
     public List<ThinningFactorRange> parseDefinition(String thinningDefinition) throws NumberFormatException {
-        List<ThinningFactorRange> result = new ArrayList<>();
-        if (thinningDefinition.length() > 4) {
-            String[] tokens = thinningDefinition.split(";");
-            // added by jhansen
-            int end = tokens.length / 3;
+        return Arrays.stream(thinningDefinition.split(";"))
+                .map(triple -> addThinningFactorRange(triple))
+                .filter(range -> range.isPresent())
+                .map(range -> range.get())
+                .collect(toList());
+    }
 
-            for (int i = 0; i < end; i++) {
-                ThinningFactorRange range = new ThinningFactorRange(
-                        Double.parseDouble(tokens[i * 3]),
-                        Double.parseDouble(tokens[i * 3 + 2]),
-                        Double.parseDouble(tokens[i * 3 + 1]));
-                result.add(range);
-            }
+    private Optional<ThinningFactorRange> addThinningFactorRange(String triple) throws IllegalArgumentException, NumberFormatException {
+        if (triple.isEmpty()) {
+            return Optional.empty();
         }
-        return result;
+        String[] values = triple.split("\\/");
+        
+        if (values.length != 3) {
+            throw new IllegalArgumentException("Illegal thinning factor triple. We need exactly 3 decimal numbers separated by /. Got: " + triple);
+        }
+        return Optional.of(new ThinningFactorRange(
+                parseDouble(values[0]),
+                parseDouble(values[2]),
+                parseDouble(values[1])));
     }
 }

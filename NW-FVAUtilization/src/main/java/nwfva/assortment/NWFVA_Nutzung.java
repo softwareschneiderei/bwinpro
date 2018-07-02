@@ -67,9 +67,6 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
     String version = "Version 0.2 2014-06-08";
     private static final Logger log = Logger.getLogger( nwfva.assortment.NWFVA_Nutzung.class.getName() );
 
-    /**
-     * 
-     */
     public NWFVA_Nutzung() {
         initComponents();
         try{
@@ -88,7 +85,8 @@ public class NWFVA_Nutzung extends javax.swing.JFrame {
         st.FileXMLSettings="ForestSimulatorNWGermanyBC4.xml";
         programDir=localPath+System.getProperty("file.separator")+"user";
         SpeciesDefMap SDM = new SpeciesDefMap();
-        SDM.readFromPath(programDir+System.getProperty("file.separator")+"models"+System.getProperty("file.separator")+st.FileXMLSettings);
+        final File modelDirectory = new File(programDir, "models");
+        SDM.readFromPath(new File(modelDirectory, st.FileXMLSettings));
         st.setSDM(SDM);
         st.setProgramDir(new File(programDir));
         loadGeneralSettings(programDir);

@@ -147,7 +147,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         grafik3D = user.getGrafik3D() && is3dAvailable();
 
         programDir = user.getProgramDir();
-        SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings).getAbsolutePath());
+        SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings));
         st.setSDM(SDM);
         workingDir = user.getWorkingDir();
         currentFile = user.getDataDir();
