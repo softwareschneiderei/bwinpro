@@ -24,6 +24,7 @@ import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.Double.parseDouble;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.*;
@@ -40,6 +41,7 @@ import org.jdom.JDOMException;
 
 public class TgDesign extends JPanel {
 
+    private static final Logger logger = Logger.getLogger(TgDesign.class.getName());
     private static final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     Stand st = new Stand();
     TgJFrame frame;
@@ -357,42 +359,36 @@ public class TgDesign extends JPanel {
                         int m = codex.indexOf(":");
                         codex = codex.substring(0, m);
                         int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
-                        gdb.weibull(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), Double.parseDouble(td5.getText()), Double.parseDouble(td6.getText()) * st.size, false);
+                        gdb.weibull(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), parseDouble(td3.getText()), parseDouble(td4.getText()), parseDouble(td5.getText()), parseDouble(td6.getText()) * st.size, false);
 // missing data fuer die Verteilung generieren
-                        if (Double.parseDouble(siteIndexTextField.getText()) > -9) {
-                            for (int j = 0; j < st.ntrees; j++) {
-                                if (st.tr[j].si <= -9) {
-                                    st.tr[j].si = Double.parseDouble(siteIndexTextField.getText());
-                                }
-                            }
+                        if (siteIndexFromInput() > -9) {
+                            st.forTreesMatching(tree -> tree.si <= -9d, tree -> tree.si = siteIndexFromInput());
                         }
                         SIofDistrib siod = new SIofDistrib();
                         FunctionInterpreter fi = new FunctionInterpreter();
-                        siod.si(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()));
-                        for (int j = 0; j < st.ntrees; j++) {
-                            if (st.tr[j].h == 0.0) {
+                        siod.si(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), parseDouble(td3.getText()), parseDouble(td4.getText()));
+                        for (Tree standTree : st.trees()) {
+                            if (standTree.h == 0.0) {
                                 Tree tree = new Tree();
                                 tree.code = Integer.parseInt(codex);
-                                tree.sp = st.tr[j].sp;
-                                tree.sp.dg = Double.parseDouble(td3.getText());
-                                tree.sp.hg = Double.parseDouble(td4.getText());
+                                tree.sp = standTree.sp;
+                                tree.sp.dg = parseDouble(td3.getText());
+                                tree.sp.hg = parseDouble(td4.getText());
                                 tree.sp.h100 = 0.0;
                                 tree.sp.d100 = 0.0;
-                                tree.d = st.tr[j].d;
-                                tree.code = st.tr[j].code;
-                                tree.sp = st.tr[j].sp;
+                                tree.d = standTree.d;
+                                tree.code = standTree.code;
+                                tree.sp = standTree.sp;
                                 tree.st = st;
-                                st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
-                                st.tr[j].layer = lay;
+                                standTree.h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
+                                standTree.layer = lay;
                             }
                         }
-                        for (int j = 0; j < st.ntrees; j++) {
-                            st.tr[j].setMissingData();
-                        }
+                        st.forAllTrees(tree -> tree.setMissingData());
                         GenerateXY gxy;
                         if (developmentCheckBox.isSelected()) {
-                            double dist = Double.parseDouble(distanceTextField.getText());
-                            double br = Double.parseDouble(widthTextField.getText());
+                            double dist = parseDouble(distanceTextField.getText());
+                            double br = parseDouble(widthTextField.getText());
                             if (dist < 0.1) {
                                 dist = 20.0;
                             }
@@ -415,13 +411,13 @@ public class TgDesign extends JPanel {
                         if (distributionComboBox.getSelectedIndex() == 0) {
                             gxy.zufall(st);
                         } else {
-                            gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()), Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
+                            gxy.raster(st, parseDouble(rasterXTextField.getText()), parseDouble(rasterYTextField.getText()), parseDouble(startXTextField.getText()), parseDouble(startYTextField.getText()));
                         }
                         st.sortbyd();
                         st.descspecies();
                         frame.tfUpdateTrue = true;
                     } catch (NumberFormatException | SpeciesNotDefinedException ex) {
-                        Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
+                        logger.log(Level.SEVERE, null, ex);
                     }
                 }
                 if (typeComboBox.getSelectedItem() == CreationType.Tree) {
@@ -433,10 +429,10 @@ public class TgDesign extends JPanel {
                             String codex = (String) (speciesCodeComboBox.getSelectedItem());
                             int m = codex.indexOf(":");
                             codex = codex.substring(0, m);
-                            st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, Double.parseDouble(td3.getText()), Double.parseDouble(td4.getText()), 0.0, 0.0, Double.parseDouble(siteIndexTextField.getText()), -9.0, -9.0, 0.0, 0, 0, 0);
+                            st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, parseDouble(td3.getText()), parseDouble(td4.getText()), 0.0, 0.0, siteIndexFromInput(), -9.0, -9.0, 0.0, 0, 0, 0);
                             st.tr[st.ntrees - 1].layer = lay;
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {
-                            Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);
+                            logger.log(Level.SEVERE, null, ex);
                         }
                     }
                     st.missingData();
@@ -445,16 +441,16 @@ public class TgDesign extends JPanel {
                     if (distributionComboBox.getSelectedItem() == CoordinateType.Random) {
                         gxy.zufall(st);
                     } else {
-                        gxy.raster(st, Double.parseDouble(rasterXTextField.getText()), Double.parseDouble(rasterYTextField.getText()),
-                                Double.parseDouble(startXTextField.getText()), Double.parseDouble(startYTextField.getText()));
+                        gxy.raster(st, parseDouble(rasterXTextField.getText()), parseDouble(rasterYTextField.getText()),
+                                parseDouble(startXTextField.getText()), parseDouble(startYTextField.getText()));
                     }
                 }
                 if (typeComboBox.getSelectedItem() == CreationType.Regeneration) {
                     String codex = (String) (speciesCodeComboBox.getSelectedItem());
                     int m = codex.indexOf(":");
                     codex = codex.substring(0, m);
-                    double bon = Double.parseDouble(siteIndexTextField.getText());
-                    double hei = Double.parseDouble(td4.getText());
+                    double bon = siteIndexFromInput();
+                    double hei = parseDouble(td4.getText());
                     double d = hei;
                     int artx = Integer.parseInt(codex);
                     double cbx = 1.0;
@@ -471,7 +467,7 @@ public class TgDesign extends JPanel {
                         cbx = atree.calculateCw();
                         gx = Math.PI * Math.pow(cbx / 2.0, 2.0);
                     }
-                    double cov = Double.parseDouble(td6.getText());
+                    double cov = parseDouble(td6.getText());
                     int anzahl = (int) Math.round(st.size * cov * 100.0 / gx);
                     for (int i = 0; i < anzahl; i++) {
                         try {
@@ -500,6 +496,15 @@ public class TgDesign extends JPanel {
         frame.tfUpdateTrue = true;
         frame.updatetp(false);
     }//GEN-LAST:event_ActionPerformed
+
+    private double siteIndexFromInput() {
+        try {
+            return parseDouble(siteIndexTextField.getText());
+        } catch (NumberFormatException e) {
+            logger.log(Level.INFO, "Could not parse site index from user input. Leaving unspecified", e);
+            return -9;
+        }
+    }
 
     private void td2KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_td2KeyPressed
         int key = evt.getKeyCode();
@@ -610,7 +615,7 @@ public class TgDesign extends JPanel {
             code = 211;
         }
         int a = Integer.parseInt(td2.getText().trim());
-        double h = Double.parseDouble(td4.getText().trim());
+        double h = parseDouble(td4.getText().trim());
         int art = 211;
         if (code < 211) {
             art = 111;

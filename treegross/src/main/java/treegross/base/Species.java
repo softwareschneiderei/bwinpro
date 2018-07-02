@@ -66,9 +66,6 @@ public class Species implements Cloneable {
     public double volumeOfDeadwood;
     public double dmax;
 
-    /**
-     * Creates a new instance of species
-     */
     public Species() {
         this(Integer.MIN_VALUE);
     }

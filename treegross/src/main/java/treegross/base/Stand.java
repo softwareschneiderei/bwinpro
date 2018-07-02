@@ -1532,10 +1532,6 @@ public class Stand {
         }
         sortbyd();
         selectNeighborTrees();
-        // competition of trees
-        /*for (int j = 0; j < ntrees; j++) {
-            tr[j].updateCompetition();
-        }*/
         scaleMan.updateCompetition();
     }
 

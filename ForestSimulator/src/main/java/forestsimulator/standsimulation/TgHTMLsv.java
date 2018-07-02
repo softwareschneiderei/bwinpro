@@ -62,24 +62,22 @@ class TgHTMLsv {
                     + "><FONT SIZE=2>" + messages.getString("TgHTMLsv.column.header.si") + "<TH BGCOLOR=\"#C0C0C0\"></TR>");
             DecimalFormat f = new DecimalFormat("0.00");
 
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0) {
-                    out.println("<TR><TD><FONT SIZE=2>" + st.tr[i].no + "<TD><FONT SIZE=2>" + st.tr[i].code + "<TD><FONT SIZE=2>" + st.tr[i].age
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].d) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].h)
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].cb) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].cw)
-                            + "<TD><FONT SIZE=2>" + f.format((st.tr[i].h - st.tr[i].cb) / st.tr[i].h)
-                            + "<TD><FONT SIZE=2>" + f.format((st.tr[i].h / st.tr[i].d))
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].v) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].out)
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].x) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].y)
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].z)
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].c66) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].c66c)
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].c66xy) + "<TD><FONT SIZE=2>" + f.format(st.tr[i].c66cxy)
-                            + "<TD><FONT SIZE=2>" + st.tr[i].crop
-                            + "<TD><FONT SIZE=2>" + st.tr[i].outtype
-                            + "<TD><FONT SIZE=2>" + st.tr[i].layer
-                            + "<TD><FONT SIZE=2>" + f.format(st.tr[i].si));
-                }
-            }
+            st.forTreesMatching(tree -> tree.isLiving(), tree -> {
+                    out.println("<TR><TD><FONT SIZE=2>" + tree.no + "<TD><FONT SIZE=2>" + tree.code + "<TD><FONT SIZE=2>" + tree.age
+                            + "<TD><FONT SIZE=2>" + f.format(tree.d) + "<TD><FONT SIZE=2>" + f.format(tree.h)
+                            + "<TD><FONT SIZE=2>" + f.format(tree.cb) + "<TD><FONT SIZE=2>" + f.format(tree.cw)
+                            + "<TD><FONT SIZE=2>" + f.format((tree.h - tree.cb) / tree.h)
+                            + "<TD><FONT SIZE=2>" + f.format((tree.h / tree.d))
+                            + "<TD><FONT SIZE=2>" + f.format(tree.v) + "<TD><FONT SIZE=2>" + f.format(tree.out)
+                            + "<TD><FONT SIZE=2>" + f.format(tree.x) + "<TD><FONT SIZE=2>" + f.format(tree.y)
+                            + "<TD><FONT SIZE=2>" + f.format(tree.z)
+                            + "<TD><FONT SIZE=2>" + f.format(tree.c66) + "<TD><FONT SIZE=2>" + f.format(tree.c66c)
+                            + "<TD><FONT SIZE=2>" + f.format(tree.c66xy) + "<TD><FONT SIZE=2>" + f.format(tree.c66cxy)
+                            + "<TD><FONT SIZE=2>" + tree.crop
+                            + "<TD><FONT SIZE=2>" + tree.outtype
+                            + "<TD><FONT SIZE=2>" + tree.layer
+                            + "<TD><FONT SIZE=2>" + f.format(tree.si));
+            });
             int jz = -5;
             while (jz < 100) {
                 jz = jz + 5;

@@ -607,7 +607,7 @@ public class DBAccessDialog extends JDialog {
 
                 lts.saveSpecies(connection, st, ids, aufs, 0, 0);
             }
-            System.out.println("edvis auf fertig: " + ids + "  " + aufs);
+            logger.log(Level.INFO, "edvis auf fertig: {0}  {1}", new Object[]{ids, aufs});
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, null, ex);
         }

@@ -37,13 +37,10 @@ public class SIofDistrib {
         // Sort trees by diameter      
         st.sortbyd();
         double size;// = 0.0;
-        double siteindex;//=-9;
         size = st.area();
-        int n100;// =0; // number of trees of the 100 strongest
-        n100 = (int) (100 * size); // depends on the size of the stand
-        if (n100 == 0) {
-            n100 = 1; // if very small take at least on tree
-        }
+        int n100 = (int) (100 * size); // number of trees of the 100 strongest
+                                       // depends on the size of the stand
+        n100 = Math.max(n100, 1);      // if very small take at least on tree
         double gsum = 0.0; // sum of basal area
         int n = 0; // counter
         int i = 0;
@@ -51,31 +48,26 @@ public class SIofDistrib {
         // the restiction to only taking trees with site index -9 is because in SimWald
         // several different stands are generated
         {
-            if (st.tr[i].code == code && st.tr[i].si == -9 && st.tr[i].out < 0) {
+            if (st.tr[i].code == code && st.tr[i].si == -9 && st.tr[i].isLiving()) {
                 n++;
                 gsum += Math.PI * Math.pow(st.tr[i].d / 200, 2);
             }
             i++;
         } while (i < st.ntrees && n < n100);
         d100 = 200 * Math.sqrt(gsum / (Math.PI * n));  // calculate d100 of those trees 
-        int merk = 0;
-        for (i = 0; i < st.nspecies; i++) {
-            if (code == st.sp[i].code) {
-                merk = i;
-            }
-        }
+        Species species = st.speciesFor(code).orElse(st.sp[0]);
         Tree tree = new Tree();
         tree.d = d100;
-        tree.sp = st.sp[merk];
+        tree.sp = species;
         tree.sp.dg = dg;
         tree.sp.hg = hg;
         tree.age = alter;
         h100 = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
         tree = new Tree();
-        tree.sp = st.sp[merk];
+        tree.sp = species;
         tree.sp.h100 = h100;
         tree.age = alter;
-        siteindex = fi.getValueForTree(tree, st.sp[merk].spDef.siteindexXML);
+        double siteindex = fi.getValueForTree(tree, species.spDef.siteindexXML);
         // assign all trees an individual site index
         for (i = 0; i < st.ntrees; i++) {
             if (st.tr[i].si == -9 && st.tr[i].code == code) {

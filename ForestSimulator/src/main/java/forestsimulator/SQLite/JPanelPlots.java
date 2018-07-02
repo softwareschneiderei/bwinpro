@@ -248,7 +248,7 @@ public class JPanelPlots extends JPanel {
             filenameLabel.setText(dir.getCanonicalPath());
             setVisible(true);
 //           nBestaende=loadBestaende();
-        } catch (Exception eio) {
+        } catch (IOException eio) {
             System.out.println(eio);
         }
     }//GEN-LAST:event_changeDatabaseButtonActionPerformed
