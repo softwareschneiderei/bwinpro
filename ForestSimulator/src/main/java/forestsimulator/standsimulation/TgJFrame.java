@@ -347,12 +347,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 if (st.ntrees == 0) {
                     dataex.readOldFormat3(st, pa);
                 }
-                if (st.getSpeciesDefinedTrue() == false) {
-                    String text = st.getSpeciesUndefinedCode();
-                    showUndefinedSpeciesMessage(text);
-                    st.ntrees = 0;
-                    st.nspecies = 0;
-                }
+                checkForUndefinedSpecies();
                 st.sortbyd();
                 st.missingData();
                 st.descspecies();
@@ -385,22 +380,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 String dn = fc.getSelectedFile().getName();
                 Model mo = new Model();
                 st.setModelRegion(mo.getPlugInName(plugIn));
-                TreegrossXML2 treegrossXML2 = new TreegrossXML2();
-                URL url = null;
-                try {
-                    url = pa.toURI().toURL();
-                    st = treegrossXML2.readTreegrossStand(st, url);
-                } catch (MalformedURLException e2) {
-                    LOGGER.info(e2.toString());
-                }
-                LOGGER.log(Level.INFO, "File eingelesen:{0}", pa);
+                readStandFromXML(pa);
 
-                if (st.getSpeciesDefinedTrue() == false) {
-                    String text = st.getSpeciesUndefinedCode();
-                    showUndefinedSpeciesMessage(text);
-                    st.ntrees = 0;
-                    st.nspecies = 0;
-                }
+                checkForUndefinedSpecies();
                 st.sortbyd();
 // Test for grouping                       
 //                       Groups groups = new Groups(st);
@@ -836,6 +818,26 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             String pa = fc.getSelectedFile().getPath();
             gr.setJPGFilename(pa);
             gr.saveToJPEG(workingDir.getAbsolutePath());
+        }
+    }
+
+    private void readStandFromXML(File pa) {
+        TreegrossXML2 treegrossXML2 = new TreegrossXML2();
+        try {
+            URL url = pa.toURI().toURL();
+            st = treegrossXML2.readTreegrossStand(st, url);
+        } catch (MalformedURLException e2) {
+            LOGGER.info(e2.toString());
+        }
+        LOGGER.log(Level.INFO, "File eingelesen:{0}", pa);
+    }
+
+    private void checkForUndefinedSpecies() throws HeadlessException {
+        if (!st.getSpeciesDefinedTrue()) {
+            String text = st.getSpeciesUndefinedCode();
+            showUndefinedSpeciesMessage(text);
+            st.ntrees = 0;
+            st.nspecies = 0;
         }
     }
 

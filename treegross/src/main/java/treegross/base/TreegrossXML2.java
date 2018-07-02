@@ -46,12 +46,6 @@ public class TreegrossXML2 {
     private final static Logger LOGGER = Logger.getLogger(TreegrossXML2.class.getName());
 
     /**
-     * Creates a new instance of TreegrossXML2
-     */
-    public TreegrossXML2() {
-    }
-
-    /**
      * Creates an Treegross xml
      *
      * @param st
@@ -189,10 +183,10 @@ public class TreegrossXML2 {
         }
     }
 
-    public treegross.base.Stand readTreegrossStand(treegross.base.Stand stl, URL url) {
+    public Stand readTreegrossStand(Stand stand, URL url) {
         try {
             URLConnection urlcon = url.openConnection();
-            return this.readTreegrossStandFromStream(stl, urlcon.getInputStream());
+            return readTreegrossStandFromStream(stand, urlcon.getInputStream());
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "", e);
         }
@@ -207,13 +201,10 @@ public class TreegrossXML2 {
      * @return TreeGrOSS Stand
      */
     public Stand readTreegrossStandFromStream(Stand stl, InputStream iss) {
-        Stand st;
-        st = stl;
+        Stand st = stl;
         try {
             SAXBuilder builder = new SAXBuilder();
-            //URLConnection urlcon = url.openConnection();
             Document doc = builder.build(iss);
-            //DocType docType = doc.getDocType();     
             Element bestand = doc.getRootElement();
             st.id = bestand.getChild("Id").getText();
             st.setName(bestand.getChild("Kennung").getText());
@@ -231,19 +222,11 @@ public class TreegrossXML2 {
             st.wuchsbezirk = bestand.getChild("Wuchsbezirk").getText();
             st.standortsKennziffer = bestand.getChild("Standortskennziffer").getText();
 
-            st.ncpnt = 0;
-            st.ntrees = 0;
-            st.nspecies = 0;
+            st.clear();
             st.center.no = "undefined";
 
-            List eckpunkte = bestand.getChildren("Eckpunkt");
-
-            Iterator i = eckpunkte.iterator();
-
-            int count_ep = 0;
-            while (i.hasNext()) {
-                Element eckpunkt = (Element) i.next();
-                count_ep++;
+            List<Element> eckpunkte = bestand.getChildren("Eckpunkt");
+            for (Element eckpunkt : eckpunkte) {
                 String nrx = eckpunkt.getChild("Nr").getText();
                 if (nrx.contains("circle") || nrx.contains("polygon")) {
                     st.center.no = nrx;
@@ -258,7 +241,7 @@ public class TreegrossXML2 {
                 }
             }
 //       if no corner point wa stored in xml create square with size equal to stand size
-            if (count_ep == 0) {
+            if (eckpunkte.isEmpty()) {
                 double length = Math.sqrt(st.size * 10000);
                 System.out.println("no corner points sotred in xml. adding sqare coordinates (length=" + length + ")");
                 st.addcornerpoint("polygon_1", 0, 0, 0);
@@ -267,13 +250,10 @@ public class TreegrossXML2 {
                 st.addcornerpoint("polygon_4", length, 0, 0);
             }
 
-            List baeume = bestand.getChildren("Baum");
-            i = baeume.iterator();
-            while (i.hasNext()) {
-                Element baum = (Element) i.next();
-                int out;// = -1 ;
+            List<Element> baeume = bestand.getChildren("Baum");
+            for (Element baum : baeume) {
                 //if (Boolean.parseBoolean(baum.getChild("Entnommen").getText())==false) // wenn so dann muss hier flase nuss hier mit true abgeglichen werden
-                out = Integer.parseInt(baum.getChild("AusscheideJahr").getText());
+                int out = Integer.parseInt(baum.getChild("AusscheideJahr").getText());
                 try {
                     st.addXMLTree(Integer.parseInt(baum.getChild("BaumartcodeLokal").getText()),
                             baum.getChild("Kennung").getText(),

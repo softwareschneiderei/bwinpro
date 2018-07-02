@@ -1622,8 +1622,8 @@ public class Stand {
      * @return true is the species is defined
      */
     public boolean getSpeciesDefinedTrue() {
-        for (int i = 0; i < nspecies; i++) {
-            if (sp[i].spDef.defined == false) {
+        for (Species species : species()) {
+            if (!species.spDef.defined) {
                 return false;
             }
         }
