@@ -22,28 +22,30 @@ import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.XMLOutputter;
 import org.jdom.input.*;
-import org.jdom.DocType;
 import java.net.*;
 import java.text.*;
 import java.io.*;
 import java.util.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JDialog;
+import org.jdom.JDOMException;
 import treegross.base.thinning.HeightBasedThinning;
+import treegross.base.thinning.ThinningDefinitions;
 
 
 /**
  *
  * @author  nagel
  */
-public class TgSpeciesManXML extends javax.swing.JDialog {
+public class TgSpeciesManXML extends JDialog {
     
     SpeciesDef spd[] = new SpeciesDef[100];
     int nspd = 0;
     static Element rootElt;
-    javax.swing.DefaultListModel listModel = new javax.swing.DefaultListModel();
+    DefaultListModel listModel = new DefaultListModel();
     String urlname = null;
 
     
-    /** Creates new form TgSpeciesManXML */
     public TgSpeciesManXML(Frame parent, boolean modal, String workdir, String fn) {
         super(parent, modal);
         initComponents();
@@ -468,7 +470,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         spd[m].cropTreeNumber = getInt((String) jTable1.getValueAt(37,1));
         spd[m].targetDiameter = getDouble((String) jTable1.getValueAt(27,1));
         spd[m].heightOfThinningStart = getDouble((String) jTable1.getValueAt(28,1));
-        spd[m].moderateThinning = new HeightBasedThinning((String) jTable1.getValueAt(29,1));
+        spd[m].dynamicThinning = extractDynamicThinning((String) jTable1.getValueAt(29,1));
         spd[m].colorXML = (String) jTable1.getValueAt(30,1);
         spd[m].competitionXML = (String) jTable1.getValueAt(31,1);
         spd[m].taperFunctionXML = (String) jTable1.getValueAt(32,1);
@@ -477,7 +479,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         spd[m].fineRootBiomass = (String) jTable1.getValueAt(35,1);
         spd[m].totalRootBiomass = (String) jTable1.getValueAt(36,1);
     }
-    
+
     private int getInt(String s) {
         int i = -9;
         try {
@@ -517,15 +519,9 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
 
             Document doc = builder.build(urlcon.getInputStream());
 
-            DocType docType = doc.getDocType();
-//
-
             Element sortimente = doc.getRootElement();
-            List Sortiment = sortimente.getChildren("SpeciesDefinition");
-            Iterator i = Sortiment.iterator();
-
-            while (i.hasNext()) {
-                Element sortiment = (Element) i.next();
+            List<Element> Sortiment = sortimente.getChildren("SpeciesDefinition");
+            for (Element sortiment : Sortiment) {
                 spd[nspd] = new SpeciesDef();
                 spd[nspd].code = Integer.parseInt(sortiment.getChild("Code").getText());
                 spd[nspd].internalCode = Integer.parseInt(sortiment.getChild("InternalCode").getText());
@@ -564,7 +560,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
                 spd[nspd].decayXML = sdm.initTGFunction(sortiment.getChild("Decay").getText());
                 spd[nspd].targetDiameter = Double.parseDouble(sortiment.getChild("TargetDiameter").getText());
                 spd[nspd].heightOfThinningStart = Double.parseDouble(sortiment.getChild("HeightOfThinningStart").getText());
-                spd[nspd].moderateThinning = new HeightBasedThinning(sortiment.getChild("ModerateThinning").getText());
+                spd[nspd].dynamicThinning = extractDynamicThinning(sortiment.getChild("ModerateThinning").getText());
                 spd[nspd].colorXML = sortiment.getChild("Color").getText();
                 spd[nspd].competitionXML = sortiment.getChild("Competition").getText();
                 spd[nspd].taperFunctionXML = sortiment.getChild("TaperFunction").getText();
@@ -582,11 +578,8 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
             }
 
             Element einstellung = doc.getRootElement();
-            List einstellungen = einstellung.getChildren("GeneralSettings");
-            Iterator k = einstellungen.iterator();
-
-            while (k.hasNext()) {
-                Element eingestellt = (Element) k.next();
+            List<Element> einstellungen = einstellung.getChildren("GeneralSettings");
+            for (Element eingestellt : einstellungen) {
                 modelRegionTextField.setText(eingestellt.getChild("ModelRegion").getText());
                 randomnessCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("ErrorComponent").getText()));
                 ingrowthCheckBox.setSelected(Boolean.parseBoolean(eingestellt.getChild("IngrowthModul").getText()));
@@ -640,10 +633,20 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
                 }
                 break;
             }
-        } catch (Exception e) {
+        } catch (IOException | NumberFormatException | JDOMException e) {
             e.printStackTrace();
         }
         renewList();
+    }
+    
+    // TODO: add thinning definitions for type and intensity
+    private static HeightBasedThinning extractDynamicThinning(String moderateThinningDefinition) {
+        return new HeightBasedThinning(
+                new ThinningDefinitions(
+                        moderateThinningDefinition,
+                        "",
+                        ""
+                ));
     }
     
     private void saveXMLFile(){
@@ -709,7 +712,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
             elt = addString(elt, "Decay",spd[i].decayXML.toString());
             elt = addString(elt, "TargetDiameter", Double.toString(spd[i].targetDiameter));
             elt = addString(elt, "HeightOfThinningStart", Double.toString(spd[i].heightOfThinningStart));
-            elt = addString(elt, "ModerateThinning", spd[i].moderateThinning.definition());
+            elt = addString(elt, "ModerateThinning", spd[i].dynamicThinning.moderateThinningDefinition());
             elt = addString(elt, "Color",spd[i].colorXML);
             elt = addString(elt, "Competition",spd[i].competitionXML);
             elt = addString(elt, "TaperFunction",spd[i].taperFunctionXML);
@@ -805,7 +808,7 @@ private void timeStepTextFieldActionPerformed(java.awt.event.ActionEvent evt) {/
         jTable1.setValueAt(spd[m].decayXML,26,1);
         jTable1.setValueAt(Double.toString(spd[m].targetDiameter),27,1);
         jTable1.setValueAt(Double.toString(spd[m].heightOfThinningStart),28,1);
-        jTable1.setValueAt(spd[m].moderateThinning,29,1);
+        jTable1.setValueAt(spd[m].dynamicThinning,29,1);
         jTable1.setValueAt(spd[m].colorXML,30,1);
         jTable1.setValueAt(spd[m].competitionXML,31,1);
         jTable1.setValueAt(spd[m].taperFunctionXML,32,1);

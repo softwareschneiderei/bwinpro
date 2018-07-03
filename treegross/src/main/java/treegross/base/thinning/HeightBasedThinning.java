@@ -5,16 +5,16 @@ import java.util.Optional;
 import treegross.base.Species;
 import treegross.base.Tree;
 
-public class HeightBasedThinning implements ModerateThinning {
+public class HeightBasedThinning implements DynamicThinning {
 
-    private final String thinningDefinition;
+    private final ThinningDefinitions thinningDefinition;
     private final List<ThinningFactorRange> ranges;
 
-    public HeightBasedThinning(String thinningDefinition) {
-        this(thinningDefinition, new ThinningDefinitionParser().parseDefinition(thinningDefinition));
+    public HeightBasedThinning(ThinningDefinitions thinningDefinition) {
+        this(thinningDefinition, new ThinningDefinitionParser().parseDefinition(thinningDefinition.moderateThinning));
     }
     
-    public HeightBasedThinning(String thinningDefinition, List<ThinningFactorRange> ranges) {
+    public HeightBasedThinning(ThinningDefinitions thinningDefinition, List<ThinningFactorRange> ranges) {
         super();
         this.thinningDefinition = thinningDefinition;
         this.ranges = ranges;
@@ -37,8 +37,8 @@ public class HeightBasedThinning implements ModerateThinning {
     }
 
     @Override
-    public String definition() {
-        return thinningDefinition;
+    public String moderateThinningDefinition() {
+        return thinningDefinition.moderateThinning;
     }
     
     protected double startReducingAHeight() throws NumberFormatException {

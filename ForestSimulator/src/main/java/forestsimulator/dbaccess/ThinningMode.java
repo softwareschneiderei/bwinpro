@@ -3,18 +3,20 @@ package forestsimulator.dbaccess;
 import java.util.NoSuchElementException;
 import treegross.base.thinning.AgeBasedThinning;
 import treegross.base.thinning.HeightBasedThinning;
-import treegross.base.thinning.ModerateThinning;
+import treegross.base.thinning.ThinningType;
+import treegross.base.thinning.DynamicThinning;
+import treegross.base.thinning.ThinningDefinitions;
 
 public enum ThinningMode {
     AGE("age") {
         @Override
-        protected ModerateThinning moderateThinning(String definition) {
+        protected DynamicThinning dynamicThinning(ThinningDefinitions definition) {
             return new AgeBasedThinning(definition);
         }
     },
     HEIGHT("height") {
         @Override
-        protected ModerateThinning moderateThinning(String definition) {
+        protected DynamicThinning dynamicThinning(ThinningDefinitions definition) {
             return new HeightBasedThinning(definition);
         }
     };
@@ -25,14 +27,15 @@ public enum ThinningMode {
         this.name = name;
     }
     
-    public static ModerateThinning forName(String name, String definition) {
+    public static DynamicThinning forName(String name, ThinningDefinitions definitions) {
         for (ThinningMode mode : values()) {
             if (mode.name.equals(name)) {
-                return mode.moderateThinning(definition);
+                return mode.dynamicThinning(definitions);
             }
         }
         throw new NoSuchElementException("No moderate thinning found for name " + name);
     }
 
-    protected abstract ModerateThinning moderateThinning(String definition);
+    protected abstract DynamicThinning dynamicThinning(ThinningDefinitions definitions);
+    
 }

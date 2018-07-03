@@ -9,7 +9,7 @@ import treegross.base.Tree;
 
 public class HeightBasedThinningTest {
     
-    private static final String UNUSED = "";
+    private static final ThinningDefinitions UNUSED = new ThinningDefinitions("", "", "");
 
     /*
      * #Pinning

@@ -5,8 +5,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 import treegross.base.thinning.HeightBasedThinning;
-import treegross.base.thinning.ModerateThinning;
 import treegross.base.thinning.ThinningFactorRange;
+import treegross.base.thinning.DynamicThinning;
+import treegross.base.thinning.ThinningDefinitions;
 
 public class TreeTest {
     
@@ -33,8 +34,8 @@ public class TreeTest {
     private static Tree treeWithThinning(final double... thinningDefinition) {
         return new Tree() {
             @Override
-            protected ModerateThinning moderateThinning() {
-                return new HeightBasedThinning("", rangesFor(thinningDefinition));
+            protected DynamicThinning dynamicThinning() {
+                return new HeightBasedThinning(new ThinningDefinitions("", "", ""), rangesFor(thinningDefinition));
             }
         };
     }

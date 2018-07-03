@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
+import treegross.base.thinning.ThinningDefinitions;
 import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 
@@ -46,9 +47,9 @@ public class LoadTreegrossStand {
                 while (rs.next()) {
                     double xp = rs.getDouble("x");
                     double yp = rs.getDouble("y");
-                    String nox = rs.getString("nr").trim();
-                    if (nox.contains("ECK")) {
-                        stand.addcornerpoint(nox, xp, yp, 0.0);
+                    String no = rs.getString("nr").trim();
+                    if (no.contains("ECK")) {
+                        stand.addcornerpoint(no, xp, yp, 0.0);
                         stand.center.no = "polygon";
                     }
                 }
@@ -276,7 +277,12 @@ public class LoadTreegrossStand {
 
     public void loadScenario(Connection dbconn, Stand st, int scenarioNo) {
         StopWatch loadScenario = new StopWatch("Load scenario").start();
-        int scenarioSpeciesIndex = 0;
+        int scenarioSpeciesIndex = loadScenarioSettings(dbconn, scenarioNo, st);
+        loadScenarioSpecies(dbconn, scenarioSpeciesIndex, st);
+        loadScenario.printElapsedTime();
+    }
+
+    private int loadScenarioSettings(Connection dbconn, int scenarioNo, Stand st) {
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Szenario where (SzenarioNr = ?)")) {
             stmt.setInt(1, scenarioNo);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -297,11 +303,8 @@ public class LoadTreegrossStand {
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");
                     double hvVolMax = rs.getDouble("HarvestVolumeMax");
                     double hvFinalCut = rs.getDouble("HarvestFinalCut");
-                    Object hvp = rs.getObject("HarvestProcess");
-                    String hvProcess = "";
-                    if (hvp != null) {
-                        hvProcess = hvp.toString();
-                    }
+                    String hvp = rs.getString("HarvestProcess");
+                    String hvProcess = hvp == null ? "" : hvp;
                     st.trule.setHarvestRegime(hvType, hvVolMin, hvVolMax, hvFinalCut, hvProcess);
                     // Set nature conversation
                     int haType = rs.getInt("HabitatType");
@@ -314,19 +317,20 @@ public class LoadTreegrossStand {
                     boolean pl = rs.getBoolean("Planting");
                     boolean plRemove = rs.getBoolean("PlantingRemoveAll");
                     double plStart = rs.getDouble("PlantingStart");
-                    Object pls = rs.getObject("PlantSpecies");
-                    String plSpecies = "";
-                    if (pls != null) {
-                        plSpecies = pls.toString();
-                    }
-                    scenarioSpeciesIndex = rs.getInt("SzenarioArtIndex");
+                    String pls = rs.getString("PlantSpecies");
+                    String plSpecies = pls == null ? "" : pls;
                     st.trule.setAutoPlanting(pl, plRemove, plStart, plSpecies);
+                    return rs.getInt("SzenarioArtIndex");
                 }
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not load scenario from database", e);
         }
-        try (PreparedStatement stmt = dbconn.prepareStatement("select * from SzenarioArt where (SzenarioArtIndex = ?)")) {
+        return 0;
+    }
+
+    private void loadScenarioSpecies(Connection connection, int scenarioSpeciesIndex, Stand st) {
+        try (PreparedStatement stmt = connection.prepareStatement("select * from SzenarioArt where (SzenarioArtIndex = ?)")) {
             StopWatch scenarioArt = new StopWatch("Scenario art").start();
             stmt.setInt(1, scenarioSpeciesIndex);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -335,13 +339,16 @@ public class LoadTreegrossStand {
                     int target = rs.getInt("targetDBH");
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
-                    String moderateThinning = rs.getString("ModerateThinning");
+                    ThinningDefinitions thinning = new ThinningDefinitions(
+                            rs.getString("ModerateThinning"),
+                            rs.getString("ThinningType"),
+                            rs.getString("ThinningIntensity"));
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.spDef.moderateThinning = ThinningMode.forName(determineThinningMode(rs), moderateThinning);
+                        species.spDef.dynamicThinning = ThinningMode.forName(determineThinningMode(rs), thinning);
                     });
                 }
             }
@@ -349,7 +356,6 @@ public class LoadTreegrossStand {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not load species scenario from database", e);
         }
-        loadScenario.printElapsedTime();
     }
 
     private String determineThinningMode(final ResultSet rs) {

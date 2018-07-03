@@ -5,19 +5,22 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import treegross.base.thinning.AgeBasedThinning;
 import treegross.base.thinning.HeightBasedThinning;
+import treegross.base.thinning.ThinningDefinitions;
 
 public class ThinningModeTest {
-    private static final String definition = "1/0.5/2";
+    private static final ThinningDefinitions definition = new ThinningDefinitions("1/0.5/2", "", "");
     
     /*
      * #Requirement http://issuetracker.intranet:20002/browse/BWIN-52
+     *
+     * #Adjusted
     */
     @Test
     public void thinningModeReturnsCorrectModerateThinningForName() {
         assertThat(ThinningMode.forName("age", definition)).isInstanceOf(AgeBasedThinning.class)
-                .returns(definition, thinning -> thinning.definition());
+                .returns(definition.moderateThinning, thinning -> thinning.moderateThinningDefinition());
         assertThat(ThinningMode.forName("height", definition)).isInstanceOf(HeightBasedThinning.class)
-                .returns(definition, thinning -> thinning.definition());
+                .returns(definition.moderateThinning, thinning -> thinning.moderateThinningDefinition());
     }
     
     @Test

@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import treegross.base.Species;
 import treegross.base.Tree;
-import static treegross.base.thinning.ModerateThinning.defaultThinningFactor;
+import static treegross.base.thinning.DynamicThinning.defaultThinningFactor;
 
-public class AgeBasedThinning implements ModerateThinning {
+public class AgeBasedThinning implements DynamicThinning {
 
-    private final String thinningDefinition;
-    private final List<ThinningFactorRange> ranges;
+    private final ThinningDefinitions thinningDefinition;
+    private final List<ThinningFactorRange> moderateThinningRange;
 
-    public AgeBasedThinning(String thinningDefinition) {
+    public AgeBasedThinning(ThinningDefinitions thinningDefinition) {
         this.thinningDefinition = thinningDefinition;
-        ranges = new ThinningDefinitionParser().parseDefinition(thinningDefinition);
+        moderateThinningRange = new ThinningDefinitionParser().parseDefinition(thinningDefinition.moderateThinning);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class AgeBasedThinning implements ModerateThinning {
 
     private Optional<Double> firstFactorFoundFor(Tree tree) {
         // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
-        return ranges.stream()
+        return moderateThinningRange.stream()
                 .map(range -> range.factorFor(tree.age))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
@@ -31,11 +31,11 @@ public class AgeBasedThinning implements ModerateThinning {
     @Override
     public boolean shouldReduce(Species species) {
         // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
-        return species.h100age >= ranges.get(0).end;
+        return species.h100age >= moderateThinningRange.get(0).end;
     }
 
     @Override
-    public String definition() {
-        return thinningDefinition;
+    public String moderateThinningDefinition() {
+        return thinningDefinition.moderateThinning;
     }
 }

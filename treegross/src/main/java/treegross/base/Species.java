@@ -46,9 +46,13 @@ public class Species implements Cloneable {
      */
     public double vhaout, ghaout, nhaout;
     /**
-     * percentage of basal area, of crown surface of living trees
+     * percentage of basal area
      */
-    public double percBA, percCSA;
+    public double percBA;
+    /**
+     * percentage of crown surface of living trees
+     */
+    public double percCSA;
     /**
      * standsize [ha]
      */

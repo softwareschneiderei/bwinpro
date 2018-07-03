@@ -18,8 +18,8 @@ package treegross.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import treegross.base.thinning.ModerateThinning;
 import treegross.random.RandomNumber;
+import treegross.base.thinning.DynamicThinning;
 
 /**
  * TreeGrOSS : class tree defines the trees for class stand
@@ -453,11 +453,11 @@ public class Tree implements Cloneable {
      * @return the moderate thinning fctor
      */
     public double getModerateThinningFactor() {
-        return moderateThinning().thinningFactorFor(this);
+        return dynamicThinning().thinningFactorFor(this);
     }
 
-    protected ModerateThinning moderateThinning() {
-        return sp.spDef.moderateThinning;
+    protected DynamicThinning dynamicThinning() {
+        return sp.spDef.dynamicThinning;
     }
 
     public void setMissingData() {

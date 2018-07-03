@@ -16,7 +16,7 @@
  */
 package treegross.base;
 
-import treegross.base.thinning.ModerateThinning;
+import treegross.base.thinning.DynamicThinning;
 
 public class SpeciesDef implements Comparable, Cloneable {
 
@@ -39,7 +39,7 @@ public class SpeciesDef implements Comparable, Cloneable {
     public String modelRegion = "default";
     public double diameterIncrementError = 0.0;
     public double heightIncrementError = 0.0;
-    public ModerateThinning moderateThinning;
+    public DynamicThinning dynamicThinning;
     public String colorXML = "100,200,300";
     public String competitionXML = "";
     public String ingrowthXML = "";
@@ -97,7 +97,7 @@ public class SpeciesDef implements Comparable, Cloneable {
         clone.stemVolumeFunctionXML = this.stemVolumeFunctionXML;
         clone.diameterIncrementError = this.diameterIncrementError;
         clone.heightIncrementError = this.heightIncrementError;
-        clone.moderateThinning = this.moderateThinning;
+        clone.dynamicThinning = this.dynamicThinning;
         clone.colorXML = this.colorXML;
         clone.competitionXML = this.competitionXML;
         clone.ingrowthXML = this.ingrowthXML;
