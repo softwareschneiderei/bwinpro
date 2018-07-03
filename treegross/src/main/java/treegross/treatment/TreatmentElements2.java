@@ -885,21 +885,12 @@ public class TreatmentElements2 {
                 }
             }
 // find crop with most competition, defined as that tree with greates ratio of
-// actual c66xy devided by maximum c66
+// actual c66xy divided by maximum c66
             int indexOfCroptree = -9;
             double maxCompetition = -99999.9;
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    // calculate maxc66
-                    double maxBasalArea = st.tr[i].calculateMaxBasalArea() * st.tr[i].getModerateThinningFactor();
-                    if (st.trule.thinningIntensity == 0.0) {
-                        maxBasalArea = maxBasalArea * 100.0;
-                    } else {
-                        maxBasalArea = maxBasalArea * (2.0 - st.trule.thinningIntensity);
-                    }
-                    double maxN = maxBasalArea / (Math.PI * Math.pow((st.tr[i].d / 200.0), 2.0));
-                    double maxC66 = maxN * Math.PI * Math.pow((st.tr[i].cw / 2.0), 2.0) / 10000.0;
-                    double c66Ratio = st.tr[i].c66xy / maxC66;
+                    double c66Ratio = calculateC66Ratio(st, i);
                     // remember tree if c66Ratio is greater than maxCompetition
                     if (c66Ratio > maxCompetition) {
                         indexOfCroptree = i;
@@ -949,6 +940,19 @@ public class TreatmentElements2 {
             }
         } //stop if max thinning amount is reached or all competitors are taken out
         while (thinned < vmaxthinning && continueThinning);
+    }
+
+    private double calculateC66Ratio(Stand st, int i) {
+        // calculate maxc66
+        double maxBasalArea = st.tr[i].calculateMaxBasalArea() * st.tr[i].getModerateThinningFactor();
+        if (st.trule.thinningIntensity == 0.0) {
+            maxBasalArea = maxBasalArea * 100.0;
+        } else {
+            maxBasalArea = maxBasalArea * (2.0 - st.trule.thinningIntensity);
+        }
+        double maxN = maxBasalArea / (Math.PI * Math.pow((st.tr[i].d / 200.0), 2.0));
+        double maxC66 = maxN * Math.PI * Math.pow((st.tr[i].cw / 2.0), 2.0) / 10000.0;
+        return st.tr[i].c66xy / maxC66;
     }
 
     
@@ -1023,15 +1027,7 @@ public class TreatmentElements2 {
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].isLiving() && st.tr[i].crop) {
 // calculate maxc66
-                        double maxBasalArea = st.tr[i].calculateMaxBasalArea() * st.tr[i].getModerateThinningFactor();
-                        if (st.trule.thinningIntensity == 0.0) {
-                            maxBasalArea = maxBasalArea * 100.0;
-                        } else {
-                            maxBasalArea = maxBasalArea * (2.0 - st.trule.thinningIntensity);
-                        }
-                        double maxN = maxBasalArea / (Math.PI * Math.pow((st.tr[i].d / 200.0), 2.0));
-                        double maxC66 = maxN * Math.PI * Math.pow((st.tr[i].cw / 2.0), 2.0) / 10000.0;
-                        double c66Ratio = st.tr[i].c66xy / maxC66;
+                        double c66Ratio = calculateC66Ratio(st, i);
 // remember tree if c66Ratio is greater than maxCompetition
                         if (c66Ratio > maxCompetition) {
                             indexOfCroptree = i;
@@ -1162,15 +1158,7 @@ public class TreatmentElements2 {
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
 // calculate maxc66
-                        double maxBasalArea = st.tr[i].calculateMaxBasalArea() * st.tr[i].getModerateThinningFactor();
-                        if (st.trule.thinningIntensity == 0.0) {
-                            maxBasalArea = maxBasalArea * 100.0;
-                        } else {
-                            maxBasalArea = maxBasalArea * (2.0 - st.trule.thinningIntensity);
-                        }
-                        double maxN = maxBasalArea / (Math.PI * Math.pow((st.tr[i].d / 200.0), 2.0));
-                        double maxC66 = maxN * Math.PI * Math.pow((st.tr[i].cw / 2.0), 2.0) / 10000.0;
-                        double c66Ratio = st.tr[i].c66xy / maxC66;
+                        double c66Ratio = calculateC66Ratio(st, i);
 // remember tree if c66Ratio is greater than maxCompetition
                         if (c66Ratio > maxCompetition) {
                             indexOfCroptree = i;
