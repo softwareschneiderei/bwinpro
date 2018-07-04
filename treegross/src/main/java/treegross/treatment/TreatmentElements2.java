@@ -859,8 +859,9 @@ public class TreatmentElements2 {
             int indexOfCroptree = -9;
             double maxCompetition = -99999.9;
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningIntensity);
+                Tree tree = st.tr[i];
+                if (tree.isLiving() && tree.crop) {
+                    double c66Ratio = calculateC66Ratio(tree, tree.sp.spDef.dynamicThinning.intensityFor(tree));
                     // remember tree if c66Ratio is greater than maxCompetition
                     if (c66Ratio > maxCompetition) {
                         indexOfCroptree = i;
@@ -874,25 +875,7 @@ public class TreatmentElements2 {
 //
 // Find neighbor who comes closest
             if (indexOfCroptree >= 0) {
-                double dist = 9999.0;
-                int merk = -9;
-                Tree cropTree = st.tr[indexOfCroptree];
-                double h66 = cropTree.cb;
-                for (int i = 0; i < cropTree.nNeighbor; i++) {
-                    Tree neighbor = st.tr[cropTree.neighbor[i]];
-                    if (neighbor.d > 7
-                            && neighbor.isLiving()
-                            && (st.trule.cutCompetingCropTrees || neighbor.crop == false)
-                            && neighbor.habitat == false) {
-                        double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
-                        double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
-                                + Math.pow(cropTree.y - neighbor.y, 2.0));
-                        if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                            merk = cropTree.neighbor[i];
-                            dist = ent - radius;
-                        }
-                    }
-                }
+                int merk = findClosestNeighbor2(st, indexOfCroptree, intensity);
                 // if merk > 9 then cut tree else stop crop tree release
                 if (merk == -9) {
                     continueThinning = false;
@@ -999,9 +982,10 @@ public class TreatmentElements2 {
                 int indexOfCroptree = -9;
                 double maxCompetition = -99999.9;
                 for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
+                    Tree tree = st.tr[i];
+                    if (tree.isLiving() && tree.tempcrop) {
 // calculate maxc66
-                        double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningIntensity);
+                        double c66Ratio = calculateC66Ratio(tree, tree.sp.spDef.dynamicThinning.intensityFor(tree));
 // remember tree if c66Ratio is greater than maxCompetition
                         if (c66Ratio > maxCompetition) {
                             indexOfCroptree = i;
@@ -1017,23 +1001,8 @@ public class TreatmentElements2 {
                 if (indexOfCroptree < 0) {
                     continueThinning = false;
                 } else {
-                    double dist = 9999.0;
-                    int merk = -9;
-                    double h66 = st.tr[indexOfCroptree].cb;
-                    for (int i = 0; i < st.tr[indexOfCroptree].nNeighbor; i++) {
-                        if (st.tr[st.tr[indexOfCroptree].neighbor[i]].d < 7
-                                && st.tr[st.tr[indexOfCroptree].neighbor[i]].out < 0
-                                && (st.trule.cutCompetingCropTrees || st.tr[st.tr[indexOfCroptree].neighbor[i]].tempcrop == false)
-                                && !st.tr[st.tr[indexOfCroptree].neighbor[i]].habitat) {
-                            double radius = st.tr[st.tr[indexOfCroptree].neighbor[i]].calculateCwAtHeight(h66) / 2.0;
-                            double ent = Math.sqrt(Math.pow(st.tr[indexOfCroptree].x - st.tr[st.tr[indexOfCroptree].neighbor[i]].x, 2.0)
-                                    + Math.pow(st.tr[indexOfCroptree].y - st.tr[st.tr[indexOfCroptree].neighbor[i]].y, 2.0));
-                            if ((ent - radius < st.tr[indexOfCroptree].cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                                merk = st.tr[indexOfCroptree].neighbor[i];
-                                dist = ent - radius;
-                            }
-                        }
-                    }
+                    
+                    int merk = findClosestNeighbor(st, indexOfCroptree, intensity);
 // if merk > 9 then cut tree else stop crop tree release                    
                     if (merk == -9) {
                         continueThinning = false;
@@ -1051,6 +1020,54 @@ public class TreatmentElements2 {
             } //stop if max thinning amount is reached or all competitors are taken out
             while (thinned < vmaxthinning && continueThinning);
         }
+    }
+
+    private int findClosestNeighbor2(Stand st, int indexOfCroptree, double intensity) {
+        int merk = -9;
+        double dist = 9999.0;
+        Tree cropTree = st.tr[indexOfCroptree];
+        double h66 = cropTree.cb;
+        for (int i = 0; i < cropTree.nNeighbor; i++) {
+            Tree neighbor = st.tr[cropTree.neighbor[i]];
+            if (neighbor.d > 7
+                    && neighbor.isLiving()
+                    && (st.trule.cutCompetingCropTrees || neighbor.crop == false)
+                    && !neighbor.habitat) {
+                double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
+                double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
+                        + Math.pow(cropTree.y - neighbor.y, 2.0));
+                // TODO: take intensity of neighbor-species or cropTree-species!
+                if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
+                    merk = cropTree.neighbor[i];
+                    dist = ent - radius;
+                }
+            }
+        }
+        return merk;
+    }
+
+    private int findClosestNeighbor(Stand st, int indexOfCroptree, double intensity) {
+        int merk = -9;
+        double dist = 9999.0;
+        Tree cropTree = st.tr[indexOfCroptree];
+        double h66 = cropTree.cb;
+        for (int i = 0; i < cropTree.nNeighbor; i++) {
+            Tree neighbor = st.tr[cropTree.neighbor[i]];
+            if (neighbor.d < 7
+                    && neighbor.isLiving()
+                    && (st.trule.cutCompetingCropTrees || neighbor.tempcrop == false)
+                    && !neighbor.habitat) {
+                double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
+                double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
+                        + Math.pow(cropTree.y - neighbor.y, 2.0));
+                // TODO: take intensity of neighbor-species or cropTree-species!
+                if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
+                    merk = cropTree.neighbor[i];
+                    dist = ent - radius;
+                }
+            }
+        }
+        return merk;
     }
 
     public void thinCompetitionFromAbove(Stand st) {
@@ -1183,6 +1200,7 @@ public class TreatmentElements2 {
         // calculate maxc66
         double maxBasalArea = tree.calculateMaxBasalArea() * tree.getModerateThinningFactor();
         if (thinningIntensity == 0.0) {
+            // TODO: why times 100.0 here?
             maxBasalArea = maxBasalArea * 100.0;
         } else {
             maxBasalArea = maxBasalArea * (2.0 - thinningIntensity);

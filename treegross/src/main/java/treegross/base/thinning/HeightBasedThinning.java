@@ -8,24 +8,26 @@ import treegross.base.Tree;
 public class HeightBasedThinning implements DynamicThinning {
 
     private final ThinningDefinitions thinningDefinition;
-    private final List<ThinningFactorRange> ranges;
+    private final List<ThinningFactorRange> moderateThinningRanges;
+    private final List<ThinningFactorRange> intensityRanges;
 
     public HeightBasedThinning(ThinningDefinitions thinningDefinition) {
         this(thinningDefinition, new ThinningDefinitionParser().parseDefinition(thinningDefinition.moderateThinning));
     }
     
-    public HeightBasedThinning(ThinningDefinitions thinningDefinition, List<ThinningFactorRange> ranges) {
+    public HeightBasedThinning(ThinningDefinitions thinningDefinition, List<ThinningFactorRange> moderateThinningRanges) {
         super();
         this.thinningDefinition = thinningDefinition;
-        this.ranges = ranges;
+        this.moderateThinningRanges = moderateThinningRanges;
+        this.intensityRanges = new ThinningDefinitionParser().parseDefinition(thinningDefinition.thinningIntensity);
     }
 
     @Override
     public double thinningFactorFor(Tree tree) {
-        return firstFactorFoundFor(tree).orElse(defaultThinningFactor);
+        return firstFactorFoundFor(tree, moderateThinningRanges).orElse(defaultThinningFactor);
     }
 
-    private Optional<Double> firstFactorFoundFor(Tree tree) {
+    private Optional<Double> firstFactorFoundFor(Tree tree, List<ThinningFactorRange> ranges) {
         return ranges.stream()
                 .map(range -> range.factorFor(tree.h))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
@@ -42,9 +44,14 @@ public class HeightBasedThinning implements DynamicThinning {
     }
     
     protected double startReducingAHeight() throws NumberFormatException {
-        if (ranges.isEmpty()) {
+        if (moderateThinningRanges.isEmpty()) {
             return Double.POSITIVE_INFINITY;
         }
-        return ranges.get(0).end;
+        return moderateThinningRanges.get(0).end;
+    }
+
+    @Override
+    public double intensityFor(Tree tree) {
+        return firstFactorFoundFor(tree, moderateThinningRanges).orElse(defaultIntensity);
     }
 }
