@@ -1040,7 +1040,7 @@ public class TreatmentElements2 {
                     } else {
                         st.tr[merk].out = st.year;
                         st.tr[merk].outtype = OutType.THINNED;
-                        thinned = thinned + (st.tr[merk].fac * st.tr[merk].v);
+                        thinned += st.tr[merk].fac * st.tr[merk].v;
                         maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
                         if (maxBasalAreaOut <= 0.0) {
                             continueThinning = false;
@@ -1209,8 +1209,7 @@ public class TreatmentElements2 {
      * @return the volume taken out  */
     public double getTotalOutVolume(Stand st) {
         double outvolume = 0.0;
-        for (int i = 0; i < st.ntrees; i++) //volume sum of outaken (thinned or harvested) and died trees in the current year
-        {
+        for (int i = 0; i < st.ntrees; i++) {//volume sum of outaken (thinned or harvested) and died trees in the current year
             if (st.tr[i].out == st.year) {
                 outvolume = outvolume + st.tr[i].fac * st.tr[i].v;
             }
@@ -1226,8 +1225,7 @@ public class TreatmentElements2 {
      */
     public double getTreatmentOutVolume(Stand st) {
         double volume = 0.0;
-        for (int i = 0; i < st.ntrees; i++) //volume sum of outaken (thinned or harvested) trees in the current year            
-        {
+        for (int i = 0; i < st.ntrees; i++) {//volume sum of outaken (thinned or harvested) trees in the current year            
             if (st.tr[i].out == st.year && st.tr[i].outtype.treated()) {
                 volume = volume + st.tr[i].fac * st.tr[i].v;
             }
@@ -1243,8 +1241,7 @@ public class TreatmentElements2 {
      */
     public double getHarvestedOutVolume(Stand st) {
         double volume = 0.0;
-        for (int i = 0; i < st.ntrees; i++) //volume sum of harvested trees in the current year               
-        {
+        for (int i = 0; i < st.ntrees; i++) {//volume sum of harvested trees in the current year               
             if (st.tr[i].out == st.year && st.tr[i].outtype == OutType.HARVESTED) {
                 volume = volume + st.tr[i].fac * st.tr[i].v;
             }
@@ -1277,7 +1274,7 @@ public class TreatmentElements2 {
     public double getNCropTrees(Stand st) {
         double nCT = 0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].crop == true && st.tr[i].out == -1) {
+            if (st.tr[i].crop && st.tr[i].isLiving()) {
                 nCT++;
             }
         }
