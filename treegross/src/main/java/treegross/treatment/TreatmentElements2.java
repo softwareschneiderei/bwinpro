@@ -538,7 +538,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -601,7 +601,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -775,30 +775,34 @@ public class TreatmentElements2 {
      * reduced with the ModerateThinningFactor and the calculated basal area is
      * similar to yield table basal area for degree of stocking 1.0.
      *
-     * @param st <code>Stand</code>V
+     * @param species of a stand
      * @param withModerateThinningFactor <code>boolean</code>      
      * @return maximum basal area or reduced maximum basal [m²/ha] area as
      * <code>double</code>
      */
-    public double getMaxStandBasalArea(Stand st, boolean withModerateThinningFactor) {
+    public double getMaxStandBasalArea(Iterable<Species> species, boolean withModerateThinningFactor) {
         double maxBA = 0.0;
-        for (Species species : st.species()) {
-            Tree atree = new Tree();
-            atree.sp = species;
-            atree.st = st;
-            atree.d = species.d100;
-            atree.h = species.h100;
-            atree.age = (int) Math.round(species.h100age);
-            atree.cw = atree.calculateCw();
-            atree.code = species.code;
-            //bei allen Durchforstungen:
-            if (withModerateThinningFactor) {
-                maxBA += atree.calculateMaxBasalArea() * (species.percCSA / 100.0) * atree.getModerateThinningFactor();
-            } else {
-                maxBA += atree.calculateMaxBasalArea() * (species.percCSA / 100.0);
-            }
+        for (Species aSpecies : species) {
+            maxBA += maxBasalAreaFor(aSpecies, withModerateThinningFactor);
         }
         return maxBA;
+    }
+
+    private double maxBasalAreaFor(Species aSpecies, boolean withModerateThinningFactor) {
+        // TODO: find a name for such a tree and extract either into Species or a factory
+        Tree atree = new Tree();
+        atree.sp = aSpecies;
+        atree.d = aSpecies.d100;
+        atree.h = aSpecies.h100;
+        atree.age = (int) Math.round(aSpecies.h100age);
+        atree.cw = atree.calculateCw();
+        atree.code = aSpecies.code;
+        //bei allen Durchforstungen:
+        double basalAreaForSpecies = atree.calculateMaxBasalArea() * (aSpecies.percCSA / 100.0);
+        if (withModerateThinningFactor) {
+            basalAreaForSpecies *= atree.getModerateThinningFactor();
+        }
+        return basalAreaForSpecies;
     }
 
     /**
@@ -1189,7 +1193,7 @@ public class TreatmentElements2 {
     }
 
     private double calculateMaxBasalArea(Stand st) {
-        double maxStandBasalArea = getMaxStandBasalArea(st, true);
+        double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
         if (st.trule.thinningIntensity == 0.0) {
             maxStandBasalArea = maxStandBasalArea * 100.0;
         } else {
@@ -1420,9 +1424,8 @@ public class TreatmentElements2 {
      */
     public void markTreesAsHabitatTreesByDiameter(Stand st) {
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 0 && st.tr[i].d >= st.trule.treeProtectedfromBHD && !st.tr[i].habitat) {
+            if (st.tr[i].isLiving() && st.tr[i].d >= st.trule.treeProtectedfromBHD && !st.tr[i].habitat) {
                 st.tr[i].habitat = true;
-                //st.tr[i].no+="_mb";
             }
         }
     }
