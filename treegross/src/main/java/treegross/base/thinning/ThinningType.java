@@ -16,9 +16,24 @@ public enum ThinningType {
             rules.cutCompetingCropTrees = true;
             rules.releaseCropTreesSpeciesDependent = true;
         }
+
+        @Override
+        public Thinner thinner() {
+            return new SingleTreeSelectionThinner();
+        }
     },
-    ThinningFromAbove("ThinningType.thinningFromAbove", 1),
-    ThinningFromBelow("ThinningType.thinningFromBelow", 2),
+    ThinningFromAbove("ThinningType.thinningFromAbove", 1) {
+        @Override
+        public Thinner thinner() {
+            return new FromAboveThinner();
+        }
+    },
+    ThinningFromBelow("ThinningType.thinningFromBelow", 2) {
+        @Override
+        public Thinner thinner() {
+            return new FromBelowThinner();
+        }
+    },
     ThinningQD("ThinningType.thinningQD", 3) {
         @Override
         public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
@@ -33,8 +48,18 @@ public enum ThinningType {
             rules.cutCompetingCropTrees = true;
             rules.releaseCropTreesSpeciesDependent = true;
         }
+
+        @Override
+        public Thinner thinner() {
+            return new QDThinner();
+        }
     },
-    ClearCut("ThinningType.clearCut", 9);
+    ClearCut("ThinningType.clearCut", 9) {
+        @Override
+        public Thinner thinner() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    };
  
     private static final ResourceBundle bundle = ResourceBundle.getBundle("treegross/treegross");
 
@@ -58,6 +83,8 @@ public enum ThinningType {
     public int value() {
         return value;
     }
+    
+    public abstract Thinner thinner();
     
     public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
         rules.typeOfThinning = this;

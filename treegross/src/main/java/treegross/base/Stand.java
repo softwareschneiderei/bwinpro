@@ -1922,4 +1922,28 @@ public class Stand {
         nspecies = 0;
         ncpnt = 0;
     }
+
+    /**
+     * unselect all temp crop trees
+     *
+     */
+    public void resetTempCropTrees() {
+        forAllTrees(tree -> tree.tempcrop = false);
+    }
+
+    /**
+     * unselect all crop trees
+     *
+     */
+    public void resetCropTrees() {
+        forAllTrees(tree -> tree.crop = false);
+    }
+
+    /**
+     * unselect all habitat trees
+     *
+     */
+    public void resetHabitatTrees() {
+        forAllTrees(tree -> tree.habitat = false);
+    }
 }

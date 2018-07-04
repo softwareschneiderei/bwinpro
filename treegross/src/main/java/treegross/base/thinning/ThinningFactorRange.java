@@ -1,5 +1,6 @@
 package treegross.base.thinning;
 
+import static java.text.MessageFormat.format;
 import java.util.Optional;
 
 public class ThinningFactorRange {
@@ -8,6 +9,11 @@ public class ThinningFactorRange {
     public final double factor;
 
     public ThinningFactorRange(double start, double end, double factor) {
+        super();
+        if (end <= start) {
+            throw new IllegalArgumentException(
+                    format("End must be greater than start. Given start={0} end={1}", start, end));
+        }
         this.start = start;
         this.end = end;
         this.factor = factor;

@@ -10,7 +10,16 @@ package treegross.base;
  */
 public class TGTextFunction implements TGFunction {
 
-    private String function = "";
+    private String function;
+    
+    public TGTextFunction() {
+        this("");
+    }
+
+    public TGTextFunction(String function) {
+        super();
+        this.function = function;
+    }
 
     @Override
     public void init(String xmlText) {
@@ -29,9 +38,7 @@ public class TGTextFunction implements TGFunction {
 
     @Override
     public TGFunction clone() {
-        TGTextFunction clone = new TGTextFunction();
-        clone.init(function);
-        return clone;
+        return new TGTextFunction(function);
     }
 
     @Override

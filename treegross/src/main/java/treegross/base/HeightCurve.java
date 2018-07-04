@@ -107,8 +107,6 @@ public class HeightCurve {
         }
     }
 
-    //
-
     public int getNumberOfFunctions() {
         getHeightCurveName(0);
         return numberOfFunctions;

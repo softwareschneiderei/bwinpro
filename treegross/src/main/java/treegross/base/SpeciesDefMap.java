@@ -237,18 +237,15 @@ public class SpeciesDefMap {
     }
 
     public TGFunction initTGFunction(String xmlText){
-        if(xmlText==null)
+        if(xmlText == null || xmlText.isEmpty()) {
             return new TGTextFunction();
-        if(xmlText.isEmpty())
-            return new TGTextFunction();
+        }
         if(xmlText.startsWith("CLASS:")){
             TGClassFunction f= new TGClassFunction();
             f.init(xmlText);
             return f;
         } else{
-            TGTextFunction f = new TGTextFunction();
-            f.init(xmlText);
-            return f;
+            return new TGTextFunction(xmlText);
         }
     }
     

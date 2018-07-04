@@ -19,7 +19,6 @@
 package treegross.treatment;
 
 import treegross.base.Stand;
-import treegross.base.thinning.ThinningType;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -39,7 +38,7 @@ public class Treatment2 {
 
     /**
      * performs a stand treatment according to user defined preferences this is
-     * a regesigned rotutine from Henriette Duda's treatment
+     * a regesigned routine from Henriette Duda's treatment
      *
      * @param st stand object
      */
@@ -143,7 +142,7 @@ public class Treatment2 {
             }
 
             if (te.getNCropTrees(st) > sumcroptrees * st.size) {
-                te.resetCropTrees(st);
+                st.resetCropTrees();
             }
             //
             // Selection and reselection of Crop Trees
@@ -155,39 +154,8 @@ public class Treatment2 {
                 }
             }
 
-            // Thinning by releasing the crop trees
-            if (st.trule.releaseCropTrees && st.trule.typeOfThinning == ThinningType.SingleTreeSelection) {
-                te.thinCropTreeCompetition(st);
-                if (st.trule.thinArea) {
-                    te.thinCompetitionFromAbove(st);
-                }
-            }
-
-            // thin area between crop trees
-            // selectCropTreesOfAllSpecies auch hier einbeziehen?
-            //public double degreeOfThinningArea; 
-            if (st.trule.typeOfThinning == ThinningType.ThinningFromAbove) {
-                //System.out.println("temporäre Zwischenfelder durchforsten");
-                //select temp crop trees (wet species)
-                te.resetTempCropTrees(st);
-                te.selectTempCropTreesTargetPercentage(st);
-                // Start thinning for all species
-                te.thinTempCropTreeCompetition(st);
-                if (st.trule.thinArea) {
-                    te.thinCompetitionFromAbove(st);
-                }
-            }
-
-            // Thinning from below
-            if (st.trule.typeOfThinning == ThinningType.ThinningFromBelow) {
-                te.thinFromBelow(st);
-            }
+            st.trule.typeOfThinning.thinner().thin(te, st);
             
-            // Thinning by QD
-            if (st.trule.typeOfThinning == ThinningType.ThinningQD) {
-                te.thinByQD(st);
-            }
-
             //if thinning amount was not high enough: set thinned trees alive
             te.checkMinThinningVolume(st);
 
@@ -233,8 +201,8 @@ public class Treatment2 {
      * @param st stand object
      */
     public void resetAllCropTrees(Stand st) {
-        te.resetTempCropTrees(st);
-        te.resetCropTrees(st);
+        st.resetTempCropTrees();
+        st.resetCropTrees();
     }
 
     public void setBT(Stand st) {
