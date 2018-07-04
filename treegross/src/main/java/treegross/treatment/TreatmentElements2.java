@@ -85,39 +85,6 @@ public class TreatmentElements2 {
     }
 
     /**
-     * unselect all crop trees
-     *
-     * @param st stand object
-     */
-    public void resetCropTrees(Stand st) {
-        for (int i = 0; i < st.ntrees; i++) {
-            st.tr[i].crop = false;
-        }
-    }
-
-    /**
-     * unselect all temp crop trees
-     *
-     * @param st the stand
-     */
-    public void resetTempCropTrees(Stand st) {
-        for (int i = 0; i < st.ntrees; i++) {
-            st.tr[i].tempcrop = false;
-        }
-    }
-
-    /**
-     * unselect all habitat trees
-     *
-     * @param st stand object
-     */
-    public void resetHabitatTrees(Stand st) {
-        for (int i = 0; i < st.ntrees; i++) {
-            st.tr[i].habitat = false;
-        }
-    }
-
-    /**
      * to obtain at least one tree of each species helps to secure rare species
      * and to create a high bioderversity
      *
@@ -791,15 +758,14 @@ public class TreatmentElements2 {
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
-        if (baFac > 1.2 && shouldReduce(st)) {
+        // http://issuetracker.intranet:20002/browse/BWIN-57: why only the first species?
+        if (baFac > 1.2 && shouldReduce(st.sp[0])) {
             maxBasalAreaOut = maxBasalAreaOut * (1.2 / baFac);
         }
         return maxBasalAreaOut;
     }    
 
-    private boolean shouldReduce(Stand st) {
-        // http://issuetracker.intranet:20002/browse/BWIN-57: why only the first species?
-        final Species species = st.sp[0];
+    private boolean shouldReduce(Species species) {
         return species.spDef.moderateThinning.shouldReduce(species);
     }
 
@@ -1477,8 +1443,7 @@ public class TreatmentElements2 {
         //set max harvest volume (vmaxharvest) if outaken amount (vout) 
         //has not reached max allowed amount for stand (st.size*st.trule.maxHarvestVolume)
         vmaxharvest = st.size * volume;
-        // reset crop tress
-        resetCropTrees(st);
+        st.resetCropTrees();
         // Select all trees of species as crop trees
         for (int i = 0; i < st.nspecies; i++) {
             if (species == st.sp[i].code) {

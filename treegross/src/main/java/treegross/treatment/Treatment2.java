@@ -143,7 +143,7 @@ public class Treatment2 {
             }
 
             if (te.getNCropTrees(st) > sumcroptrees * st.size) {
-                te.resetCropTrees(st);
+                st.resetCropTrees();
             }
             //
             // Selection and reselection of Crop Trees
@@ -169,7 +169,7 @@ public class Treatment2 {
             if (st.trule.typeOfThinning == ThinningType.ThinningFromAbove) {
                 //System.out.println("temporäre Zwischenfelder durchforsten");
                 //select temp crop trees (wet species)
-                te.resetTempCropTrees(st);
+                st.resetTempCropTrees();
                 te.selectTempCropTreesTargetPercentage(st);
                 // Start thinning for all species
                 te.thinTempCropTreeCompetition(st);
@@ -233,8 +233,8 @@ public class Treatment2 {
      * @param st stand object
      */
     public void resetAllCropTrees(Stand st) {
-        te.resetTempCropTrees(st);
-        te.resetCropTrees(st);
+        st.resetTempCropTrees();
+        st.resetCropTrees();
     }
 
     public void setBT(Stand st) {
