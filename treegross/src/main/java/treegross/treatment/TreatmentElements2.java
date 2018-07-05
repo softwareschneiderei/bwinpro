@@ -282,7 +282,7 @@ public class TreatmentElements2 {
             // conditions: no habitat tree, diameter > target diameter, standing, max harvest volume has not been reached
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].habitat == false && st.tr[i].d > st.tr[i].sp.trule.targetDiameter
-                        && st.tr[i].out < 0 && harvested < vmaxharvest) {
+                        && st.tr[i].isLiving() && harvested < vmaxharvest) {
                     if (this.getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                         break;
                     }
@@ -335,10 +335,10 @@ public class TreatmentElements2 {
             int merk = -9;
             double maxdiff = -9999.9;
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0 && st.tr[i].crop && st.tr[i].habitat == false) {
+                if (st.tr[i].isLiving() && st.tr[i].crop && st.tr[i].habitat == false) {
                     double diff = 0.0;
                     for (int j = 0; j < st.ntrees; j++) {
-                        if (st.tr[j].out < 0 && (st.tr[j].crop || st.tr[j].habitat)) {
+                        if (st.tr[j].isLiving() && (st.tr[j].crop || st.tr[j].habitat)) {
                             double dist = Math.pow(st.tr[j].x - st.tr[i].x, 2.0) + Math.pow(st.tr[j].y - st.tr[i].y, 2.0);
                             if (dist != 0.0) {
                                 dist = Math.sqrt(dist);
@@ -361,7 +361,7 @@ public class TreatmentElements2 {
                 // conditions: no habitat tree, diameter > target diameter, standing, max harvest volume has not been reached
                 // and tree is greater than 12 m
                 for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].habitat == false && st.tr[i].out < 0 && st.tr[i].h > 12) {
+                    if (st.tr[i].habitat == false && st.tr[i].isLiving() && st.tr[i].h > 12) {
                         double dist = Math.pow(st.tr[merk].x - st.tr[i].x, 2.0) + Math.pow(st.tr[merk].y - st.tr[i].y, 2.0);
                         if (dist != 0.0) {
                             dist = Math.sqrt(dist);
@@ -381,7 +381,7 @@ public class TreatmentElements2 {
         if (harvested < vmaxharvest && vmaxharvest > 0) {
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].habitat == false && st.tr[i].d > st.tr[i].sp.trule.targetDiameter * 1.15
-                        && st.tr[i].out < 0 && harvested < vmaxharvest) {
+                        && st.tr[i].isLiving() && harvested < vmaxharvest) {
                     if (this.getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                         break;
                     }
@@ -436,7 +436,7 @@ public class TreatmentElements2 {
                 if (st.tr[i].out < 1 && st.tr[i].crop == true) {
                     for (int j = 0; j < st.ntrees; j++) {
                         //competitor has to be a crop tree                            
-                        if (st.tr[j].out < 0 && st.tr[j].crop == true && st.tr[i].no.compareTo(st.tr[j].no) != 0 && !st.tr[j].habitat) {
+                        if (st.tr[j].isLiving() && st.tr[j].crop == true && st.tr[i].no.compareTo(st.tr[j].no) != 0 && !st.tr[j].habitat) {
                             //caluclate distance between crop trees                                
                             dist_trees = Math.sqrt(Math.pow(st.tr[i].x - st.tr[j].x, 2.0) + Math.pow(st.tr[i].y - st.tr[j].y, 2.0));
 
@@ -490,7 +490,7 @@ public class TreatmentElements2 {
         //clear all remaining trees if wanted
         if (st.trule.onPlantingRemoveAllTrees) {
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0 && !st.tr[i].habitat) {
+                if (st.tr[i].isLiving() && !st.tr[i].habitat) {
                     if (this.getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                         break;
                     }
@@ -509,7 +509,7 @@ public class TreatmentElements2 {
         double sum = 0.0;
         double sumTarget = 0.0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat) {
+            if (st.tr[i].isLiving() && st.tr[i].d >= 7.0 && !st.tr[i].habitat) {
                 sum += Math.pow(st.tr[i].d, 2.0) * st.tr[i].fac;
                 if (st.tr[i].d > st.tr[i].sp.trule.targetDiameter) {
                     sumTarget += Math.pow(st.tr[i].d, 2.0) * st.tr[i].fac;
@@ -547,7 +547,7 @@ public class TreatmentElements2 {
                 double max = -9999999.0;
                 int merk = -9;
                 for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].d >= (st.tr[i].sp.trule.targetDiameter * 0.3)) {
+                    if (st.tr[i].isLiving() && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].d >= (st.tr[i].sp.trule.targetDiameter * 0.3)) {
                         double diff = st.tr[i].d - st.tr[i].sp.trule.targetDiameter;
                         if (max < diff) {
                             merk = i;
@@ -675,7 +675,7 @@ public class TreatmentElements2 {
             // remove first 50% basal area of non crop trees
             int count = 0;
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
+                if (st.tr[i].isLiving() && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
                     count++;
                 }
             }
@@ -686,7 +686,7 @@ public class TreatmentElements2 {
             int kill = (int) Math.floor(st.random.nextUniform() * count);
             count = 0;
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0 && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
+                if (st.tr[i].isLiving() && st.tr[i].d >= 7.0 && !st.tr[i].habitat && st.tr[i].crop == false) {
                     if (count == kill) {
                         merk = i;
                     }
@@ -1401,7 +1401,7 @@ public class TreatmentElements2 {
                 xmin = xmin + st.trule.skidtrails.distance;
                 double x2 = xmin + st.trule.skidtrails.width;
                 for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].out < 0 && st.tr[i].x > xmin && st.tr[i].x < x2) {
+                    if (st.tr[i].isLiving() && st.tr[i].x > xmin && st.tr[i].x < x2) {
                         st.tr[i].out = st.year;
                         st.tr[i].outBySkidtrail = true;
                         if (st.tr[i].d < st.tr[i].sp.spDef.targetDiameter) {
