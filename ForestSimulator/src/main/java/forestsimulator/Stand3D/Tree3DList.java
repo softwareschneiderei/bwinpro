@@ -24,9 +24,6 @@ public class Tree3DList {
     public int[] sts = null;
     private int standyear;
 
-    public Tree3DList() {
-    }
-
     /**
      * Creates a new instance of Tree3DList with all trees and attaches all
      * trees to the parent group
@@ -36,7 +33,6 @@ public class Tree3DList {
     }
 
     public final void setListData(Tree[] tgtrees, int ntrees, Texture2D[] bltexture, boolean speciescolor, boolean textured, boolean sstatus, Group parent, int[] speciestoshow, boolean showdead, StandBase3D base, int year) {
-        clear();
         standyear = year;
         sts = speciestoshow;
         int n3dtrees = countRelevantTrees(tgtrees, ntrees);
@@ -187,14 +183,4 @@ public class Tree3DList {
         }
         trees = null;
     }
-
-    public void clear() {
-        if (trees != null) {
-            for (int i = 0; i < trees.length; i++) {
-                trees[i] = null;
-            }
-        }
-        trees = null;
-    }
-
 }
