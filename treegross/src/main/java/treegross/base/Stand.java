@@ -1742,6 +1742,7 @@ public class Stand {
                 atree.code = sp[i].code;
                 atree.d = sp[i].d100;
                 atree.h = sp[i].h100;
+                atree.age = (int) Math.round(sp[i].h100age);
                 atree.sp = sp[i];
                 atree.no = "dummy tree for species " + sp[i].code;
                 atree.st = this;
@@ -1758,6 +1759,7 @@ public class Stand {
                 atree.code = sp[i].code;
                 atree.d = sp[i].dg;
                 atree.h = sp[i].hg;
+                atree.age = (int) Math.round(sp[i].h100age);
                 atree.sp = sp[i];
                 atree.no = "dummy tree for species " + sp[i].code;
                 atree.st = this;
