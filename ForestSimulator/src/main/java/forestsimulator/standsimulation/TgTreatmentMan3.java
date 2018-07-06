@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.treatment.*;
+import treegross.base.thinning.ScenarioThinningSettings;
 
 
 /**
@@ -553,8 +553,11 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         double thIntensity = Double.parseDouble(thtxt);
         boolean ctreesOnly = releaseOnlyCropTreesCheckBox.isSelected();
 
-        st.trule.setThinningRegime(new ThinningRegime((ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity, Double.parseDouble(thinningAmountMinimumTextField.getText()),
-                 Double.parseDouble(thinningAmountMaximumTextField.getText()), ctreesOnly));
+        st.trule.setThinningRegime(new ThinningRegime(
+                ScenarioThinningSettings.heightBasedScenarioSetting((ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity),
+                Double.parseDouble(thinningAmountMinimumTextField.getText()),
+                Double.parseDouble(thinningAmountMaximumTextField.getText()),
+                ctreesOnly));
 // set Harvesting Regime
         double clearFak = 0.0;
         if (harvestingTypeComboBox.getSelectedIndex() == 0) {
@@ -660,5 +663,5 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JCheckBox useRiskModelCheckBox;
     private javax.swing.JComboBox woodTypeComboBox;
     // End of variables declaration//GEN-END:variables
-    
+
 }

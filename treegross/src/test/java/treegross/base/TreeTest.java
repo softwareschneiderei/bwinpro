@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ModerateThinning;
-import treegross.base.thinning.ThinningFactorRange;
+import treegross.base.thinning.ThinningValueRange;
 
 public class TreeTest {
     
@@ -39,12 +39,11 @@ public class TreeTest {
         };
     }
     
-    private static List<ThinningFactorRange> rangesFor(double... factors) {
-        List<ThinningFactorRange> ranges = new ArrayList<>();
+    private static List<ThinningValueRange<Double>> rangesFor(double... factors) {
+        List<ThinningValueRange<Double>> ranges = new ArrayList<>();
         for (int i = 0; i < factors.length - 2; i += 3) {
-            ranges.add(new ThinningFactorRange(factors[i], factors[ i + 2], factors[i + 1]));
+            ranges.add(new ThinningValueRange(factors[i], factors[ i + 2], factors[i + 1]));
         }
         return ranges;
     }
-
 }

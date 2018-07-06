@@ -411,4 +411,16 @@ public class Species implements Cloneable {
                 .append(" G:").append(gha);
         return sb.toString();
     }
+
+    public Tree normTree() {
+        // TODO: find a name for such a tree and extract either into Species or a factory
+        Tree atree = new Tree();
+        atree.sp = this;
+        atree.d = this.d100;
+        atree.h = this.h100;
+        atree.age = (int) Math.round(this.h100age);
+        atree.cw = atree.calculateCw();
+        atree.code = this.code;
+        return atree;
+    }
 }

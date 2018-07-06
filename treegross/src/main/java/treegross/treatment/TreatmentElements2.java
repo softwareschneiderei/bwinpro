@@ -26,6 +26,7 @@ import treegross.base.OutType;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
+import treegross.base.TreatmentRuleStand;
 import treegross.base.Tree;
 
 /**
@@ -246,8 +247,6 @@ public class TreatmentElements2 {
             //Initialize Temp CropTreeSpecies
             ctspecies[i] = new CropTreeSpecies();
             ctspecies[i].addCtsp(st.sp[i].code, n_ct_ha, dist_ct, st.sp[i].trule.minCropTreeHeight);
-            //}
-
         }
         //Select Temp Croptrees dependent on target mixture percentage
         ctselect.selectTempCropTrees(st, ctspecies);
@@ -538,7 +537,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -601,7 +600,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -753,8 +752,9 @@ public class TreatmentElements2 {
     }
     
     private double reduceBaOut(Stand st) {
+        double maxStandBasalArea = getMaxStandBasalArea(st, true);
         //Festlegen der Grundflächenansenkung
-        double maxBa = calculateMaxBasalArea(st);
+        double maxBa = maxStandBasalArea;
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
@@ -773,32 +773,30 @@ public class TreatmentElements2 {
      * reduced with the ModerateThinningFactor and the calculated basal area is
      * similar to yield table basal area for degree of stocking 1.0.
      *
-     * @param species of a stand
+     * @param stand the stand to calculate the basal area for
      * @param withModerateThinningFactor <code>boolean</code>      
      * @return maximum basal area or reduced maximum basal [m²/ha] area as
      * <code>double</code>
      */
-    public double getMaxStandBasalArea(Iterable<Species> species, boolean withModerateThinningFactor) {
+    public double getMaxStandBasalArea(Stand stand, boolean withModerateThinningFactor) {
         double maxBA = 0.0;
-        for (Species aSpecies : species) {
-            maxBA += maxBasalAreaFor(aSpecies, withModerateThinningFactor);
+        for (Species aSpecies : stand.species()) {
+            maxBA += maxBasalAreaFor(aSpecies, stand.trule, withModerateThinningFactor);
         }
         return maxBA;
     }
 
-    private double maxBasalAreaFor(Species aSpecies, boolean withModerateThinningFactor) {
-        // TODO: find a name for such a tree and extract either into Species or a factory
-        Tree atree = new Tree();
-        atree.sp = aSpecies;
-        atree.d = aSpecies.d100;
-        atree.h = aSpecies.h100;
-        atree.age = (int) Math.round(aSpecies.h100age);
-        atree.cw = atree.calculateCw();
-        atree.code = aSpecies.code;
+    private double maxBasalAreaFor(Species aSpecies, TreatmentRuleStand rules, boolean withModerateThinningFactor) {
+        Tree atree = aSpecies.normTree();
         //bei allen Durchforstungen:
         double basalAreaForSpecies = atree.calculateMaxBasalArea() * (aSpecies.percCSA / 100.0);
         if (withModerateThinningFactor) {
             basalAreaForSpecies *= atree.getModerateThinningFactor();
+        }
+        if (rules.thinningSettings.intensityFor(atree) == 0.0) {
+            basalAreaForSpecies = basalAreaForSpecies * 100.0;
+        } else {
+            basalAreaForSpecies = basalAreaForSpecies * (2.0 - rules.thinningSettings.intensityFor(atree));
         }
         return basalAreaForSpecies;
     }
@@ -833,10 +831,6 @@ public class TreatmentElements2 {
         // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
         // 5. Start with 1. again
 
-        double intensity = 2.0 - st.trule.thinningIntensity;
-        if (intensity == 0.0) {
-            intensity = 1.0;
-        }
 
         //double maxBasalAreaOut = st.bha - maxStandBasalArea;
         double maxBasalAreaOut = reduceBaOut(st);
@@ -858,7 +852,7 @@ public class TreatmentElements2 {
             double maxCompetition = -99999.9;
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningIntensity);
+                    double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(st.tr[i]));
                     // remember tree if c66Ratio is greater than maxCompetition
                     if (c66Ratio > maxCompetition) {
                         indexOfCroptree = i;
@@ -875,6 +869,10 @@ public class TreatmentElements2 {
                 double dist = 9999.0;
                 int merk = -9;
                 Tree cropTree = st.tr[indexOfCroptree];
+                double intensity = 2.0 - st.trule.thinningSettings.intensityFor(cropTree);
+                if (intensity == 0.0) {
+                    intensity = 1.0;
+                }
                 double h66 = cropTree.cb;
                 for (int i = 0; i < cropTree.nNeighbor; i++) {
                     Tree neighbor = st.tr[cropTree.neighbor[i]];
@@ -976,11 +974,6 @@ public class TreatmentElements2 {
 
             double maxBasalAreaOut = reduceBaOut(st);
             
-            double intensity = st.trule.thinningIntensity;
-            if (intensity == 0.0) {
-                intensity = 1.0;
-            }
-
             boolean continueThinning = true;
             if (maxBasalAreaOut <= 0.0) {
                 return;
@@ -999,7 +992,7 @@ public class TreatmentElements2 {
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
 // calculate maxc66
-                        double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningIntensity);
+                        double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(st.tr[i]));
 // remember tree if c66Ratio is greater than maxCompetition
                         if (c66Ratio > maxCompetition) {
                             indexOfCroptree = i;
@@ -1017,7 +1010,12 @@ public class TreatmentElements2 {
                 } else {
                     double dist = 9999.0;
                     int merk = -9;
-                    double h66 = st.tr[indexOfCroptree].cb;
+                    final Tree cropTree = st.tr[indexOfCroptree];
+                    double h66 = cropTree.cb;
+                    double intensity = st.trule.thinningSettings.intensityFor(cropTree);
+                    if (intensity == 0.0) {
+                        intensity = 1.0;
+                    }
                     for (int i = 0; i < st.tr[indexOfCroptree].nNeighbor; i++) {
                         if (st.tr[st.tr[indexOfCroptree].neighbor[i]].d < 7
                                 && st.tr[st.tr[indexOfCroptree].neighbor[i]].out < 0
@@ -1188,16 +1186,6 @@ public class TreatmentElements2 {
         double maxN = maxBasalArea / (Math.PI * Math.pow((tree.d / 200.0), 2.0));
         double maxC66 = maxN * Math.PI * Math.pow((tree.cw / 2.0), 2.0) / 10000.0;
         return tree.c66xy / maxC66;
-    }
-
-    private double calculateMaxBasalArea(Stand st) {
-        double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
-        if (st.trule.thinningIntensity == 0.0) {
-            maxStandBasalArea = maxStandBasalArea * 100.0;
-        } else {
-            maxStandBasalArea = maxStandBasalArea * (2.0 - st.trule.thinningIntensity);
-        }
-        return maxStandBasalArea;
     }
 
     /**

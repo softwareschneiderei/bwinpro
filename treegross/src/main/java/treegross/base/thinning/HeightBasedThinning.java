@@ -7,13 +7,13 @@ import treegross.base.Tree;
 public class HeightBasedThinning implements ModerateThinning {
 
     private final String thinningDefinition;
-    private final List<ThinningFactorRange> ranges;
+    private final List<ThinningValueRange<Double>> ranges;
 
     public HeightBasedThinning(String thinningDefinition) {
-        this(thinningDefinition, new ThinningDefinitionParser().parseDefinition(thinningDefinition));
+        this(thinningDefinition, ThinningDefinitionParser.thinningFactorParser.parseDefinition(thinningDefinition));
     }
     
-    public HeightBasedThinning(String thinningDefinition, List<ThinningFactorRange> ranges) {
+    public HeightBasedThinning(String thinningDefinition, List<ThinningValueRange<Double>> ranges) {
         super();
         this.thinningDefinition = thinningDefinition;
         this.ranges = ranges;
