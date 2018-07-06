@@ -758,16 +758,14 @@ public class TreatmentElements2 {
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
-        // http://issuetracker.intranet:20002/browse/BWIN-57: why only the first species?
-        if (baFac > 1.2 && shouldReduce(st.sp[0])) {
+        // http://issuetracker.intranet:20002/browse/BWIN-57:
+        //   Removed additional criterion based on first species (st.sp[0])
+        //   and moderate thinning settings after discussion with Dr. Albrecht
+        if (baFac > 1.2) {
             maxBasalAreaOut = maxBasalAreaOut * (1.2 / baFac);
         }
         return maxBasalAreaOut;
     }    
-
-    private boolean shouldReduce(Species species) {
-        return species.spDef.moderateThinning.shouldReduce(species);
-    }
 
     /**
      * Returns maximum basal area for a treegross stand <code>Stand</code>. If

@@ -2,7 +2,6 @@ package treegross.base.thinning;
 
 import java.util.List;
 import java.util.Optional;
-import treegross.base.Species;
 import treegross.base.Tree;
 import static treegross.base.thinning.ModerateThinning.defaultThinningFactor;
 
@@ -34,12 +33,6 @@ public class AgeBasedThinning implements ModerateThinning {
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
     
-    @Override
-    public boolean shouldReduce(Species species) {
-        // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
-        return species.h100age >= ranges.get(0).end;
-    }
-
     @Override
     public String definition() {
         return thinningDefinition;

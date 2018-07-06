@@ -4,54 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
-import treegross.base.Species;
 import treegross.base.Tree;
 
 public class HeightBasedThinningTest {
     
     private static final String UNUSED = "";
 
-    /*
-     * #Pinning
-     *
-     * #Adjusted
-    */
-    @Test
-    public void obtainReducingHeight() {
-        assertThat(new HeightBasedThinning(UNUSED, rangesFor(10d, 0.9d, 22d)).startReducingAHeight()).isEqualTo(22.0d);
-        assertThat(new HeightBasedThinning(UNUSED, rangesFor(11.0, 0.9, 20.0, 20.0, 0.7, 30.0)).startReducingAHeight()).isEqualTo(20.0d);
-    }
-    
-    /*
-     * #Pinning
-     *
-     * #Adjusted
-    */
-    @Test
-    public void reducingHeightIsInfinityWithIncompleteDefinition() {
-        assertThat(Double.isInfinite(new HeightBasedThinning(UNUSED, rangesFor(10.0,0.9)).startReducingAHeight())).isTrue();
-    }
-    
-    /*
-     * #Pinning
-     *
-     * #Adjusted
-    */
-    @Test
-    public void shouldReduce() {
-        HeightBasedThinning thinning = new HeightBasedThinning(UNUSED, rangesFor(10.0,0.9,22.0));
-        Species sp = new Species();
-        sp.h100 = 21.9;
-        
-        assertThat(thinning.shouldReduce(sp)).isFalse();
-        
-        sp.h100 = 22;
-        assertThat(thinning.shouldReduce(sp)).isTrue();
-        
-        sp.h100 = 22.1;
-        assertThat(thinning.shouldReduce(sp)).isTrue();
-    }
-    
     /*
      * #Pinning
      *
