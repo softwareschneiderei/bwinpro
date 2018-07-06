@@ -18,20 +18,20 @@ public enum ThinningType {
         }
 
         @Override
-        public Thinner thinner() {
-            return new SingleTreeSelectionThinner();
+        public Thinner thinner(double volumeAlreadyOut) {
+            return new SingleTreeSelectionThinner(volumeAlreadyOut);
         }
     },
     ThinningFromAbove("ThinningType.thinningFromAbove", 1) {
         @Override
-        public Thinner thinner() {
-            return new FromAboveThinner();
+        public Thinner thinner(double volumeAlreadyOut) {
+            return new FromAboveThinner(volumeAlreadyOut);
         }
     },
     ThinningFromBelow("ThinningType.thinningFromBelow", 2) {
         @Override
-        public Thinner thinner() {
-            return new FromBelowThinner();
+        public Thinner thinner(double volumeAlreadyOut) {
+            return new FromBelowThinner(volumeAlreadyOut);
         }
     },
     ThinningQD("ThinningType.thinningQD", 3) {
@@ -50,13 +50,13 @@ public enum ThinningType {
         }
 
         @Override
-        public Thinner thinner() {
+        public Thinner thinner(double volumeAlreadyOut) {
             return new QDThinner();
         }
     },
     ClearCut("ThinningType.clearCut", 9) {
         @Override
-        public Thinner thinner() {
+        public Thinner thinner(double volumeAlreadyOut) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     };
@@ -84,7 +84,7 @@ public enum ThinningType {
         return value;
     }
     
-    public abstract Thinner thinner();
+    public abstract Thinner thinner(double volumeAlreadyOut);
     
     public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
         rules.typeOfThinning = this;

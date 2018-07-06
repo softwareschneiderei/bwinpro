@@ -154,7 +154,7 @@ public class Treatment2 {
                 }
             }
 
-            st.trule.typeOfThinning.thinner().thin(te, st);
+            st.trule.typeOfThinning.thinner(te.vout).thin(st);
             
             //if thinning amount was not high enough: set thinned trees alive
             te.checkMinThinningVolume(st);
