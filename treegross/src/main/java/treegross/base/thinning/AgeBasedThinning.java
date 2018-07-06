@@ -16,13 +16,19 @@ public class AgeBasedThinning implements ModerateThinning {
         ranges = new ThinningDefinitionParser().parseDefinition(thinningDefinition);
     }
 
+    /**
+     * The age of norm tree is used to select the thinning factor. It should be set
+     * to h100age of its species.
+     * 
+     * @param tree norm tree for a species
+     * @return thinning factor based on the age of the norm tree
+     */
     @Override
     public double thinningFactorFor(Tree tree) {
         return firstFactorFoundFor(tree).orElse(defaultThinningFactor);
     }
 
     private Optional<Double> firstFactorFoundFor(Tree tree) {
-        // http://issuetracker.intranet:20002/browse/BWIN-57: verify the condition with domain experts
         return ranges.stream()
                 .map(range -> range.factorFor(tree.age))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
