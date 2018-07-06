@@ -32,6 +32,10 @@ public class Tree3DList {
         setListData(tgtrees, ntrees, bltexture, speciescolor, textured, sstatus, parent, speciestoshow, showdead, base, year);
     }
 
+    Tree3DList() {
+        super();
+    }
+
     public final void setListData(Tree[] tgtrees, int ntrees, Texture2D[] bltexture, boolean speciescolor, boolean textured, boolean sstatus, Group parent, int[] speciestoshow, boolean showdead, StandBase3D base, int year) {
         standyear = year;
         sts = speciestoshow;
