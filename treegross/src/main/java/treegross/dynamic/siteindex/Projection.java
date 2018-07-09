@@ -1,6 +1,5 @@
 package treegross.dynamic.siteindex;
 
-import java.time.Month;
 import java.time.Year;
 import java.util.Iterator;
 import java.util.stream.IntStream;
@@ -9,23 +8,17 @@ public class Projection implements Iterable<Year>{
     
     public String standName;
     public String treeSpecies;
-    public final Month vegetationBeginMonth;
-    public final Month vegetationEndMonth;
     public String rcp;
     public int length;
+    private final Year start;
 
-    public Projection() {
-        this(Month.MARCH, Month.AUGUST);
-    }
-    
-    public Projection(Month vegetationBegin, Month vegetationEnd) {
+    public Projection(Year start) {
         super();
-        this.vegetationBeginMonth = vegetationBegin;
-        this.vegetationEndMonth = vegetationEnd;
+        this.start = start;
     }
 
     @Override
     public Iterator<Year> iterator() {
-        return IntStream.range(1, length).mapToObj(number -> Year.of(number)).iterator();
+        return IntStream.range(start.getValue(), start.getValue() + length).mapToObj(number -> Year.of(number)).iterator();
     }
 }

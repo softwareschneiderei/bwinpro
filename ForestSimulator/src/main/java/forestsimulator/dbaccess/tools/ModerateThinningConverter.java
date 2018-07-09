@@ -1,4 +1,4 @@
-package forestsimulator.dbaccess.util;
+package forestsimulator.dbaccess.tools;
 
 import forestsimulator.dbaccess.ConnectionFactory;
 import java.sql.Connection;
