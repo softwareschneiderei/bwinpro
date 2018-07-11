@@ -2,6 +2,7 @@ package forestsimulator.dbaccess.tools;
 
 import forestsimulator.dbaccess.ConnectionFactory;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 
@@ -27,17 +28,20 @@ public class ModerateThinningConverter {
     }
 
     private static int update(final Connection db, String src, String dest) throws SQLException {
-        int rows = db.createStatement().executeUpdate("update szenarioart set"
-                + " moderatethinning = '" + dest + "' where"
-                + " moderatethinning = '" + src + "'");
-        return rows;
+        try (PreparedStatement st = db.prepareStatement("update szenarioart set"
+                    + " moderatethinning = ? where moderatethinning = ?")) {
+            st.setString(1, dest);
+            st.setString(2, src);
+            return st.executeUpdate();
+        }
     }
     
     private static int updateScenario(final Connection db, String src, String dest) throws SQLException {
-        int rows = db.createStatement().executeUpdate("update Szenario set"
-                + " ThinningIntensity = '" + dest + "' where"
-                + " ThinningIntensity = '" + src + "'");
-        return rows;
+        try (PreparedStatement st = db.prepareStatement("update Szenario set"
+                    + " ThinningIntensity = ? where ThinningIntensity = ?")) {
+            st.setString(1, dest);
+            st.setString(2, src);
+            return st.executeUpdate();
+        }
     }
-    
 }
