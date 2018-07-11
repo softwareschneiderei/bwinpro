@@ -229,14 +229,12 @@ public class LoadTreegrossStand {
             stmt.setInt(3, scen);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int jj = rs.getInt("Zufall");
-                    if (jj == 0) {
+                    if (rs.getInt("Zufall") == 0) {
                         stl.random.setRandomType(RandomNumber.OFF);
                     } else {
                         stl.random.setRandomType(RandomNumber.PSEUDO);
                     }
-                    jj = rs.getInt("Einwuchs");
-                    stl.ingrowthActive = jj != 0;
+                    stl.ingrowthActive = rs.getInt("Einwuchs") != 0;
                     stl.temp_Integer = rs.getInt("Schritte");
                     ebaum = rs.getInt("EBaum");
                     bestand = rs.getInt("Bestand");
