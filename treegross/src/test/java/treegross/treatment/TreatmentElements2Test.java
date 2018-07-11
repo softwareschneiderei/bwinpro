@@ -5,7 +5,6 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import treegross.base.Species;
-import treegross.base.Stand;
 import treegross.base.TGTextFunction;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ThinningFactorRange;
