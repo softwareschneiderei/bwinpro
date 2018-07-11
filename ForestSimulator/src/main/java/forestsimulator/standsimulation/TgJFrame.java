@@ -22,7 +22,6 @@ import nwfva.biomass.BiomassDialog;
 import forestsimulator.Stand3D.PackageInfo;
 import forestsimulator.Stand3D.Manager3D;
 import forestsimulator.Stand3D.Query3DProperties;
-import forestsimulator.gui.BlockingSpinner;
 import forestsimulator.language.UserLanguage;
 import forestsimulator.util.StopWatch;
 import java.util.logging.Level;
@@ -56,8 +55,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     FileHandler logHandler = null;
 
-    String bwinproVersion = "Version 7.8-0.4";
-    String bwinproLastUpdate = "15.06.2018";
+    String bwinproVersion = "Version 7.8-0.5dev";
+    String bwinproLastUpdate = "11.07.2018";
     private boolean accessInput = true;
     static Stand st = new Stand();
     SpeciesDefMap SDM = new SpeciesDefMap();
