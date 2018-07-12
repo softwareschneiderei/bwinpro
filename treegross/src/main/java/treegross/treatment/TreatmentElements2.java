@@ -705,6 +705,9 @@ public class TreatmentElements2 {
     public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
         double maxBa = calculateMaxBasalArea(st);
+        if (maxBa == 0d) {
+            throw new IllegalStateException("Max basal area must not be 0.");
+        }
         double maxBasalAreaOut = st.bha - maxBa;
         double baFac = st.bha / maxBa;
         
