@@ -745,86 +745,6 @@ public class TreatmentElements2 {
         return basalAreaForSpecies;
     }
 
-    
-    public static void thinCompetitionFromAbove(Stand st, double thinned, double vout) {
-        //set max thinning volume (vmaxthinning) if outaken amount (vout)
-        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        double vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
-
-        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
-        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
-            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
-        }
-
-        if (vmaxthinning > 0) {
-            // Thinning is done iteratively tree by tree
-            // 1. Calculate the overlap of all crop trees
-            // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
-            //    Heidi Doebbeler and crown width functions
-            // 3. Find tree with the highest differenz in overlap - tolerable overlap
-            // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
-            // 5. Start with 1. again
-
-            // Festlegen der Grundflächenabsenkung
-            st.bha = 0.0;
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out == -1) {
-                    st.bha += Math.PI * Math.pow(st.tr[i].d / 200.0, 2.0) * st.tr[i].fac;
-                }
-            }
-            st.bha = st.bha / st.size;
-
-            double maxBasalAreaOut = reduceBaOut(st);
-
-            boolean continueThinning = true;
-            if (maxBasalAreaOut <= 0.0) {
-                return;
-            }
-            do {
-                // find non crop tree with most competition to other trees, defined as that the maximum overlap area for neighbor trees
-                int indextree = -9;
-                double maxOverlap = -99999.9;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].d > 7 && st.tr[i].isLiving() && st.tr[i].crop == false && st.tr[i].tempcrop == false && st.tr[i].habitat == false) {
-                        double ovlp = 0.0;
-                        for (int j = 0; j < st.tr[i].nNeighbor; j++) {
-                            double distance = Math.sqrt(Math.pow(st.tr[i].x - st.tr[st.tr[i].neighbor[j]].x, 2.0)
-                                    + Math.pow(st.tr[i].y - st.tr[st.tr[i].neighbor[j]].y, 2.0));
-                            double ri = st.tr[i].cw / 2.0;
-                            double rj = st.tr[st.tr[i].neighbor[j]].cw / 2.0;
-                            // only if there is an overlap and ri > rj
-                            if (ri + rj > distance && ri > rj) {
-                                ovlp += overlap(rj, ri, distance);
-                            }
-                        }
-                        if (ovlp > maxOverlap) {
-                            maxOverlap = ovlp;
-                            indextree = i;
-                        }
-                    }
-                }
-
-                // release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
-                // crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
-                // into the limit of twice the crown radius of the crop tree size
-                // if merk > 9 then cut tree else stop crop tree release
-                if (indextree == -9) {
-                    continueThinning = false;
-                } else {
-                    st.tr[indextree].out = st.year;
-                    st.tr[indextree].outtype = OutType.THINNED;
-                    thinned = thinned + (st.tr[indextree].fac * st.tr[indextree].v);
-                    maxBasalAreaOut = maxBasalAreaOut - (st.tr[indextree].fac * Math.PI * Math.pow(st.tr[indextree].d / 200.0, 2.0)) / st.size;
-                    if (maxBasalAreaOut <= 0.0) {
-                        continueThinning = false;
-                    }
-                }
-            } //stop if max thinning amount is reached or all competitors are taken out
-            while (thinned < vmaxthinning && continueThinning);
-        }
-    }
-
     public static double calculateC66Ratio(Tree tree, double thinningIntensity) {
         // calculate maxc66
         double maxBasalArea = tree.calculateMaxBasalArea() * tree.getModerateThinningFactor();
@@ -1000,7 +920,7 @@ public class TreatmentElements2 {
     /**
      * calculate overlap area of two circle only if they overlap
      */
-    private static double overlap(double r1, double r2, double e) {
+    public static double overlap(double r1, double r2, double e) {
         double x, y, f;
         f = 0.0;
         //r1 should always be the smaller radius
