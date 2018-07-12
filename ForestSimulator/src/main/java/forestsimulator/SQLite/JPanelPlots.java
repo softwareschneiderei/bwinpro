@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import treegross.base.GenerateXY;
+import treegross.base.Layer;
 import treegross.base.OutType;
 import treegross.base.Stand;
 
@@ -324,7 +325,7 @@ public class JPanelPlots extends JPanel {
                         ps.setBoolean(17, st.tr[i].habitat);
                         ps.setDouble(18, st.tr[i].fac);
                         ps.setString(19, st.tr[i].remarks);
-                        ps.setInt(20, st.tr[i].layer);
+                        ps.setInt(20, st.tr[i].layer.toInt());
 
                         ps.execute();
                     }
@@ -554,7 +555,7 @@ public class JPanelPlots extends JPanel {
                     double w = Double.parseDouble(rs.getString("azimuth"));
                     double zz = Double.parseDouble(rs.getString("z"));
                     double ff = Double.parseDouble(rs.getString("fac"));
-                    int lay = rs.getInt("layer");
+                    Layer lay = Layer.fromInt(rs.getInt("layer"));
                     double xx = radius + Math.sin(Math.PI * w / 200.0) * e;
                     double yy = radius + Math.cos(Math.PI * w / 200.0) * e;
                     int nclone = 1;
@@ -569,8 +570,7 @@ public class JPanelPlots extends JPanel {
                             xx = -9.0;
                             yy = -9.0;
                         }
-                        st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, 0, 0.0, rm);
-                        st.tr[st.ntrees - 1].layer = lay;
+                        st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, lay, 0.0, rm);
                     }
                 }
             }

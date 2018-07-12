@@ -20,7 +20,6 @@ import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.XMLOutputter;
 import org.jdom.input.*;
-//import org.jdom.DocType;
 import java.net.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -163,7 +162,7 @@ public class TreegrossXML2 {
             elt = addString(elt, "ZBaumtemporaer", Boolean.toString(st.tr[i].tempcrop));
             elt = addString(elt, "HabitatBaum", Boolean.toString(st.tr[i].habitat));
             elt = addString(elt, "KraftscheKlasse", "0");
-            elt = addString(elt, "Schicht", Integer.toString(st.tr[i].layer));
+            elt = addString(elt, "Schicht", String.valueOf(st.tr[i].layer.toInt()));
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
             elt = addString(elt, "Flaechenfaktor", f.format(st.tr[i].fac));
@@ -226,7 +225,7 @@ public class TreegrossXML2 {
             st.center.no = "undefined";
 
             List<Element> eckpunkte = bestand.getChildren("Eckpunkt");
-            for (Element eckpunkt : eckpunkte) {
+            eckpunkte.forEach((eckpunkt) -> {
                 String nrx = eckpunkt.getChild("Nr").getText();
                 if (nrx.contains("circle") || nrx.contains("polygon")) {
                     st.center.no = nrx;
@@ -239,7 +238,7 @@ public class TreegrossXML2 {
                             Double.parseDouble(eckpunkt.getChild("RelativeYKoordinate_m").getText()),
                             Double.parseDouble(eckpunkt.getChild("RelativeBodenhoehe_m").getText()));
                 }
-            }
+            });
 //       if no corner point wa stored in xml create square with size equal to stand size
             if (eckpunkte.isEmpty()) {
                 double length = Math.sqrt(st.size * 10000);
@@ -271,7 +270,7 @@ public class TreegrossXML2 {
                             Boolean.parseBoolean(baum.getChild("ZBaum").getText()),
                             Boolean.parseBoolean(baum.getChild("ZBaumtemporaer").getText()),
                             Boolean.parseBoolean(baum.getChild("HabitatBaum").getText()),
-                            Integer.parseInt(baum.getChild("Schicht").getText()),
+                            Layer.fromInt(Integer.parseInt(baum.getChild("Schicht").getText())),
                             Double.parseDouble(baum.getChild("VolumenTotholz_cbm").getText()),
                             baum.getChild("Bemerkung").getText()
                     );

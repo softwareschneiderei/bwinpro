@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import treegross.base.GenerateXY;
+import treegross.base.Layer;
 import treegross.base.OutType;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
@@ -328,7 +329,7 @@ public class JPanelDatabase extends JPanel {
                     ps.setBoolean(17, st.tr[i].habitat);
                     ps.setDouble(18,st.tr[i].fac);
                     ps.setString(19, st.tr[i].remarks);
-                    ps.setInt(20, st.tr[i].layer);
+                    ps.setInt(20, st.tr[i].layer.toInt());
                     ps.execute();
                 }
             }
@@ -578,7 +579,7 @@ public class JPanelDatabase extends JPanel {
                         double yy = Double.parseDouble(rs.getString("y"));
                         double zz = Double.parseDouble(rs.getString("z"));
                         double ff = Double.parseDouble(rs.getString("fac"));
-                        int lay = rs.getInt("layer");
+                        Layer lay = Layer.fromInt(rs.getInt("layer"));
 
                         int nclone = 1;
                         if (ff >= 2.0) {
@@ -592,8 +593,7 @@ public class JPanelDatabase extends JPanel {
                                 xx = -9.0;
                                 yy = -9.0;
                             }
-                            st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, 0, 0.0, rm);
-                            st.tr[st.ntrees - 1].layer = lay;
+                            st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, lay, 0.0, rm);
                         }
                     }
                 } catch (SpeciesNotDefinedException ex) {

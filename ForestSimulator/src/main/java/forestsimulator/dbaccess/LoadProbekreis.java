@@ -189,7 +189,7 @@ public class LoadProbekreis {
                                     yp = -9.0;
                                 }
 
-                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, -9.0, xp, yp, -9.0, 0, 0, 0, fac, 0, "");
+                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, -9.0, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
                             }
                         }
                     }
@@ -255,7 +255,6 @@ public class LoadProbekreis {
             stmt.setInt(1, kreis);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-
                     int art = rs.getInt("Artencode");
                     double win = rs.getDouble("Gon");
                     double ent = rs.getDouble("Entfernung");
@@ -269,7 +268,7 @@ public class LoadProbekreis {
                     double xp = 25 + Math.sin(Math.PI * win / 180.0) * ent;
                     double yp = 25 + Math.cos(Math.PI * win / 180.0) * ent;
                     double fac = 1.0;
-                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, -9.0, xp, yp, -9.0, 0, 0, 0, fac, 0, "");
+                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, -9.0, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
                 }
             }
         } catch (Exception e) {

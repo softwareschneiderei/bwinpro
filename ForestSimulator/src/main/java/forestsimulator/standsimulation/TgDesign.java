@@ -381,7 +381,7 @@ public class TgDesign extends JPanel {
                                 tree.sp = standTree.sp;
                                 tree.st = st;
                                 standTree.h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
-                                standTree.layer = lay;
+                                standTree.layer = Layer.fromInt(lay);
                             }
                         }
                         st.forAllTrees(tree -> tree.setMissingData());
@@ -430,7 +430,7 @@ public class TgDesign extends JPanel {
                             int m = codex.indexOf(":");
                             codex = codex.substring(0, m);
                             st.addTree(Integer.parseInt(codex), nrAdd, Integer.parseInt(td2.getText()), -1, parseDouble(td3.getText()), parseDouble(td4.getText()), 0.0, 0.0, siteIndexFromInput(), -9.0, -9.0, 0.0, 0, 0, 0);
-                            st.tr[st.ntrees - 1].layer = lay;
+                            st.tr[st.ntrees - 1].layer = Layer.fromInt(lay);
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             logger.log(Level.SEVERE, null, ex);
                         }
@@ -458,7 +458,7 @@ public class TgDesign extends JPanel {
                     if (d < 7.0) {
 // get crown width at dbh= 7 cm of species at point of ingrowth            
                         Tree atree = new Tree(artx, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
-                                false, 3, 0.0, "");
+                                false, Layer.UNDERSTORY, 0.0, "");
                         try {
                             atree.sp = st.addspecies(atree);
                         } catch (SpeciesNotDefinedException ex) {
@@ -475,7 +475,7 @@ public class TgDesign extends JPanel {
                             String nrAdd = nox.toString();
                             if (d < 7.0) {
                                 st.addTree(artx, nrAdd, Integer.parseInt(td2.getText()), -1, d, hei, hei / 2.0, cbx, bon, -9.0, -9.0, 0.0, 0, 0, 0);
-                                st.tr[st.ntrees - 1].layer = 3;
+                                st.tr[st.ntrees - 1].layer = Layer.UNDERSTORY;
                             }
                         } catch (NumberFormatException | SpeciesNotDefinedException ex) {
                             Logger.getLogger(TgDesign.class.getName()).log(Level.SEVERE, null, ex);

@@ -115,7 +115,7 @@ public class StandTest {
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.5, 0, 2014, 0, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2014, Layer.NONE, 0, null, 15.1, -1,
                         false, true, true);
     }
 
@@ -136,7 +136,7 @@ public class StandTest {
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 0, 2013, 0, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 0, 2013, Layer.NONE, 0, null, 15.1, -1,
                         false, true, false);
     }
 
@@ -157,7 +157,7 @@ public class StandTest {
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 1, 2013, 0, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 1, 2013, Layer.NONE, 0, null, 15.1, -1,
                         false, true, false);
     }
 
@@ -178,7 +178,7 @@ public class StandTest {
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 2, 2013, 3, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 2, 2013, Layer.UNDERSTORY, 0, null, 15.1, -1,
                         false, true, false);
     }
 
@@ -203,14 +203,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 1);
         
-        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, 2, "remark");
+        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
-                        OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", 15.1, -1,
                         true, false, true);
     }
     
@@ -224,14 +224,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 1);
         
-        s.addtreeNFV(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, 2, "remark");
+        s.addtreeNFV(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
-                        OutType.STANDING, 1.5, 0, 2015, 2, 2, "remark", 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", 15.1, -1,
                         true, false, true);
     }
     
@@ -248,14 +248,14 @@ public class StandTest {
         s.addXMLTree(1, "number", 23, 9, OutType.FALLEN,
                 2.4, 12.4, 3.5, 4.3,
                 0.89, 1.7, 15.1, 2.1, -2.22, true, false, false,
-                1, 9.32, "remark");
+                Layer.UPPERSTORY, 9.32, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat", "volumeDeadwood")
                 .containsExactly(1, "number", 23, 9, 2.4, 12.4, 3.5, 4.3, 15.1, 2.1, -2.22,
-                        OutType.FALLEN, 1.7, 0, 0, 1, 0, "remark", 0.89, 0,
+                        OutType.FALLEN, 1.7, 0, 0, Layer.UPPERSTORY, 0, "remark", 0.89, 0,
                         true, false, false, 9.32);
     }
     

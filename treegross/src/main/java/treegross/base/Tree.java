@@ -91,10 +91,8 @@ public class Tree implements Cloneable {
      * reference to stand
      */
     public Stand st;
-    /**
-     * tree layer 1=upper, 2=middel, 3=lower
-     */
-    public int layer;
+
+    public Layer layer;
     /**
      * last diameter amd height increment
      */
@@ -182,14 +180,9 @@ public class Tree implements Cloneable {
      * year of removal in reality
      */
     int yearOfRemovalinReality = 0;
-// for Viswin 
-    /* Ober- u. Unterstand */ public int ou = 0;
-    /**
-     * mortality reason 1= thinned or harvested, 2= dry and standing, 3= wind
-     * throw, 4= other
-     */
-    public int mortalityReason = 0;
-    //for ried
+    // for Viswin 
+    /* Ober- u. Unterstand */
+    public int ou = 0;
     /**
      * index of vitality
      */    public double vitality = 1;
@@ -231,7 +224,7 @@ public class Tree implements Cloneable {
      */
     public Tree(int codex, String nox, int agex, int outx, OutType outtypex, double dx, double hx, double cbx, double cwx,
             double six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
-            boolean habitatTreex, int treeLayerx, double volumeDeadwoodx, String remarksx) {
+            boolean habitatTreex, Layer treeLayerx, double volumeDeadwoodx, String remarksx) {
         code = codex;
         no = nox;
         out = outx;

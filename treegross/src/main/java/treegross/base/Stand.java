@@ -505,7 +505,7 @@ public class Stand {
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 2;
-            tr[ntrees - 1].layer = 3;
+            tr[ntrees - 1].layer = Layer.UNDERSTORY;
         }
     }
 
@@ -533,7 +533,7 @@ public class Stand {
     public boolean addTree(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         try {
-            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, 0, null);
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, Layer.NONE, null);
             return true;
         } catch (IllegalStateException e) {
             LOGGER.log(Level.INFO, "Tree not added.", e);
@@ -544,12 +544,12 @@ public class Stand {
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
             double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
-        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, 0, null);
+        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, Layer.NONE, null);
     }
 
     /* add a tree from Dbase NFV*/
     public void addtreeNFV(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, double fac, int ou, String rm) throws SpeciesNotDefinedException {
+            double si, double x, double y, double z, int zb, int tzb, int hb, double fac, Layer ou, String rm) throws SpeciesNotDefinedException {
         if (ntrees + 1 > maxStandTrees) {
             throw new IllegalStateException(
                     MessageFormat.format("Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}",
@@ -571,8 +571,8 @@ public class Stand {
         tree.fac = fac;
         tree.origin = 0;
         tree.year = this.year;
-        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
-        tree.ou = ou;
+        tree.layer = ou;
+        tree.ou = ou.toInt();
         tree.remarks = rm;
         tree.si = si; // no site index set at this point
         tree.group = -1; // no site index set at this point
@@ -587,7 +587,7 @@ public class Stand {
     public void addXMLTree(int codenumber, String number, int age, int out, OutType outtype,
             double d, double h, double cb, double cw,
             double si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
-            int layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
+            Layer layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
         Tree tree = new Tree(codenumber, number, age, out, outtype, d, h, cb, cw, si, fac, x, y, z, zb, tzb, hb, layer,
                 volumeDeadwood, remarks);
        addTreeToStand(tree);

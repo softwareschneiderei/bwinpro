@@ -22,6 +22,7 @@ package treegross.treatment;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.GenerateXY;
+import treegross.base.Layer;
 import treegross.base.OutType;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
@@ -1076,7 +1077,7 @@ public class TreatmentElements2 {
             double spcov = getDegreeOfCover(art, st, false);
             // get crown width at dbh = 7 cm of species at point of ingrowth            
             Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
-                    false, 3, 0.0, "");
+                    false, Layer.UNDERSTORY, 0.0, "");
             try {
                 atree.sp = st.addspecies(atree);
             } catch (SpeciesNotDefinedException ex) {

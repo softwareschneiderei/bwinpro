@@ -189,7 +189,7 @@ public class LoadTreegrossStand {
                             if (i > 0) {
                                 nrx = nr + "_" + i;
                             }
-                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, fac, ou, rm);
+                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, fac, Layer.fromInt(ou), rm);
                         }
                         if (out > 0) {
                             stand.tr[stand.ntrees - 1].outtype = OutType.THINNED;

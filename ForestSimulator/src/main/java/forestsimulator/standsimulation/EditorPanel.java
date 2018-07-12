@@ -69,7 +69,7 @@ public class EditorPanel extends JPanel {
         int erg = -9;
         try {
             erg = Integer.parseInt(txt.trim());
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             erg = -9;
         }
         return erg;
@@ -79,7 +79,7 @@ public class EditorPanel extends JPanel {
         double erg = -99.0;
         try {
             erg = Double.parseDouble(txt.trim());
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             erg = -9;
         }
         return erg;
@@ -141,9 +141,9 @@ public class EditorPanel extends JPanel {
                     st.tr[m].remarks = "";
                 }
                 if (jTable2.getValueAt(i, 17) != null) {
-                    st.tr[m].layer = getInt((String) jTable2.getValueAt(i, 17));
+                    st.tr[m].layer = Layer.fromInt(getInt((String) jTable2.getValueAt(i, 17)));
                 } else {
-                    st.tr[m].layer = 0;
+                    st.tr[m].layer = Layer.NONE;
                 }
                 m = m + 1;
             }
@@ -206,7 +206,7 @@ public class EditorPanel extends JPanel {
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
             jTable2.setValueAt(st.tr[i].remarks, i, 16);
-            jTable2.setValueAt(Integer.toString(st.tr[i].layer), i, 17);
+            jTable2.setValueAt(String.valueOf(st.tr[i].layer.toInt()), i, 17);
         }
     }
 
@@ -533,7 +533,7 @@ public class EditorPanel extends JPanel {
         }
         try {
             url = new URL(fname);
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
         }
         if (url.toString().length() > 0) {
             TreegrossXML2 treegrossXML = new TreegrossXML2();
