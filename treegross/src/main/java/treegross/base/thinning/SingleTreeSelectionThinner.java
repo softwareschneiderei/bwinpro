@@ -25,7 +25,7 @@ public class SingleTreeSelectionThinner implements Thinner {
         }
         thinCropTreeCompetition(stand);
         if (stand.trule.thinArea) {
-            TreatmentElements2.thinCompetitionFromAbove(stand, thinned, vout);
+            FromAboveThinner.thinCompetitionFromAbove(stand, thinned, vout);
         }
     }
     
