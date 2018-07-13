@@ -701,4 +701,13 @@ public class Tree implements Cloneable {
     public boolean isLiving() {
         return out < 0;
     }
+    
+    public void takeOut(int year, OutType reason) {
+        out = year;
+        outtype = reason;
+    }
+    
+    public boolean isOf(Species species) {
+        return sp.code == species.code;
+    }
 }
