@@ -506,13 +506,12 @@ public class Tree implements Cloneable {
             }
 
             //NormalDistributed ndis = new NormalDistributed();
-            double effect;
             if (/*randomEffects*/rn.randomOn) {
                 if (bhdinc <= 0.0) {
                     bhdinc = 0.0001;
                 }
                 //effect = sp.spDef.diameterIncrementError*ndis.value(1.0);
-                effect = sp.spDef.diameterIncrementError * rn.nextNormal(1);
+                double effect = sp.spDef.diameterIncrementError * rn.nextNormal(1);
                 bhdinc = Math.exp(Math.log(bhdinc) + effect);
             }
             if (bhdinc < 0.0) {
@@ -531,7 +530,7 @@ public class Tree implements Cloneable {
 
             hinc = fi.getValueForTree(this, sp.spDef.heightIncrementXML);
             if (rn.randomOn) {
-                effect = sp.spDef.heightIncrementError;
+                double effect = sp.spDef.heightIncrementError;
                 hinc += effect * rn.nextNormal(1);
             }
 

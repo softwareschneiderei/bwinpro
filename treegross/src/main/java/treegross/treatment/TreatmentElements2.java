@@ -736,14 +736,7 @@ public class TreatmentElements2 {
     }
 
     private static double maxBasalAreaFor(Species aSpecies, boolean withModerateThinningFactor) {
-        // TODO: find a name for such a tree and extract either into Species or a factory
-        Tree atree = new Tree();
-        atree.sp = aSpecies;
-        atree.d = aSpecies.d100;
-        atree.h = aSpecies.h100;
-        atree.age = (int) Math.round(aSpecies.h100age);
-        atree.cw = atree.calculateCw();
-        atree.code = aSpecies.code;
+        Tree atree = aSpecies.referenceTree();
         //bei allen Durchforstungen:
         double basalAreaForSpecies = atree.calculateMaxBasalArea() * (aSpecies.percCSA / 100.0);
         if (withModerateThinningFactor) {

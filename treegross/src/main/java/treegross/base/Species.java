@@ -411,4 +411,15 @@ public class Species implements Cloneable {
                 .append(" G:").append(gha);
         return sb.toString();
     }
+
+    public Tree referenceTree() {
+        Tree atree = new Tree();
+        atree.sp = this;
+        atree.d = d100;
+        atree.h = h100;
+        atree.age = (int) Math.round(h100age);
+        atree.cw = atree.calculateCw();
+        atree.code = code;
+        return atree;
+    }
 }
