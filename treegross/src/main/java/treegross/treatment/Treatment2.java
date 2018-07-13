@@ -18,6 +18,7 @@
  */
 package treegross.treatment;
 
+import treegross.base.Species;
 import treegross.base.Stand;
 
 /**
@@ -154,7 +155,9 @@ public class Treatment2 {
                 }
             }
 
-            st.trule.typeOfThinning.thinner(te.vout).thin(st);
+            for (Species species : st.species()) {
+                st.trule.typeOfThinning.thinner(te.vout).thin(st, species);
+            }
             
             //if thinning amount was not high enough: set thinned trees alive
             te.checkMinThinningVolume(st);

@@ -1,6 +1,7 @@
 package treegross.base.thinning;
 
 import treegross.base.OutType;
+import treegross.base.Species;
 import treegross.base.Stand;
 
 /**
@@ -8,11 +9,6 @@ import treegross.base.Stand;
  *
  */
 public class QDThinner implements Thinner {
-
-    @Override
-    public void thin(Stand stand) {
-        thinByQD(stand);
-    }
 
     /**
      * Thinning by Q-D-Rule is a specail thinning from Rheinland-Pfalz The
@@ -25,28 +21,26 @@ public class QDThinner implements Thinner {
      * method assumes that there is no competition of other crop trees and that
      * the number of crop trees is low
      *
-     * @param st
+     * @param stand the stand to work on
+     * @param species thin only trees of the given species
      */
-    public void thinByQD(Stand st) {
-        st.forTreesMatching(tree -> tree.isLiving() && tree.crop, tree -> {
+    @Override
+    public void thin(Stand stand, Species species) {
+        stand.forTreesMatching(tree -> tree.isLiving() && tree.crop && tree.isOf(species), tree -> {
             // we found a crop tree and remove now all other trees
-            for (int j = 0; j < st.ntrees; j++) {
-                if (st.tr[j].d > 7 && st.tr[j].isLiving() && st.tr[j].crop == false && st.tr[j].habitat == false) {
-                    double ent = Math.sqrt(Math.pow(tree.x - st.tr[j].x, 2.0) + Math.pow(tree.y - st.tr[j].y, 2.0));
-                    if (tree.h > tree.si * 0.8) {
-                        if (ent < 0.9 * (tree.cw + st.tr[j].cw) / 2.0 && st.tr[j].h * 1.1 > tree.cb) {
-                            st.tr[j].out = st.year;
-                            st.tr[j].outtype = OutType.THINNED;
-                        }
-                    }
-                    if (tree.h > tree.si * 0.3 && tree.h < tree.si * 0.8) {
-                        if (ent < 0.20 + (tree.cw + st.tr[j].cw) / 2.0) {
-                            st.tr[j].out = st.year;
-                            st.tr[j].outtype = OutType.THINNED;
-                        }
+            stand.forTreesMatching(competitor -> competitor.d > 7 && competitor.isLiving() && !competitor.crop && !competitor.habitat, competitor -> {
+                double ent = Math.sqrt(Math.pow(tree.x - competitor.x, 2.0) + Math.pow(tree.y - competitor.y, 2.0));
+                if (tree.h > tree.si * 0.8) {
+                    if (ent < 0.9 * (tree.cw + competitor.cw) / 2.0 && competitor.h * 1.1 > tree.cb) {
+                        competitor.takeOut(stand.year, OutType.THINNED);
                     }
                 }
-            }
+                if (tree.h > tree.si * 0.3 && tree.h < tree.si * 0.8) {
+                    if (ent < 0.20 + (tree.cw + competitor.cw) / 2.0) {
+                        competitor.takeOut(stand.year, OutType.THINNED);
+                    }
+                }
+            });
         });
     }
 }
