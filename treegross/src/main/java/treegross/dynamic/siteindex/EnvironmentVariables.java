@@ -2,12 +2,24 @@ package treegross.dynamic.siteindex;
 
 import java.time.Month;
 import java.time.Year;
-import java.util.LinkedHashMap;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
+import treegross.util.SlidingMeanCalculator;
 
-public class EnvironmentVariables {
-    private final Map<Year, GrowingSeasonValues> growingSeasons = new LinkedHashMap<>();
+public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
+    private final Map<Year, GrowingSeasonValues> growingSeasons = new TreeMap<>();
+
+    public EnvironmentVariables() {
+        super();
+    }
+
+    protected EnvironmentVariables(EnvironmentVariables environmentVariables) {
+        super();
+        growingSeasons.putAll(environmentVariables.growingSeasons);
+    }
     
     /**
      * Average growing season temperature
@@ -47,16 +59,46 @@ public class EnvironmentVariables {
     public double aridityIndexOf(Year year) {
         return Month.values().length * growingSeasonPrecipitationSumOf(year) / (growingSeasonMeanTemperatureOf(year) + 10);
     }
+    
+    public void addGrowingSeason(GrowingSeasonValues growingSeason) {
+        addGrowingSeasons(Arrays.asList(growingSeason));
+    }
 
     public void addGrowingSeasons(Iterable<GrowingSeasonValues> growingSeasons) {
         growingSeasons.forEach((seasonValues) -> {
             this.growingSeasons.put(seasonValues.year, seasonValues);
         });
     }
+    
+    public EnvironmentVariables calculate5YearMeans() {
+        EnvironmentVariables result = new EnvironmentVariables();
+        SlidingMeanCalculator<GrowingSeasonValues> window = new SlidingMeanCalculator<>(5);
+        fillMeanCalculatorWindow(window);
+        forEach(growingSeason -> {
+            window.add(growingSeason);
+            result.addGrowingSeason(new GrowingSeasonValues(
+                    growingSeason.year,
+                    window.meanOf(season -> season.meanTemperature),
+                    window.meanOf(season -> season.meanPrecipitationSum),
+                    new AnnualNitrogenDeposition(window.meanOf(season -> season.nitrogenDeposition.value))));
+        });
+        return result;
+    }
+
+    private void fillMeanCalculatorWindow(SlidingMeanCalculator<GrowingSeasonValues> window) {
+        for (int i = 0; i < window.windowSize(); i++) {
+            window.add(this.iterator().next());
+        }
+    }
 
     private void checkEntryFor(Year year) throws NoSuchElementException {
         if (!growingSeasons.containsKey(year)) {
             throw new NoSuchElementException("No values for year " + year + " found.");
         }
+    }
+
+    @Override
+    public Iterator<GrowingSeasonValues> iterator() {
+        return growingSeasons.values().iterator();
     }
 }
