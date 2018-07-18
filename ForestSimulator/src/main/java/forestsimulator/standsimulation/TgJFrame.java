@@ -542,7 +542,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 programDir = user.getWorkingDir();
             }
             if (cmd.equals("Species Manager")) {
-                TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir.getAbsolutePath(), st.FileXMLSettings);
+                TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir, st.FileXMLSettings);
                 spman.setVisible(true);
             }
             if (cmd.equals("About")) {
