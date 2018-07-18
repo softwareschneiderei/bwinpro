@@ -1,23 +1,26 @@
 package treegross.dynamic.siteindex;
 
 import java.util.LinkedList;
+import java.util.function.Function;
+import treegross.util.MeanCalculator;
 
-public class DataAccumulation {
+public class Weighted5YearMeanCalculator<E> implements MeanCalculator<E>{
 
     private static final int windowSize = 5;
-    private final LinkedList<Double> yearlyValues;
+    private final LinkedList<E> yearlyValues;
 
-    public DataAccumulation() {
+    public Weighted5YearMeanCalculator() {
         this.yearlyValues = new LinkedList<>();
     }
     
-    public DataAccumulation add(double value) {
+    @Override
+    public void add(E value) {
         yearlyValues.add(value);
         while (yearlyValues.size() > windowSize) { yearlyValues.remove(); }
-        return this;
     }
     
-    public double weighted5YearMean() {
+    @Override
+    public double meanOf(Function<E, Double> extractor) {
         if (yearlyValues.isEmpty()) {
             return 0d;
         }
@@ -28,8 +31,13 @@ public class DataAccumulation {
             int weight = pastYear + 1;
             
             totalWeight += weight;
-            result += weight * yearlyValues.get(pastYear);
+            result += weight * extractor.apply(yearlyValues.get(pastYear));
         }
         return result /= totalWeight; //NOSONAR, false positive! We have at least one value here, so weight is also at least 1!
+    }
+
+    @Override
+    public int windowSize() {
+        return windowSize;
     }
 }

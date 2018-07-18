@@ -15,7 +15,7 @@ public class DynamicSiteIndexCalculationDemo {
     public static Projection basicInfoSpecification() {
         Projection result = new Projection(Year.of(2006));
         result.standName = "fi 150/   b";
-        result.treeSpecies = "Fi";
+        result.treeSpecies = "Bu";
         result.rcp = "MISC";
         return result;
     }

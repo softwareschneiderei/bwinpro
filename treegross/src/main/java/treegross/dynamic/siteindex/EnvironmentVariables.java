@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.TreeMap;
+import treegross.util.MeanCalculator;
 import treegross.util.SlidingMeanCalculator;
 
 public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
@@ -71,9 +72,17 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
     }
     
     public EnvironmentVariables calculate5YearMeans() {
+        final SlidingMeanCalculator<GrowingSeasonValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
+        slidingMeanCalculator.fillCalculatorWindow(iterator().next());
+        return calculateMeanWith(slidingMeanCalculator);
+    }
+
+    public EnvironmentVariables calculateWeighted5YearMeans() {
+        return calculateMeanWith(new Weighted5YearMeanCalculator<>());
+    }
+
+    private EnvironmentVariables calculateMeanWith(MeanCalculator<GrowingSeasonValues> window) {
         EnvironmentVariables result = new EnvironmentVariables();
-        SlidingMeanCalculator<GrowingSeasonValues> window = new SlidingMeanCalculator<>(5);
-        fillMeanCalculatorWindow(window);
         forEach(growingSeason -> {
             window.add(growingSeason);
             result.addGrowingSeason(new GrowingSeasonValues(
@@ -83,31 +92,6 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
                     new AnnualNitrogenDeposition(window.meanOf(season -> season.nitrogenDeposition.value))));
         });
         return result;
-    }
-
-    // TODO: refactor DataAccumulation to something more flexible like the SlidingMeanCalculator<E>
-    public EnvironmentVariables calculateWeighted5YearMeans() {
-        EnvironmentVariables result = new EnvironmentVariables();
-        DataAccumulation temperatureMean = new DataAccumulation();
-        DataAccumulation precipitationMean = new DataAccumulation();
-        DataAccumulation nitrogenDepositionMean = new DataAccumulation();
-        forEach(growingSeason -> {
-            double weightedMeanTemperature = temperatureMean.add(growingSeason.meanTemperature).weighted5YearMean();
-            double weightedMeanPrecipitation = precipitationMean.add(growingSeason.meanPrecipitationSum).weighted5YearMean();
-            AnnualNitrogenDeposition weightedMeanNitrogen = new AnnualNitrogenDeposition(nitrogenDepositionMean.add(growingSeason.nitrogenDeposition.value).weighted5YearMean());
-            result.addGrowingSeason(new GrowingSeasonValues(
-                    growingSeason.year,
-                    weightedMeanTemperature,
-                    weightedMeanPrecipitation,
-                    weightedMeanNitrogen));
-        });
-        return result;
-    }
-
-    private void fillMeanCalculatorWindow(SlidingMeanCalculator<GrowingSeasonValues> window) {
-        for (int i = 0; i < window.windowSize(); i++) {
-            window.add(this.iterator().next());
-        }
     }
 
     private void checkEntryFor(Year year) throws NoSuchElementException {
