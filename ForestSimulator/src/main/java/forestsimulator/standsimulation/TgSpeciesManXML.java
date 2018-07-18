@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JTable;
 import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import treegross.base.thinning.HeightBasedThinning;
@@ -40,8 +41,8 @@ import treegross.base.thinning.HeightBasedThinning;
 public class TgSpeciesManXML extends javax.swing.JDialog {
 
     private static final Logger logger = Logger.getLogger(TgSpeciesManXML.class.getName());
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("forestsimulator/gui");
     private final List<SpeciesDef> spd = new ArrayList<>();
-    private static Element rootElt;
     private final DefaultListModel listModel = new DefaultListModel();
     private final File urlname;
 
@@ -91,18 +92,17 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         biomassTextField = new javax.swing.JTextField();
         deadWoodModuleLabel = new javax.swing.JLabel();
         deadWoodModuleTextField = new javax.swing.JTextField();
-        jScrollPane3 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         selectedSpeciesLabel = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        speciesDefinitionTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         saveButton = new javax.swing.JButton();
         saveAsNewButton = new javax.swing.JButton();
         saveSettingsButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        speciesListPanel = new javax.swing.JPanel();
         treeSpeciesLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         speciesList = new javax.swing.JList();
@@ -209,7 +209,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         getContentPane().add(jPanel4, java.awt.BorderLayout.NORTH);
 
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        jPanel1.setLayout(new java.awt.BorderLayout(5, 5));
 
         selectedSpeciesLabel.setText(bundle.getString("TgSpeciesManXML.selectedSpeciesLabel.text")); // NOI18N
         jPanel1.add(selectedSpeciesLabel, java.awt.BorderLayout.PAGE_START);
@@ -218,8 +219,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jScrollPane2.setAutoscrolls(true);
 
-        jTable1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        speciesDefinitionTable.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        speciesDefinitionTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null},
                 {null, null},
@@ -264,7 +265,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
                 "Variable", "XML Code"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(speciesDefinitionTable);
 
         jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -311,7 +312,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
                 .addComponent(deleteButton)
                 .addGap(16, 16, 16)
                 .addComponent(saveSettingsButton)
-                .addContainerGap(625, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,15 +328,14 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
         jPanel1.add(jPanel3, java.awt.BorderLayout.SOUTH);
 
-        jScrollPane3.setViewportView(jPanel1);
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-        jPanel2.setPreferredSize(new java.awt.Dimension(100, 600));
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        speciesListPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        speciesListPanel.setPreferredSize(new java.awt.Dimension(100, 600));
+        speciesListPanel.setLayout(new java.awt.BorderLayout(5, 5));
 
         treeSpeciesLabel.setText(bundle.getString("TgSpeciesManXML.treeSpeciesLabel.text")); // NOI18N
-        jPanel2.add(treeSpeciesLabel, java.awt.BorderLayout.NORTH);
+        speciesListPanel.add(treeSpeciesLabel, java.awt.BorderLayout.NORTH);
 
         speciesList.setModel(listModel);
         speciesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -345,9 +345,9 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         });
         jScrollPane1.setViewportView(speciesList);
 
-        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        speciesListPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.WEST);
+        getContentPane().add(speciesListPanel, java.awt.BorderLayout.WEST);
 
         setSize(new java.awt.Dimension(1196, 820));
         setLocationRelativeTo(null);
@@ -392,44 +392,44 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
 
     private void saveTable(SpeciesDef speciesDefinition) {
         SpeciesDefMap sdm = new SpeciesDefMap();
-        speciesDefinition.code = Integer.parseInt((String) jTable1.getValueAt(0, 1));
-        speciesDefinition.shortName = (String) jTable1.getValueAt(1, 1);
-        speciesDefinition.longName = (String) jTable1.getValueAt(2, 1);
-        speciesDefinition.latinName = (String) jTable1.getValueAt(3, 1);
-        speciesDefinition.internalCode = Integer.parseInt((String) jTable1.getValueAt(4, 1));
-        speciesDefinition.codeGroup = Integer.parseInt((String) jTable1.getValueAt(5, 1));
-        speciesDefinition.handledLikeCode = Integer.parseInt((String) jTable1.getValueAt(6, 1));
-        speciesDefinition.heightCurve = getInt((String) jTable1.getValueAt(7, 1));
-        speciesDefinition.uniformHeightCurveXML = sdm.initTGFunction(jTable1.getValueAt(8, 1).toString());
-        speciesDefinition.heightVariationXML = sdm.initTGFunction(jTable1.getValueAt(9, 1).toString());
-        speciesDefinition.diameterDistributionXML = sdm.initTGFunction(jTable1.getValueAt(10, 1).toString());
-        speciesDefinition.volumeFunctionXML = sdm.initTGFunction(jTable1.getValueAt(11, 1).toString());
-        speciesDefinition.stemVolumeFunctionXML = (String) jTable1.getValueAt(12, 1);
-        speciesDefinition.crownwidthXML = sdm.initTGFunction(jTable1.getValueAt(13, 1).toString());
-        speciesDefinition.crownbaseXML = sdm.initTGFunction(jTable1.getValueAt(14, 1).toString());
-        speciesDefinition.crownType = getInt((String) jTable1.getValueAt(15, 1));
-        speciesDefinition.siteindexXML = sdm.initTGFunction(jTable1.getValueAt(16, 1).toString());
-        speciesDefinition.siteindexHeightXML = sdm.initTGFunction(jTable1.getValueAt(17, 1).toString());
-        speciesDefinition.potentialHeightIncrementXML = sdm.initTGFunction(jTable1.getValueAt(18, 1).toString());
-        speciesDefinition.heightIncrementXML = sdm.initTGFunction(jTable1.getValueAt(19, 1).toString());
-        speciesDefinition.heightIncrementError = getDouble((String) jTable1.getValueAt(20, 1));
-        speciesDefinition.diameterIncrementXML = sdm.initTGFunction(jTable1.getValueAt(21, 1).toString());
-        speciesDefinition.diameterIncrementError = getDouble((String) jTable1.getValueAt(22, 1));
-        speciesDefinition.maximumDensityXML = sdm.initTGFunction(jTable1.getValueAt(23, 1).toString());
-        speciesDefinition.maximumAge = getInt((String) jTable1.getValueAt(24, 1));
-        speciesDefinition.ingrowthXML = (String) jTable1.getValueAt(25, 1);
-        speciesDefinition.decayXML = sdm.initTGFunction(jTable1.getValueAt(26, 1).toString());
-        speciesDefinition.cropTreeNumber = getInt((String) jTable1.getValueAt(37, 1));
-        speciesDefinition.targetDiameter = getDouble((String) jTable1.getValueAt(27, 1));
-        speciesDefinition.heightOfThinningStart = getDouble((String) jTable1.getValueAt(28, 1));
-        speciesDefinition.moderateThinning = new HeightBasedThinning((String) jTable1.getValueAt(29, 1));
-        speciesDefinition.colorXML = (String) jTable1.getValueAt(30, 1);
-        speciesDefinition.competitionXML = (String) jTable1.getValueAt(31, 1);
-        speciesDefinition.taperFunctionXML = (String) jTable1.getValueAt(32, 1);
-        speciesDefinition.coarseRootBiomass = (String) jTable1.getValueAt(33, 1);
-        speciesDefinition.smallRootBiomass = (String) jTable1.getValueAt(34, 1);
-        speciesDefinition.fineRootBiomass = (String) jTable1.getValueAt(35, 1);
-        speciesDefinition.totalRootBiomass = (String) jTable1.getValueAt(36, 1);
+        speciesDefinition.code = Integer.parseInt((String) speciesDefinitionTable.getValueAt(0, 1));
+        speciesDefinition.shortName = (String) speciesDefinitionTable.getValueAt(1, 1);
+        speciesDefinition.longName = (String) speciesDefinitionTable.getValueAt(2, 1);
+        speciesDefinition.latinName = (String) speciesDefinitionTable.getValueAt(3, 1);
+        speciesDefinition.internalCode = Integer.parseInt((String) speciesDefinitionTable.getValueAt(4, 1));
+        speciesDefinition.codeGroup = Integer.parseInt((String) speciesDefinitionTable.getValueAt(5, 1));
+        speciesDefinition.handledLikeCode = Integer.parseInt((String) speciesDefinitionTable.getValueAt(6, 1));
+        speciesDefinition.heightCurve = getInt((String) speciesDefinitionTable.getValueAt(7, 1));
+        speciesDefinition.uniformHeightCurveXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(8, 1).toString());
+        speciesDefinition.heightVariationXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(9, 1).toString());
+        speciesDefinition.diameterDistributionXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(10, 1).toString());
+        speciesDefinition.volumeFunctionXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(11, 1).toString());
+        speciesDefinition.stemVolumeFunctionXML = (String) speciesDefinitionTable.getValueAt(12, 1);
+        speciesDefinition.crownwidthXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(13, 1).toString());
+        speciesDefinition.crownbaseXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(14, 1).toString());
+        speciesDefinition.crownType = getInt((String) speciesDefinitionTable.getValueAt(15, 1));
+        speciesDefinition.siteindexXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(16, 1).toString());
+        speciesDefinition.siteindexHeightXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(17, 1).toString());
+        speciesDefinition.potentialHeightIncrementXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(18, 1).toString());
+        speciesDefinition.heightIncrementXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(19, 1).toString());
+        speciesDefinition.heightIncrementError = getDouble((String) speciesDefinitionTable.getValueAt(20, 1));
+        speciesDefinition.diameterIncrementXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(21, 1).toString());
+        speciesDefinition.diameterIncrementError = getDouble((String) speciesDefinitionTable.getValueAt(22, 1));
+        speciesDefinition.maximumDensityXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(23, 1).toString());
+        speciesDefinition.maximumAge = getInt((String) speciesDefinitionTable.getValueAt(24, 1));
+        speciesDefinition.ingrowthXML = (String) speciesDefinitionTable.getValueAt(25, 1);
+        speciesDefinition.decayXML = sdm.initTGFunction(speciesDefinitionTable.getValueAt(26, 1).toString());
+        speciesDefinition.cropTreeNumber = getInt((String) speciesDefinitionTable.getValueAt(37, 1));
+        speciesDefinition.targetDiameter = getDouble((String) speciesDefinitionTable.getValueAt(27, 1));
+        speciesDefinition.heightOfThinningStart = getDouble((String) speciesDefinitionTable.getValueAt(28, 1));
+        speciesDefinition.moderateThinning = new HeightBasedThinning((String) speciesDefinitionTable.getValueAt(29, 1));
+        speciesDefinition.colorXML = (String) speciesDefinitionTable.getValueAt(30, 1);
+        speciesDefinition.competitionXML = (String) speciesDefinitionTable.getValueAt(31, 1);
+        speciesDefinition.taperFunctionXML = (String) speciesDefinitionTable.getValueAt(32, 1);
+        speciesDefinition.coarseRootBiomass = (String) speciesDefinitionTable.getValueAt(33, 1);
+        speciesDefinition.smallRootBiomass = (String) speciesDefinitionTable.getValueAt(34, 1);
+        speciesDefinition.fineRootBiomass = (String) speciesDefinitionTable.getValueAt(35, 1);
+        speciesDefinition.totalRootBiomass = (String) speciesDefinitionTable.getValueAt(36, 1);
     }
 
     private int getInt(String s) {
@@ -555,68 +555,68 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         Document doc = new Document();
-        rootElt = new Element("ForestSimulatorSettings");
+        Element rootElt = new Element("ForestSimulatorSettings");
         ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
                 "type=\"text/xsl\" href=\"ForestSimulatorSettings.xsl\"");
         doc.addContent(pi);
         doc.setRootElement(rootElt);
-        Element elt = new Element("GeneralSettings");
-        elt = addString(elt, "ModelRegion", modelRegionTextField.getText());
-        elt = addString(elt, "ErrorComponent", String.valueOf(randomnessCheckBox.isSelected()));
-        elt = addString(elt, "IngrowthModul", String.valueOf(ingrowthCheckBox.isSelected()));
-        elt = addString(elt, "DeadwoodModul", String.valueOf(deadWoodModuleCheckBox.isSelected()));
-        elt = addString(elt, "TimeStep", String.valueOf(Integer.parseInt(timeStepTextField.getText().trim())));
-        elt = addString(elt, "Author", authorTextField.getText());
-        elt = addString(elt, "FirstDate", dateTextField.getText());
-        elt = addString(elt, "LastChange", lastUpdateTextField.getText());
-        elt = addString(elt, "Literature", literatureTextField.getText());
-        elt = addString(elt, "Description", descriptionTextArea.getText());
-        elt = addString(elt, "SortingModul", sortingModuleTextField.getText());
-        elt = addString(elt, "BiomassModul", biomassTextField.getText());
-        elt = addString(elt, "DebriswoodModul", deadWoodModuleTextField.getText());
-        rootElt.addContent(elt);
+        Element parent = new Element("GeneralSettings");
+        parent = addString(parent, "ModelRegion", modelRegionTextField.getText());
+        parent = addString(parent, "ErrorComponent", String.valueOf(randomnessCheckBox.isSelected()));
+        parent = addString(parent, "IngrowthModul", String.valueOf(ingrowthCheckBox.isSelected()));
+        parent = addString(parent, "DeadwoodModul", String.valueOf(deadWoodModuleCheckBox.isSelected()));
+        parent = addString(parent, "TimeStep", String.valueOf(Integer.parseInt(timeStepTextField.getText().trim())));
+        parent = addString(parent, "Author", authorTextField.getText());
+        parent = addString(parent, "FirstDate", dateTextField.getText());
+        parent = addString(parent, "LastChange", lastUpdateTextField.getText());
+        parent = addString(parent, "Literature", literatureTextField.getText());
+        parent = addString(parent, "Description", descriptionTextArea.getText());
+        parent = addString(parent, "SortingModul", sortingModuleTextField.getText());
+        parent = addString(parent, "BiomassModul", biomassTextField.getText());
+        parent = addString(parent, "DebriswoodModul", deadWoodModuleTextField.getText());
+        rootElt.addContent(parent);
 
         for (SpeciesDef speciesDefinition : spd) {
-            elt = new Element("SpeciesDefinition");
-            elt = addString(elt, "Code", Integer.toString(speciesDefinition.code));
-            elt = addString(elt, "ShortName", speciesDefinition.shortName);
-            elt = addString(elt, "LongName", speciesDefinition.longName);
-            elt = addString(elt, "LatinName", speciesDefinition.latinName);
-            elt = addString(elt, "InternalCode", Integer.toString(speciesDefinition.internalCode));
-            elt = addString(elt, "CodeGroup", Integer.toString(speciesDefinition.codeGroup));
-            elt = addString(elt, "HandledLikeCode", Integer.toString(speciesDefinition.handledLikeCode));
-            elt = addString(elt, "HeightCurve", Integer.toString(speciesDefinition.heightCurve));
-            elt = addString(elt, "UniformHeightCurveXML", speciesDefinition.uniformHeightCurveXML.toString());
-            elt = addString(elt, "HeightVariation", speciesDefinition.heightVariationXML.toString());
-            elt = addString(elt, "DiameterDistributionXML", speciesDefinition.diameterDistributionXML.toString());
-            elt = addString(elt, "VolumeFunctionXML", speciesDefinition.volumeFunctionXML.toString());
-            elt = addString(elt, "StemVolumeFunction", speciesDefinition.stemVolumeFunctionXML);
-            elt = addString(elt, "Crownwidth", speciesDefinition.crownwidthXML.toString());
-            elt = addString(elt, "Crownbase", speciesDefinition.crownbaseXML.toString());
-            elt = addString(elt, "CrownType", Integer.toString(speciesDefinition.crownType));
-            elt = addString(elt, "SiteIndex", speciesDefinition.siteindexXML.toString());
-            elt = addString(elt, "SiteIndexHeight", speciesDefinition.siteindexHeightXML.toString());
-            elt = addString(elt, "PotentialHeightIncrement", speciesDefinition.potentialHeightIncrementXML.toString());
-            elt = addString(elt, "HeightIncrement", speciesDefinition.heightIncrementXML.toString());
-            elt = addString(elt, "HeightIncrementError", Double.toString(speciesDefinition.heightIncrementError));
-            elt = addString(elt, "DiameterIncrement", speciesDefinition.diameterIncrementXML.toString());
-            elt = addString(elt, "DiameterIncrementError", Double.toString(speciesDefinition.diameterIncrementError));
-            elt = addString(elt, "MaximumDensity", speciesDefinition.maximumDensityXML.toString());
-            elt = addString(elt, "CropTreeNumber", Integer.toString(speciesDefinition.cropTreeNumber));
-            elt = addString(elt, "MaximumAge", Integer.toString(speciesDefinition.maximumAge));
-            elt = addString(elt, "Ingrowth", speciesDefinition.ingrowthXML);
-            elt = addString(elt, "Decay", speciesDefinition.decayXML.toString());
-            elt = addString(elt, "TargetDiameter", Double.toString(speciesDefinition.targetDiameter));
-            elt = addString(elt, "HeightOfThinningStart", Double.toString(speciesDefinition.heightOfThinningStart));
-            elt = addString(elt, "ModerateThinning", speciesDefinition.moderateThinning.definition());
-            elt = addString(elt, "Color", speciesDefinition.colorXML);
-            elt = addString(elt, "Competition", speciesDefinition.competitionXML);
-            elt = addString(elt, "TaperFunction", speciesDefinition.taperFunctionXML);
-            elt = addString(elt, "CoarseRootBiomass", speciesDefinition.coarseRootBiomass);
-            elt = addString(elt, "SmallRootBiomass", speciesDefinition.smallRootBiomass);
-            elt = addString(elt, "FineRootBiomass", speciesDefinition.fineRootBiomass);
-            elt = addString(elt, "TotalRootBiomass", speciesDefinition.totalRootBiomass);
-            rootElt.addContent(elt);
+            Element speciesDefinitionElement = new Element("SpeciesDefinition");
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Code", Integer.toString(speciesDefinition.code));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "ShortName", speciesDefinition.shortName);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "LongName", speciesDefinition.longName);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "LatinName", speciesDefinition.latinName);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "InternalCode", Integer.toString(speciesDefinition.internalCode));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "CodeGroup", Integer.toString(speciesDefinition.codeGroup));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HandledLikeCode", Integer.toString(speciesDefinition.handledLikeCode));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HeightCurve", Integer.toString(speciesDefinition.heightCurve));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "UniformHeightCurveXML", speciesDefinition.uniformHeightCurveXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HeightVariation", speciesDefinition.heightVariationXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "DiameterDistributionXML", speciesDefinition.diameterDistributionXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "VolumeFunctionXML", speciesDefinition.volumeFunctionXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "StemVolumeFunction", speciesDefinition.stemVolumeFunctionXML);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Crownwidth", speciesDefinition.crownwidthXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Crownbase", speciesDefinition.crownbaseXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "CrownType", Integer.toString(speciesDefinition.crownType));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "SiteIndex", speciesDefinition.siteindexXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "SiteIndexHeight", speciesDefinition.siteindexHeightXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "PotentialHeightIncrement", speciesDefinition.potentialHeightIncrementXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HeightIncrement", speciesDefinition.heightIncrementXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HeightIncrementError", Double.toString(speciesDefinition.heightIncrementError));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "DiameterIncrement", speciesDefinition.diameterIncrementXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "DiameterIncrementError", Double.toString(speciesDefinition.diameterIncrementError));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "MaximumDensity", speciesDefinition.maximumDensityXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "CropTreeNumber", Integer.toString(speciesDefinition.cropTreeNumber));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "MaximumAge", Integer.toString(speciesDefinition.maximumAge));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Ingrowth", speciesDefinition.ingrowthXML);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Decay", speciesDefinition.decayXML.toString());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "TargetDiameter", Double.toString(speciesDefinition.targetDiameter));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "HeightOfThinningStart", Double.toString(speciesDefinition.heightOfThinningStart));
+            speciesDefinitionElement = addString(speciesDefinitionElement, "ModerateThinning", speciesDefinition.moderateThinning.definition());
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Color", speciesDefinition.colorXML);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "Competition", speciesDefinition.competitionXML);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "TaperFunction", speciesDefinition.taperFunctionXML);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "CoarseRootBiomass", speciesDefinition.coarseRootBiomass);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "SmallRootBiomass", speciesDefinition.smallRootBiomass);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "FineRootBiomass", speciesDefinition.fineRootBiomass);
+            speciesDefinitionElement = addString(speciesDefinitionElement, "TotalRootBiomass", speciesDefinition.totalRootBiomass);
+            rootElt.addContent(speciesDefinitionElement);
         }
         try (FileOutputStream result = new FileOutputStream(urlname)) {
             XMLOutputter outputter = new XMLOutputter();
@@ -635,82 +635,56 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     }
 
     private void loadTable(SpeciesDef speciesDefinition) {
-        jTable1.setValueAt("Baumarten Code (I) ", 0, 0);
-        jTable1.setValueAt("Kurzname ", 1, 0);
-        jTable1.setValueAt("Name ", 2, 0);
-        jTable1.setValueAt("lateinisch ", 3, 0);
-        jTable1.setValueAt("Interner Code (I) ", 4, 0);
-        jTable1.setValueAt("Gruppen Code (I) ", 5, 0);
-        jTable1.setValueAt("Einstellungen wie Code (I) ", 6, 0);
-        jTable1.setValueAt("Height Curve (I)", 7, 0);
-        jTable1.setValueAt("Uniform Height Curve ", 8, 0);
-        jTable1.setValueAt("Height Variation", 9, 0);
-        jTable1.setValueAt("Diameter distribution", 10, 0);
-        jTable1.setValueAt("Volume Function o.B.", 11, 0);
-        jTable1.setValueAt("Stem Volume Function o.B.", 12, 0);
-        jTable1.setValueAt("Crown width", 13, 0);
-        jTable1.setValueAt("Crown base", 14, 0);
-        jTable1.setValueAt("Crown type", 15, 0);
-        jTable1.setValueAt("Site index", 16, 0);
-        jTable1.setValueAt("Index height", 17, 0);
-        jTable1.setValueAt("Potential height increment", 18, 0);
-        jTable1.setValueAt("Height Increment", 19, 0);
-        jTable1.setValueAt("Height Increment Error", 20, 0);
-        jTable1.setValueAt("Quadratic Diameter Increment", 21, 0);
-        jTable1.setValueAt("Diameter Increment Error", 22, 0);
-        jTable1.setValueAt("Maximum Density", 23, 0);
-        jTable1.setValueAt("Maximum Age", 24, 0);
-        jTable1.setValueAt("Plugin Ingrowth", 25, 0);
-        jTable1.setValueAt("Decay", 26, 0);
-        jTable1.setValueAt("Target Diameter", 27, 0);
-        jTable1.setValueAt("Height of first Thinning", 28, 0);
-        jTable1.setValueAt("Moderate Thinning Factor", 29, 0);
-        jTable1.setValueAt("Color", 30, 0);
-        jTable1.setValueAt("Plugin Competition", 31, 0);
-        jTable1.setValueAt("Plugin Taper Fuction", 32, 0);
-        jTable1.setValueAt("Grobwurzelbiomasse Funktion", 33, 0);
-        jTable1.setValueAt("Kleinwurzelbiomasse Funktion", 34, 0);
-        jTable1.setValueAt("Feinwurzelbiomasse Funktion", 35, 0);
-        jTable1.setValueAt("Gesamtwurzelbiomasse Funktion", 36, 0);
-        jTable1.setValueAt("Anzahl der Z-Bäume", 37, 0);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.code), 0, 1);
-        jTable1.setValueAt(speciesDefinition.shortName, 1, 1);
-        jTable1.setValueAt(speciesDefinition.longName, 2, 1);
-        jTable1.setValueAt(speciesDefinition.latinName, 3, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.internalCode), 4, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.codeGroup), 5, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.handledLikeCode), 6, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.heightCurve), 7, 1);
-        jTable1.setValueAt(speciesDefinition.uniformHeightCurveXML, 8, 1);
-        jTable1.setValueAt(speciesDefinition.heightVariationXML, 9, 1);
-        jTable1.setValueAt(speciesDefinition.diameterDistributionXML, 10, 1);
-        jTable1.setValueAt(speciesDefinition.volumeFunctionXML, 11, 1);
-        jTable1.setValueAt(speciesDefinition.stemVolumeFunctionXML, 12, 1);
-        jTable1.setValueAt(speciesDefinition.crownwidthXML, 13, 1);
-        jTable1.setValueAt(speciesDefinition.crownbaseXML, 14, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.crownType), 15, 1);
-        jTable1.setValueAt(speciesDefinition.siteindexXML, 16, 1);
-        jTable1.setValueAt(speciesDefinition.siteindexHeightXML, 17, 1);
-        jTable1.setValueAt(speciesDefinition.potentialHeightIncrementXML, 18, 1);
-        jTable1.setValueAt(speciesDefinition.heightIncrementXML, 19, 1);
-        jTable1.setValueAt(Double.toString(speciesDefinition.heightIncrementError), 20, 1);
-        jTable1.setValueAt(speciesDefinition.diameterIncrementXML, 21, 1);
-        jTable1.setValueAt(Double.toString(speciesDefinition.diameterIncrementError), 22, 1);
-        jTable1.setValueAt(speciesDefinition.maximumDensityXML, 23, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.maximumAge), 24, 1);
-        jTable1.setValueAt(speciesDefinition.ingrowthXML, 25, 1);
-        jTable1.setValueAt(speciesDefinition.decayXML, 26, 1);
-        jTable1.setValueAt(Double.toString(speciesDefinition.targetDiameter), 27, 1);
-        jTable1.setValueAt(Double.toString(speciesDefinition.heightOfThinningStart), 28, 1);
-        jTable1.setValueAt(speciesDefinition.moderateThinning.definition(), 29, 1);
-        jTable1.setValueAt(speciesDefinition.colorXML, 30, 1);
-        jTable1.setValueAt(speciesDefinition.competitionXML, 31, 1);
-        jTable1.setValueAt(speciesDefinition.taperFunctionXML, 32, 1);
-        jTable1.setValueAt(speciesDefinition.coarseRootBiomass, 33, 1);
-        jTable1.setValueAt(speciesDefinition.smallRootBiomass, 34, 1);
-        jTable1.setValueAt(speciesDefinition.fineRootBiomass, 35, 1);
-        jTable1.setValueAt(speciesDefinition.totalRootBiomass, 36, 1);
-        jTable1.setValueAt(Integer.toString(speciesDefinition.cropTreeNumber), 37, 1);
+        setVariableForSpecies("TgSpeciesManXML.definition.speciesCode.label", speciesDefinition.code, 0);
+        setVariableForSpecies("TgSpeciesManXML.definition.shortName.label", speciesDefinition.shortName, 1);
+        setVariableForSpecies("TgSpeciesManXML.definition.longName.label", speciesDefinition.longName, 2);
+        setVariableForSpecies("TgSpeciesManXML.definition.latinName.label", speciesDefinition.latinName, 3);
+        setVariableForSpecies("TgSpeciesManXML.definition.internalCode.label", speciesDefinition.latinName, 4);
+        setVariableForSpecies("TgSpeciesManXML.definition.groupCode.label", speciesDefinition.codeGroup, 5);
+        setVariableForSpecies("TgSpeciesManXML.definition.handledLikeCode.label", speciesDefinition.handledLikeCode, 6);
+        setVariableForSpecies("TgSpeciesManXML.definition.heightCurce.label", speciesDefinition.heightCurve, 7);
+        setVariableForSpecies("TgSpeciesManXML.definition.uniformHeightCurve.label", speciesDefinition.uniformHeightCurveXML, 8);
+        setVariableForSpecies("TgSpeciesManXML.definition.heightVariation.label", speciesDefinition.heightVariationXML, 9);
+        setVariableForSpecies("TgSpeciesManXML.definition.diameterDistribution.label", speciesDefinition.diameterDistributionXML, 10);
+        setVariableForSpecies("TgSpeciesManXML.definition.volumeFunction.label", speciesDefinition.volumeFunctionXML, 11);
+        setVariableForSpecies("TgSpeciesManXML.definition.stemVolumeFunction.label", speciesDefinition.stemVolumeFunctionXML, 12);
+        setVariableForSpecies("TgSpeciesManXML.definition.crownWidth.label", speciesDefinition.crownwidthXML, 13);
+        setVariableForSpecies("TgSpeciesManXML.definition.crownBase.label", speciesDefinition.crownbaseXML, 14);
+        setVariableForSpecies("TgSpeciesManXML.definition.crownType.label", speciesDefinition.crownType, 15);
+        setVariableForSpecies("TgSpeciesManXML.definition.siteIndex.label", speciesDefinition.siteindexXML, 16);
+        setVariableForSpecies("TgSpeciesManXML.definition.siteIndexHeight.label", speciesDefinition.siteindexHeightXML, 17);
+        setVariableForSpecies("TgSpeciesManXML.definition.potentialHeightIncrement.label", speciesDefinition.potentialHeightIncrementXML, 18);
+        setVariableForSpecies("TgSpeciesManXML.definition.heightIncrement.label", speciesDefinition.heightIncrementXML, 19);
+        setVariableForSpecies("TgSpeciesManXML.definition.heightIncrementError.label", speciesDefinition.heightIncrementError, 20);
+        setVariableForSpecies("TgSpeciesManXML.definition.diameterIncrement.label", speciesDefinition.diameterIncrementXML, 21);
+        setVariableForSpecies("TgSpeciesManXML.definition.diameterIncrementError.label", speciesDefinition.diameterIncrementError, 22);
+        setVariableForSpecies("TgSpeciesManXML.definition.maximumDensity.label", speciesDefinition.maximumDensityXML, 23);
+        setVariableForSpecies("TgSpeciesManXML.definition.maximumAge.label", speciesDefinition.maximumAge, 24);
+        setVariableForSpecies("TgSpeciesManXML.definition.ingrowth.label", speciesDefinition.ingrowthXML, 25);
+        setVariableForSpecies("TgSpeciesManXML.definition.decay.label", speciesDefinition.decayXML, 26);
+        setVariableForSpecies("TgSpeciesManXML.definition.targetDiameter.label", speciesDefinition.targetDiameter, 27);
+        setVariableForSpecies("TgSpeciesManXML.definition.heightOfThinningStart.label", speciesDefinition.heightOfThinningStart, 28);
+        setVariableForSpecies("TgSpeciesManXML.definition.moderateThinning.label", speciesDefinition.moderateThinning.definition(), 29);
+        setVariableForSpecies("TgSpeciesManXML.definition.color.label", speciesDefinition.colorXML, 30);
+        speciesDefinitionTable.setValueAt("Plugin Competition", 31, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.competitionXML, 31, 1);
+        speciesDefinitionTable.setValueAt("Plugin Taper Fuction", 32, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.taperFunctionXML, 32, 1);
+        speciesDefinitionTable.setValueAt("Grobwurzelbiomasse Funktion", 33, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.coarseRootBiomass, 33, 1);
+        speciesDefinitionTable.setValueAt("Kleinwurzelbiomasse Funktion", 34, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.smallRootBiomass, 34, 1);
+        speciesDefinitionTable.setValueAt("Feinwurzelbiomasse Funktion", 35, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.fineRootBiomass, 35, 1);
+        speciesDefinitionTable.setValueAt("Gesamtwurzelbiomasse Funktion", 36, 0);
+        speciesDefinitionTable.setValueAt(speciesDefinition.totalRootBiomass, 36, 1);
+        speciesDefinitionTable.setValueAt("Anzahl der Z-Bäume", 37, 0);
+        speciesDefinitionTable.setValueAt(Integer.toString(speciesDefinition.cropTreeNumber), 37, 1);
+    }
+
+    private void setVariableForSpecies(String labelKey, Object value, int row) {
+        speciesDefinitionTable.setValueAt(bundle.getString(labelKey), row, 0);
+        speciesDefinitionTable.setValueAt(value, row, 1);
     }
 
     private int stripCommentsFromInt(String orig, int stdValue) {
@@ -734,7 +708,6 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     private javax.swing.JLabel generalSettingsLabel;
     private javax.swing.JCheckBox ingrowthCheckBox;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -744,9 +717,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lastUpdateLabel;
     private javax.swing.JTextField lastUpdateTextField;
     private javax.swing.JTextField literatureTextField;
@@ -759,7 +730,9 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
     private javax.swing.JLabel selectedSpeciesLabel;
     private javax.swing.JLabel sortingModuleLabel;
     private javax.swing.JTextField sortingModuleTextField;
+    private javax.swing.JTable speciesDefinitionTable;
     private javax.swing.JList speciesList;
+    private javax.swing.JPanel speciesListPanel;
     private javax.swing.JLabel timeStepLabel;
     private javax.swing.JTextField timeStepTextField;
     private javax.swing.JLabel treeSpeciesLabel;
