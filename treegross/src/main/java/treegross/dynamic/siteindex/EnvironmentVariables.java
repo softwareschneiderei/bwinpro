@@ -57,6 +57,7 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
         return growingSeasons.get(year).nitrogenDeposition;
     }
 
+    // TODO: change double to aridity index type
     public double aridityIndexOf(Year year) {
         return Month.values().length * growingSeasonPrecipitationSumOf(year) / (growingSeasonMeanTemperatureOf(year) + 10);
     }

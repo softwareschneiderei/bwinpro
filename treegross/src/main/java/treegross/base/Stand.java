@@ -825,7 +825,7 @@ public class Stand {
     public double getVhaResidual(int spe) {
         double vha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0
+            if (tr[i].isLiving()
                     && ((tr[i].code == spe) || (spe == 0))) {
                 vha += tr[i].fac * tr[i].v;
             }
@@ -950,7 +950,7 @@ public class Stand {
     public void growBack(int years, boolean db) {
         // System.out.println("grow back stand "+ntrees);
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0 || tr[i].out == tr[i].st.year) {
+            if (tr[i].isLiving() || tr[i].out == tr[i].st.year) {
                 tr[i].growBack(years);
             }
         }
@@ -964,13 +964,10 @@ public class Stand {
         year -= years;
         sortbyd();
         descspecies();         // new spcies description, dl00, h100 etc.
-        for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0) {
-                tr[i].cw = tr[i].calculateCw();
-                tr[i].cb = tr[i].calculateCb();
-                //System.out.println("grow back stand "+tr[i].h+" "+tr[i].cb);
-            }
-        };
+        forTreesMatching(tree -> tree.isLiving(), tree -> {
+            tree.cw = tree.calculateCw();
+            tree.cb = tree.calculateCb();
+        });
         descspecies();         // new spcies description, dl00, h100 etc.
         // Bestand auf Sollgrundfläche anreichern
         double dgGen, dMaxGen;
@@ -1099,11 +1096,11 @@ public class Stand {
         // then for checking j>= a int number, java has a special algorithm to compare numbers with 0.
         // TODO: benchmark against a for-each-loop
         for (int j = startindex; j >= 0; j--) {
-            if (tr[j].out < 1) {
+            if (tr[j].isLiving()) {
                 nTreesAlive++;
             }
             if (tr[j].d >= 7.0) {
-                if (tr[j].out < 1) {
+                if (tr[j].isLiving()) {
                     nha += tr[j].fac;
                     bha += tr[j].fac * Math.PI * (tr[j].d / 200.0) * (tr[j].d / 200.0);
                     if (tr[j].h >= 1.3) {
@@ -1140,7 +1137,7 @@ public class Stand {
             double jj = 0;
             int k = 0;
             while (jj < n100 && k < ntrees) {
-                if (tr[k].d >= 7.0 && tr[k].out < 1) {
+                if (tr[k].d >= 7.0 && tr[k].isLiving()) {
                     d100 = d100 + tr[k].fac * Math.PI * (tr[k].d / 200.0) * (tr[k].d / 200.0);
                     jj += tr[k].fac;
                 }
@@ -1162,12 +1159,12 @@ public class Stand {
             m.heightcurve();
 
             for (int j = 0; j < ntrees; j = j + k) {
-                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                     ndh++;
                 }
             }
             for (int j = 0; j < ntrees; j = j + k) {
-                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                     m.adddh(sp[0].spDef.heightCurve, ndh, tr[j].d, tr[j].h);
                 }
             }
@@ -1204,7 +1201,7 @@ public class Stand {
 
         if (ndh > 0 && ndh <= 4) {
             for (int j = startindex; j >= 0; j--) {
-                if (tr[j].d >= 7.0 && tr[j].h > 1.3 && tr[j].out < 1 && hk < tr[j].h) {
+                if (tr[j].d >= 7.0 && tr[j].h > 1.3 && tr[j].isLiving() && hk < tr[j].h) {
                     dk = tr[j].d;
                     hk = tr[j].h;
                 }
@@ -1271,7 +1268,7 @@ public class Stand {
         double sumBA = 0.0;
         double sumCSA = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d >= 7.0 && tr[i].out < 0) {
+            if (tr[i].d >= 7.0 && tr[i].isLiving()) {
                 sumBA = sumBA + tr[i].fac * Math.PI * Math.pow(tr[i].d / 200.0, 2.0);
                 sumCSA = sumCSA + tr[i].fac * Math.PI * Math.pow(tr[i].cw / 2.0, 2.0);
             }
@@ -1285,7 +1282,7 @@ public class Stand {
                 if (tr[j].code != sp[i].code) {
                     continue;
                 }
-                if (tr[j].d >= 7.0 && tr[j].out < 0) {
+                if (tr[j].d >= 7.0 && tr[j].isLiving()) {
                     sp[i].percBA += tr[j].fac * Math.PI * Math.pow(tr[j].d / 200.0, 2.0);
                     sp[i].percCSA += tr[j].fac * Math.PI * Math.pow(tr[j].cw / 2.0, 2.0);
                 }
@@ -1332,7 +1329,7 @@ public class Stand {
                     continue;
                 }
                 if (tr[j].d >= 7.0) {
-                    if (tr[j].out < 1 || tr[j].out == year - 1) {
+                    if (tr[j].isLiving() || tr[j].out == year - 1) {
                         sp[i].vol += tr[j].fac * tr[j].v;
                     }
                     if (tr[j].out == year) {
@@ -1376,8 +1373,7 @@ public class Stand {
         // 0. update st,bha die Bestandesgrundfläche
         bha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            // TODO: Why out < 1? -1 means living, what does 0 mean?
-            if (tr[i].out < 1 && tr[i].d >= 7.0) {
+            if (tr[i].isLiving() && tr[i].d >= 7.0) {
                 bha = bha + tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
             }
         }
@@ -1637,9 +1633,9 @@ public class Stand {
      */
     public String getSpeciesUndefinedCode() {
         String str = "Species code:";
-        for (int i = 0; i < nspecies; i++) {
-            if (sp[i].spDef.defined == false) {
-                str += " " + sp[i].code;
+        for (Species species : species()) {
+            if (!species.spDef.defined) {
+                str += " " + species.code;
             }
         }
         return str;
@@ -1684,14 +1680,13 @@ public class Stand {
         }
         for (int i = 0; i < ntrees; i++) {
             //if (tr[i].no.indexOf("413") >-1)
-            //System.out.println("das ist er");
-            if (tr[i].out < 0 || tr[i].out == year) {
+            if (tr[i].isLiving() || tr[i].out == year) {
                 for (int k = 0; k < tr[i].maxNeighbor; k++) {
                     eA[k] = 9999.9;
                     tr[i].neighbor[k] = -9;
                 }
                 for (int j = 0; j < ntrees; j++) {
-                    if ((tr[j].out < 0 || tr[j].out == year) && (i != j)) {
+                    if ((tr[j].isLiving() || tr[j].out == year) && (i != j)) {
                         double entf = Math.sqrt(Math.pow((tr[i].x - tr[j].x), 2.0) + Math.pow((tr[i].y - tr[j].y), 2.0));
                         //The influence zone should be at least 2m
                         double minimumRadius = 2.0 * tr[i].cw;
@@ -1824,7 +1819,7 @@ public class Stand {
     private Collection getDeadRegTrees() {
         List<Tree> treestoremove = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d < 7 && tr[i].out > -1) {
+            if (tr[i].d < 7 && tr[i].isDead()) {
                 treestoremove.add(tr[i]);
             }
         }
@@ -1864,7 +1859,7 @@ public class Stand {
         double mean = 0.0;
         int n = 0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d >= 7.0 && tr[i].out < 0 && (tr[i].code == treeCode || treeCode == 0)) {
+            if (tr[i].d >= 7.0 && tr[i].isLiving() && (tr[i].code == treeCode || treeCode == 0)) {
                 mean += tr[i].cb;
                 n++;
             }

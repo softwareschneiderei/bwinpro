@@ -702,6 +702,10 @@ public class Tree implements Cloneable {
         return out < 0;
     }
     
+    public boolean isDead() {
+        return !isLiving();
+    }
+    
     public void takeOut(int year, OutType reason) {
         out = year;
         outtype = reason;
