@@ -30,7 +30,7 @@ public class DynamicSiteIndexCalculationDemo {
         EnvironmentVariables mean5YearVariables = dsiEnvironment.calculate5YearMeans();
         LongtermEnvironmentVariables longTermVariables = new LongtermEnvironmentVariables(mean5YearVariables);
         
-        EnvironmentVariables standardizedEnvironment = longTermVariables.standardized(dsiEnvironment);
+        EnvironmentVariables standardizedEnvironment = longTermVariables.standardized(dsiEnvironment.calculateWeighted5YearMeans());
         dsiProjection.length = 5;
         Regression dsiFunction = new DynamicSiteIndexModel().modelParameters();
         DynamicSiteIndex dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndex(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, standardizedEnvironment);
@@ -84,7 +84,7 @@ public class DynamicSiteIndexCalculationDemo {
             return result;
         }
 
-        private static double standardizeValues(double yearlyMean, double longtermMean) {
+        private double standardizeValues(double yearlyMean, double longtermMean) {
             return (yearlyMean - longtermMean) / longtermMean;
         }
     }

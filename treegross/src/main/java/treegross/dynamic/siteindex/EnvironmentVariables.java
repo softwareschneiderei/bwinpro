@@ -85,6 +85,25 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
         return result;
     }
 
+    // TODO: refactor DataAccumulation to something more flexible like the SlidingMeanCalculator<E>
+    public EnvironmentVariables calculateWeighted5YearMeans() {
+        EnvironmentVariables result = new EnvironmentVariables();
+        DataAccumulation temperatureMean = new DataAccumulation();
+        DataAccumulation precipitationMean = new DataAccumulation();
+        DataAccumulation nitrogenDepositionMean = new DataAccumulation();
+        forEach(growingSeason -> {
+            double weightedMeanTemperature = temperatureMean.add(growingSeason.meanTemperature).weighted5YearMean();
+            double weightedMeanPrecipitation = precipitationMean.add(growingSeason.meanPrecipitationSum).weighted5YearMean();
+            AnnualNitrogenDeposition weightedMeanNitrogen = new AnnualNitrogenDeposition(nitrogenDepositionMean.add(growingSeason.nitrogenDeposition.value).weighted5YearMean());
+            result.addGrowingSeason(new GrowingSeasonValues(
+                    growingSeason.year,
+                    weightedMeanTemperature,
+                    weightedMeanPrecipitation,
+                    weightedMeanNitrogen));
+        });
+        return result;
+    }
+
     private void fillMeanCalculatorWindow(SlidingMeanCalculator<GrowingSeasonValues> window) {
         for (int i = 0; i < window.windowSize(); i++) {
             window.add(this.iterator().next());

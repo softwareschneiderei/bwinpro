@@ -1,34 +1,35 @@
 package treegross.dynamic.siteindex;
 
-import java.util.List;
+import java.util.LinkedList;
 
 public class DataAccumulation {
+
+    private static final int windowSize = 5;
+    private final LinkedList<Double> yearlyValues;
+
+    public DataAccumulation() {
+        this.yearlyValues = new LinkedList<>();
+    }
     
-    public double[] weighted5YearMean(List<Double> yearlyValues, int projectionLength) {
-        double[] result = new double[projectionLength];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = 0d;
+    public DataAccumulation add(double value) {
+        yearlyValues.add(value);
+        while (yearlyValues.size() > windowSize) { yearlyValues.remove(); }
+        return this;
+    }
+    
+    public double weighted5YearMean() {
+        if (yearlyValues.isEmpty()) {
+            return 0d;
         }
-        int lag = 5;
-        for (int year = 1; year <= projectionLength; year++) {
-            int period = lag;
-            if (year <= lag) {
-                period = year;
-            }
+        double result = 0d;
             
-            int sYear = 0;
-            for (int jYear = 1; jYear <= period; jYear++) {
-                int dYear = year - jYear + 1;
-                int weight = (period - jYear + 1);
-                if (dYear > 0) {
-                    sYear = sYear + weight;
-                    result[year - 1] = result[year - 1] + weight * yearlyValues.get(dYear - 1);
-                }
-            }
-            if (sYear > 0) {
-                result[year - 1] = result[year - 1] / sYear;
-            }
+        int totalWeight = 0;
+        for (int pastYear = 0; pastYear < yearlyValues.size(); pastYear++) {
+            int weight = pastYear + 1;
+            
+            totalWeight += weight;
+            result += weight * yearlyValues.get(pastYear);
         }
-        return result;
+        return result /= totalWeight;
     }
 }

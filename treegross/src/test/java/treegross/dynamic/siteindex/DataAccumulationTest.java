@@ -1,27 +1,38 @@
 package treegross.dynamic.siteindex;
 
-import java.util.Arrays;
-import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 public class DataAccumulationTest {
+    private static final Offset<Double> delta = Offset.offset(0.001);
     
     @Test
+    public void emptyAccumulatorYieldsZero() {
+        final DataAccumulation dataAccumulation = new DataAccumulation();
+
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(0d, delta);
+    }
+   
+    @Test
     public void accumulationYields5YearMeans() {
-        List<Double> yearlyValues = Arrays.asList(1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d);
+        final DataAccumulation dataAccumulation = new DataAccumulation();
         
-        Assertions.assertThat(new DataAccumulation().weighted5YearMean(yearlyValues, yearlyValues.size())).containsExactly(new double[]{
-                    1d,
-                    1.666d,
-                    2.333d,
-                    3d,
-                    3.666d,
-                    4.666d,
-                    5.666d,
-                    6.666d
-                },
-                Offset.offset(0.001));
+        dataAccumulation.add(1d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(1d, delta);
+        dataAccumulation.add(2d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(1.666d, delta);
+        dataAccumulation.add(3d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(2.333d, delta);
+        dataAccumulation.add(4d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(3d, delta);
+        dataAccumulation.add(5d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(3.666d, delta);
+        dataAccumulation.add(6d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(4.666d, delta);
+        dataAccumulation.add(7d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(5.666d, delta);
+        dataAccumulation.add(8d);
+        Assertions.assertThat(dataAccumulation.weighted5YearMean()).isCloseTo(6.666d, delta);
     }
 }
