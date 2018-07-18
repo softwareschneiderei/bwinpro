@@ -30,6 +30,6 @@ public class DataAccumulation {
             totalWeight += weight;
             result += weight * yearlyValues.get(pastYear);
         }
-        return result /= totalWeight;
+        return result /= totalWeight; //NOSONAR, false positive! We have at least one value here, so weight is also at least 1!
     }
 }
