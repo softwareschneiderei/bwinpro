@@ -11,8 +11,8 @@ public class DynamicSiteIndexCalculation {
         this.dsi = dsi;
     }
 
-    public DynamicSiteIndex recursiveProjection(Projection projection, Regression dsiFunction, EnvironmentVariables dsiEnvironment) {
-        ModelParameters model = dsiFunction.parametersForSpecies(projection.treeSpecies);
+    public DynamicSiteIndex recursiveProjection(Projection projection, DynamicSiteIndexModel dsiFunction, EnvironmentVariables dsiEnvironment) {
+        DynamicSiteIndexModelParameters model = dsiFunction.parametersForSpecies(projection.treeSpecies);
         projection.forEach(year -> {
             final double siteIndex = computeSiteIndex(year, model, dsiEnvironment, dsi.endSiteIndex());
             dsi.siIntermediates.put(year, siteIndex);
@@ -20,7 +20,7 @@ public class DynamicSiteIndexCalculation {
         return dsi;
     }
 
-    private static double computeSiteIndex(Year year, ModelParameters model, EnvironmentVariables environment, double previousSiteIndex) {
+    private static double computeSiteIndex(Year year, DynamicSiteIndexModelParameters model, EnvironmentVariables environment, double previousSiteIndex) {
         System.out.println("Previous site index: " + previousSiteIndex);
         System.out.println("Mean teamperature: " + environment.growingSeasonMeanTemperatureOf(year));
         System.out.println("Mean precipitation sum: " + environment.growingSeasonPrecipitationSumOf(year));

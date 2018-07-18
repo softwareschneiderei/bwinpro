@@ -9,13 +9,12 @@ import treegross.dynamic.siteindex.DynamicSiteIndexModel;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.GrowingSeasonValues;
 import treegross.dynamic.siteindex.Projection;
-import treegross.dynamic.siteindex.Regression;
 
 public class DynamicSiteIndexCalculationDemo {
     public static Projection basicInfoSpecification() {
         Projection result = new Projection(Year.of(2006));
         result.standName = "fi 150/   b";
-        result.treeSpecies = "Bu";
+        result.treeSpecies = "Fi";
         result.rcp = "MISC";
         return result;
     }
@@ -32,7 +31,7 @@ public class DynamicSiteIndexCalculationDemo {
         
         EnvironmentVariables standardizedEnvironment = longTermVariables.standardized(dsiEnvironment.calculateWeighted5YearMeans());
         dsiProjection.length = 5;
-        Regression dsiFunction = new DynamicSiteIndexModel().modelParameters();
+        DynamicSiteIndexModel dsiFunction = new DynamicSiteIndexModel();
         DynamicSiteIndex dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndex(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, standardizedEnvironment);
         System.out.println("Dynamic site index: " + dsi.siIntermediates);
         System.out.println("Dynamic site index after " + dsiProjection.length + " years: " + dsi.endSiteIndex());
