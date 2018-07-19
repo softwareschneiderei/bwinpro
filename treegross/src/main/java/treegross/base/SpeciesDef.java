@@ -17,6 +17,7 @@
 package treegross.base;
 
 import treegross.base.thinning.ModerateThinning;
+import treegross.dynamic.siteindex.DynamicSiteIndexCalculator;
 
 public class SpeciesDef implements Comparable, Cloneable {
 
@@ -65,6 +66,7 @@ public class SpeciesDef implements Comparable, Cloneable {
     public TGFunction diameterIncrementXML;
     public TGFunction maximumDensityXML;
     public TGFunction decayXML;
+    public DynamicSiteIndexCalculator dsiCalculator;
 
     /**
      * Creates a new instance of Class

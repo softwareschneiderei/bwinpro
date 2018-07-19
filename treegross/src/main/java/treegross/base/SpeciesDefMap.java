@@ -24,6 +24,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.JDOMException;
 import treegross.base.thinning.HeightBasedThinning;
+import treegross.dynamic.siteindex.DynamicSiteIndexCalculator;
+import treegross.dynamic.siteindex.DynamicSiteIndexModelParameters;
 
 /**
  *
@@ -85,38 +87,37 @@ public class SpeciesDefMap {
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(imps);
         Element rm = doc.getRootElement();
-        List<Element> list = rm.getChildren("SpeciesDefinition");
-        int code, m, handledLikeCode;
+        List<Element> speciesDefinitions = rm.getChildren("SpeciesDefinition");
 
-        for (Element def : list) {
-            code = Integer.parseInt(def.getChild("Code").getText());
-            handledLikeCode = Integer.parseInt(def.getChild("HandledLikeCode").getText());
-            spcdef.put(code, new SpeciesDef());
-            SpeciesDef actual = spcdef.get(code);
-            define(code, actual, def, handledLikeCode);
+        for (Element definition : speciesDefinitions) {
+            int code = Integer.parseInt(definition.getChild("Code").getText());
+            int handledLikeCode = Integer.parseInt(definition.getChild("HandledLikeCode").getText());
+            final SpeciesDef current = new SpeciesDef();
+            define(code, current, definition, handledLikeCode);
             if (code != handledLikeCode) {
-                boolean found = false;
-                Iterator j = list.iterator();
-                while (j.hasNext() && !found) {
-                    Element parent_def = (Element) j.next();
+                for (Element parent_def : speciesDefinitions) {
                     int code_parent = Integer.parseInt(parent_def.getChild("Code").getText());
                     if (handledLikeCode == code_parent) {
-                        overload(actual, parent_def);
-                        found = true;
+                        overload(current, parent_def);
+                        break;
                     }
                 }
             }
-            m = actual.colorXML.indexOf(";");
-            actual.colorRed = Integer.parseInt(actual.colorXML.substring(0, m));
-            actual.colorXML = actual.colorXML.substring(m + 1);
-            m = actual.colorXML.indexOf(";");
-            actual.colorGreen = Integer.parseInt(actual.colorXML.substring(0, m));
-            actual.colorXML = actual.colorXML.substring(m + 1);
-            actual.colorBlue = Integer.parseInt(actual.colorXML);
-            actual.setDefined(true);
-            //System.out.println(actual.toString());
+            parseColor(current);
+            current.setDefined(true);
+            spcdef.put(code, current);
         }
         loaded = true;
+    }
+
+    private void parseColor(final SpeciesDef current) throws NumberFormatException {
+        int m = current.colorXML.indexOf(";");
+        current.colorRed = Integer.parseInt(current.colorXML.substring(0, m));
+        current.colorXML = current.colorXML.substring(m + 1);
+        m = current.colorXML.indexOf(";");
+        current.colorGreen = Integer.parseInt(current.colorXML.substring(0, m));
+        current.colorXML = current.colorXML.substring(m + 1);
+        current.colorBlue = Integer.parseInt(current.colorXML);
     }
 
     private void overload(SpeciesDef actual, Element with) {
@@ -250,20 +251,23 @@ public class SpeciesDefMap {
         actual.smallRootBiomass = def.getChild("SmallRootBiomass").getText();
         actual.fineRootBiomass = def.getChild("FineRootBiomass").getText();
         actual.totalRootBiomass = def.getChild("TotalRootBiomass").getText();
-        //TGFunctions
-        actual.uniformHeightCurveXML = initTGFunction(def.getChild("UniformHeightCurveXML").getText().trim());
-        actual.heightVariationXML = initTGFunction(def.getChild("HeightVariation").getText().trim());
-        actual.diameterDistributionXML = initTGFunction(def.getChild("DiameterDistributionXML").getText().trim());
-        actual.volumeFunctionXML = initTGFunction(def.getChild("VolumeFunctionXML").getText().trim());
-        actual.crownwidthXML = initTGFunction(def.getChild("Crownwidth").getText().trim());
-        actual.crownbaseXML = initTGFunction(def.getChild("Crownbase").getText().trim());
-        actual.siteindexXML = initTGFunction(def.getChild("SiteIndex").getText().trim());
-        actual.siteindexHeightXML = initTGFunction(def.getChild("SiteIndexHeight").getText().trim());
-        actual.potentialHeightIncrementXML = initTGFunction(def.getChild("PotentialHeightIncrement").getText().trim());
-        actual.heightIncrementXML = initTGFunction(def.getChild("HeightIncrement").getText().trim());
-        actual.diameterIncrementXML = initTGFunction(def.getChild("DiameterIncrement").getText().trim());
-        actual.maximumDensityXML = initTGFunction(def.getChild("MaximumDensity").getText().trim());
-        actual.decayXML = initTGFunction(def.getChild("Decay").getText().trim());
+        // TGFunctions
+        actual.uniformHeightCurveXML = initTGFunction(def.getChild("UniformHeightCurveXML").getText());
+        actual.heightVariationXML = initTGFunction(def.getChild("HeightVariation").getText());
+        actual.diameterDistributionXML = initTGFunction(def.getChild("DiameterDistributionXML").getText());
+        actual.volumeFunctionXML = initTGFunction(def.getChild("VolumeFunctionXML").getText());
+        actual.crownwidthXML = initTGFunction(def.getChild("Crownwidth").getText());
+        actual.crownbaseXML = initTGFunction(def.getChild("Crownbase").getText());
+        actual.siteindexXML = initTGFunction(def.getChild("SiteIndex").getText());
+        actual.siteindexHeightXML = initTGFunction(def.getChild("SiteIndexHeight").getText());
+        actual.potentialHeightIncrementXML = initTGFunction(def.getChild("PotentialHeightIncrement").getText());
+        actual.heightIncrementXML = initTGFunction(def.getChild("HeightIncrement").getText());
+        actual.diameterIncrementXML = initTGFunction(def.getChild("DiameterIncrement").getText());
+        actual.maximumDensityXML = initTGFunction(def.getChild("MaximumDensity").getText());
+        actual.decayXML = initTGFunction(def.getChild("Decay").getText());
+        
+        // TODO: Parameterize dynamic site index calculator model function from definition
+        actual.dsiCalculator = new DynamicSiteIndexCalculator(new DynamicSiteIndexModelParameters());
     }
 
     private int stripCommentsFromInt(String orig, int stdValue) {

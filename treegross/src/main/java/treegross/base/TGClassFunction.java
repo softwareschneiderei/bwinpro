@@ -20,7 +20,7 @@ public class TGClassFunction implements TGFunction {
 
     @Override
     public void init(String xmlText) {
-        function = removePrefix(xmlText);
+        function = removePrefix(xmlText.trim());
         // so können die Plugins nur im Package treegross.plugin paziert werden
         String modelPlugIn = "treegross.plugin." + function;
         try {

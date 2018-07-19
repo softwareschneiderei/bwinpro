@@ -18,7 +18,7 @@ public class TGTextFunction implements TGFunction {
 
     public TGTextFunction(String function) {
         super();
-        this.function = function;
+        this.function = function.trim();
     }
 
     @Override

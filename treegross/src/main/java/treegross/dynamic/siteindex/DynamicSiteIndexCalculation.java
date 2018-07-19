@@ -1,7 +1,5 @@
 package treegross.dynamic.siteindex;
 
-import java.time.Year;
-
 public class DynamicSiteIndexCalculation {
 
     private final DynamicSiteIndex dsi;
@@ -13,25 +11,11 @@ public class DynamicSiteIndexCalculation {
 
     public DynamicSiteIndex recursiveProjection(Projection projection, DynamicSiteIndexModel dsiFunction, EnvironmentVariables dsiEnvironment) {
         DynamicSiteIndexModelParameters model = dsiFunction.parametersForSpecies(projection.treeSpecies);
+        DynamicSiteIndexCalculator calculator = new DynamicSiteIndexCalculator(model);
         projection.forEach(year -> {
-            final double siteIndex = computeSiteIndex(year, model, dsiEnvironment, dsi.endSiteIndex());
+            final double siteIndex = calculator.computeSiteIndex(year, dsi.endSiteIndex(), dsiEnvironment);
             dsi.siIntermediates.put(year, siteIndex);
         });
         return dsi;
-    }
-
-    private static double computeSiteIndex(Year year, DynamicSiteIndexModelParameters model, EnvironmentVariables environment, double previousSiteIndex) {
-        System.out.println("Previous site index: " + previousSiteIndex);
-        System.out.println("Mean teamperature: " + environment.growingSeasonMeanTemperatureOf(year));
-        System.out.println("Mean precipitation sum: " + environment.growingSeasonPrecipitationSumOf(year));
-        System.out.println("Annual nitrogen deposition: " + environment.nitrogenDepositionOf(year).value);
-        System.out.println("Aridity index: " + environment.aridityIndexOf(year));
-        return model.parameter1 * Math.pow(previousSiteIndex, model.parameter2)
-                * Math.exp(model.parameter3 * environment.growingSeasonMeanTemperatureOf(year)
-                        + model.parameter4 * environment.growingSeasonPrecipitationSumOf(year)
-                        + model.parameter5 * environment.aridityIndexOf(year)
-                        + model.parameter6 * environment.nitrogenDepositionOf(year).value
-                        + model.parameter7 * environment.growingSeasonPrecipitationSumOf(year)
-                                * environment.nitrogenDepositionOf(year).value);
     }
 }
