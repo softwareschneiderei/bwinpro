@@ -9,8 +9,8 @@
  *  -> remove field speciesfile and add pointer to this class
  *  -> if a new species appears do not load from file but from this class
  */
-
 package treegross.base;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,178 +30,221 @@ import treegross.base.thinning.HeightBasedThinning;
  * @author jhansen
  */
 public class SpeciesDefMap {
-    protected final Map<Integer,SpeciesDef> spcdef;
-    private URL actualurl;
-    private boolean loaded = false;    
-    private final String stdModel="ForestSimulatorNWGermanyBC4";
-    
-    private final static Logger LOGGER = Logger.getLogger(SpeciesDefMap.class.getName());
 
-    public SpeciesDefMap(){
+    private static final Logger logger = Logger.getLogger(SpeciesDefMap.class.getName());
+    protected final Map<Integer, SpeciesDef> spcdef;
+    private URL actualurl;
+    private boolean loaded = false;
+    private final String stdModel = "ForestSimulatorNWGermanyBC4";
+
+    public SpeciesDefMap() {
         spcdef = new HashMap<>();
-        loaded=false;
-        actualurl=null;
+        loaded = false;
+        actualurl = null;
     }
-    
-    public void reload(){
-        if(loaded && actualurl!=null){
+
+    public void reload() {
+        if (loaded && actualurl != null) {
             readFromURL(actualurl);
         }
     }
-    
-    public void readInternal(String name){
-        URL url;
-        if(name!=null)
-            url=getClass().getResource("/treegross/model/"+name+".xml");
-        else
-            url=getClass().getResource("/treegross/model/"+stdModel+".xml");
+
+    public void readInternal(String name) {
+        URL url = getClass().getResource("/treegross/model/" + stdModel + ".xml");
+        if (name != null) {
+            url = getClass().getResource("/treegross/model/" + name + ".xml");
+        }
         readFromURL(url);
     }
-    
-    public void readFromPath(File path){
-        try{
-            URL url = path.toURI().toURL();
-            readFromURL(url);            
-        } catch(MalformedURLException e){
-            LOGGER.log(Level.SEVERE, "reading xml file: ",e);
-        }        
-    }
 
-    public void readFromURL(URL url){
-        try{
-           readXML(url);   
-           actualurl=url;
-        } catch(IOException | JDOMException e){
-            LOGGER.log(Level.SEVERE, "reading xml file: ",e);
+    public void readFromPath(File path) {
+        try {
+            readXMLStream(new FileInputStream(path));
+            actualurl = path.toURI().toURL();
+        } catch (IOException | JDOMException ex) {
+            logger.log(Level.SEVERE, "Could not load species definition", ex);
         }
     }
 
-    private void readXML(URL url) throws IOException, org.jdom.JDOMException{
+    private void readFromURL(URL url) {
+        try {
+            readXML(url);
+            actualurl = url;
+        } catch (IOException | JDOMException e) {
+            logger.log(Level.SEVERE, "reading xml file: ", e);
+        }
+    }
+
+    private void readXML(URL url) throws IOException, org.jdom.JDOMException {
         URLConnection urlcon = url.openConnection();
-        actualurl=url;
+        actualurl = url;
         readXMLStream(urlcon.getInputStream());
     }
 
-    public void readXMLStream(InputStream imps) throws IOException, org.jdom.JDOMException{
+    private void readXMLStream(InputStream imps) throws IOException, org.jdom.JDOMException {
         SAXBuilder builder = new SAXBuilder();
-        Document doc = builder.build(imps);         
-        Element rm =  doc.getRootElement();  
-        List  list= rm.getChildren("SpeciesDefinition");
-        Iterator i = list.iterator();        
-        Element def;
+        Document doc = builder.build(imps);
+        Element rm = doc.getRootElement();
+        List<Element> list = rm.getChildren("SpeciesDefinition");
         int code, m, handledLikeCode;
-        
-        while (i.hasNext()) {            
-            def = (Element)i.next();
-            code =Integer.parseInt(def.getChild("Code").getText());            
+
+        for (Element def : list) {
+            code = Integer.parseInt(def.getChild("Code").getText());
             handledLikeCode = Integer.parseInt(def.getChild("HandledLikeCode").getText());
-            spcdef.put(code,new SpeciesDef());
-            SpeciesDef actual=spcdef.get(code);
+            spcdef.put(code, new SpeciesDef());
+            SpeciesDef actual = spcdef.get(code);
             define(code, actual, def, handledLikeCode);
-            if(code!=handledLikeCode){  
-                boolean found=false;
-                Iterator j = list.iterator();       
-                while(j.hasNext() && !found){
-                    Element parent_def = (Element)j.next();
+            if (code != handledLikeCode) {
+                boolean found = false;
+                Iterator j = list.iterator();
+                while (j.hasNext() && !found) {
+                    Element parent_def = (Element) j.next();
                     int code_parent = Integer.parseInt(parent_def.getChild("Code").getText());
-                    if (handledLikeCode == code_parent){
+                    if (handledLikeCode == code_parent) {
                         overload(actual, parent_def);
-                        found=true;
+                        found = true;
                     }
                 }
             }
             m = actual.colorXML.indexOf(";");
-            actual.colorRed=Integer.parseInt(actual.colorXML.substring(0,m));
-            actual.colorXML=actual.colorXML.substring(m+1);
+            actual.colorRed = Integer.parseInt(actual.colorXML.substring(0, m));
+            actual.colorXML = actual.colorXML.substring(m + 1);
             m = actual.colorXML.indexOf(";");
-            actual.colorGreen=Integer.parseInt(actual.colorXML.substring(0,m));
-            actual.colorXML=actual.colorXML.substring(m+1);
-            actual.colorBlue=Integer.parseInt(actual.colorXML);
+            actual.colorGreen = Integer.parseInt(actual.colorXML.substring(0, m));
+            actual.colorXML = actual.colorXML.substring(m + 1);
+            actual.colorBlue = Integer.parseInt(actual.colorXML);
             actual.setDefined(true);
             //System.out.println(actual.toString());
         }
-        loaded=true;
-    } 
-    
-    private void overload(SpeciesDef actual, Element with){
-         if (actual.uniformHeightCurveXML.undefined())
-             actual.uniformHeightCurveXML = initTGFunction(with.getChild("UniformHeightCurveXML").getText());
-         if (actual.heightVariationXML.undefined())
-             actual.heightVariationXML = initTGFunction(with.getChild("HeightVariation").getText());
-         if (actual.diameterDistributionXML.undefined())
-             actual.diameterDistributionXML = initTGFunction(with.getChild("DiameterDistributionXML").getText());
-         if (actual.volumeFunctionXML.undefined())
-             actual.volumeFunctionXML = initTGFunction(with.getChild("VolumeFunctionXML").getText());
-         if (actual.crownwidthXML.undefined())
-             actual.crownwidthXML = initTGFunction(with.getChild("Crownwidth").getText());
-         if (actual.crownbaseXML.undefined())
-             actual.crownbaseXML = initTGFunction(with.getChild("Crownbase").getText());
-         if (actual.siteindexXML.undefined())
-             actual.siteindexXML = initTGFunction(with.getChild("SiteIndex").getText());
-         if (actual.siteindexHeightXML.undefined())
-             actual.siteindexHeightXML = initTGFunction(with.getChild("SiteIndexHeight").getText());
-         if (actual.potentialHeightIncrementXML.undefined())
-             actual.potentialHeightIncrementXML = initTGFunction(with.getChild("PotentialHeightIncrement").getText());
-         if (actual.heightIncrementXML.undefined())
-             actual.heightIncrementXML = initTGFunction(with.getChild("HeightIncrement").getText());
-         if (actual.diameterIncrementXML.undefined())
-             actual.diameterIncrementXML = initTGFunction(with.getChild("DiameterIncrement").getText());
-         if (actual.maximumDensityXML.undefined())
-             actual.maximumDensityXML =initTGFunction(with.getChild("MaximumDensity").getText());
-         if (actual.decayXML.undefined())
-             actual.decayXML = initTGFunction(with.getChild("Decay").getText());
-         
-         if (actual.crownType < 0) actual.crownType =Integer.parseInt(with.getChild("CrownType").getText());
-         if (actual.heightIncrementError < 0) actual.heightIncrementError = Double.parseDouble(with.getChild("HeightIncrementError").getText());
-         if (actual.diameterIncrementError < 0) actual.diameterIncrementError = Double.parseDouble(with.getChild("DiameterIncrementError").getText());
-         if (actual.maximumAge < 0) actual.maximumAge =Integer.parseInt(with.getChild("MaximumAge").getText());
-         if (actual.ingrowthXML.trim().isEmpty()) actual.ingrowthXML = with.getChild("Ingrowth").getText();
-         if (actual.heightCurve < 0) actual.heightCurve =Integer.parseInt(with.getChild("HeightCurve").getText());
-         if (actual.targetDiameter < 0) actual.targetDiameter =Double.parseDouble(with.getChild("TargetDiameter").getText());
-         if (actual.cropTreeNumber < 0) actual.cropTreeNumber =stripCommentsFromInt(with.getChild("CropTreeNumber").getText(),100);
-         if (actual.heightOfThinningStart < 0) actual.heightOfThinningStart =Double.parseDouble(with.getChild("HeightOfThinningStart").getText());
-         if (actual.moderateThinning == null) actual.moderateThinning = new HeightBasedThinning(with.getChild("ModerateThinning").getText());
-         if (actual.colorXML.trim().isEmpty()) actual.colorXML = with.getChild("Color").getText();
-         if (actual.competitionXML.trim().isEmpty()) actual.competitionXML = with.getChild("Competition").getText();
-         if (actual.taperFunctionXML.trim().isEmpty()) actual.taperFunctionXML = with.getChild("TaperFunction").getText();
-         if (actual.stemVolumeFunctionXML.trim().isEmpty()){
-            try{
-                actual.stemVolumeFunctionXML = with.getChild("StemVolumeFunction").getText();
-            }catch (Exception e){
-                System.out.println("Schaftholz ist: "+actual.stemVolumeFunctionXML);
-            }
-         }
-         if (actual.coarseRootBiomass.trim().isEmpty()) actual.coarseRootBiomass = with.getChild("CoarseRootBiomass").getText();
-         if (actual.smallRootBiomass.trim().isEmpty()) actual.smallRootBiomass = with.getChild("SmallRootBiomass").getText();
-         if (actual.fineRootBiomass.trim().isEmpty()) actual.fineRootBiomass = with.getChild("FineRootBiomass").getText();
-         if (actual.totalRootBiomass.trim().isEmpty()) actual.totalRootBiomass = with.getChild("TotalRootBiomass").getText();                   
+        loaded = true;
     }
-    
-    private void define(int code, SpeciesDef actual, Element def, int hlc){
-        actual.code=code;
-        actual.handledLikeCode=hlc;
+
+    private void overload(SpeciesDef actual, Element with) {
+        if (actual.uniformHeightCurveXML.undefined()) {
+            actual.uniformHeightCurveXML = initTGFunction(with.getChild("UniformHeightCurveXML").getText());
+        }
+        if (actual.heightVariationXML.undefined()) {
+            actual.heightVariationXML = initTGFunction(with.getChild("HeightVariation").getText());
+        }
+        if (actual.diameterDistributionXML.undefined()) {
+            actual.diameterDistributionXML = initTGFunction(with.getChild("DiameterDistributionXML").getText());
+        }
+        if (actual.volumeFunctionXML.undefined()) {
+            actual.volumeFunctionXML = initTGFunction(with.getChild("VolumeFunctionXML").getText());
+        }
+        if (actual.crownwidthXML.undefined()) {
+            actual.crownwidthXML = initTGFunction(with.getChild("Crownwidth").getText());
+        }
+        if (actual.crownbaseXML.undefined()) {
+            actual.crownbaseXML = initTGFunction(with.getChild("Crownbase").getText());
+        }
+        if (actual.siteindexXML.undefined()) {
+            actual.siteindexXML = initTGFunction(with.getChild("SiteIndex").getText());
+        }
+        if (actual.siteindexHeightXML.undefined()) {
+            actual.siteindexHeightXML = initTGFunction(with.getChild("SiteIndexHeight").getText());
+        }
+        if (actual.potentialHeightIncrementXML.undefined()) {
+            actual.potentialHeightIncrementXML = initTGFunction(with.getChild("PotentialHeightIncrement").getText());
+        }
+        if (actual.heightIncrementXML.undefined()) {
+            actual.heightIncrementXML = initTGFunction(with.getChild("HeightIncrement").getText());
+        }
+        if (actual.diameterIncrementXML.undefined()) {
+            actual.diameterIncrementXML = initTGFunction(with.getChild("DiameterIncrement").getText());
+        }
+        if (actual.maximumDensityXML.undefined()) {
+            actual.maximumDensityXML = initTGFunction(with.getChild("MaximumDensity").getText());
+        }
+        if (actual.decayXML.undefined()) {
+            actual.decayXML = initTGFunction(with.getChild("Decay").getText());
+        }
+
+        if (actual.crownType < 0) {
+            actual.crownType = Integer.parseInt(with.getChild("CrownType").getText());
+        }
+        if (actual.heightIncrementError < 0) {
+            actual.heightIncrementError = Double.parseDouble(with.getChild("HeightIncrementError").getText());
+        }
+        if (actual.diameterIncrementError < 0) {
+            actual.diameterIncrementError = Double.parseDouble(with.getChild("DiameterIncrementError").getText());
+        }
+        if (actual.maximumAge < 0) {
+            actual.maximumAge = Integer.parseInt(with.getChild("MaximumAge").getText());
+        }
+        if (actual.ingrowthXML.trim().isEmpty()) {
+            actual.ingrowthXML = with.getChild("Ingrowth").getText();
+        }
+        if (actual.heightCurve < 0) {
+            actual.heightCurve = Integer.parseInt(with.getChild("HeightCurve").getText());
+        }
+        if (actual.targetDiameter < 0) {
+            actual.targetDiameter = Double.parseDouble(with.getChild("TargetDiameter").getText());
+        }
+        if (actual.cropTreeNumber < 0) {
+            actual.cropTreeNumber = stripCommentsFromInt(with.getChild("CropTreeNumber").getText(), 100);
+        }
+        if (actual.heightOfThinningStart < 0) {
+            actual.heightOfThinningStart = Double.parseDouble(with.getChild("HeightOfThinningStart").getText());
+        }
+        if (actual.moderateThinning == null) {
+            actual.moderateThinning = new HeightBasedThinning(with.getChild("ModerateThinning").getText());
+        }
+        if (actual.colorXML.trim().isEmpty()) {
+            actual.colorXML = with.getChild("Color").getText();
+        }
+        if (actual.competitionXML.trim().isEmpty()) {
+            actual.competitionXML = with.getChild("Competition").getText();
+        }
+        if (actual.taperFunctionXML.trim().isEmpty()) {
+            actual.taperFunctionXML = with.getChild("TaperFunction").getText();
+        }
+        if (actual.stemVolumeFunctionXML.trim().isEmpty()) {
+            try {
+                actual.stemVolumeFunctionXML = with.getChild("StemVolumeFunction").getText();
+            } catch (Exception e) {
+                System.out.println("Schaftholz ist: " + actual.stemVolumeFunctionXML);
+            }
+        }
+        if (actual.coarseRootBiomass.trim().isEmpty()) {
+            actual.coarseRootBiomass = with.getChild("CoarseRootBiomass").getText();
+        }
+        if (actual.smallRootBiomass.trim().isEmpty()) {
+            actual.smallRootBiomass = with.getChild("SmallRootBiomass").getText();
+        }
+        if (actual.fineRootBiomass.trim().isEmpty()) {
+            actual.fineRootBiomass = with.getChild("FineRootBiomass").getText();
+        }
+        if (actual.totalRootBiomass.trim().isEmpty()) {
+            actual.totalRootBiomass = with.getChild("TotalRootBiomass").getText();
+        }
+    }
+
+    private void define(int code, SpeciesDef actual, Element def, int hlc) {
+        actual.code = code;
+        actual.handledLikeCode = hlc;
         actual.shortName = def.getChild("ShortName").getText();
         actual.longName = def.getChild("LongName").getText();
         actual.latinName = def.getChild("LatinName").getText();
-        actual.internalCode =Integer.parseInt(def.getChild("InternalCode").getText());
-        actual.codeGroup =Integer.parseInt(def.getChild("CodeGroup").getText());
-        actual.heightCurve =Integer.parseInt(def.getChild("HeightCurve").getText());
-        actual.crownType =Integer.parseInt(def.getChild("CrownType").getText());
+        actual.internalCode = Integer.parseInt(def.getChild("InternalCode").getText());
+        actual.codeGroup = Integer.parseInt(def.getChild("CodeGroup").getText());
+        actual.heightCurve = Integer.parseInt(def.getChild("HeightCurve").getText());
+        actual.crownType = Integer.parseInt(def.getChild("CrownType").getText());
         actual.heightIncrementError = Double.parseDouble(def.getChild("HeightIncrementError").getText());
         actual.diameterIncrementError = Double.parseDouble(def.getChild("DiameterIncrementError").getText());
-        actual.maximumAge =Integer.parseInt(def.getChild("MaximumAge").getText());
+        actual.maximumAge = Integer.parseInt(def.getChild("MaximumAge").getText());
         actual.ingrowthXML = def.getChild("Ingrowth").getText();
-        actual.targetDiameter =Double.parseDouble(def.getChild("TargetDiameter").getText());
-        actual.cropTreeNumber=stripCommentsFromInt(def.getChild("CropTreeNumber").getText(),-9);
-        actual.heightOfThinningStart =Double.parseDouble(def.getChild("HeightOfThinningStart").getText());
+        actual.targetDiameter = Double.parseDouble(def.getChild("TargetDiameter").getText());
+        actual.cropTreeNumber = stripCommentsFromInt(def.getChild("CropTreeNumber").getText(), -9);
+        actual.heightOfThinningStart = Double.parseDouble(def.getChild("HeightOfThinningStart").getText());
         actual.moderateThinning = new HeightBasedThinning(def.getChild("ModerateThinning").getText());
         actual.colorXML = def.getChild("Color").getText();
         actual.competitionXML = def.getChild("Competition").getText();
         actual.taperFunctionXML = def.getChild("TaperFunction").getText();
         try {
             actual.stemVolumeFunctionXML = def.getChild("StemVolumeFunction").getText();
-        }catch (Exception e){
-             System.out.println("Schaftholz ist: "+actual.stemVolumeFunctionXML);
+        } catch (Exception e) {
+            logger.log(Level.INFO, "Schaftholz ist: {0}", actual.stemVolumeFunctionXML);
         }
         actual.coarseRootBiomass = def.getChild("CoarseRootBiomass").getText();
         actual.smallRootBiomass = def.getChild("SmallRootBiomass").getText();
@@ -211,7 +254,7 @@ public class SpeciesDefMap {
         actual.uniformHeightCurveXML = initTGFunction(def.getChild("UniformHeightCurveXML").getText().trim());
         actual.heightVariationXML = initTGFunction(def.getChild("HeightVariation").getText().trim());
         actual.diameterDistributionXML = initTGFunction(def.getChild("DiameterDistributionXML").getText().trim());
-        actual.volumeFunctionXML =initTGFunction(def.getChild("VolumeFunctionXML").getText().trim());
+        actual.volumeFunctionXML = initTGFunction(def.getChild("VolumeFunctionXML").getText().trim());
         actual.crownwidthXML = initTGFunction(def.getChild("Crownwidth").getText().trim());
         actual.crownbaseXML = initTGFunction(def.getChild("Crownbase").getText().trim());
         actual.siteindexXML = initTGFunction(def.getChild("SiteIndex").getText().trim());
@@ -222,212 +265,223 @@ public class SpeciesDefMap {
         actual.maximumDensityXML = initTGFunction(def.getChild("MaximumDensity").getText().trim());
         actual.decayXML = initTGFunction(def.getChild("Decay").getText().trim());
     }
-    
-    private int stripCommentsFromInt(String orig, int stdValue){
-        if(orig==null || orig.equals(""))
-            return stdValue;       
+
+    private int stripCommentsFromInt(String orig, int stdValue) {
+        if (orig == null || orig.equals("")) {
+            return stdValue;
+        }
         return Integer.parseInt(orig.split("[/][*].+?[*][/]")[0].trim());
     }
 
-    public TGFunction initTGFunction(String xmlText){
-        if(xmlText == null || xmlText.isEmpty()) {
+    public TGFunction initTGFunction(String xmlText) {
+        if (xmlText == null || xmlText.isEmpty()) {
             return new TGTextFunction();
         }
-        if(xmlText.startsWith("CLASS:")){
-            TGClassFunction f= new TGClassFunction();
+        if (xmlText.startsWith("CLASS:")) {
+            TGClassFunction f = new TGClassFunction();
             f.init(xmlText);
             return f;
-        } else{
+        } else {
             return new TGTextFunction(xmlText);
         }
     }
-    
-    public boolean isLoaded(){
+
+    public boolean isLoaded() {
         return loaded;
     }
 
-    public URL getActualURL(){
+    public URL getActualURL() {
         return actualurl;
     }
 
-    public int getSize(){
+    public int getSize() {
         return spcdef.size();
     }
 
-    public int[] getSpeciesCodes(){
-        if(loaded){
-            int[] list= new int[spcdef.size()];
-            Iterator<Integer> it=spcdef.keySet().iterator();
-            int index=0;
-            while(it.hasNext()){
-                list[index]=it.next();
+    public int[] getSpeciesCodes() {
+        if (loaded) {
+            int[] list = new int[spcdef.size()];
+            Iterator<Integer> it = spcdef.keySet().iterator();
+            int index = 0;
+            while (it.hasNext()) {
+                list[index] = it.next();
                 index++;
             }
             return list;
+        } else {
+            return null;
         }
-        else return null;
     }
 
-    public SpeciesDef getByCode(int code){
+    public SpeciesDef getByCode(int code) {
         return spcdef.get(code);
     }
 
-    /** insert a new species only if the map is loaded and the
-     * map does not contain a species with code code
-     * returns the new and empty SpeciesDef object or null
-     * no new species is inserted
+    /**
+     * insert a new species only if the map is loaded and the map does not
+     * contain a species with code code returns the new and empty SpeciesDef
+     * object or null no new species is inserted
+     *
      * @param code the species code
      * @return species definition for speecies with defined code
      */
-    public SpeciesDef insertSpecies(int code){
-        if(loaded && getByCode(code)==null){
-            SpeciesDef spec= new SpeciesDef();
+    public SpeciesDef insertSpecies(int code) {
+        if (loaded && getByCode(code) == null) {
+            SpeciesDef spec = new SpeciesDef();
             spcdef.put(code, spec);
             return spec;
         }
         return null;
     }
 
-    public void removeSpecies(int code){
-        if(loaded){
+    public void removeSpecies(int code) {
+        if (loaded) {
             spcdef.remove(code);
         }
-    } 
+    }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "SpeciedDefMap [size: " + getSize() + "; URL:" + getActualURL() + "]";
     }
-    
+
     /* writes species information for all species of one stand to a html file in
      * specified path with specified filename
      * and returns the complete cannonical path of the output file.
-    */
-    public String listAllSpeciesDefinition(Stand st, String path, String fname){        
-        File file= new File(path, fname);
+     */
+    public String listAllSpeciesDefinition(Stand st, String path, String fname) {
+        File file = new File(path, fname);
         String filename;
         try {
             filename = file.getCanonicalPath();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             return null;
         }
         try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>"+"Simulator Species Definition"+"</H2> ");
-            for (int i=0;i<st.nspecies;i++){
+            out.println("<H2><P align=center>" + "Simulator Species Definition" + "</H2> ");
+            for (int i = 0; i < st.nspecies; i++) {
                 out.println("<P>");
                 int m = -9;
-                if(st.sp[i].spDef.latinName.contains("http")) m = st.sp[i].spDef.latinName.indexOf("http")-1;
-                String txt= st.sp[i].spDef.latinName;
-                if (m > 1) txt = "<a href="+st.sp[i].spDef.latinName.substring(m+1,st.sp[i].spDef.latinName.length())+">"+st.sp[i].spDef.latinName.substring(0,m)+"</a>";
-                out.println("<P><B>Baumart: "+st.sp[i].code+" "+st.sp[i].spDef.longName+"  "+txt+"</B>");
-                out.println("<BR>   Kronenbreite [m] = "+st.sp[i].spDef.crownwidthXML);
-                out.println("<BR>   Kronenansatz [m] = "+st.sp[i].spDef.crownbaseXML);
-                out.println("<BR>   Bonitöt      [m] = "+st.sp[i].spDef.siteindexXML);
-                out.println("<BR>   Potentielle Höhenzuwachs [%] = "+st.sp[i].spDef.potentialHeightIncrementXML);
-                out.println("<BR>   Höhenzuwachsmodulation [%] = "+st.sp[i].spDef.heightIncrementXML);
-                out.println("<BR>   Standardabweichung Höhenzuwachs [m] = "+(new Double(st.sp[i].spDef.heightIncrementError)).toString());
-                out.println("<BR>   Grundflächenzuwachs [cm²] = "+st.sp[i].spDef.diameterIncrementXML);
-                out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = "+(new Double(st.sp[i].spDef.diameterIncrementError)).toString());
-                out.println("<BR>   Maximale Dichte [m²/ha] = "+st.sp[i].spDef.maximumDensityXML);
-                out.println("<BR>   Volumenfunktion [m³] = "+st.sp[i].spDef.volumeFunctionXML);
-                out.println("<BR>   Durchmesserverteilung : "+st.sp[i].spDef.diameterDistributionXML);
-                out.println("<BR>   Höhenkurvenfunktion = "+st.sp[i].spDef.heightCurve);
-                out.println("<BR>   Einheitshöhenkurve [m] = "+st.sp[i].spDef.uniformHeightCurveXML);
-                out.println("<BR>   Höhenkurvenvariation [m] = "+st.sp[i].spDef.heightVariationXML);
-                out.println("<BR>   Totholzzerfall [%] = "+st.sp[i].spDef.decayXML);
-                out.println("<BR>   Kronendarstellung = "+st.sp[i].spDef.crownType);
-                out.println("<BR>   Baumartenfarbe [RGB] = "+st.sp[i].spDef.colorXML);
+                if (st.sp[i].spDef.latinName.contains("http")) {
+                    m = st.sp[i].spDef.latinName.indexOf("http") - 1;
+                }
+                String txt = st.sp[i].spDef.latinName;
+                if (m > 1) {
+                    txt = "<a href=" + st.sp[i].spDef.latinName.substring(m + 1, st.sp[i].spDef.latinName.length()) + ">" + st.sp[i].spDef.latinName.substring(0, m) + "</a>";
+                }
+                out.println("<P><B>Baumart: " + st.sp[i].code + " " + st.sp[i].spDef.longName + "  " + txt + "</B>");
+                out.println("<BR>   Kronenbreite [m] = " + st.sp[i].spDef.crownwidthXML);
+                out.println("<BR>   Kronenansatz [m] = " + st.sp[i].spDef.crownbaseXML);
+                out.println("<BR>   Bonitöt      [m] = " + st.sp[i].spDef.siteindexXML);
+                out.println("<BR>   Potentielle Höhenzuwachs [%] = " + st.sp[i].spDef.potentialHeightIncrementXML);
+                out.println("<BR>   Höhenzuwachsmodulation [%] = " + st.sp[i].spDef.heightIncrementXML);
+                out.println("<BR>   Standardabweichung Höhenzuwachs [m] = " + (new Double(st.sp[i].spDef.heightIncrementError)).toString());
+                out.println("<BR>   Grundflächenzuwachs [cm²] = " + st.sp[i].spDef.diameterIncrementXML);
+                out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = " + (new Double(st.sp[i].spDef.diameterIncrementError)).toString());
+                out.println("<BR>   Maximale Dichte [m²/ha] = " + st.sp[i].spDef.maximumDensityXML);
+                out.println("<BR>   Volumenfunktion [m³] = " + st.sp[i].spDef.volumeFunctionXML);
+                out.println("<BR>   Durchmesserverteilung : " + st.sp[i].spDef.diameterDistributionXML);
+                out.println("<BR>   Höhenkurvenfunktion = " + st.sp[i].spDef.heightCurve);
+                out.println("<BR>   Einheitshöhenkurve [m] = " + st.sp[i].spDef.uniformHeightCurveXML);
+                out.println("<BR>   Höhenkurvenvariation [m] = " + st.sp[i].spDef.heightVariationXML);
+                out.println("<BR>   Totholzzerfall [%] = " + st.sp[i].spDef.decayXML);
+                out.println("<BR>   Kronendarstellung = " + st.sp[i].spDef.crownType);
+                out.println("<BR>   Baumartenfarbe [RGB] = " + st.sp[i].spDef.colorXML);
             }
             out.println("</TABLE>");
-            out.println("<br>"+"created by TreeGroSS ("+st.modelRegion+")</br></HTML>");
+            out.println("<br>" + "created by TreeGroSS (" + st.modelRegion + ")</br></HTML>");
         } catch (FileNotFoundException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             return null;
         }
         return filename;
     }
-   /* writes species information for active species of one stand to a html file in
+
+    /* writes species information for active species of one stand to a html file in
      * specified path with specified filename
      * and returns the complete cannonical path of the output file.
-    */
-    public String listCurrentSpeciesDefinition(Stand st, String path, String fname) throws IOException{
-        File file= new File(path, fname);
-        String filename=file.getCanonicalPath();
-        OutputStream os=new FileOutputStream(filename);
-	try (PrintWriter out= new PrintWriter(new OutputStreamWriter(os))) {
+     */
+    public String listCurrentSpeciesDefinition(Stand st, String path, String fname) throws IOException {
+        File file = new File(path, fname);
+        String filename = file.getCanonicalPath();
+        OutputStream os = new FileOutputStream(filename);
+        try (PrintWriter out = new PrintWriter(new OutputStreamWriter(os))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>"+"Simulator Species Definition"+"</H2> ");
-            if (st.nspecies>0 && st.ingrowthActive==true){
+            out.println("<H2><P align=center>" + "Simulator Species Definition" + "</H2> ");
+            if (st.nspecies > 0 && st.ingrowthActive == true) {
                 try {
-                   String modelPlugIn="treegross.base."+st.sp[0].spDef.ingrowthXML;
-                   PlugInIngrowth ig = (PlugInIngrowth)Class.forName(modelPlugIn).newInstance();
-                   out.println("<P><B>Aktivieres Einwuchsmodell : "+ig.getModelName()+"</B>");
-                }
-                catch(Exception e){
+                    String modelPlugIn = "treegross.base." + st.sp[0].spDef.ingrowthXML;
+                    PlugInIngrowth ig = (PlugInIngrowth) Class.forName(modelPlugIn).newInstance();
+                    out.println("<P><B>Aktivieres Einwuchsmodell : " + ig.getModelName() + "</B>");
+                } catch (Exception e) {
                     System.out.println(e);
                     System.out.println("ERROR in Class Ingrowth2 ");
                 }
             }
-            for (int i=0;i<st.nspecies;i++){
+            for (int i = 0; i < st.nspecies; i++) {
                 out.println("<P>");
                 int m = -9;
-                if(st.sp[i].spDef.latinName.contains("http")){
-                    m = st.sp[i].spDef.latinName.indexOf("http")-1;
+                if (st.sp[i].spDef.latinName.contains("http")) {
+                    m = st.sp[i].spDef.latinName.indexOf("http") - 1;
                 }
-                String txt= st.sp[i].spDef.latinName;
-                if (m > 1) txt = "<a href="+st.sp[i].spDef.latinName.substring(m+1,st.sp[i].spDef.latinName.length())+">"+st.sp[i].spDef.latinName.substring(0,m)+"</a>";
-                out.println("<P><B>Baumart: "+st.sp[i].code+" "+st.sp[i].spDef.longName+"  "+txt+"</B>");
-                out.println("<BR>   Kronenbreite [m] = "+st.sp[i].spDef.crownwidthXML);
-                out.println("<BR>   Kronenansatz [m] = "+st.sp[i].spDef.crownbaseXML);
-                out.println("<BR>   Bonität      [m] = "+st.sp[i].spDef.siteindexXML);
-                out.println("<BR>   Potentielle Höhenzuwachs [%] = "+st.sp[i].spDef.potentialHeightIncrementXML);
-                out.println("<BR>   Höhenzuwachsmodulation [%] = "+st.sp[i].spDef.heightIncrementXML);
-                out.println("<BR>   Standardabweichung Höhenzuwachs [m] = "+(new Double(st.sp[i].spDef.heightIncrementError)).toString());
-                out.println("<BR>   Grundflächenzuwachs [cm²] = "+st.sp[i].spDef.diameterIncrementXML);
-                out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = "+(new Double(st.sp[i].spDef.diameterIncrementError)).toString());
-                out.println("<BR>   Maximale Dichte [m²/ha] = "+st.sp[i].spDef.maximumDensityXML);
-                out.println("<BR>   Volumenfunktion [m³] = "+st.sp[i].spDef.volumeFunctionXML);
-                out.println("<BR>   Durchmesserverteilung : "+st.sp[i].spDef.diameterDistributionXML);
-                out.println("<BR>   Höhenkurvenfunktion = "+st.sp[i].spDef.heightCurve);
-                out.println("<BR>   Einheitshöhenkurve [m] = "+st.sp[i].spDef.uniformHeightCurveXML);
-                out.println("<BR>   Höhenkurvenvariation [m] = "+st.sp[i].spDef.heightVariationXML);
-                out.println("<BR>   Totholzzerfall [%] = "+st.sp[i].spDef.decayXML);
-                out.println("<BR>   Kronendarstellung = "+st.sp[i].spDef.crownType);
-                out.println("<BR>   Baumartenfarbe [RGB] = "+st.sp[i].spDef.colorXML);
+                String txt = st.sp[i].spDef.latinName;
+                if (m > 1) {
+                    txt = "<a href=" + st.sp[i].spDef.latinName.substring(m + 1, st.sp[i].spDef.latinName.length()) + ">" + st.sp[i].spDef.latinName.substring(0, m) + "</a>";
+                }
+                out.println("<P><B>Baumart: " + st.sp[i].code + " " + st.sp[i].spDef.longName + "  " + txt + "</B>");
+                out.println("<BR>   Kronenbreite [m] = " + st.sp[i].spDef.crownwidthXML);
+                out.println("<BR>   Kronenansatz [m] = " + st.sp[i].spDef.crownbaseXML);
+                out.println("<BR>   Bonität      [m] = " + st.sp[i].spDef.siteindexXML);
+                out.println("<BR>   Potentielle Höhenzuwachs [%] = " + st.sp[i].spDef.potentialHeightIncrementXML);
+                out.println("<BR>   Höhenzuwachsmodulation [%] = " + st.sp[i].spDef.heightIncrementXML);
+                out.println("<BR>   Standardabweichung Höhenzuwachs [m] = " + (new Double(st.sp[i].spDef.heightIncrementError)).toString());
+                out.println("<BR>   Grundflächenzuwachs [cm²] = " + st.sp[i].spDef.diameterIncrementXML);
+                out.println("<BR>   Standardabweichung Grundflächenzuwachs [m²] = " + (new Double(st.sp[i].spDef.diameterIncrementError)).toString());
+                out.println("<BR>   Maximale Dichte [m²/ha] = " + st.sp[i].spDef.maximumDensityXML);
+                out.println("<BR>   Volumenfunktion [m³] = " + st.sp[i].spDef.volumeFunctionXML);
+                out.println("<BR>   Durchmesserverteilung : " + st.sp[i].spDef.diameterDistributionXML);
+                out.println("<BR>   Höhenkurvenfunktion = " + st.sp[i].spDef.heightCurve);
+                out.println("<BR>   Einheitshöhenkurve [m] = " + st.sp[i].spDef.uniformHeightCurveXML);
+                out.println("<BR>   Höhenkurvenvariation [m] = " + st.sp[i].spDef.heightVariationXML);
+                out.println("<BR>   Totholzzerfall [%] = " + st.sp[i].spDef.decayXML);
+                out.println("<BR>   Kronendarstellung = " + st.sp[i].spDef.crownType);
+                out.println("<BR>   Baumartenfarbe [RGB] = " + st.sp[i].spDef.colorXML);
             }
             out.println("</TABLE>");
-            out.println("<br>"+"created by ForestSimulatorBWINPro "+st.modelRegion+"</br></HTML>");
+            out.println("<br>" + "created by ForestSimulatorBWINPro " + st.modelRegion + "</br></HTML>");
         }
-	return filename;
+        return filename;
     }
-    
-    public String listSpeciesCode(int code, String path, String fname2){	
-        File file= new File(path, fname2);
+
+    public String listSpeciesCode(int code, String path, String fname2) {
+        File file = new File(path, fname2);
         String filename;
         try {
             filename = file.getCanonicalPath();
         } catch (IOException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
             return null;
         }
         try (PrintWriter out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename)))) {
             out.println("<HTML>");
-            out.println("<H2><P align=center>"+"Species Code"+"</P align=center></H2><P> ");
-            SpeciesDef sd=this.getByCode(code);
+            out.println("<H2><P align=center>" + "Species Code" + "</P align=center></H2><P> ");
+            SpeciesDef sd = this.getByCode(code);
             int mm = -9;
-            if (sd.latinName.contains("http")){
-                mm = sd.latinName.indexOf("http")-1;
+            if (sd.latinName.contains("http")) {
+                mm = sd.latinName.indexOf("http") - 1;
             }
-            String txt= sd.latinName;
-            if(mm > 1) txt = "<a href="+sd.latinName.substring(mm+1,sd.latinName.length())+">"+sd.latinName.substring(0,mm)+"</a>";
-            out.println("<BR>Baumart: "+sd.code+" "+sd.shortName+" "+sd.longName+"  "+txt+"");
+            String txt = sd.latinName;
+            if (mm > 1) {
+                txt = "<a href=" + sd.latinName.substring(mm + 1, sd.latinName.length()) + ">" + sd.latinName.substring(0, mm) + "</a>";
+            }
+            out.println("<BR>Baumart: " + sd.code + " " + sd.shortName + " " + sd.longName + "  " + txt + "");
             out.println("</P></TABLE>");
-            out.println("<br><hr>"+"created by TreeGrOSS</br></HTML>");
-	} catch (FileNotFoundException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+            out.println("<br><hr>" + "created by TreeGrOSS</br></HTML>");
+        } catch (FileNotFoundException ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
-        return filename;            
+        return filename;
     }
 }

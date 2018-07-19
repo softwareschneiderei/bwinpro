@@ -349,56 +349,6 @@ public class Stand {
         status = 0;
     }
 
-    // in Stand ????
-    /**
-     * For simple stand creation. The method does all necessary settings to
-     * start simulation.
-     *
-     * @param localPath = path of the xml file with simulator settings, if null
-     * load std. model
-     * @param xmlSettingsFile = name of file with simulator settings
-     * @param standname = stand name
-     * @param standsize = stand size [ha]
-     * @param year = year that the simulation starts The methods create a square
-     * stand area of the given site. If you need an different area shape or
-     * circular plot you have to overwrite the cornerpoints, the stand.center
-     * information.
-     */
-    public void easyStart(File localPath, String xmlSettingsFile, String standname, double standsize, int year) {
-        SpeciesDefMap SDM = new SpeciesDefMap();
-
-        LOGGER.log(Level.INFO, "SDM loaded from {0}\\{1}", new Object[]{localPath, xmlSettingsFile});
-
-        if (localPath != null && xmlSettingsFile != null) {
-            try {
-                SDM.readFromPath(new File(localPath, xmlSettingsFile));
-                //SDM.readFromURL(new URL(localPath, st.FileXMLSettings));
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, "loading species definitions", ex);
-            }
-        } else {
-            //load sdm from internal package
-            SDM.readInternal(null);
-        }
-        setSDM(SDM);
-        setProgramDir(localPath);
-        setName(standname);
-        setSize(standsize);
-        this.year = year;
-        // Flächengrenzen festlegen
-        double l = Math.sqrt(10000.0 * standsize);
-        ncpnt = 0;
-        addcornerpoint("ECK1", 0.0, 0.0, 0.0);
-        addcornerpoint("ECK2", 0.0, l, 0.0);
-        addcornerpoint("ECK3", l, l, 0.0);
-        addcornerpoint("ECK4", l, 0, 0.0);
-        center.no = "polygon";
-        center.x = l * 0.5;
-        center.y = l * 0.5;
-        center.z = 0.0;
-        scaleMan.setScaleMethod(ScaleManager.SCALE_FIXED);
-    }
-
     /**
      * set the SpececiesDefMap this is the recommend method to set a pointer to
      * an instance of SpeciesDefMap the SpeciesDefMap should be loaded only once

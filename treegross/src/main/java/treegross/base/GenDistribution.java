@@ -117,7 +117,6 @@ public class GenDistribution {
             nr = "";
             Species spx = new Species();
 
-            //spx.spDef.loadSpeciesDefXML(art,st.programDir,st.FileXMLSettings);
             spx.spDef = st.getSDM().getByCode(art);
 
             spx.dg = dg;

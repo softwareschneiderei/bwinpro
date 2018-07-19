@@ -53,13 +53,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
     private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    FileHandler logHandler = null;
+    private final TgInternalFrame[] iframe = new TgInternalFrame[8];
+    private final SpeciesDefMap speciesDefinitions = new SpeciesDefMap();
+    private final FileHandler logHandler;
 
     String bwinproVersion = "Version 7.8-0.5dev";
     String bwinproLastUpdate = "11.07.2018";
     private boolean accessInput = true;
-    static Stand st = new Stand();
-    SpeciesDefMap SDM = new SpeciesDefMap();
+    private Stand st = new Stand();
     File currentFile;
     StringBuffer ColorInfo;
     String seite;
@@ -85,7 +86,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgGrafikMenu tgGrafikMenu;
     TgToolbar toolbar;
     TgScreentoolbar tgScreentoolbar;
-    private final TgInternalFrame[] iframe = new TgInternalFrame[8];
     JDesktopPane dp = new JDesktopPane();
     TgUser user;
     private JFrame owner;
@@ -146,8 +146,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         grafik3D = user.getGrafik3D() && is3dAvailable();
 
         programDir = user.getProgramDir();
-        SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings));
-        st.setSDM(SDM);
+        speciesDefinitions.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings));
+        st.setSDM(speciesDefinitions);
         workingDir = user.getWorkingDir();
         currentFile = user.getDataDir();
         st.setProgramDir(programDir);
