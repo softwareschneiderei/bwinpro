@@ -45,4 +45,9 @@ public class TGTextFunction implements TGFunction {
     public String toString() {
         return function;
     }
+
+    @Override
+    public boolean undefined() {
+        return this.function.isEmpty();
+    }
 }

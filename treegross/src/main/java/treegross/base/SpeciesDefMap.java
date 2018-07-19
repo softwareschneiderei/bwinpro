@@ -124,57 +124,57 @@ public class SpeciesDefMap {
     } 
     
     private void overload(SpeciesDef actual, Element with){
-         if (actual.uniformHeightCurveXML.toString().length()==0)
+         if (actual.uniformHeightCurveXML.undefined())
              actual.uniformHeightCurveXML = initTGFunction(with.getChild("UniformHeightCurveXML").getText());
-         if (actual.heightVariationXML.toString().length()==0)
+         if (actual.heightVariationXML.undefined())
              actual.heightVariationXML = initTGFunction(with.getChild("HeightVariation").getText());
-         if (actual.diameterDistributionXML.toString().length()==0)
+         if (actual.diameterDistributionXML.undefined())
              actual.diameterDistributionXML = initTGFunction(with.getChild("DiameterDistributionXML").getText());
-         if (actual.volumeFunctionXML.toString().length()==0)
+         if (actual.volumeFunctionXML.undefined())
              actual.volumeFunctionXML = initTGFunction(with.getChild("VolumeFunctionXML").getText());
-         if (actual.crownwidthXML.toString().length()==0)
+         if (actual.crownwidthXML.undefined())
              actual.crownwidthXML = initTGFunction(with.getChild("Crownwidth").getText());
-         if (actual.crownbaseXML.toString().length()==0)
+         if (actual.crownbaseXML.undefined())
              actual.crownbaseXML = initTGFunction(with.getChild("Crownbase").getText());
-         if (actual.siteindexXML.toString().length()==0)
+         if (actual.siteindexXML.undefined())
              actual.siteindexXML = initTGFunction(with.getChild("SiteIndex").getText());
-         if (actual.siteindexHeightXML.toString().length()==0)
+         if (actual.siteindexHeightXML.undefined())
              actual.siteindexHeightXML = initTGFunction(with.getChild("SiteIndexHeight").getText());
-         if (actual.potentialHeightIncrementXML.toString().length()==0)
+         if (actual.potentialHeightIncrementXML.undefined())
              actual.potentialHeightIncrementXML = initTGFunction(with.getChild("PotentialHeightIncrement").getText());
-         if (actual.heightIncrementXML.toString().length()==0)
+         if (actual.heightIncrementXML.undefined())
              actual.heightIncrementXML = initTGFunction(with.getChild("HeightIncrement").getText());
-         if (actual.diameterIncrementXML.toString().length()==0)
+         if (actual.diameterIncrementXML.undefined())
              actual.diameterIncrementXML = initTGFunction(with.getChild("DiameterIncrement").getText());
-         if (actual.maximumDensityXML.toString().length()==0)
+         if (actual.maximumDensityXML.undefined())
              actual.maximumDensityXML =initTGFunction(with.getChild("MaximumDensity").getText());
-         if (actual.decayXML.toString().length()==0)
+         if (actual.decayXML.undefined())
              actual.decayXML = initTGFunction(with.getChild("Decay").getText());
          
          if (actual.crownType < 0) actual.crownType =Integer.parseInt(with.getChild("CrownType").getText());
          if (actual.heightIncrementError < 0) actual.heightIncrementError = Double.parseDouble(with.getChild("HeightIncrementError").getText());
          if (actual.diameterIncrementError < 0) actual.diameterIncrementError = Double.parseDouble(with.getChild("DiameterIncrementError").getText());
          if (actual.maximumAge < 0) actual.maximumAge =Integer.parseInt(with.getChild("MaximumAge").getText());
-         if (actual.ingrowthXML.trim().length() < 1) actual.ingrowthXML = with.getChild("Ingrowth").getText();
+         if (actual.ingrowthXML.trim().isEmpty()) actual.ingrowthXML = with.getChild("Ingrowth").getText();
          if (actual.heightCurve < 0) actual.heightCurve =Integer.parseInt(with.getChild("HeightCurve").getText());
          if (actual.targetDiameter < 0) actual.targetDiameter =Double.parseDouble(with.getChild("TargetDiameter").getText());
          if (actual.cropTreeNumber < 0) actual.cropTreeNumber =stripCommentsFromInt(with.getChild("CropTreeNumber").getText(),100);
          if (actual.heightOfThinningStart < 0) actual.heightOfThinningStart =Double.parseDouble(with.getChild("HeightOfThinningStart").getText());
          if (actual.moderateThinning == null) actual.moderateThinning = new HeightBasedThinning(with.getChild("ModerateThinning").getText());
-         if (actual.colorXML.trim().length() < 1) actual.colorXML = with.getChild("Color").getText();
-         if (actual.competitionXML.trim().length() < 1) actual.competitionXML = with.getChild("Competition").getText();
-         if (actual.taperFunctionXML.trim().length() < 1) actual.taperFunctionXML = with.getChild("TaperFunction").getText();
-         if (actual.stemVolumeFunctionXML.trim().length() < 1){
+         if (actual.colorXML.trim().isEmpty()) actual.colorXML = with.getChild("Color").getText();
+         if (actual.competitionXML.trim().isEmpty()) actual.competitionXML = with.getChild("Competition").getText();
+         if (actual.taperFunctionXML.trim().isEmpty()) actual.taperFunctionXML = with.getChild("TaperFunction").getText();
+         if (actual.stemVolumeFunctionXML.trim().isEmpty()){
             try{
                 actual.stemVolumeFunctionXML = with.getChild("StemVolumeFunction").getText();
             }catch (Exception e){
                 System.out.println("Schaftholz ist: "+actual.stemVolumeFunctionXML);
             }
          }
-         if (actual.coarseRootBiomass.trim().length() < 1) actual.coarseRootBiomass = with.getChild("CoarseRootBiomass").getText();
-         if (actual.smallRootBiomass.trim().length() < 1) actual.smallRootBiomass = with.getChild("SmallRootBiomass").getText();
-         if (actual.fineRootBiomass.trim().length() < 1) actual.fineRootBiomass = with.getChild("FineRootBiomass").getText();
-         if (actual.totalRootBiomass.trim().length() < 1) actual.totalRootBiomass = with.getChild("TotalRootBiomass").getText();                   
+         if (actual.coarseRootBiomass.trim().isEmpty()) actual.coarseRootBiomass = with.getChild("CoarseRootBiomass").getText();
+         if (actual.smallRootBiomass.trim().isEmpty()) actual.smallRootBiomass = with.getChild("SmallRootBiomass").getText();
+         if (actual.fineRootBiomass.trim().isEmpty()) actual.fineRootBiomass = with.getChild("FineRootBiomass").getText();
+         if (actual.totalRootBiomass.trim().isEmpty()) actual.totalRootBiomass = with.getChild("TotalRootBiomass").getText();                   
     }
     
     private void define(int code, SpeciesDef actual, Element def, int hlc){

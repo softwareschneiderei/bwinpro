@@ -23,7 +23,7 @@
  */
 package treegross.base;
 
-public class Species implements Cloneable {
+public class Species {
 
     /**
      * Species Code according to Lower Saxony
@@ -75,40 +75,37 @@ public class Species implements Cloneable {
         this.code = code;
     }
 
-    @Override
-    public Species clone() {
-        Species clone = new Species();
-        clone.code = this.code;
-        clone.d100 = this.d100;
-        clone.dg = this.dg;
-        clone.dgout = this.dgout;
-        clone.gha = this.gha;
-        clone.ghaout = this.ghaout;
-        clone.h100 = this.h100;
-        clone.h100age = this.h100age;
-        clone.hbon = this.hbon;
-        clone.heightcurveUsed = this.heightcurveUsed;
-        clone.heightcurveUsedP0 = this.heightcurveUsedP0;
-        clone.heightcurveUsedP1 = this.heightcurveUsedP1;
-        clone.heightcurveUsedP2 = this.heightcurveUsedP2;
-        clone.hg = this.hg;
-        clone.nha = this.nha;
-        clone.nhaout = this.nhaout;
-        clone.percBA = this.percBA;
-        clone.percCSA = this.percCSA;
+    public Species(Species sp) {
+        code = sp.code;
+        d100 = sp.d100;
+        dg = sp.dg;
+        dgout = sp.dgout;
+        gha = sp.gha;
+        ghaout = sp.ghaout;
+        h100 = sp.h100;
+        h100age = sp.h100age;
+        hbon = sp.hbon;
+        heightcurveUsed = sp.heightcurveUsed;
+        heightcurveUsedP0 = sp.heightcurveUsedP0;
+        heightcurveUsedP1 = sp.heightcurveUsedP1;
+        heightcurveUsedP2 = sp.heightcurveUsedP2;
+        hg = sp.hg;
+        nha = sp.nha;
+        nhaout = sp.nhaout;
+        percBA = sp.percBA;
+        percCSA = sp.percCSA;
         if (price != null) {
-            clone.price = this.price.clone();
+            price = sp.price.clone();
         }
-        clone.size = this.size;
-        clone.spDef = this.spDef.clone();
-        clone.totalPrice = this.totalPrice;
-        clone.trule = this.trule.clone();
-        clone.vhaout = this.vhaout;
-        clone.vjkl1 = this.vjkl1;
-        clone.vjkl2 = this.vjkl2;
-        clone.vjkl3 = this.vjkl3;
-        clone.vol = this.vol;
-        return clone;
+        size = sp.size;
+        spDef = sp.spDef.clone();
+        totalPrice = sp.totalPrice;
+        trule = sp.trule.clone();
+        vhaout = sp.vhaout;
+        vjkl1 = sp.vjkl1;
+        vjkl2 = sp.vjkl2;
+        vjkl3 = sp.vjkl3;
+        vol = sp.vol;
     }
 
     /**
@@ -153,11 +150,11 @@ public class Species implements Cloneable {
                         }
                     }
                 }
-                if (st.tr[i].out > 0) {
+                if (st.tr[i].isDead()) {
                     volumeOfDeadwood += st.tr[i].fac * st.tr[i].volumeDeadwood;
                 }
             }
-            if (st.tr[i].d >= 7 && st.tr[i].out < 0) {
+            if (st.tr[i].d >= 7 && st.tr[i].isLiving()) {
                 ghaStand += st.tr[i].fac * Math.PI * (st.tr[i].d / 200.0) * (st.tr[i].d / 200.0);
             }
         }
@@ -196,7 +193,7 @@ public class Species implements Cloneable {
 
             while (jj < n100 && k < st.ntrees) {
 
-                if (st.tr[k].d >= 7 && st.tr[k].code == code && st.tr[k].out < 1) {
+                if (st.tr[k].d >= 7 && st.tr[k].code == code && st.tr[k].isLiving()) {
                     d100 = d100 + st.tr[k].fac * Math.PI * (st.tr[k].d / 200.0) * (st.tr[k].d / 200.0);
                     h100age = h100age + st.tr[k].fac * st.tr[k].age;
 
@@ -226,7 +223,7 @@ public class Species implements Cloneable {
         int ndh = 0; // number of diameter and height values
 
         for (int j = 0; j < st.ntrees; j++) {
-            if (st.tr[j].d >= 7 && st.tr[j].code == code && st.tr[j].h >/*=*/ 1.3 && (st.tr[j].out < 1 || st.tr[j].out == st.year)) {
+            if (st.tr[j].d >= 7 && st.tr[j].code == code && st.tr[j].h >/*=*/ 1.3 && (st.tr[j].isLiving() || st.tr[j].out == st.year)) {
                 ndh++;
             }
         }

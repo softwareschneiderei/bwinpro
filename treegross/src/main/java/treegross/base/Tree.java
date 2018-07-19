@@ -295,7 +295,7 @@ public class Tree implements Cloneable {
         clone.shareXtimber = this.shareXtimber;
         clone.sharelog = this.sharelog;
         clone.si = this.si;
-        clone.sp = sp.clone();
+        clone.sp = new Species(sp);
         //clone.st has to be added in the super clone call
         clone.v = this.v;
         clone.x = this.x;
