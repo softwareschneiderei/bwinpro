@@ -4,8 +4,6 @@ import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
 import java.time.Year;
 import treegross.dynamic.siteindex.AnnualNitrogenDeposition;
 import treegross.dynamic.siteindex.DynamicSiteIndex;
-import treegross.dynamic.siteindex.DynamicSiteIndexCalculation;
-import treegross.dynamic.siteindex.DynamicSiteIndexModel;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.GrowingSeasonValues;
 import treegross.dynamic.siteindex.Projection;
@@ -14,7 +12,7 @@ public class DynamicSiteIndexCalculationDemo {
     public static Projection basicInfoSpecification() {
         Projection result = new Projection(Year.of(2006));
         result.standName = "fi 150/   b";
-        result.treeSpecies = "Fi";
+        result.treeSpecies = "Bu";
         result.rcp = "MISC";
         return result;
     }

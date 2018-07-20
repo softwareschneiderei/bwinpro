@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 import org.jdom.JDOMException;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.dynamic.siteindex.DynamicSiteIndexCalculator;
-import treegross.dynamic.siteindex.DynamicSiteIndexModelParameters;
 
 /**
  *
@@ -267,7 +266,7 @@ public class SpeciesDefMap {
         actual.decayXML = initTGFunction(def.getChild("Decay").getText());
         
         // TODO: Parameterize dynamic site index calculator model function from definition
-        actual.dsiCalculator = new DynamicSiteIndexCalculator(new DynamicSiteIndexModelParameters());
+        actual.dsiCalculator = new DynamicSiteIndexCalculator(new TGTextFunction(""));
     }
 
     private int stripCommentsFromInt(String orig, int stdValue) {
