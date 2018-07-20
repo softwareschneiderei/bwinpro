@@ -16,14 +16,13 @@ public class DynamicSiteIndexCalculator {
         this.model = model;
     }
     
-    // TODO: write a pinning test
     public double computeSiteIndex(Year year, double previousSiteIndex, EnvironmentVariables environment) {
         // TODO: use JEP for evaluating the function
-        logger.log(Level.FINE, "Previous site index: {0}", previousSiteIndex);
-        logger.log(Level.FINE, "Mean teamperature: {0}", environment.growingSeasonMeanTemperatureOf(year));
-        logger.log(Level.FINE, "Mean precipitation sum: {0}", environment.growingSeasonPrecipitationSumOf(year));
-        logger.log(Level.FINE, "Annual nitrogen deposition: {0}", environment.nitrogenDepositionOf(year).value);
-        logger.log(Level.FINE, "Aridity index: {0}", environment.aridityIndexOf(year));
+        logger.log(Level.INFO, "Previous site index: {0}", previousSiteIndex);
+        logger.log(Level.INFO, "Mean teamperature: {0}", environment.growingSeasonMeanTemperatureOf(year));
+        logger.log(Level.INFO, "Mean precipitation sum: {0}", environment.growingSeasonPrecipitationSumOf(year));
+        logger.log(Level.INFO, "Annual nitrogen deposition: {0}", environment.nitrogenDepositionOf(year).value);
+        logger.log(Level.INFO, "Aridity index: {0}", environment.aridityIndexOf(year));
         return model.parameter1 * Math.pow(previousSiteIndex, model.parameter2)
                 * Math.exp(model.parameter3 * environment.growingSeasonMeanTemperatureOf(year)
                         + model.parameter4 * environment.growingSeasonPrecipitationSumOf(year)
