@@ -32,6 +32,7 @@ import treegross.dynamic.siteindex.DynamicSiteIndexCalculator;
  */
 public class SpeciesDefMap {
 
+    public static final int defaultCropTreeNumber = 100;
     private static final Logger logger = Logger.getLogger(SpeciesDefMap.class.getName());
     protected final Map<Integer, SpeciesDef> spcdef;
     private URL actualurl;
@@ -89,14 +90,11 @@ public class SpeciesDefMap {
         List<Element> speciesDefinitions = rm.getChildren("SpeciesDefinition");
 
         for (Element definition : speciesDefinitions) {
-            int code = Integer.parseInt(definition.getChild("Code").getText());
-            int handledLikeCode = Integer.parseInt(definition.getChild("HandledLikeCode").getText());
-            final SpeciesDef current = new SpeciesDef();
-            define(code, current, definition, handledLikeCode);
-            if (code != handledLikeCode) {
+            final SpeciesDef current = speciesDefinitionFrom(definition);
+            if (current.code != current.handledLikeCode) {
                 for (Element parent_def : speciesDefinitions) {
                     int code_parent = Integer.parseInt(parent_def.getChild("Code").getText());
-                    if (handledLikeCode == code_parent) {
+                    if (current.handledLikeCode == code_parent) {
                         overload(current, parent_def);
                         break;
                     }
@@ -104,9 +102,57 @@ public class SpeciesDefMap {
             }
             parseColor(current);
             current.setDefined(true);
-            spcdef.put(code, current);
+            spcdef.put(current.code, current);
         }
         loaded = true;
+    }
+
+    public SpeciesDef speciesDefinitionFrom(Element def) {
+        SpeciesDef speciesDefinition = new SpeciesDef();
+        speciesDefinition.code = Integer.parseInt(def.getChild("Code").getText());
+        speciesDefinition.handledLikeCode = Integer.parseInt(def.getChild("HandledLikeCode").getText());
+        speciesDefinition.shortName = def.getChild("ShortName").getText();
+        speciesDefinition.longName = def.getChild("LongName").getText();
+        speciesDefinition.latinName = def.getChild("LatinName").getText();
+        speciesDefinition.internalCode = Integer.parseInt(def.getChild("InternalCode").getText());
+        speciesDefinition.codeGroup = Integer.parseInt(def.getChild("CodeGroup").getText());
+        speciesDefinition.heightCurve = Integer.parseInt(def.getChild("HeightCurve").getText());
+        speciesDefinition.crownType = Integer.parseInt(def.getChild("CrownType").getText());
+        speciesDefinition.heightIncrementError = Double.parseDouble(def.getChild("HeightIncrementError").getText());
+        speciesDefinition.diameterIncrementError = Double.parseDouble(def.getChild("DiameterIncrementError").getText());
+        speciesDefinition.maximumAge = Integer.parseInt(def.getChild("MaximumAge").getText());
+        speciesDefinition.ingrowthXML = def.getChild("Ingrowth").getText();
+        speciesDefinition.targetDiameter = Double.parseDouble(def.getChild("TargetDiameter").getText());
+        speciesDefinition.cropTreeNumber = stripCommentsFromInt(def.getChild("CropTreeNumber").getText(), SpeciesDefMap.defaultCropTreeNumber);
+        speciesDefinition.heightOfThinningStart = Double.parseDouble(def.getChild("HeightOfThinningStart").getText());
+        speciesDefinition.moderateThinning = new HeightBasedThinning(def.getChild("ModerateThinning").getText());
+        speciesDefinition.colorXML = def.getChild("Color").getText();
+        speciesDefinition.competitionXML = def.getChild("Competition").getText();
+        speciesDefinition.taperFunctionXML = def.getChild("TaperFunction").getText();
+        try {
+            speciesDefinition.stemVolumeFunctionXML = def.getChild("StemVolumeFunction").getText();
+        } catch (Exception e) {
+            SpeciesDefMap.logger.log(Level.INFO, "Schaftholz ist nicht definiert.", e);
+        }
+        speciesDefinition.coarseRootBiomass = def.getChild("CoarseRootBiomass").getText();
+        speciesDefinition.smallRootBiomass = def.getChild("SmallRootBiomass").getText();
+        speciesDefinition.fineRootBiomass = def.getChild("FineRootBiomass").getText();
+        speciesDefinition.totalRootBiomass = def.getChild("TotalRootBiomass").getText();
+        speciesDefinition.uniformHeightCurveXML = initTGFunction(def.getChild("UniformHeightCurveXML").getText());
+        speciesDefinition.heightVariationXML = initTGFunction(def.getChild("HeightVariation").getText());
+        speciesDefinition.diameterDistributionXML = initTGFunction(def.getChild("DiameterDistributionXML").getText());
+        speciesDefinition.volumeFunctionXML = initTGFunction(def.getChild("VolumeFunctionXML").getText());
+        speciesDefinition.crownwidthXML = initTGFunction(def.getChild("Crownwidth").getText());
+        speciesDefinition.crownbaseXML = initTGFunction(def.getChild("Crownbase").getText());
+        speciesDefinition.siteindexXML = initTGFunction(def.getChild("SiteIndex").getText());
+        speciesDefinition.siteindexHeightXML = initTGFunction(def.getChild("SiteIndexHeight").getText());
+        speciesDefinition.potentialHeightIncrementXML = initTGFunction(def.getChild("PotentialHeightIncrement").getText());
+        speciesDefinition.heightIncrementXML = initTGFunction(def.getChild("HeightIncrement").getText());
+        speciesDefinition.diameterIncrementXML = initTGFunction(def.getChild("DiameterIncrement").getText());
+        speciesDefinition.maximumDensityXML = initTGFunction(def.getChild("MaximumDensity").getText());
+        speciesDefinition.decayXML = initTGFunction(def.getChild("Decay").getText());
+        speciesDefinition.dsiCalculator = new DynamicSiteIndexCalculator(initTGFunction(def.getChildText("DynamicSiteIndex")));
+        return speciesDefinition;
     }
 
     private void parseColor(final SpeciesDef current) throws NumberFormatException {
@@ -182,7 +228,7 @@ public class SpeciesDefMap {
             actual.targetDiameter = Double.parseDouble(with.getChild("TargetDiameter").getText());
         }
         if (actual.cropTreeNumber < 0) {
-            actual.cropTreeNumber = stripCommentsFromInt(with.getChild("CropTreeNumber").getText(), 100);
+            actual.cropTreeNumber = stripCommentsFromInt(with.getChild("CropTreeNumber").getText(), defaultCropTreeNumber);
         }
         if (actual.heightOfThinningStart < 0) {
             actual.heightOfThinningStart = Double.parseDouble(with.getChild("HeightOfThinningStart").getText());
@@ -218,62 +264,6 @@ public class SpeciesDefMap {
         if (actual.totalRootBiomass.trim().isEmpty()) {
             actual.totalRootBiomass = with.getChild("TotalRootBiomass").getText();
         }
-    }
-
-    private void define(int code, SpeciesDef actual, Element def, int hlc) {
-        actual.code = code;
-        actual.handledLikeCode = hlc;
-        actual.shortName = def.getChild("ShortName").getText();
-        actual.longName = def.getChild("LongName").getText();
-        actual.latinName = def.getChild("LatinName").getText();
-        actual.internalCode = Integer.parseInt(def.getChild("InternalCode").getText());
-        actual.codeGroup = Integer.parseInt(def.getChild("CodeGroup").getText());
-        actual.heightCurve = Integer.parseInt(def.getChild("HeightCurve").getText());
-        actual.crownType = Integer.parseInt(def.getChild("CrownType").getText());
-        actual.heightIncrementError = Double.parseDouble(def.getChild("HeightIncrementError").getText());
-        actual.diameterIncrementError = Double.parseDouble(def.getChild("DiameterIncrementError").getText());
-        actual.maximumAge = Integer.parseInt(def.getChild("MaximumAge").getText());
-        actual.ingrowthXML = def.getChild("Ingrowth").getText();
-        actual.targetDiameter = Double.parseDouble(def.getChild("TargetDiameter").getText());
-        actual.cropTreeNumber = stripCommentsFromInt(def.getChild("CropTreeNumber").getText(), -9);
-        actual.heightOfThinningStart = Double.parseDouble(def.getChild("HeightOfThinningStart").getText());
-        actual.moderateThinning = new HeightBasedThinning(def.getChild("ModerateThinning").getText());
-        actual.colorXML = def.getChild("Color").getText();
-        actual.competitionXML = def.getChild("Competition").getText();
-        actual.taperFunctionXML = def.getChild("TaperFunction").getText();
-        try {
-            actual.stemVolumeFunctionXML = def.getChild("StemVolumeFunction").getText();
-        } catch (Exception e) {
-            logger.log(Level.INFO, "Schaftholz ist: {0}", actual.stemVolumeFunctionXML);
-        }
-        actual.coarseRootBiomass = def.getChild("CoarseRootBiomass").getText();
-        actual.smallRootBiomass = def.getChild("SmallRootBiomass").getText();
-        actual.fineRootBiomass = def.getChild("FineRootBiomass").getText();
-        actual.totalRootBiomass = def.getChild("TotalRootBiomass").getText();
-        // TGFunctions
-        actual.uniformHeightCurveXML = initTGFunction(def.getChild("UniformHeightCurveXML").getText());
-        actual.heightVariationXML = initTGFunction(def.getChild("HeightVariation").getText());
-        actual.diameterDistributionXML = initTGFunction(def.getChild("DiameterDistributionXML").getText());
-        actual.volumeFunctionXML = initTGFunction(def.getChild("VolumeFunctionXML").getText());
-        actual.crownwidthXML = initTGFunction(def.getChild("Crownwidth").getText());
-        actual.crownbaseXML = initTGFunction(def.getChild("Crownbase").getText());
-        actual.siteindexXML = initTGFunction(def.getChild("SiteIndex").getText());
-        actual.siteindexHeightXML = initTGFunction(def.getChild("SiteIndexHeight").getText());
-        actual.potentialHeightIncrementXML = initTGFunction(def.getChild("PotentialHeightIncrement").getText());
-        actual.heightIncrementXML = initTGFunction(def.getChild("HeightIncrement").getText());
-        actual.diameterIncrementXML = initTGFunction(def.getChild("DiameterIncrement").getText());
-        actual.maximumDensityXML = initTGFunction(def.getChild("MaximumDensity").getText());
-        actual.decayXML = initTGFunction(def.getChild("Decay").getText());
-        
-        // TODO: Parameterize dynamic site index calculator model function from definition
-        actual.dsiCalculator = new DynamicSiteIndexCalculator(new TGTextFunction(""));
-    }
-
-    private int stripCommentsFromInt(String orig, int stdValue) {
-        if (orig == null || orig.equals("")) {
-            return stdValue;
-        }
-        return Integer.parseInt(orig.split("[/][*].+?[*][/]")[0].trim());
     }
 
     public TGFunction initTGFunction(String xmlText) {
@@ -486,5 +476,17 @@ public class SpeciesDefMap {
             logger.log(Level.SEVERE, null, ex);
         }
         return filename;
+    }
+
+    public int stripCommentsFromInt(String orig, int defaultValue) {
+        if (orig == null || orig.equals("")) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(orig.split("[/][*].+?[*][/]")[0].trim());
+        } catch (NumberFormatException e) {
+            logger.log(Level.INFO, "Integer value not defined, using default.", e);
+            return defaultValue;
+        }
     }
 }

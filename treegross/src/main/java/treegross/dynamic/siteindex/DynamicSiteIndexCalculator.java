@@ -10,9 +10,11 @@ public class DynamicSiteIndexCalculator {
     private static final Logger logger = Logger.getLogger(DynamicSiteIndexCalculator.class.getName());
 
     private final JEP evaluator;
+    private final TGFunction model;
 
     public DynamicSiteIndexCalculator(TGFunction model) {
         super();
+        this.model = model;
         evaluator = new JEP();
         evaluator.addStandardFunctions();
         evaluator.addVariable("prevSI", 0);
@@ -20,9 +22,9 @@ public class DynamicSiteIndexCalculator {
         evaluator.addVariable("env.PSum", 0);
         evaluator.addVariable("env.NOTotal", 0);
         evaluator.addVariable("env.AI", 0);
-        evaluator.parseExpression(model.getFunctionText());
+        evaluator.parseExpression(modelFunctionText(model));
     }
-    
+
     public double computeSiteIndex(Year year, double previousSiteIndex, EnvironmentVariables environment) {
         logger.log(Level.INFO, "Previous site index: {0}", previousSiteIndex);
         evaluator.setVarValue("prevSI", previousSiteIndex);
@@ -35,5 +37,16 @@ public class DynamicSiteIndexCalculator {
         logger.log(Level.INFO, "Aridity index: {0}", environment.aridityIndexOf(year));
         evaluator.setVarValue("env.AI", environment.aridityIndexOf(year));
         return evaluator.getValue();
+    }
+
+    private static String modelFunctionText(TGFunction model) {
+        if (model.undefined()) {
+            return "prevSI";
+        }
+        return model.getFunctionText();
+    }
+
+    public String functionText() {
+        return model.getFunctionText();
     }
 }
