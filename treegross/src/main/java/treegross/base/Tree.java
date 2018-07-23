@@ -84,6 +84,10 @@ public class Tree implements Cloneable {
      */
     public double si;
     /**
+     * dynamic, climate-sensitive site index
+     */
+    public SiteIndex dsi;
+    /**
      * reference to species
      */
     public Species sp;
@@ -185,7 +189,8 @@ public class Tree implements Cloneable {
     public int ou = 0;
     /**
      * index of vitality
-     */    public double vitality = 1;
+     */    
+    public double vitality = 1;
 
     public boolean outBySkidtrail = false;
     public int bioMass = 0; // kg   
@@ -235,6 +240,7 @@ public class Tree implements Cloneable {
         cb = cbx;
         cw = cwx;
         si = six;
+        dsi = SiteIndex.si(si);
         fac = facx;
         x = xx;
         y = yx;
@@ -295,6 +301,7 @@ public class Tree implements Cloneable {
         clone.shareXtimber = this.shareXtimber;
         clone.sharelog = this.sharelog;
         clone.si = this.si;
+        clone.dsi = this.dsi;
         clone.sp = new Species(sp);
         //clone.st has to be added in the super clone call
         clone.v = this.v;
@@ -460,9 +467,11 @@ public class Tree implements Cloneable {
                 sp.h100 = st.h100;
             }
             si = calculateSiteIndex();
+            dsi = SiteIndex.si(si);
         }
         if (si <= -9.0) {
             si = sp.hbon;
+            dsi = SiteIndex.si(si);
         }
         if (cb < 0.01) {
             cb = calculateCb();

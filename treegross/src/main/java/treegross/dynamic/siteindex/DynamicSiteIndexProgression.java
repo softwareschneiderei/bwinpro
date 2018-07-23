@@ -4,7 +4,7 @@ import java.time.Year;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DynamicSiteIndex {
+public class DynamicSiteIndexProgression {
     public int year;
     public final double si0;
     /**
@@ -13,7 +13,7 @@ public class DynamicSiteIndex {
     // TODO: Introduce SiteIndex type instead of double
     public Map<Year, Double> siIntermediates = new LinkedHashMap<>();
 
-    public DynamicSiteIndex(double initialSiteIndex) {
+    public DynamicSiteIndexProgression(double initialSiteIndex) {
         super();
         si0 = initialSiteIndex;
     }

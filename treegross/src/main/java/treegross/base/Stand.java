@@ -1473,9 +1473,7 @@ public class Stand {
         // generate missing data of trees, sorting by height for dynamical crown base
         //
         sortbyh();
-        for (int j = 0; j < ntrees; j++) {
-            tr[j].setMissingData();
-        }
+        forAllTrees(tree -> tree.setMissingData());
         sortbyd();
         selectNeighborTrees();
         scaleMan.updateCompetition();

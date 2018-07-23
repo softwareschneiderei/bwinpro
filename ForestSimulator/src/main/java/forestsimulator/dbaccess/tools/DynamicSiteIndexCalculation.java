@@ -1,21 +1,21 @@
 package forestsimulator.dbaccess.tools;
 
 import treegross.base.TGFunction;
-import treegross.dynamic.siteindex.DynamicSiteIndex;
+import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
 import treegross.dynamic.siteindex.DynamicSiteIndexCalculator;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.Projection;
 
 public class DynamicSiteIndexCalculation {
 
-    private final DynamicSiteIndex dsi;
+    private final DynamicSiteIndexProgression dsi;
 
-    public DynamicSiteIndexCalculation(DynamicSiteIndex dsi) {
+    public DynamicSiteIndexCalculation(DynamicSiteIndexProgression dsi) {
         super();
         this.dsi = dsi;
     }
 
-    public DynamicSiteIndex recursiveProjection(Projection projection, DynamicSiteIndexModel dsiFunction, EnvironmentVariables dsiEnvironment) {
+    public DynamicSiteIndexProgression recursiveProjection(Projection projection, DynamicSiteIndexModel dsiFunction, EnvironmentVariables dsiEnvironment) {
         TGFunction model = dsiFunction.parametersForSpecies(projection.treeSpecies);
         DynamicSiteIndexCalculator calculator = new DynamicSiteIndexCalculator(model);
         projection.forEach(year -> {

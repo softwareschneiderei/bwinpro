@@ -3,7 +3,7 @@ package forestsimulator.dbaccess.tools;
 import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
 import java.time.Year;
 import treegross.dynamic.siteindex.AnnualNitrogenDeposition;
-import treegross.dynamic.siteindex.DynamicSiteIndex;
+import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.GrowingSeasonValues;
 import treegross.dynamic.siteindex.Projection;
@@ -30,7 +30,7 @@ public class DynamicSiteIndexCalculationDemo {
         EnvironmentVariables standardizedEnvironment = longTermVariables.standardized(dsiEnvironment.calculateWeighted5YearMeans());
         dsiProjection.length = 5;
         DynamicSiteIndexModel dsiFunction = new DynamicSiteIndexModel();
-        DynamicSiteIndex dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndex(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, standardizedEnvironment);
+        DynamicSiteIndexProgression dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndexProgression(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, standardizedEnvironment);
         System.out.println("Dynamic site index: " + dsi.siIntermediates);
         System.out.println("Dynamic site index after " + dsiProjection.length + " years: " + dsi.endSiteIndex());
     }
