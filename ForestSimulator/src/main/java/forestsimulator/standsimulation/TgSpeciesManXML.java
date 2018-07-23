@@ -549,8 +549,8 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
             addString(speciesDefinitionElement, "Crownbase", speciesDefinition.crownbaseXML.toString());
             addString(speciesDefinitionElement, "CrownType", speciesDefinition.crownType);
             addString(speciesDefinitionElement, "SiteIndex", speciesDefinition.siteindexXML.toString());
-            addString(speciesDefinitionElement, "DynamicSiteIndex", speciesDefinition.dsiCalculator.functionText());
             addString(speciesDefinitionElement, "SiteIndexHeight", speciesDefinition.siteindexHeightXML.toString());
+            addString(speciesDefinitionElement, "DynamicSiteIndex", speciesDefinition.dsiCalculator.functionText());
             addString(speciesDefinitionElement, "PotentialHeightIncrement", speciesDefinition.potentialHeightIncrementXML.toString());
             addString(speciesDefinitionElement, "HeightIncrement", speciesDefinition.heightIncrementXML.toString());
             addString(speciesDefinitionElement, "HeightIncrementError", Double.toString(speciesDefinition.heightIncrementError));
@@ -600,7 +600,7 @@ public class TgSpeciesManXML extends javax.swing.JDialog {
         setVariableForSpecies("TgSpeciesManXML.definition.shortName.label", speciesDefinition.shortName, 1);
         setVariableForSpecies("TgSpeciesManXML.definition.longName.label", speciesDefinition.longName, 2);
         setVariableForSpecies("TgSpeciesManXML.definition.latinName.label", speciesDefinition.latinName, 3);
-        setVariableForSpecies("TgSpeciesManXML.definition.internalCode.label", speciesDefinition.latinName, 4);
+        setVariableForSpecies("TgSpeciesManXML.definition.internalCode.label", speciesDefinition.internalCode, 4);
         setVariableForSpecies("TgSpeciesManXML.definition.groupCode.label", speciesDefinition.codeGroup, 5);
         setVariableForSpecies("TgSpeciesManXML.definition.handledLikeCode.label", speciesDefinition.handledLikeCode, 6);
         setVariableForSpecies("TgSpeciesManXML.definition.heightCurce.label", speciesDefinition.heightCurve, 7);

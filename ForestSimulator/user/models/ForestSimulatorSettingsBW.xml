@@ -35,6 +35,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>(65^1.27298)*(sp.h100/(65^1.27298))^(1.0/exp( (-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*t.age^(0.58581-1.0))) )) /* Eiche FVA-BaWü (Albrecht 2010) */</SiteIndex>
     <SiteIndexHeight>(65^1.27298)*(t.si/(65^1.27298))^exp((-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*t.age^(0.58581-1.0)))) /* Eiche FVA-BaWü (Albrecht 2010) */</SiteIndexHeight>
+    <DynamicSiteIndex>1.003688189 * prevSI ^ 0.9986461 * exp(0.009484183 * env.tMean + 0.0000371199 * env.PSum + 0.0000655434 * env.AI + 0.001791844 * env.NOTotal + -0.0000265272 * env.PSum * env.NOTotal)</DynamicSiteIndex>
     <PotentialHeightIncrement>((65^1.27298)*(t.si/(65^1.27298))^exp((-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*(t.age+5.0)^(0.58581-1.0))))-(65^1.27298)*(t.si/(65^1.27298))^exp((-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*t.age^(0.58581-1.0))))) /* Eiche FVA-BaWü (Albrecht 2010) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((65^1.27298)*(t.si/(65^1.27298))^exp((-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*(t.age+5.0)^(0.58581-1.0))))-(65^1.27298)*(t.si/(65^1.27298))^exp((-0.07156/((0.58581-1.0)*100.0^(0.58581-1.0)))+(0.07156/((0.58581-1.0)*t.age^(0.58581-1.0))))) /sp.h100)+(0.0*(t.hinc^1.0)))  /* Eiche Albrecht FVA-BaWü 2010) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -75,6 +76,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>(65^1.18795)*(sp.h100/(65^1.18795))^(1.0/exp( (-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*t.age^(0.93779-1.0))) )) /* Buche FVA-BaWü (Albrecht 2010) */</SiteIndex>
     <SiteIndexHeight>(65^1.18795)*(t.si/(65^1.18795))^exp((-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*t.age^(0.93779-1.0)))) /* Buche FVA-BaWü (Albrecht 2010) */</SiteIndexHeight>
+    <DynamicSiteIndex>1.00073275896246 * prevSI ^ 0.999669144313255 * exp(-0.0149015250445941 * env.tMean + 0.0265622605718776 * env.PSum + -0.0280997500063786 * env.AI + 0.000870135381431146 * env.NOTotal + 0.00309594554803747 * env.PSum * env.NOTotal)</DynamicSiteIndex>
     <PotentialHeightIncrement>((65^1.18795)*(t.si/(65^1.18795))^exp((-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*(t.age+5.0)^(0.93779-1.0))))-(65^1.18795)*(t.si/(65^1.18795))^exp((-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*t.age^(0.93779-1.0))))) /* Buche FVA-BaWü (Albrecht 2010) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((65^1.18795)*(t.si/(65^1.18795))^exp((-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*(t.age+5.0)^(0.93779-1.0))))-(65^1.18795)*(t.si/(65^1.18795))^exp((-0.40702/((0.93779-1.0)*100.0^(0.93779-1.0)))+(0.40702/((0.93779-1.0)*t.age^(0.93779-1.0))))) /sp.h100)+(0.0*(t.hinc^1.0)))  /* Buche FVA-BaWü (Albrecht 2010) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -156,6 +158,7 @@
     <CrownType>1</CrownType>
     <SiteIndex>(65^1.72513)*(sp.h100/(65^1.72513))^(1.0/exp( (-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*t.age^(1.34491-1.0))) )) /* Douglasie FVA-BaWü (Albrecht 2010) */</SiteIndex>
     <SiteIndexHeight>(65^1.72513)*(t.si/(65^1.72513))^exp((-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*t.age^(1.34491-1.0)))) /* Douglasie FVA-BaWü (Albrecht 2010) */</SiteIndexHeight>
+    <DynamicSiteIndex>0.998923053 * prevSI ^ 1.0001322887 * exp(0.001771317 * env.tMean + -0.000152524 * env.PSum + -0.006474024 * env.AI + 0.001710475 * env.NOTotal + 0.005876502 * env.PSum * env.NOTotal)</DynamicSiteIndex>
     <PotentialHeightIncrement>((65^1.72513)*(t.si/(65^1.72513))^exp((-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*(t.age+5.0)^(1.34491-1.0))))-(65^1.72513)*(t.si/(65^1.72513))^exp((-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*t.age^(1.34491-1.0))))) /* Douglasie FVA-BaWü (Albrecht 2010) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((65^1.72513)*(t.si/(65^1.72513))^exp((-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*(t.age+5.0)^(1.34491-1.0))))-(65^1.72513)*(t.si/(65^1.72513))^exp((-0.87152/((1.34491-1.0)*100.0^(1.34491-1.0)))+(0.87152/((1.34491-1.0)*t.age^(1.34491-1.0))))) /sp.h100)+(0.0*(t.hinc^1.0)))  /* Douglasie Albrecht FVA-BaWü 2010) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -196,6 +199,7 @@
     <CrownType>1</CrownType>
     <SiteIndex>(sp.h100+31.67480-11.64500*ln(t.age)+1.04989*((ln(t.age))^2.0))/(-0.43221+0.31253*ln(t.age)) /* Kiefer (NAGEL 1999) */</SiteIndex>
     <SiteIndexHeight>-31.67480+11.64500*ln(t.age)-1.04989*(ln(t.age)^2)-0.43221*t.si+0.31253*t.si*ln(t.age) /* Kiefer (NAGEL 1999) */</SiteIndexHeight>
+    <DynamicSiteIndex>0.998323247 * prevSI ^ 1.000431293 * exp(-0.024653515 * env.tMean + 0.044228403 * env.PSum + -0.042809993 * env.AI + 0.000690637 * env.NOTotal + 0.000254849 * env.PSum * env.NOTotal)</DynamicSiteIndex>
     <PotentialHeightIncrement>((-31.67480+11.64500*ln(t.age+5)-1.04989*((ln(t.age+5))^2.0)-0.43221*t.si+0.31253*t.si*(ln(t.age+5)))-(-31.67480+11.64500*ln(t.age)-1.04989*((ln(t.age))^2.0)-0.43221*t.si+0.31253*t.si*(ln(t.age)))) /* Kiefer (NAGEL 1999) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((-31.67480+11.64500*ln(t.age+5)-1.04989*((ln(t.age+5))^2.0)-0.43221*t.si+0.31253*t.si*(ln(t.age+5)))-(-31.67480+11.64500*ln(t.age)-1.04989*((ln(t.age))^2.0)-0.43221*t.si+0.31253*t.si*(ln(t.age))))/sp.h100)+(0.0000*(t.hinc^1.0))) /* Kiefer (DÖBBELER ET AL 2002) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -236,6 +240,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -276,6 +281,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -316,6 +322,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>sp.h100/(1.3952*(1.0-exp(-0.0321*t.age))^1.5033) /* Roteiche NAGEL 1999 */</SiteIndex>
     <SiteIndexHeight>1.3952*t.si*(1.0-exp(-0.0321*t.age))^1.5033 /* Roteiche NAGEL 1999 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((1.3952*t.si*(1.0-exp(-0.0321*(t.age+5.0)))^1.5033)-(1.3952*t.si*(1.0-exp(-0.0321*t.age))^1.5033))  /* Roteiche NAGEL 1999 */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((1.3952*t.si*(1.0-exp(-0.0321*(t.age+5.0)))^1.5033)-(1.3952*t.si*(1.0-exp(-0.0321*t.age))^1.5033))/sp.h100)+(-0.00102*(t.hinc^2.6855))) /* Roteiche (DÖBBELER ET AL 2002) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -356,6 +363,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -396,6 +404,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -436,6 +445,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -476,6 +486,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>(sp.h100+46.046-15.81886*ln(t.age)+1.33618*((ln(t.age))^2.0))/(0.00000+0.22808*ln(t.age)) /* Esche (NAGEL 1999) */</SiteIndex>
     <SiteIndexHeight>-46.046+15.81886*ln(t.age)-1.33618*(ln(t.age)^2)+0.0*t.si+0.22808*t.si*ln(t.age)/* Esche (NAGEL 1999) */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((-46.046+15.81886*ln(t.age+5)-1.33618*((ln(t.age+5))^2.0)+0.22808*t.si*(ln(t.age+5)))-(-46.046+15.81886*ln(t.age)-1.33618*((ln(t.age))^2.0)+0.22808*t.si*(ln(t.age) /* Esche (NAGEL 1999) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((-46.046+15.81886*ln(t.age+5)-1.33618*((ln(t.age+5))^2.0)+0.22808*t.si*(ln(t.age+5)))-(-46.046+15.81886*ln(t.age)-1.33618*((ln(t.age))^2.0)+0.22808*t.si*(ln(t.age))))/sp.h100)+(0.0*(t.hinc^1.0)))/* Esche (DÖBBELER ET AL 2002) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -516,6 +527,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>296.0432*(sp.h100/296.0432)^(1.0/exp( (-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*t.age^(1.30296-1.0))) )) /* NAGEL 1985 */</SiteIndex>
     <SiteIndexHeight>296.0432*(t.si/296.0432)^exp((-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*t.age^(1.30296-1.0))))  /* NAGEL 1985 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(296.0432*(t.si/296.0432)^exp((-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*(t.age+5.0)^(1.30296-1.0))))-296.0432*(t.si/296.0432)^exp((-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*t.age^(1.30296-1.0))))) /* NAGEL 1985 */</PotentialHeightIncrement>
     <HeightIncrement>t.h*(((296.0432*(t.si/296.0432)^exp((-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*(t.age+5.0)^(1.30296-1.0))))-296.0432*(t.si/296.0432)^exp((-0.62388/((1.30296-1.0)*100.0^(1.30296-1.0)))+(0.62388/((1.30296-1.0)*t.age^(1.30296-1.0)))))/sp.h100)+(0.0*(t.hinc^1.0))) /* Ahorn (DÖBBELER ET AL 2002) */</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -556,6 +568,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -596,6 +609,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -636,6 +650,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -676,6 +691,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -716,6 +732,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -756,6 +773,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>96.173358*(sp.h100/96.173358)^(1.0/exp( (-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0))) )) /* BÖCKMANN 1990 */</SiteIndex>
     <SiteIndexHeight>96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0))))/* BÖCKMANN 1990 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*(t.age+5.0)^(1.101126-1.0))))-96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0))))) /* BÖCKMANN 1990 */</PotentialHeightIncrement>
     <HeightIncrement>(96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*(t.age+5.0)^(1.101126-1.0))))-96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0)))))/* BÖCKMANN 1990 */</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -796,6 +814,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>96.173358*(sp.h100/96.173358)^(1.0/exp( (-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0))) ))/* Winterlinde BÖCKMANN 1990 */</SiteIndex>
     <SiteIndexHeight>96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0))))/* Winterlinde BÖCKMANN 1990 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*(t.age+5.0)^(1.101126-1.0))))-96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0)))))/* Winterlinde BÖCKMANN 1990 */</PotentialHeightIncrement>
     <HeightIncrement>(96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*(t.age+5.0)^(1.101126-1.0))))-96.173358*(t.si/96.173358)^exp((-0.495586/((1.101126-1.0)*100.0^(1.101126-1.0)))+(0.495586/((1.101126-1.0)*t.age^(1.101126-1.0)))))/* Winterlinde BÖCKMANN 1990 */</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -836,6 +855,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -876,6 +896,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -916,6 +937,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -956,6 +978,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>84.185464*(sp.h100/84.185464)^(1.0/exp( (-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*t.age^(1.150926-1.0))) )) /* RÖÖS 1990 */</SiteIndex>
     <SiteIndexHeight>84.185464*(t.si/84.185464)^exp((-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*t.age^(1.150926-1.0)))) /* RÖÖS 1990 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(84.185464*(t.si/84.185464)^exp((-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*(t.age+5.0)^(1.150926-1.0))))-84.185464*(t.si/84.185464)^exp((-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*t.age^(1.150926-1.0))))) /* RÖÖS 1990 */</PotentialHeightIncrement>
     <HeightIncrement>(84.185464*(t.si/84.185464)^exp((-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*(t.age+5.0)^(1.150926-1.0))))-84.185464*(t.si/84.185464)^exp((-0.800089/((1.150926-1.0)*100.0^(1.150926-1.0)))+(0.800089/((1.150926-1.0)*t.age^(1.150926-1.0))))) /* RÖÖS 1990 */</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -996,6 +1019,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1036,6 +1060,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1076,6 +1101,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>785.400774*(sp.h100/785.400774)^(1.0/exp( (-0.20576727/((1.03088451-1.0)*100.0^(1.03088451-1.0)))+(0.20576727/((1.03088451-1.0)*t.age^(1.03088451-1.0))) )) /* KAHLE 2004 */</SiteIndex>
     <SiteIndexHeight>785.400774*(t.si/785.400774)^exp((-0.20576727/((1.03088451-1.0)*100.0^(1.03088451-1.0)))+(0.20576727/((1.03088451-1.0)*t.age^(1.03088451-1.0)))) /* KAHLE 2004 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(785.400774*(t.si/785.400774)^exp((-0.20576727/((1.03088451-1.0)*100.0^(1.03088451-1.0)))+(0.20576727/((1.03088451-1.0)*(t.age+5.0)^(1.03088451-1.0))))-785.400774*(t.si/785.400774)^exp((-0.20576727/((1.03088451-1.0)*100.0^(1.03088451-1.0)))+(0.20576727/((1.03088451-1.0)*t.age^(1.03088451-1.0)))))/sp.h100 /* KAHLE 2004 */</PotentialHeightIncrement>
     <HeightIncrement>t.hinc</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -1116,6 +1142,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1156,6 +1183,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1196,6 +1224,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1236,6 +1265,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1276,6 +1306,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1316,6 +1347,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1356,6 +1388,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1396,6 +1429,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1436,6 +1470,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1476,6 +1511,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1516,6 +1552,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1556,6 +1593,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>25.544*(sp.h100/25.544)^(1.0/exp( (-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*t.age^(0.15717-1.0))) )) /* Moorbirke (NAGEL 2009*/</SiteIndex>
     <SiteIndexHeight>25.544*(t.si/25.544)^exp((-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*t.age^(0.15717-1.0)))) /* Moorbirke (NAGEL 2009*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(25.544*(t.si/25.544)^exp((-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*(t.age+5.0)^(0.15717-1.0))))-25.544*(t.si/25.544)^exp((-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*t.age^(0.15717-1.0))))) /* Moorbirke (NAGEL 2009*/</PotentialHeightIncrement>
     <HeightIncrement>(25.544*(t.si/25.544)^exp((-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*(t.age+5.0)^(0.15717-1.0))))-25.544*(t.si/25.544)^exp((-0.12695/((0.15717-1.0)*100.0^(0.15717-1.0)))+(0.12695/((0.15717-1.0)*t.age^(0.15717-1.0))))) /* Moorbirke (NAGEL 2009*/</HeightIncrement>
     <HeightIncrementError>0.05</HeightIncrementError>
@@ -1596,6 +1634,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1636,6 +1675,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1676,6 +1716,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>4.0*sp.h100*exp(2.733015-1.668158*ln(t.age)+0.167998*ln(t.age)^2.0) /*Schwarzerle Lockow (1994)*/</SiteIndex>
     <SiteIndexHeight>t.si/(4.0*exp(2.733015-1.668158*ln(t.age+5)+0.167998*ln(t.age+5)^2.0))  /*Schwarzerle Lockow (1994)*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344)) /*Schwarzerle Lockow (1994)*/</PotentialHeightIncrement>
     <HeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344))</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1716,6 +1757,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>4.0*sp.h100*exp(2.733015-1.668158*ln(t.age)+0.167998*ln(t.age)^2.0) /*Schwarzerle Lockow (1994)*/</SiteIndex>
     <SiteIndexHeight>t.si/(4.0*exp(2.733015-1.668158*ln(t.age+5)+0.167998*ln(t.age+5)^2.0))  /*Schwarzerle Lockow (1994)*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344))  /*Schwarzerle Lockow (1994)*/</PotentialHeightIncrement>
     <HeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344))  /*Schwarzerle Lockow (1994)*/</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1756,6 +1798,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>4.0*sp.h100*exp(2.733015-1.668158*ln(t.age)+0.167998*ln(t.age)^2.0) /*Schwarzerle Lockow (1994)*/</SiteIndex>
     <SiteIndexHeight>t.si/(4.0*exp(2.733015-1.668158*ln(t.age+5)+0.167998*ln(t.age+5)^2.0))  /*Schwarzerle Lockow (1994)*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344))  /*Schwarzerle Lockow (1994)*/</PotentialHeightIncrement>
     <HeightIncrement>((1.2164*t.si*(1.0-exp(-0.0194*(t.age+5.0)))^1.1344)-(1.2164*t.si*(1.0-exp(-0.0194*t.age))^1.1344))  /*Schwarzerle Lockow (1994)*/</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1796,6 +1839,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1836,6 +1880,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1876,6 +1921,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1916,6 +1962,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1956,6 +2003,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -1996,6 +2044,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2036,6 +2085,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2076,6 +2126,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>66.9903*(sp.h100/66.9903)^(1.0/exp( (-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*t.age^(0.79707-1.0))) )) /*Eberesche (Hillebrand 1996)*/</SiteIndex>
     <SiteIndexHeight>66.9903*(t.si/66.9903)^exp((-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*t.age^(0.79707-1.0)))) /*Eberesche (Hillebrand 1996)*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>(66.9903*(t.si/66.9903)^exp((-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*(t.age+5.0)^(0.79707-1.0))))-66.9903*(t.si/66.9903)^exp((-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*t.age^(0.79707-1.0)))))</PotentialHeightIncrement>
     <HeightIncrement>(66.9903*(t.si/66.9903)^exp((-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*(t.age+5.0)^(0.79707-1.0))))-66.9903*(t.si/66.9903)^exp((-0.23515/((0.79707-1.0)*100.0^(0.79707-1.0)))+(0.23515/((0.79707-1.0)*t.age^(0.79707-1.0)))))</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2116,6 +2167,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2156,6 +2208,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2196,6 +2249,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2236,6 +2290,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2276,6 +2331,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2316,6 +2372,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2356,6 +2413,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2396,6 +2454,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex>(65^1.36035)*(sp.h100/(65^1.36035))^(1.0/exp( (-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*t.age^(0.97125-1.0))) )) /* Tanne FVA-BaWü (Albrecht 2010) */</SiteIndex>
     <SiteIndexHeight>(65^1.36035)*(t.si/(65^1.36035))^exp((-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*t.age^(0.97125-1.0)))) /* Tanne FVA-BaWü (Albrecht 2010) */</SiteIndexHeight>
+    <DynamicSiteIndex>1.003960038 * prevSI ^ 0.998859199 * exp(-7.59825E-03 * env.tMean + 5.62569E-05 * env.PSum + -6.092363E-03 * env.AI + 4.5039E-04 * env.NOTotal + 8.766782E-03 * env.PSum * env.NOTotal)</DynamicSiteIndex>
     <PotentialHeightIncrement>((65^1.36035)*(t.si/(65^1.36035))^exp((-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*(t.age+5.0)^(0.97125-1.0))))-(65^1.36035)*(t.si/(65^1.36035))^exp((-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*t.age^(0.97125-1.0))))) /* Tanne FVA-BaWü (Albrecht 2010) */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((65^1.36035)*(t.si/(65^1.36035))^exp((-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*(t.age+5.0)^(0.97125-1.0))))-(65^1.36035)*(t.si/(65^1.36035))^exp((-0.33404/((0.97125-1.0)*100.0^(0.97125-1.0)))+(0.33404/((0.97125-1.0)*t.age^(0.97125-1.0))))) /sp.h100)+(0.0*(t.hinc^1.0)))  /* Tanne Albrecht FVA-BaWü 2010) */</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2436,6 +2495,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2476,6 +2536,7 @@
     <CrownType>1</CrownType>
     <SiteIndex>sp.h100*((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*t.age)) )^2.08562 /* Geb 2007 */</SiteIndex>
     <SiteIndexHeight>t.si/((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*t.age)) )^2.08562 /* Geb 2007 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((t.si/((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*(t.age+5.0))) )^2.08562)-(t.si/((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*(t.age))) )^2.08562 ))         /* Geb 2009 */</PotentialHeightIncrement>
     <HeightIncrement>((t.si/((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*(t.age+5.0))) )^2.08562)-(t.si/((1.0-exp(-0.0371*50.0))/(1.0-exp(-0.0371*(t.age))) )^2.08562 )) *1.053041*(t.h/sp.h100)^0.021848</HeightIncrement>
     <HeightIncrementError>1.29</HeightIncrementError>
@@ -2516,6 +2577,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2556,6 +2618,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2596,6 +2659,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2636,6 +2700,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2676,6 +2741,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2716,6 +2782,7 @@
     <CrownType>1</CrownType>
     <SiteIndex>(sp.h100+0.53515)/(-0.78758+0.38982*ln(t.age)) /*ELae (Nagel 1999*/</SiteIndex>
     <SiteIndexHeight>-0.53515-0.78758*t.si+0.38982*t.si*ln(t.age) /*ELae (Nagel 1999*/</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((-0.53515-0.78758*t.si+0.38982*t.si*(ln(t.age+5)))-(-0.53515-0.78758*t.si+0.38982*t.si*(ln(t.age)))) /*ELae (Nagel 1999*/</PotentialHeightIncrement>
     <HeightIncrement>((-0.53515-0.78758*t.si+0.38982*t.si*(ln(t.age+5)))-(-0.53515-0.78758*t.si+0.38982*t.si*(ln(t.age)))) /*Elae (Nagel 1999*/</HeightIncrement>
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2756,6 +2823,7 @@
     <CrownType>1</CrownType>
     <SiteIndex>sp.h100/(1.88062*(1.0-exp(-0.009296*t.age))^0.6345) /* JLae Westphal 1997 */</SiteIndex>
     <SiteIndexHeight>1.88062*t.si*(1.0-exp(-0.009296*t.age))^0.6345 /* JLae Westphal 1997 */</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>((1.88062*t.si*(1.0-exp(-0.009296*(t.age+5.0)))^0.6345)-(1.88062*t.si*(1.0-exp(-0.009296*t.age))^0.6345)) /* JLae Westphal 1997 */</PotentialHeightIncrement>
     <HeightIncrement>t.h*((((1.88062*t.si*(1.0-exp(-0.009296*(t.age+5.0)))^0.6345)-(1.88062*t.si*(1.0-exp(-0.009296*t.age))^0.6345))/sp.h100)+(0.0188*(t.hinc^3.5922)))</HeightIncrement>
     <HeightIncrementError>0.082</HeightIncrementError>
@@ -2796,6 +2864,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2836,6 +2905,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2876,6 +2946,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2916,6 +2987,7 @@
     <CrownType>-9</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2956,6 +3028,7 @@
     <CrownType>0</CrownType>
     <SiteIndex />
     <SiteIndexHeight />
+    <DynamicSiteIndex />
     <PotentialHeightIncrement />
     <HeightIncrement />
     <HeightIncrementError>-9.0</HeightIncrementError>
@@ -2996,6 +3069,7 @@
     <CrownType>0</CrownType>
     <SiteIndex>1</SiteIndex>
     <SiteIndexHeight>1</SiteIndexHeight>
+    <DynamicSiteIndex />
     <PotentialHeightIncrement>0</PotentialHeightIncrement>
     <HeightIncrement>0</HeightIncrement>
     <HeightIncrementError>0.0</HeightIncrementError>
