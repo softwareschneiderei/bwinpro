@@ -82,6 +82,7 @@ class TgHTMLsv {
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.outtype"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.layer"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.si"))
+                    + tableHeaderOf(messages.getString("TgHTMLsv.column.header.dsi"))
                     + "</tr>");
 
             st.forTreesMatching(tree -> tree.isLiving(), tree -> {
@@ -129,6 +130,7 @@ class TgHTMLsv {
                 + valueCellOf(tree.outtype)
                 + valueCellOf(tree.layer)
                 + valueCellOf(f.format(tree.si))
+                + valueCellOf(f.format(tree.dsi.value))
                 + "</tr>");
     }
     

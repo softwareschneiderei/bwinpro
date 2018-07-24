@@ -466,12 +466,10 @@ public class Tree implements Cloneable {
             if (sp.h100 <= 1.3 || Double.isNaN(sp.h100)) {
                 sp.h100 = st.h100;
             }
-            si = calculateSiteIndex();
-            dsi = SiteIndex.si(si);
+            initializeSiteIndex(calculateSiteIndex());
         }
         if (si <= -9.0) {
-            si = sp.hbon;
-            dsi = SiteIndex.si(si);
+            initializeSiteIndex(sp.hbon);
         }
         if (cb < 0.01) {
             cb = calculateCb();
@@ -482,6 +480,11 @@ public class Tree implements Cloneable {
         if (v <= 0.0) {
             v = calculateVolume();
         }
+    }
+
+    void initializeSiteIndex(double value) {
+        si = value;
+        dsi = SiteIndex.si(si);
     }
 
     /**
@@ -598,7 +601,6 @@ public class Tree implements Cloneable {
     }
 
     void growBack(int years) {
-        //System.out.println("grow back Tree");
         double ts = st.timeStep;
         if (out == st.year) {
             out = -1;
