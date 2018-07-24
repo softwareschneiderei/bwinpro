@@ -38,14 +38,28 @@ class TgHTMLsv {
         this.file = new File(path, fname);
 
         try (PrintWriter out = new PrintWriter(new FileWriter(file))) {
-            out.println("<HTML>");
-            out.println("<H2><P align=center>" + messages.getString("TgHTMLsv.heading.text") + "</P align=center></H2> ");
-            out.println("<P><B>" + messages.getString("TgHTMLsv.standname.label") + st.standname);
-            out.println("<BR>" + messages.getString("TgHTMLsv.standsize.label") + st.size);
-            out.println("<BR>" + messages.getString("TgHTMLsv.year.label") + st.year + "</B></P>");
-            out.println("<HR>");
-            out.println("<TABLE BORDER>");
-            out.println("<TR>"
+            out.println("<html><head><style>"
+                    + "table, th, td {"
+                    + "  font-size: small;"
+                    + "  border: solid black 1px;"
+                    + "  border-collapse: collapse;"
+                    + "}"
+                    + "th, td {"
+                    + "  padding: 2px;"
+                    + "}"
+                    + "th {"
+                    + "  background-color: #c0c0c0;"
+                    + "}"
+                    + "</style></head><body>");
+            out.println("<h2><p align=center>" + messages.getString("TgHTMLsv.heading.text") + "</p></h2> ");
+            out.println("<p><b>"
+                    + messages.getString("TgHTMLsv.standname.label") + st.standname + "<br>"
+                    + messages.getString("TgHTMLsv.standsize.label") + st.size + "<br>"
+                    + messages.getString("TgHTMLsv.year.label") + st.year
+                    + "</b></p>");
+            out.println("<hr>");
+            out.println("<table>");
+            out.println("<tr>"
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.number"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.species"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.age"))
@@ -55,13 +69,11 @@ class TgHTMLsv {
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.cw"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.cr"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.hd"))
-                    // TODO: Extract Vol. String into resource bundle
-                    + tableHeaderOf("Vol.")
+                    + tableHeaderOf(messages.getString("TgHTMLsv.column.header.volume"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.cr") + "aus")
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.x"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.y"))
-                    // TODO: Extract z into resource bundle
-                    + tableHeaderOf("z")
+                    + tableHeaderOf(messages.getString("TgHTMLsv.column.header.z"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.c66"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.c66c"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.c66xy"))
@@ -70,7 +82,7 @@ class TgHTMLsv {
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.outtype"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.layer"))
                     + tableHeaderOf(messages.getString("TgHTMLsv.column.header.si"))
-                    + "</TR>");
+                    + "</tr>");
 
             st.forTreesMatching(tree -> tree.isLiving(), tree -> {
                 writeDataRow(out, tree);
@@ -85,15 +97,16 @@ class TgHTMLsv {
                     }
                 }
             }
-            out.println("</TABLE>");
-            out.println("<br>" + messages.getString("TgHTMLsv.created.label") + st.modelRegion + "</br></HTML>");
-        } catch (Exception e) {
+            out.println("</table>");
+            out.println("<br>" + messages.getString("TgHTMLsv.created.label") + st.modelRegion + "</br>");
+            out.println("</body></html>");
+        } catch (IOException e) {
             logger.log(Level.SEVERE, "Could not write HTML report.", e);
         }
     }
 
     private void writeDataRow(PrintWriter out, Tree tree) {
-        out.println("<TR>"
+        out.println("<tr>"
                 + valueCellOf(tree.no)
                 + valueCellOf(tree.code)
                 + valueCellOf(tree.age)
@@ -116,15 +129,15 @@ class TgHTMLsv {
                 + valueCellOf(tree.outtype)
                 + valueCellOf(tree.layer)
                 + valueCellOf(f.format(tree.si))
-                + "</TR>");
+                + "</tr>");
     }
     
     private String tableHeaderOf(String heading) {
-        return "<TH BGCOLOR=\"#C0C0C0\"><FONT SIZE=2>" + heading + "</FONT></TH>";
+        return "<th>" + heading + "</th>";
     }
     
     private String valueCellOf(Object value) {
-        return "<TD><FONT SIZE=2>" + value + "</FONT></TD>";
+        return "<td>" + value + "</td>";
     }
 
     public String getFilename() {
