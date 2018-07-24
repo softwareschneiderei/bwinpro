@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import treegross.base.StandLocation;
 import forestsimulator.util.StopWatch;
 import java.sql.*;
 import java.text.MessageFormat;
@@ -26,6 +27,8 @@ public class LoadTreegrossStand {
     private int durchforstung_an = 0;
     private int scenario = 0;
     private boolean executeMortality;
+    private boolean calculateDSI;
+    private String dsiScenario;
 
     public Stand loadFromDB(Connection connection, Stand stand, String edvId, int selectedAufn, boolean missingDataAutomatisch,
             boolean missingDataReplace) {
@@ -221,7 +224,7 @@ public class LoadTreegrossStand {
         return new StandMetaData(standName(connection, edvId, selectedAufn), year, size);
     }
 
-    public Stand loadRules(Connection dbconn, Stand stl, String idx, int auf, int scen) {
+    public Stand loadRules(Connection dbconn, Stand stand, String idx, int auf, int scen) {
         durchforstung_an = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ? AND Szenario = ?)")) {
             stmt.setString(1, idx);
@@ -230,12 +233,13 @@ public class LoadTreegrossStand {
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     if (rs.getInt("Zufall") == 0) {
-                        stl.random.setRandomType(RandomNumber.OFF);
+                        stand.random.setRandomType(RandomNumber.OFF);
                     } else {
-                        stl.random.setRandomType(RandomNumber.PSEUDO);
+                        stand.random.setRandomType(RandomNumber.PSEUDO);
                     }
-                    stl.ingrowthActive = rs.getInt("Einwuchs") != 0;
-                    stl.temp_Integer = rs.getInt("Schritte");
+                    stand.ingrowthActive = rs.getInt("Einwuchs") != 0;
+                    stand.temp_Integer = rs.getInt("Schritte");
+                    stand.location = new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
                     ebaum = rs.getInt("EBaum");
                     bestand = rs.getInt("Bestand");
                     baumart = rs.getInt("Baumart");
@@ -246,17 +250,19 @@ public class LoadTreegrossStand {
                     } else {
                         scenario = rs.getInt("Szenario");
                     }
+                    calculateDSI = intToBool(rs.getInt("dsi_enabled"));
+                    dsiScenario = rs.getString("dsi_scenario");
                 }
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not load rules from database", e);
         }
         if (applyTreatment() && scenario > 0) {
-            stl.distanceDependent = true;
-            applyTreatmentRulesTo(stl);
-            loadScenario(dbconn, stl, scenario);
+            stand.distanceDependent = true;
+            applyTreatmentRulesTo(stand);
+            loadScenario(dbconn, stand, scenario);
         }
-        return stl;
+        return stand;
     }
 
     protected void applyTreatmentRulesTo(Stand stl) {
@@ -386,6 +392,14 @@ public class LoadTreegrossStand {
 
     public boolean executeMortality() {
         return executeMortality;
+    }
+    
+    public boolean calculateDynamicSiteIndex() {
+        return calculateDSI;
+    }
+    
+    public String dynamicSiteIndexScenario() {
+        return dsiScenario;
     }
     
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {

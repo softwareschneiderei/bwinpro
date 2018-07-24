@@ -27,7 +27,6 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import static treegross.base.ScaleManager.SCALE_AUTO;
@@ -58,6 +57,7 @@ import treegross.random.RandomNumber;
  */
 public class Stand {
 
+    private final static Logger LOGGER = Logger.getLogger(Stand.class.getName());
     public boolean debug = true;
 
     /**
@@ -225,6 +225,7 @@ public class Stand {
      * Hangneigung_Prozent
      */
     public double hangneigungProzent = -99.9;
+    // TODO: use location instead of wuchsgebiet and wuchsbezirk
     /**
      * Wuchsgebiet
      */
@@ -280,9 +281,6 @@ public class Stand {
     /* a container to store all added StandChangeListeners*/
     private final List<StandChangeListener> StandChangeListeners = new ArrayList<>();
     private boolean notifyListeners = true;
-    public double ed = 0;
-    public double pd = 0;
-    public int water = -99;
     
     /**
      * parallel Competion Update mechanism
@@ -293,8 +291,7 @@ public class Stand {
      * stopping hook for time consuming loop/calculation
      */
     boolean stop = false;
-
-    private final static Logger LOGGER = Logger.getLogger(Stand.class.getName());
+    public StandLocation location;
 
     public Stand() {
         this(SCALE_AUTO);
@@ -316,11 +313,11 @@ public class Stand {
     }
 
     public Iterable<Tree> trees() {
-        return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
+        return Arrays.asList(tr).subList(0, ntrees);
     }
 
     public Iterable<Species> species() {
-        return Arrays.stream(sp, 0, nspecies).collect(Collectors.toList());
+        return Arrays.asList(sp).subList(0, nspecies);
     }
 
     public ScaleManager getScaleManager() {
@@ -839,12 +836,10 @@ public class Stand {
 
     /**
      * st.grow starts a growth cycle for the class stand, expects an integer for
-     * the number of years of one growing cycle. Should be between 1 -5. The
-     * second parameter controlls the regenration growth and can be set as
-     * either true or false
+     * the number of years of one growing cycle. Should be between 1 -5.
      *
      * @param period
-     * @param naturalIngrowth
+     * @param naturalIngrowth controls the regeneration growth
      */
     public void grow(int period, boolean naturalIngrowth) {
         // Stand is 1=growing, or 2....9 = Period of harvest, or 99=final clear cut
@@ -1348,7 +1343,7 @@ public class Stand {
                 double jj = 0;
                 int k = 0;
                 while (jj < n100 && k < ntrees) {
-                    if (tr[k].out < 1 && tr[k].d >= 7.0) {
+                    if (tr[k].isLiving() && tr[k].d >= 7.0) {
                         d100 = d100 + tr[k].fac * Math.PI * (tr[k].d / 200.0) * (tr[k].d / 200.0);
                         jj = jj + tr[k].fac;
                     }
@@ -1361,7 +1356,7 @@ public class Stand {
             int ndh = 0; // number of diameter and height values
 
             for (int j = 0; j < ntrees; j++) {
-                if (tr[j].h >= 1.3 && tr[j].out < 1) {
+                if (tr[j].h >= 1.3 && tr[j].isLiving()) {
                     ndh++;
                 }
             }
@@ -1375,7 +1370,7 @@ public class Stand {
                 k = k + 1;
                 ndh = 0;
                 for (int j = 0; j < ntrees; j = j + k) {
-                    if (tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                    if (tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                         ndh++;
                     }
                 }
@@ -1384,7 +1379,7 @@ public class Stand {
                 m.heightcurve();
 
                 for (int j = 0; j < ntrees; j = j + k) {
-                    if (tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                    if (tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                         m.adddh(sp[0].spDef.heightCurve, ndh, tr[j].d, tr[j].h);
                     }
                 }
@@ -1413,7 +1408,7 @@ public class Stand {
             double hk = 0.0;
             if (ndh > 0 && ndh <= 5) {
                 for (int j = 0; j < ntrees; j++) {
-                    if (tr[j].h > 1.3 && tr[j].out < 1) {
+                    if (tr[j].h > 1.3 && tr[j].isLiving()) {
                         dk = tr[j].d;
                         hk = tr[j].h;
                     }
@@ -1444,11 +1439,10 @@ public class Stand {
                 }
                 sp[0].dg = dgmerk;
                 sp[0].hg = hgmerk;
-
             }
         }
         //
-        // In case a site index is given to one or more trees, than all trees without
+        // In case a site index is given to one or more trees, then all trees without
         // site index of that species will get the average site index
         for (int jj = 0; jj < nspecies; jj++) {
             double avSiteIndex = 0.0;
@@ -1463,7 +1457,7 @@ public class Stand {
                 avSiteIndex = avSiteIndex / nSiteIndex;
                 for (int j = 0; j < ntrees; j++) {
                     if (tr[j].code == sp[jj].code && tr[j].si < 0) {
-                        tr[j].si = avSiteIndex;
+                        tr[j].initializeSiteIndex(avSiteIndex);
                     }
                 }
                 sp[jj].hbon = avSiteIndex;

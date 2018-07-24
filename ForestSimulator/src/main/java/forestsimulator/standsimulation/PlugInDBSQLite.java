@@ -26,5 +26,5 @@ import treegross.base.*;
  */
 public interface PlugInDBSQLite {
 
-    public void startDialog(JFrame frame, Stand st, File dir);
+    public void startDialog(JFrame frame, Stand st, File dataDirectory);
 }

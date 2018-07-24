@@ -2,6 +2,7 @@ package forestsimulator.dbaccess.tools;
 
 import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
 import java.time.Year;
+import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.AnnualNitrogenDeposition;
 import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
 import treegross.dynamic.siteindex.EnvironmentVariables;
@@ -36,7 +37,7 @@ public class DynamicSiteIndexCalculationDemo {
     }
 
     private static EnvironmentVariables loadEnvironmentData(String region, String subRegion, String scenario) {
-        return new DatabaseEnvirionmentalDataProvider("data_standsimulation/climate_database.mdb").environmentalDataFor(region, subRegion, scenario);
+        return new DatabaseEnvirionmentalDataProvider("data_standsimulation/climate_database.mdb").environmentalDataFor(new StandLocation(region, subRegion), scenario);
     }
 
     private static class LongtermEnvironmentVariables extends EnvironmentVariables {

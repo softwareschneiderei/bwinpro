@@ -16,6 +16,8 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
+import java.io.File;
 import treegross.base.thinning.ThinningType;
 import java.text.*;
 import java.util.*;
@@ -25,7 +27,6 @@ import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.treatment.*;
 
 
 /**
@@ -36,12 +37,14 @@ public class TgTreatmentMan3 extends JPanel {
     private final DefaultTableModel data;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     private final Stand st;
+    private final TgUser userSettings;
     Object[] rowData={" "," "," "," "," "," "};
     TgYieldTable  yt  = null;
     
-    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent) {
+    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, TgUser userSettings) {
         initComponents();
         st = stparent;
+        this.userSettings = userSettings;
         yt = frameparent.yt;
 
         thinningIntensityComboBox.removeAllItems();
@@ -427,7 +430,9 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
 
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
-    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected());
+    // TODO: get dsi settings from the gui
+    DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(userSettings.getDataDir(), "climate_data.mdb").getAbsolutePath());
+    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected(), true, environmentalDatabase, "MISC");
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
         if (simTime < st.timeStep) {

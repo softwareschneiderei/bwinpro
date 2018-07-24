@@ -12,9 +12,9 @@ import javax.swing.JFrame;
 public class DBAccess implements PlugInDBSQLite {
 
     @Override
-    public void startDialog(JFrame frame, Stand st, File dirx) {
+    public void startDialog(JFrame frame, Stand st, File dataDirectory) {
         System.out.println("starte Dialog");
-        DBAccessDialog dialog = new DBAccessDialog(frame, true, st, dirx);
+        DBAccessDialog dialog = new DBAccessDialog(frame, true, st, dataDirectory);
         dialog.setVisible(true);
     }
 }

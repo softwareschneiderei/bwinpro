@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 
 class TgUser {
 
+    private static final Logger logger = Logger.getLogger(TgUser.class.getName());
     private File workingDir;
     private File programDir;
     private File dataDir;
@@ -34,7 +35,6 @@ class TgUser {
     int grafik3D = 0;
     String update = "01012007";
     String nwfva = null;
-    private static final Logger logger = Logger.getLogger(TgUser.class.getName());
     private final File baseDirectory;
     private final Properties settings;
 
@@ -143,13 +143,11 @@ class TgUser {
             URLConnection urlcon = url.openConnection();
 
             urlcon.setReadTimeout(1000);
-            java.io.BufferedReader br = new java.io.BufferedReader(
-                    new java.io.InputStreamReader(
-                            urlcon.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
             updateInternet = br.readLine();
 
-        } catch (java.io.IOException e) {
-            System.out.println("kein Internet Check möglich !");
+        } catch (IOException e) {
+            logger.info("kein Internet Check möglich !");
         }
         if (updateInternet != null) {
             int yearNet = Integer.parseInt(updateInternet.substring(6, 10));

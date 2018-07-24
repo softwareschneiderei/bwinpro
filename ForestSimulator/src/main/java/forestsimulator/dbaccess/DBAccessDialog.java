@@ -51,13 +51,15 @@ public class DBAccessDialog extends JDialog {
     int growthCycles = 0;
     private final ConnectionFactory connectionFactory;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
+    private final File dataDirectory;
     
-    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, File dir) {
+    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, File dataDirectory) {
         super(parent, modal);
         initComponents();
+        this.dataDirectory = dataDirectory;
         connectionFactory = new ConnectionFactory(parent);
         st = stand;
-        databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
+        databaseFilenameTextField.setText(new File(dataDirectory, "localdata.mdb").getPath());
         elsaltoPanel.setVisible(false);
         calculateStandButton.setVisible(false);
         if (st.FileXMLSettings.indexOf("ElSalto") > 0) {
@@ -491,7 +493,8 @@ public class DBAccessDialog extends JDialog {
             st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality());
+            DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality(), lts.calculateDynamicSiteIndex(), environmentalDatabase, lts.dynamicSiteIndexScenario());
             for (int step = 0; step < st.temp_Integer; step++) {
                 simulation.executeStep(5, publishNothing);
                 st.sortbyd();
@@ -508,7 +511,13 @@ public class DBAccessDialog extends JDialog {
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
         System.out.println("Parent: " + getParent());
-        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(new ConnectionFactory((RootPaneContainer) getParent()), aktivesDatenfile, st, updateViewCheckbox.isSelected());
+        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(
+                new ConnectionFactory((RootPaneContainer) getParent()),
+                dataDirectory,
+                aktivesDatenfile,
+                st,
+                updateViewCheckbox.isSelected()
+        );
         BatchProgressDialog progress = new BatchProgressDialog((Frame) getParent(), new File(aktivesDatenfile).getName(), processor);
         processor.setProgressListener(progress);
         progress.pack();

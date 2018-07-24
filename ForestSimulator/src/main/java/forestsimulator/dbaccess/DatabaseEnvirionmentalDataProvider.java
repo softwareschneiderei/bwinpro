@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
+import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.AnnualNitrogenDeposition;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.EnvironmentalDataProvider;
@@ -34,15 +35,15 @@ public class DatabaseEnvirionmentalDataProvider implements EnvironmentalDataProv
     }
 
     @Override
-    public EnvironmentVariables environmentalDataFor(String region, String subRegion, String scenario) {
+    public EnvironmentVariables environmentalDataFor(StandLocation location, String scenario) {
         Map<Year, List<MonthlyValues>> rawData = new HashMap<>();
         try (
                 Connection con = databaseConnector.openDBConnection(databaseFile, "", "");
                 PreparedStatement ps = con.prepareStatement(
                         "select * from input_data where Wuchsgebiet = ? and Wuchsbezirk = ? and Scenario = ?"
                         + " and month >= ? and month <= ?")) {
-            ps.setString(1, region);
-            ps.setString(2, subRegion);
+            ps.setString(1, location.region);
+            ps.setString(2, location.subRegion);
             ps.setString(3, scenario);
             ps.setInt(4, vegetationStart.getValue());
             ps.setInt(5, vegetationEnd.getValue());

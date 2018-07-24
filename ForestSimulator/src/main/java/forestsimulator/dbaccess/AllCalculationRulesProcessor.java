@@ -3,6 +3,7 @@ package forestsimulator.dbaccess;
 import forestsimulator.standsimulation.Simulation;
 import forestsimulator.util.StandGeometry;
 import forestsimulator.util.StopWatch;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +19,6 @@ import treegross.base.GenerateXY;
 import treegross.base.OutType;
 import treegross.base.Stand;
 import treegross.base.Tree;
-import treegross.treatment.Treatment2;
 
 public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgress> implements BatchProcessingControl {
 
@@ -31,15 +31,17 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     }
     
     private final ConnectionFactory connectionFactory;
+    private final File dataDirectory;
     private final String aktivesDatenfile;
     private Stand st;
     private BatchProgressListener progressListener;
     private volatile boolean shouldStop;
     private final StopWatch wholeBatchTiming = new StopWatch("Whole batch");
 
-    public AllCalculationRulesProcessor(ConnectionFactory connectionFactory, String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
+    public AllCalculationRulesProcessor(ConnectionFactory connectionFactory, File dataDirectory, String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
         super();
         this.connectionFactory = connectionFactory;
+        this.dataDirectory = dataDirectory;
         this.aktivesDatenfile = aktivesDatenfile;
         this.st = st;
         this.st.notificationsEnabled(notifyStandListeners);
@@ -112,7 +114,15 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> tree.fac == 0.0);
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, rule.scenarioId);
         saveStand(con, st, lts, rule, 0, pass);
-        Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality());
+        DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+        Simulation simulation = new Simulation(
+                st,
+                lts.applyTreatment(),
+                lts.executeMortality(),
+                lts.calculateDynamicSiteIndex(),
+                environmentalDatabase,
+                lts.dynamicSiteIndexScenario()
+        );
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
@@ -169,7 +179,11 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         try (Statement stmt = con.createStatement();
                 ResultSet rs = stmt.executeQuery("SELECT * FROM Vorschrift")) {
             while (rs.next()) {
-                rules.add(new CalculationRule(rs.getString("edvid"), rs.getInt("auf"), rs.getInt("Szenario"), rs.getInt("wiederholung")));
+                rules.add(new CalculationRule(
+                        rs.getString("edvid"),
+                        rs.getInt("auf"),
+                        rs.getInt("Szenario"),
+                        rs.getInt("wiederholung")));
             }
         } catch (SQLException e) {
             logger.log(Level.WARNING, "Problem getting rules from database.", e);

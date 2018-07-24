@@ -117,7 +117,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         setSize(scr.width, (scr.height - (scr.height / 50)));
         File workingDirectory = new java.io.File(".");
         // TODO: move loading of settings and setting of the locale into ForestSimulator.main()
-        this.user = new TgUser(workingDirectory);
+        user = new TgUser(workingDirectory);
         if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
             JDialog settings = new TgUserDialog(this, true);
             settings.setVisible(true);
@@ -188,7 +188,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         tsi = new TgStandInfo(language.locale());
 
 // Treatment Manager Window                
-        treatmentMan3 = new TgTreatmentMan3(st, this);
+        treatmentMan3 = new TgTreatmentMan3(st, this, user);
         JPanel treatmentPanel = new JPanel();
         treatmentPanel.setLayout(new BorderLayout());
         JPanel tgTreatmentMenus = new JPanel();
