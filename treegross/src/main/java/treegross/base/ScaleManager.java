@@ -205,7 +205,7 @@ public class ScaleManager {
 
     private void updateCompetitionNoScale() {
         for (int i = 0; i < st.ntrees && !st.stop; i++) {
-            if (st.tr[i].out < 0) {
+            if (st.tr[i].isLiving()) {
                 st.tr[i].updateCompetition();
             }
         }
@@ -235,7 +235,7 @@ public class ScaleManager {
 
     private void updateCrownNoScale() {
         for (int i = 0; i < st.ntrees && !st.stop; i++) {
-            if (st.tr[i].out < 0) {
+            if (st.tr[i].isLiving()) {
                 st.tr[i].updateCrown();
             }
         }
@@ -265,7 +265,7 @@ public class ScaleManager {
 
     private void growNoScale(int period, RandomNumber random) {
         for (int i = 0; i < st.ntrees && !st.stop; i++) {
-            if (st.tr[i].out < 0) {
+            if (st.tr[i].isLiving()) {
                 st.tr[i].grow(period, random);
             }
         }
@@ -307,7 +307,7 @@ public class ScaleManager {
         @Override
         public void run() {
             for (int i = s; i < e && !st.stop; i++) {
-                if (st.tr[i].out < 0) {
+                if (st.tr[i].isLiving()) {
                     st.tr[i].updateCompetition();
                 }
             }
@@ -349,7 +349,7 @@ public class ScaleManager {
         @Override
         public void run() {
             for (int i = s; i < e && !st.stop; i++) {
-                if (st.tr[i].out < 0) {
+                if (st.tr[i].isLiving()) {
                     st.tr[i].updateCrown();
                 }
             }
@@ -374,7 +374,7 @@ public class ScaleManager {
         @Override
         public void run() {
             for (int i = s; i < e && !st.stop; i++) {
-                if (st.tr[i].out < 0) {
+                if (st.tr[i].isLiving()) {
                     st.tr[i].grow(period, random);
                 }
             }
