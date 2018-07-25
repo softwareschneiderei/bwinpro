@@ -432,8 +432,10 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
     // TODO: get dsi settings from the gui
-    DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(userSettings.getDataDir(), "climate_data.mdb").getAbsolutePath());
-    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected(), true, environmentalDatabase, "rcp85");
+    boolean dsiEnabled = true;
+    
+    Simulation simulation = getSimulation(dsiEnabled, useMortalityCheckBox.isSelected());
+    
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
         if (simTime < st.timeStep) {
@@ -602,6 +604,15 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         // Number of crop trees dependent on calcualted distance and actual mixture percent
         return (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * percentage / 100.0);
     }
+    
+    private Simulation getSimulation(boolean dsiEnabled, boolean useMortality) {
+        if (dsiEnabled) {
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(userSettings.getDataDir(), "climate_data.mdb").getAbsolutePath());
+            return new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, "rcp85");
+        }
+        return new Simulation(st, true, useMortality);
+    }
+
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel clearingLabel;

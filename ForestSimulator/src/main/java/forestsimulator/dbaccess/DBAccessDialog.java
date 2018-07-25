@@ -14,6 +14,7 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.dbaccess;
+import forestsimulator.standsimulation.ClimateSensitiveSimulation;
 import forestsimulator.standsimulation.Simulation;
 import static forestsimulator.standsimulation.Simulation.publishNothing;
 import forestsimulator.util.StandGeometry;
@@ -454,18 +455,22 @@ public class DBAccessDialog extends JDialog {
             st.missingData();
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
-            // Test if all trees are in area
-            st.forTreesMatching(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0, this::killTree);
-            st.descspecies();
-            // Define all trees with fac = 0.0 as dead zu that there is no growth
-            st.forTreesMatching(tree -> tree.fac == 0.0, this::killTree);
-            st.descspecies();
+            takeOutIrrelevantTrees();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Problem with database", e);
         }
 
         dispose();
     }//GEN-LAST:event_loadStandButtonActionPerformed
+
+    private void takeOutIrrelevantTrees() {
+        // Test if all trees are in area
+        st.forTreesMatching(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0, this::killTree);
+        st.descspecies();
+        // Define all trees with fac = 0.0 as dead zu that there is no growth
+        st.forTreesMatching(tree -> tree.fac == 0.0, this::killTree);
+        st.descspecies();
+    }
 
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
@@ -483,8 +488,7 @@ public class DBAccessDialog extends JDialog {
             st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
-            Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality(), lts.calculateDynamicSiteIndex(), environmentalDatabase, lts.dynamicSiteIndexScenario());
+            Simulation simulation = getSimulation(lts.calculateDynamicSiteIndex(), lts);
             for (int step = 0; step < st.temp_Integer; step++) {
                 simulation.executeStep(5, publishNothing);
                 st.sortbyd();
@@ -582,20 +586,7 @@ public class DBAccessDialog extends JDialog {
                     st.missingData();
                     GenerateXY gxy = new GenerateXY();
                     gxy.zufall(st);
-                    // Test if all trees are in area           
-                    for (int k = 0; k < st.ntrees; k++) {
-                        if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                            killTreeAt(k);
-                        }
-                    }
-                    st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth          
-                    for (int k = 0; k < st.ntrees; k++) {
-                        if (st.tr[k].fac == 0.0) {
-                            killTreeAt(k);
-                        }
-                    }
-                    st.descspecies();
+                    takeOutIrrelevantTrees();
                 }
             }
 // Daten speichern        
@@ -613,8 +604,13 @@ public class DBAccessDialog extends JDialog {
         dispose();
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
-    private void killTreeAt(int k) {
-        killTree(st.tr[k]);
+    // TODO: move into something like a Simulation factory
+    private Simulation getSimulation(boolean climateSensitive, LoadTreegrossStand lts) {
+        if (climateSensitive) {
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            return new ClimateSensitiveSimulation(st, lts.applyTreatment(), lts.executeMortality(), environmentalDatabase, lts.dynamicSiteIndexScenario());
+        }
+        return new Simulation(st, lts.applyTreatment(), lts.executeMortality());
     }
     
     private void killTree(Tree tree) {
@@ -961,9 +957,7 @@ public class DBAccessDialog extends JDialog {
                                 st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                             }
                         }
-                        for (int j = 0; j < st.ntrees; j++) {
-                            st.tr[j].setMissingData();
-                        }
+                        st.forAllTrees(tree -> tree.setMissingData());
                         GenerateXY gxy = new GenerateXY();
                         gxy.setGroupRadius(0.0);
                         gxy.zufall(st);
@@ -976,7 +970,6 @@ public class DBAccessDialog extends JDialog {
                         LoadTreegrossStand lts = new LoadTreegrossStand();
                         lts.saveStand(con, st, id, alt, 0, 0);
                         lts.saveSpecies(con, st, id, alt, 0, 0);
-                        //
                         st.grow(5, false);
                         st.sortbyd();
                         st.missingData();
@@ -984,7 +977,6 @@ public class DBAccessDialog extends JDialog {
                         lts.saveStand(con, st, id, alt, 1, 0);
                         lts.saveSpecies(con, st, id, alt, 1, 0);
                     }
-
                 }
             }
         } catch (Exception e) {

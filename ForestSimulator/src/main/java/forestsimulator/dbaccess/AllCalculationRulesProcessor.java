@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import forestsimulator.standsimulation.ClimateSensitiveSimulation;
 import forestsimulator.standsimulation.Simulation;
 import forestsimulator.util.StandGeometry;
 import forestsimulator.util.StopWatch;
@@ -114,15 +115,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> tree.fac == 0.0);
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, rule.scenarioId);
         saveStand(con, st, lts, rule, 0, pass);
-        DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
-        Simulation simulation = new Simulation(
-                st,
-                lts.applyTreatment(),
-                lts.executeMortality(),
-                lts.calculateDynamicSiteIndex(),
-                environmentalDatabase,
-                lts.dynamicSiteIndexScenario()
-        );
+        Simulation simulation = getSimulation(lts.calculateDynamicSiteIndex(), lts);
         for (int step = 0; step < st.temp_Integer; step++) {
             if (shouldStop) {
                 logger.log(Level.FINE, "Processing aborted before next step.");
@@ -144,6 +137,14 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         }
     }
 
+    private Simulation getSimulation(boolean climateSensitive, LoadTreegrossStand lts) {
+        if (climateSensitive) {
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            return new ClimateSensitiveSimulation(st, lts.applyTreatment(), lts.executeMortality(), environmentalDatabase, lts.dynamicSiteIndexScenario());
+        }
+        return new Simulation(st, lts.applyTreatment(), lts.executeMortality());
+    }
+    
     private void markTreesAsDead(Predicate<Tree> condition) {
         for (int k = 0; k < st.ntrees; k++) {
             if (condition.test(st.tr[k])) {
