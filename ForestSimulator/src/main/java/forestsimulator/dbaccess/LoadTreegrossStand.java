@@ -1,10 +1,7 @@
 package forestsimulator.dbaccess;
 
-import forestsimulator.standsimulation.ClimateSensitiveSimulation;
-import forestsimulator.standsimulation.Simulation;
 import treegross.base.StandLocation;
 import forestsimulator.util.StopWatch;
-import java.io.File;
 import java.sql.*;
 import java.text.MessageFormat;
 import java.util.Optional;
@@ -423,7 +420,7 @@ public class LoadTreegrossStand {
     
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBaum "
-                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, zb) "
+                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, zb, dsi) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (Tree tree : st.trees()) {
                 if (tree.no.contains("_")) {
@@ -451,6 +448,7 @@ public class LoadTreegrossStand {
                 stmt.setDouble(20, tree.x);
                 stmt.setDouble(21, tree.y);
                 stmt.setInt(22, boolToDB(tree.crop));
+                stmt.setDouble(23, tree.dsi.value);
                 stmt.addBatch();
             }
             stmt.executeBatch();
@@ -507,12 +505,12 @@ public class LoadTreegrossStand {
                 Double gpro = 100.0 * st.sp[i].gha / st.bha;
                 int art = st.sp[i].code;
 
-// SUMME Grundfläche und Volumen der Nutzung  
+                // SUMME Grundfläche und Volumen der Nutzung  
                 double nnhaa = 0.0;
                 double gghaa = 0.0;
                 double vvhaa = 0.0;
                 for (int ik = 0; ik < st.ntrees; ik++) {
-                    if (st.tr[ik].out > 0 && st.tr[ik].code == st.sp[i].code) {
+                    if (st.tr[ik].isDead() && st.tr[ik].code == st.sp[i].code) {
                         nnhaa = nnhaa + 1.0 * st.tr[ik].fac / st.size;
                         gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
                         vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
@@ -585,7 +583,7 @@ public class LoadTreegrossStand {
             double vvhaaz = 0.0;
             double gghaa = 0.0;
             for (int ik = 0; ik < st.ntrees; ik++) {
-                if (st.tr[ik].out > 0) {
+                if (st.tr[ik].isDead()) {
                     gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
                     vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
                     if (st.tr[ik].outtype == OutType.FALLEN) {
@@ -675,7 +673,7 @@ public class LoadTreegrossStand {
                     stmt.execute();
                 }
             }
-// In auf Datei schreiben
+            // In auf tabelle schreiben
             String idx = st.standname + " 1";
             try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Auf (id, edvid, auf, monat, jahr, flha)"
                     + " values (?, ?, 1, 1, ?, ?)")) {
@@ -745,9 +743,7 @@ public class LoadTreegrossStand {
                         st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                     }
                 }
-                for (int j = 0; j < st.ntrees; j++) {
-                    st.tr[j].setMissingData();
-                }
+                st.forAllTrees(tree -> tree.setMissingData());
                 GenerateXY gxy = new GenerateXY();
                 gxy.setGroupRadius(0.0);
                 gxy.zufall(st);

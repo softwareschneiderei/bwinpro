@@ -146,12 +146,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     }
     
     private void markTreesAsDead(Predicate<Tree> condition) {
-        for (int k = 0; k < st.ntrees; k++) {
-            if (condition.test(st.tr[k])) {
-                st.tr[k].out = 1900;
-                st.tr[k].outtype = OutType.FALLEN;
-            }
-        }
+        st.forTreesMatching(condition, tree -> tree.takeOut(1900, OutType.FALLEN));
         st.descspecies();
     }
 
