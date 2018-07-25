@@ -114,7 +114,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
         markTreesAsDead(tree -> tree.fac == 0.0);
         st = lts.loadRules(con, st, rule.edvId, rule.aufId, rule.scenarioId);
         saveStand(con, st, lts, rule, 0, pass);
-        DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+        DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
         Simulation simulation = new Simulation(
                 st,
                 lts.applyTreatment(),

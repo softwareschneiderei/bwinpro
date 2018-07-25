@@ -105,4 +105,8 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
     public Iterator<GrowingSeasonValues> iterator() {
         return growingSeasons.values().iterator();
     }
+
+    boolean hasDataFor(Year year) {
+        return growingSeasons.containsKey(year);
+    }
 }

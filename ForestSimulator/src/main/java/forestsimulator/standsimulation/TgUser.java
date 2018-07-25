@@ -23,7 +23,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-class TgUser {
+public class TgUser {
 
     private static final Logger logger = Logger.getLogger(TgUser.class.getName());
     private File workingDir;

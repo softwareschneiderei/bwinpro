@@ -34,6 +34,7 @@ public class LoadTreegrossStand {
             boolean missingDataReplace) {
         StopWatch loadFromDB = new StopWatch("Load from Database").start();
         stand.setMetaData(standMetadata(connection, edvId, selectedAufn));
+        stand.location = loadLocation(connection, edvId, selectedAufn);
         stand.clear();
         addTrees(connection, edvId, selectedAufn, stand);
         addCoordinates(connection, edvId, stand);
@@ -68,9 +69,9 @@ public class LoadTreegrossStand {
                 while (rs.next()) {
                     double xp = rs.getDouble("x");
                     double yp = rs.getDouble("y");
-                    final String nox = rs.getString("nr").trim();
-                    int artx = rs.getInt("art");
-                    stand.forTreesMatching(tree -> nox.equals(tree.no.trim()) && (artx == tree.code), tree -> {
+                    final String nr = rs.getString("nr").trim();
+                    int species = rs.getInt("art");
+                    stand.forTreesMatching(tree -> nr.equals(tree.no.trim()) && (species == tree.code), tree -> {
                         tree.x = xp;
                         tree.y = yp;
                     });
@@ -222,6 +223,21 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not load stand recording from database", e);
         }
         return new StandMetaData(standName(connection, edvId, selectedAufn), year, size);
+    }
+    
+    public StandLocation loadLocation(Connection dbconn, String edvId, int auf) {
+        try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ?)")) {
+            stmt.setString(1, edvId);
+            stmt.setInt(2, auf);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load rules from database", e);
+        }
+        return new StandLocation("", "");
     }
 
     public Stand loadRules(Connection dbconn, Stand stand, String idx, int auf, int scen) {

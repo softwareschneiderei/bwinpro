@@ -1,6 +1,5 @@
 package forestsimulator.standsimulation;
 
-import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
 import forestsimulator.util.StopWatch;
 import java.time.Year;
 import java.util.function.Consumer;
@@ -8,6 +7,7 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import treegross.base.SiteIndex;
 import treegross.base.Stand;
+import treegross.dynamic.siteindex.EnvironmentStandardizer;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.EnvironmentalDataProvider;
 import treegross.treatment.Treatment2;
@@ -30,7 +30,7 @@ public class Simulation {
         this.executeMortality = executeMortality;
         this.calculateDynamicSiteIndex = calculateDynamicSiteIndex;
         if (calculateDynamicSiteIndex) {
-            this.environmentVariables = environmentProvider.environmentalDataFor(st.location, climateScenario);
+            this.environmentVariables = EnvironmentStandardizer.standardize(environmentProvider.environmentalDataFor(st.location, climateScenario));
         }
     }
 
@@ -56,6 +56,7 @@ public class Simulation {
         if (calculateDynamicSiteIndex && environmentVariables != null) {
             IntStream.range(startYear, startYear + numberOfYears).mapToObj(year -> Year.of(year)).forEachOrdered(year -> {
                 st.forAllTrees(tree -> {
+                    
                     tree.dsi = SiteIndex.si(tree.sp.spDef.dsiCalculator.computeSiteIndex(year, tree.dsi.value, environmentVariables));
                 });
             });

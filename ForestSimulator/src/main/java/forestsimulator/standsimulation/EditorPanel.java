@@ -130,7 +130,7 @@ public class EditorPanel extends JPanel {
                     Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 st.tr[m].fac = getDouble((String) jTable2.getValueAt(i, 15));
-                st.tr[m].outtype = OutType.values()[getInt((String) jTable2.getValueAt(i, 9))];
+                st.tr[m].outtype = (OutType) jTable2.getValueAt(i, 9);
                 st.tr[m].crop = getBoolean((String) jTable2.getValueAt(i, 13));
                 st.tr[m].habitat = getBoolean((String) jTable2.getValueAt(i, 14));
 //            st.tr[m].c66=  Double.parseDouble( (String) jTable2.getValueAt(i,15));         

@@ -16,7 +16,7 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
-import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
+import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
 import java.io.File;
 import treegross.base.thinning.ThinningType;
 import java.text.*;
@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
+import treegross.random.RandomNumber;
 
 
 /**
@@ -431,8 +432,8 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
     // TODO: get dsi settings from the gui
-    DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(userSettings.getDataDir(), "climate_data.mdb").getAbsolutePath());
-    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected(), true, environmentalDatabase, "MISC");
+    DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(userSettings.getDataDir(), "climate_data.mdb").getAbsolutePath());
+    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected(), true, environmentalDatabase, "rcp85");
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
         if (simTime < st.timeStep) {
@@ -536,9 +537,9 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     
     public void loadSettingsToStandRule() {
       if (useRandomEffectsCheckBox.isSelected()) {
-          st.random.setRandomType(11);
+          st.random.setRandomType(RandomNumber.PSEUDO_FIXED);
       } else {
-          st.random.setRandomType(10);
+          st.random.setRandomType(RandomNumber.OFF);
       }
       st.ingrowthActive = useIngrowthModelCheckBox.isSelected();
       st.riskActive = useRiskModelCheckBox.isSelected();

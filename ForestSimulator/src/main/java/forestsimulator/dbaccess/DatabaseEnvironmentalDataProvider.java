@@ -21,14 +21,14 @@ import treegross.dynamic.siteindex.EnvironmentalDataProvider;
 import treegross.dynamic.siteindex.GrowingSeasonValues;
 import treegross.dynamic.siteindex.MonthlyToSeasonMapper;
 
-public class DatabaseEnvirionmentalDataProvider implements EnvironmentalDataProvider {
+public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvider {
     private static final Month vegetationStart = Month.MARCH;
     private static final Month vegetationEnd = Month.AUGUST;
 
     private final String databaseFile;
     private final ConnectionFactory databaseConnector;
 
-    public DatabaseEnvirionmentalDataProvider(String databaseFile) {
+    public DatabaseEnvironmentalDataProvider(String databaseFile) {
         super();
         this.databaseFile = databaseFile;
         databaseConnector = new ConnectionFactory();
@@ -40,9 +40,9 @@ public class DatabaseEnvirionmentalDataProvider implements EnvironmentalDataProv
         try (
                 Connection con = databaseConnector.openDBConnection(databaseFile, "", "");
                 PreparedStatement ps = con.prepareStatement(
-                        "select * from input_data where Wuchsgebiet = ? and Wuchsbezirk = ? and Scenario = ?"
+                        "select * from input_data where Bundesland = ? and Wuchsbezirk = ? and Scenario = ?"
                         + " and month >= ? and month <= ?")) {
-            ps.setString(1, location.region);
+            ps.setString(1, location.federalState);
             ps.setString(2, location.subRegion);
             ps.setString(3, scenario);
             ps.setInt(4, vegetationStart.getValue());
@@ -53,10 +53,10 @@ public class DatabaseEnvirionmentalDataProvider implements EnvironmentalDataProv
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(DatabaseEnvirionmentalDataProvider.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DatabaseEnvironmentalDataProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
         EnvironmentVariables result = new EnvironmentVariables();
-        result.addGrowingSeasons(rawData.entrySet().stream().map(DatabaseEnvirionmentalDataProvider::mapMonthliesToSeason).collect(toList()));
+        result.addGrowingSeasons(rawData.entrySet().stream().map(DatabaseEnvironmentalDataProvider::mapMonthliesToSeason).collect(toList()));
         return result;
     }
 
