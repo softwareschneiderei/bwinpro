@@ -2,11 +2,11 @@ package treegross.base;
 
 public class StandLocation {
 
-    public final String region;
+    public final String federalState;
     public final String subRegion;
 
-    public StandLocation(String region, String subregion) {
-        this.region = region;
+    public StandLocation(String federalState, String subregion) {
+        this.federalState = federalState;
         this.subRegion = subregion;
     }
 }

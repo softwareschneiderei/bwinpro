@@ -26,6 +26,9 @@ public class DynamicSiteIndexCalculator {
     }
 
     public double computeSiteIndex(Year year, double previousSiteIndex, EnvironmentVariables environment) {
+        if (!environment.hasDataFor(year)) {
+            return previousSiteIndex;
+        }
         logger.log(Level.INFO, "Previous site index: {0}", previousSiteIndex);
         evaluator.setVarValue("prevSI", previousSiteIndex);
         logger.log(Level.INFO, "Mean teamperature: {0}", environment.growingSeasonMeanTemperatureOf(year));

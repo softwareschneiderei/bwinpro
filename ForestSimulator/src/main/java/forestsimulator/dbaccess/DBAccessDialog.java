@@ -261,7 +261,7 @@ public class DBAccessDialog extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        standNameTextField.setText("test0001"); // NOI18N
+        standNameTextField.setText("Dgl_MDf_"); // NOI18N
 
         databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
 
@@ -446,9 +446,7 @@ public class DBAccessDialog extends JDialog {
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ids = standNameTextField.getText();
-        Object txt = recordingComboBox.getSelectedItem();
-
-        int aufs = Integer.parseInt(txt.toString());
+        int aufs = (int) recordingComboBox.getSelectedItem();
 
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             st = lts.loadFromDB(con, st, ids, aufs, true, true);
@@ -456,19 +454,11 @@ public class DBAccessDialog extends JDialog {
             st.missingData();
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
-            // Test if all trees are in area           
-            for (int k = 0; k < st.ntrees; k++) {
-                if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                    killTree(k);
-                }
-            }
+            // Test if all trees are in area
+            st.forTreesMatching(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0, this::killTree);
             st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth          
-            for (int k = 0; k < st.ntrees; k++) {
-                if (st.tr[k].fac == 0.0) {
-                    killTree(k);
-                }
-            }
+            // Define all trees with fac = 0.0 as dead zu that there is no growth
+            st.forTreesMatching(tree -> tree.fac == 0.0, this::killTree);
             st.descspecies();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Problem with database", e);
@@ -493,7 +483,7 @@ public class DBAccessDialog extends JDialog {
             st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            DatabaseEnvirionmentalDataProvider environmentalDatabase = new DatabaseEnvirionmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
             Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality(), lts.calculateDynamicSiteIndex(), environmentalDatabase, lts.dynamicSiteIndexScenario());
             for (int step = 0; step < st.temp_Integer; step++) {
                 simulation.executeStep(5, publishNothing);
@@ -595,14 +585,14 @@ public class DBAccessDialog extends JDialog {
                     // Test if all trees are in area           
                     for (int k = 0; k < st.ntrees; k++) {
                         if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                            killTree(k);
+                            killTreeAt(k);
                         }
                     }
                     st.descspecies();
 // Define all trees with fac = 0.0 as dead zu that there is no growth          
                     for (int k = 0; k < st.ntrees; k++) {
                         if (st.tr[k].fac == 0.0) {
-                            killTree(k);
+                            killTreeAt(k);
                         }
                     }
                     st.descspecies();
@@ -623,9 +613,12 @@ public class DBAccessDialog extends JDialog {
         dispose();
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
-    private void killTree(int k) {
-        st.tr[k].out = 1900;
-        st.tr[k].outtype = OutType.FALLEN;
+    private void killTreeAt(int k) {
+        killTree(st.tr[k]);
+    }
+    
+    private void killTree(Tree tree) {
+        tree.takeOut(1900, OutType.FALLEN);
     }
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
