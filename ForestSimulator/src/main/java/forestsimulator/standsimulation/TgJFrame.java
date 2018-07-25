@@ -75,7 +75,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgDesign sd;
     TgYieldTable yt = new TgYieldTable();
     Treatment2 tl = new Treatment2();
-    TgTreatmentMan3 treatmentMan3;
+    private final TgTreatmentMan3 treatmentMan3;
     TgStandInfo tsi;
     UserLanguage language;
 
@@ -187,16 +187,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
         tsi = new TgStandInfo(language.locale());
 
-// Treatment Manager Window                
+        // Treatment Manager Window                
         treatmentMan3 = new TgTreatmentMan3(st, this, user);
         JPanel treatmentPanel = new JPanel();
         treatmentPanel.setLayout(new BorderLayout());
-        JPanel tgTreatmentMenus = new JPanel();
-        tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));
-//                tgTreatmentMan2Menu = new TgTreatmentMan2Menu(this,this, language);
-//                tgTreatmentMan2Menu.setAlignmentY(Component.CENTER_ALIGNMENT);
-//                tgTreatmentMenus.add(tgTreatmentMan2Menu);
-        treatmentPanel.add(tgTreatmentMenus, BorderLayout.NORTH);
         treatmentPanel.add(treatmentMan3, BorderLayout.CENTER);
 
         sd = new TgDesign(st, this, language.locale());
@@ -843,7 +837,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private void batchProcessingUsingDatabase(String modelPlugIn) {
         try {
             PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
-            dialog.startDialog(this, st, user.getDataDir());
+            dialog.startDialog(this, st, user);
             st.sortbyd();
             st.missingData();
             st.descspecies();

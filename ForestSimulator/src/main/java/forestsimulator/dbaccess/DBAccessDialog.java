@@ -17,6 +17,7 @@ package forestsimulator.dbaccess;
 import forestsimulator.standsimulation.ClimateSensitiveSimulation;
 import forestsimulator.standsimulation.Simulation;
 import static forestsimulator.standsimulation.Simulation.publishNothing;
+import forestsimulator.standsimulation.TgUser;
 import forestsimulator.util.StandGeometry;
 import java.awt.Frame;
 import java.io.File;
@@ -52,15 +53,15 @@ public class DBAccessDialog extends JDialog {
     int growthCycles = 0;
     private final ConnectionFactory connectionFactory;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    private final File dataDirectory;
+    private final TgUser userSettings;
     
-    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, File dataDirectory) {
+    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, TgUser userSettings) {
         super(parent, modal);
         initComponents();
-        this.dataDirectory = dataDirectory;
+        this.userSettings = userSettings;
         connectionFactory = new ConnectionFactory(parent);
         st = stand;
-        databaseFilenameTextField.setText(new File(dataDirectory, "localdata.mdb").getPath());
+        databaseFilenameTextField.setText(new File(this.userSettings.getDataDir(), "localdata.mdb").getPath());
         elsaltoPanel.setVisible(false);
         calculateStandButton.setVisible(false);
         if (st.FileXMLSettings.indexOf("ElSalto") > 0) {
@@ -447,7 +448,15 @@ public class DBAccessDialog extends JDialog {
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ids = standNameTextField.getText();
-        int aufs = (int) recordingComboBox.getSelectedItem();
+        Integer aufs = (Integer) recordingComboBox.getSelectedItem();
+        if (aufs == null) {
+            JOptionPane.showMessageDialog(
+                    rootPane,
+                    messages.getString("DBAccessDialog.inventory.not.found.message"),
+                    messages.getString("DBAccessDialog.inventory.not.found.title"),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             st = lts.loadFromDB(con, st, ids, aufs, true, true);
@@ -507,7 +516,7 @@ public class DBAccessDialog extends JDialog {
         System.out.println("Parent: " + getParent());
         AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(
                 new ConnectionFactory((RootPaneContainer) getParent()),
-                dataDirectory,
+                userSettings.getClimateDatabase(),
                 aktivesDatenfile,
                 st,
                 updateViewCheckbox.isSelected()
@@ -607,7 +616,7 @@ public class DBAccessDialog extends JDialog {
     // TODO: move into something like a Simulation factory
     private Simulation getSimulation(boolean climateSensitive, LoadTreegrossStand lts) {
         if (climateSensitive) {
-            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(userSettings.getClimateDatabase());
             return new ClimateSensitiveSimulation(st, lts.applyTreatment(), lts.executeMortality(), environmentalDatabase, lts.dynamicSiteIndexScenario());
         }
         return new Simulation(st, lts.applyTreatment(), lts.executeMortality());

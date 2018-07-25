@@ -113,6 +113,11 @@ public class TgUser {
     public File getDataDir() {
         return dataDir;
     }
+    
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-76
+    public File getClimateDatabase() {
+        return new File(getDataDir(), "climate_data.mdb");
+    }
 
     public String getXMLSettings() {
         return plugIn;

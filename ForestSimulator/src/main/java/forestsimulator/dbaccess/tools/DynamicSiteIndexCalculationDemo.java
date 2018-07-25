@@ -1,6 +1,7 @@
 package forestsimulator.dbaccess.tools;
 
 import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
+import java.io.File;
 import java.time.Year;
 import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
@@ -13,7 +14,7 @@ public class DynamicSiteIndexCalculationDemo {
         Projection result = new Projection(Year.of(2006));
         result.standName = "fi 150/   b";
         result.treeSpecies = "Fi";
-        result.rcp = "MISC";
+        result.rcp = "misc";
         return result;
     }
     
@@ -33,7 +34,7 @@ public class DynamicSiteIndexCalculationDemo {
     }
 
     private static EnvironmentVariables loadEnvironmentData(String region, String subRegion, String scenario) {
-        return new DatabaseEnvironmentalDataProvider("data_standsimulation/climate_data.mdb").environmentalDataFor(new StandLocation(region, subRegion), scenario);
+        return new DatabaseEnvironmentalDataProvider(new File("data_standsimulation/climate_data.mdb")).environmentalDataFor(new StandLocation(region, subRegion), scenario);
     }
 
 }

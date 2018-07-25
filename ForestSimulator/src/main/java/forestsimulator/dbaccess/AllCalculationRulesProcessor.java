@@ -32,17 +32,17 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
     }
     
     private final ConnectionFactory connectionFactory;
-    private final File dataDirectory;
+    private final File climateDataBase;
     private final String aktivesDatenfile;
     private Stand st;
     private BatchProgressListener progressListener;
     private volatile boolean shouldStop;
     private final StopWatch wholeBatchTiming = new StopWatch("Whole batch");
 
-    public AllCalculationRulesProcessor(ConnectionFactory connectionFactory, File dataDirectory, String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
+    public AllCalculationRulesProcessor(ConnectionFactory connectionFactory, File climateDataBase, String aktivesDatenfile, Stand st, boolean notifyStandListeners) {
         super();
         this.connectionFactory = connectionFactory;
-        this.dataDirectory = dataDirectory;
+        this.climateDataBase = climateDataBase;
         this.aktivesDatenfile = aktivesDatenfile;
         this.st = st;
         this.st.notificationsEnabled(notifyStandListeners);
@@ -139,7 +139,7 @@ public class AllCalculationRulesProcessor extends SwingWorker<Void, BatchProgres
 
     private Simulation getSimulation(boolean climateSensitive, LoadTreegrossStand lts) {
         if (climateSensitive) {
-            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(new File(dataDirectory, "climate_data.mdb").getAbsolutePath());
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(climateDataBase);
             return new ClimateSensitiveSimulation(st, lts.applyTreatment(), lts.executeMortality(), environmentalDatabase, lts.dynamicSiteIndexScenario());
         }
         return new Simulation(st, lts.applyTreatment(), lts.executeMortality());

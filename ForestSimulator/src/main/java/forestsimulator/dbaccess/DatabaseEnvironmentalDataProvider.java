@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import java.io.File;
 import treegross.dynamic.siteindex.MonthlyValues;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,10 +26,10 @@ public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvi
     private static final Month vegetationStart = Month.MARCH;
     private static final Month vegetationEnd = Month.AUGUST;
 
-    private final String databaseFile;
+    private final File databaseFile;
     private final ConnectionFactory databaseConnector;
 
-    public DatabaseEnvironmentalDataProvider(String databaseFile) {
+    public DatabaseEnvironmentalDataProvider(File databaseFile) {
         super();
         this.databaseFile = databaseFile;
         databaseConnector = new ConnectionFactory();
