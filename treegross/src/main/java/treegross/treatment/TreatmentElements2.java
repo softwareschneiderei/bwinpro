@@ -765,9 +765,9 @@ public class TreatmentElements2 {
     private static double calculateMaxBasalArea(Stand st) {
         double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
         if (st.trule.thinningIntensity == 0.0) {
-            maxStandBasalArea = maxStandBasalArea * 100.0;
+            maxStandBasalArea *= 100.0;
         } else {
-            maxStandBasalArea = maxStandBasalArea * (2.0 - st.trule.thinningIntensity);
+            maxStandBasalArea *= (2.0 - st.trule.thinningIntensity);
         }
         return maxStandBasalArea;
     }

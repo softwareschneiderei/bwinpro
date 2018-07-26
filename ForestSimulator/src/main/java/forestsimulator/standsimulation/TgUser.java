@@ -66,9 +66,9 @@ public class TgUser {
 
     void loadSettings(Reader in) throws IOException, NumberFormatException {
         settings.load(in);
-        programDir = parseToFile("program.directory").getCanonicalFile();
-        dataDir = parseToFile("data.directory").getCanonicalFile();
-        workingDir = parseToFile("working.directory").getCanonicalFile();
+        programDir = parseToFile(settings.getProperty("program.directory")).getCanonicalFile();
+        dataDir = parseToFile(settings.getProperty("data.directory")).getCanonicalFile();
+        workingDir = parseToFile(settings.getProperty("working.directory")).getCanonicalFile();
         languageCode = settings.getProperty("language.code", "");
         XMLSettings = settings.getProperty("settings.file", "");
         plugIn = XMLSettings;
@@ -81,7 +81,7 @@ public class TgUser {
     }
 
     private File parseToFile(String property) {
-        final String normalizedPath = normalizePath(settings.getProperty(property));
+        final String normalizedPath = normalizePath(property);
         File f = new File(normalizedPath);
         if (f.isAbsolute()) {
             return f;
@@ -96,21 +96,30 @@ public class TgUser {
         return path;
     }
 
-    public boolean fileExists(String fname) {
-        File f = new File(fname);
+    public boolean fileExistsInWorkingDir(String fname) {
+        File f = new File(baseDirectory, fname);
         System.out.println(f + (f.exists() ? " is found " : " is missing "));
         return f.exists();
     }
 
     public File getWorkingDir() {
+        if (workingDir == null) {
+            return new File(baseDirectory, "output_standsimulation");
+        }
         return workingDir;
     }
 
     public File getProgramDir() {
+        if (programDir == null) {
+            return new File(baseDirectory, "user");
+        }
         return programDir;
     }
 
     public File getDataDir() {
+        if (dataDir == null) {
+            return new File(baseDirectory, "data_standsimulation");
+        }
         return dataDir;
     }
     

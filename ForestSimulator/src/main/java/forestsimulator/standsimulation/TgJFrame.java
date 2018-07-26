@@ -87,7 +87,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgToolbar toolbar;
     TgScreentoolbar tgScreentoolbar;
     JDesktopPane dp = new JDesktopPane();
-    TgUser user;
+    private final TgUser user;
     private JFrame owner;
 
     private Manager3D manager3d;
@@ -105,36 +105,21 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
     int kspTyp = 0;
 
-    public TgJFrame(Stand stneu) throws IOException {
+    public TgJFrame(Stand stneu, TgUser userSettings, UserLanguage language) throws IOException {
+        super();
+        st = stneu;
+        user = userSettings;
+        this.language = language;
+        plugIn = userSettings.plugIn;
         logHandler = new FileHandler("log.txt");
         logHandler.setFormatter(new SimpleFormatter());
         LOGGER.addHandler(logHandler);
         LOGGER.log(Level.INFO, "ForestSimulator Version: {0}", bwinproVersion);
 
-        st = stneu;
         st.addStandChangeListener(this);
         screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         setSize(screenSize.width, (screenSize.height - (screenSize.height / 50)));
-        File workingDirectory = new java.io.File(".");
         // TODO: move loading of settings and setting of the locale into ForestSimulator.main()
-        user = new TgUser(workingDirectory);
-        if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
-            JDialog settings = new TgUserDialog(this, true);
-            settings.setVisible(true);
-            JTextArea about = new JTextArea(messages.getString("TgJFrame.applySettingsDialog.message"));
-            JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.applySettingsDialog.title"), JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
-        } else {
-            System.out.println("Settings laden ");
-            LOGGER.log(Level.INFO, "TgJFrame local path : {0}", workingDirectory.getCanonicalPath());
-            user.loadSettings();
-            language = UserLanguage.forLocale(user.getLanguageShort());
-            Locale.setDefault(language.locale());
-            plugIn = user.getPlugIn();
-            st.modelRegion = plugIn;
-            st.FileXMLSettings = user.XMLSettings;
-            LOGGER.log(Level.INFO, "Modell :{0}", plugIn);
-        }
         setTitle(getTitle() + "Forest Simulator BWINPro 7 " + bwinproVersion + " - Modell: " + plugIn);
         boolean available3d = is3dAvailable();
         if (plugIn.indexOf("nwfva") > 0) {
@@ -260,7 +245,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 System.exit(0);
             }
         });
-        user.loadSettings();
         zf.neuzeichnen();
         pp.neuzeichnen();
         gr.starten();

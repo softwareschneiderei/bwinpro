@@ -24,51 +24,29 @@ import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.*;
 
 public class TgUserDialog extends JDialog {
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    File WorkingDir;
-    File ProgramDir;
-    File DataDir;
     UserLanguage Language;
-    File localPath;
-    String XMLSettings = "";
-    String plugIn = "";
-    File verzeichnis;
-    File localF = null;
-    private TgUser user = new TgUser(new File("."));
+    private final TgUser user = new TgUser(new File("."));
    
     public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
-        if (user.fileExists("ForestSimulator.ini")) {
+        if (user.fileExistsInWorkingDir("ForestSimulator.ini")) {
             System.out.println("Settings laden");
             user.loadSettings();
-              
-            ProgramDir=user.getProgramDir();
-            WorkingDir=user.getWorkingDir();
-            DataDir=user.getDataDir();
-            XMLSettings=user.getXMLSettings();
-            plugIn = user.getPlugIn();
         }
         Language = UserLanguage.forLocale(user.getLanguageShort());
         initComponents();
         File f = new File(".");
-        try {
-            localPath= f.getCanonicalFile();
-        } catch (IOException e) {
-            Logger.getLogger(TgUserDialog.class.getName()).log(Level.SEVERE, "Problem getting working directory: {0}", e.getMessage());
-        }
         if (user.getProgramDir().isDirectory()) {
             loadModels();
         }
-        userDirectoryTextField.setText(ProgramDir.getName());
-        outputDirectoryTextField.setText(WorkingDir.getName());
-        dataDirectoryTextField.setText(DataDir.getName());
-        xmlFileComboBox.setSelectedItem(plugIn);
-// PlugIn Model
+        userDirectoryTextField.setText(user.getProgramDir().getName());
+        outputDirectoryTextField.setText(user.getWorkingDir().getName());
+        dataDirectoryTextField.setText(user.getDataDir().getName());
+        xmlFileComboBox.setSelectedItem(user.plugIn);
         languageSelector.setSelectedItem(Language);
         standGraphicComboBox.setSelectedIndex(user.grafik3D);
     }
@@ -231,19 +209,19 @@ public class TgUserDialog extends JDialog {
     private void searchDataDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchDataDirectoryButtonActionPerformed
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(localPath);
+        jf.setCurrentDirectory(user.getWorkingDir());
         jf.setDialogTitle(messages.getString("TgUserDialog.chooseDataDirDialog.title"));
         jf.showOpenDialog(this);
-        DataDir = jf.getSelectedFile();        
+        File DataDir = jf.getSelectedFile();        
         dataDirectoryTextField.setText(DataDir.getAbsolutePath());
     }//GEN-LAST:event_searchDataDirectoryButtonActionPerformed
 
     private void searchOutputDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchOutputDirectoryButtonActionPerformed
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(localPath);
+        jf.setCurrentDirectory(user.getWorkingDir());
         jf.showOpenDialog(this);
-        WorkingDir = jf.getSelectedFile();
+        File WorkingDir = jf.getSelectedFile();
         outputDirectoryTextField.setText(WorkingDir.getAbsolutePath());
     }//GEN-LAST:event_searchOutputDirectoryButtonActionPerformed
 
@@ -277,18 +255,21 @@ public class TgUserDialog extends JDialog {
 
     private void searchUserDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchUserDirectoryButtonActionPerformed
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
-        jf.setCurrentDirectory(localPath);
+        jf.setCurrentDirectory(user.getWorkingDir());
         jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
         jf.setDialogTitle(messages.getString("TgUserDialog.chooseUserDirDialog.title"));
         int k = jf.showOpenDialog(this);
-        ProgramDir = jf.getSelectedFile();
+        File ProgramDir = jf.getSelectedFile();
         userDirectoryTextField.setText(ProgramDir.getAbsolutePath());
         loadModels();
     }//GEN-LAST:event_searchUserDirectoryButtonActionPerformed
 
     private void loadModels() {
         xmlFileComboBox.removeAllItems();
-        File modelDirectory = new File(ProgramDir, "models");
+        File modelDirectory = new File(user.getProgramDir(), "models");
+        if (!modelDirectory.isDirectory()) {
+            return;
+        }
 // Liste mit Dateien erstellen 
         String entries[] = modelDirectory.list();
         for (String entry : entries) {

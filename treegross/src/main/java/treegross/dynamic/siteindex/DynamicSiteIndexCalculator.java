@@ -1,5 +1,6 @@
 package treegross.dynamic.siteindex;
 
+import java.text.MessageFormat;
 import java.time.Year;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -11,7 +12,7 @@ public class DynamicSiteIndexCalculator {
 
     private final JEP evaluator;
     private final TGFunction model;
-
+    
     public DynamicSiteIndexCalculator(TGFunction model) {
         super();
         this.model = model;
