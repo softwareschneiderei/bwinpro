@@ -109,4 +109,21 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
     public boolean hasDataFor(Year year) {
         return growingSeasons.containsKey(year);
     }
+
+    /**
+     * 
+     * @param startInclusive start year of period inclusive
+     * @param endInclusive end year of period inclusive
+     * @return false if there is environmental data for all year in the given period
+     */
+    public boolean dataMissingFor(Year startInclusive, Year endInclusive) {
+        try {
+            for (Year current = startInclusive; current.isBefore(endInclusive) || current.equals(endInclusive); current = current.plusYears(1)) {
+                checkEntryFor(current);
+            }
+            return false;
+        } catch (NoSuchElementException e) {
+            return true;
+        }
+    }
 }

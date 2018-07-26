@@ -18,22 +18,26 @@ package forestsimulator.standsimulation;
 
 import forestsimulator.dbaccess.ConnectionFactory;
 import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import treegross.base.thinning.ThinningType;
 import java.text.*;
+import java.time.Year;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
+import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.random.RandomNumber;
 
 
@@ -100,7 +104,7 @@ public class TgTreatmentMan3 extends JPanel {
         useMortalityCheckBox = new javax.swing.JCheckBox();
         useRiskModelCheckBox = new javax.swing.JCheckBox();
         useClimateDataCheckBox = new javax.swing.JCheckBox();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        climateScenarioComboBox = new javax.swing.JComboBox<>();
         startSimulationButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         treatmentRulesPanel = new javax.swing.JPanel();
@@ -164,11 +168,6 @@ public class TgTreatmentMan3 extends JPanel {
 
         simulationDurationTextField.setText("5"); // NOI18N
         simulationDurationTextField.setPreferredSize(new java.awt.Dimension(22, 20));
-        simulationDurationTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulationDurationTextFieldActionPerformed(evt);
-            }
-        });
         jPanel1.add(simulationDurationTextField);
 
         simulationDurationUnitLabel.setText(bundle.getString("TgTreatmentMan3.simulationDurationUnitLabel.text")); // NOI18N
@@ -200,8 +199,8 @@ public class TgTreatmentMan3 extends JPanel {
         useClimateDataCheckBox.setText(bundle.getString("TgTreatmentMan3.useClimateDataCheckBox.text")); // NOI18N
         jPanel1.add(useClimateDataCheckBox);
 
-        jComboBox1.setModel(loadClimateScenarios());
-        jPanel1.add(jComboBox1);
+        climateScenarioComboBox.setModel(loadClimateScenarios());
+        jPanel1.add(climateScenarioComboBox);
 
         startSimulationButton.setText(bundle.getString("TgTreatmentMan3.startSimulationButton.text")); // NOI18N
         startSimulationButton.addActionListener(new java.awt.event.ActionListener() {
@@ -251,22 +250,12 @@ public class TgTreatmentMan3 extends JPanel {
         thinningPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         releaseOnlyCropTreesCheckBox.setText(bundle.getString("TgTreatmentMan3.releaseOnlyCropTreesCheckBox.text")); // NOI18N
-        releaseOnlyCropTreesCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                releaseOnlyCropTreesCheckBoxActionPerformed(evt);
-            }
-        });
         thinningPanel.add(releaseOnlyCropTreesCheckBox);
 
         thinningTypeLabel.setText(bundle.getString("TgTreatmentMan3.thinningTypeLabel.text")); // NOI18N
         thinningPanel.add(thinningTypeLabel);
 
         thinningTypeComboBox.setModel(new DefaultComboBoxModel(ThinningType.values()));
-        thinningTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                thinningTypeComboBoxActionPerformed(evt);
-            }
-        });
         thinningPanel.add(thinningTypeComboBox);
 
         thinningIntensityLabel.setText(bundle.getString("TgTreatmentMan3.thinningIntensityLabel.text")); // NOI18N
@@ -286,11 +275,6 @@ public class TgTreatmentMan3 extends JPanel {
 
         thinningAmountMaximumTextField.setText("60"); // NOI18N
         thinningAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        thinningAmountMaximumTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                thinningAmountMaximumTextFieldActionPerformed(evt);
-            }
-        });
         thinningPanel.add(thinningAmountMaximumTextField);
 
         treatmentRulesPanel.add(thinningPanel);
@@ -329,11 +313,6 @@ public class TgTreatmentMan3 extends JPanel {
 
         harvestingAmountMaximumTextField.setText("120"); // NOI18N
         harvestingAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        harvestingAmountMaximumTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                harvestingAmountMaximumTextFieldActionPerformed(evt);
-            }
-        });
         harvestingPanel.add(harvestingAmountMaximumTextField);
 
         treatmentRulesPanel.add(harvestingPanel);
@@ -366,11 +345,6 @@ public class TgTreatmentMan3 extends JPanel {
         protectionPanel.add(protectionThicknessLabel);
 
         protectionThicknessTextField.setText("150"); // NOI18N
-        protectionThicknessTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                protectionThicknessTextFieldActionPerformed(evt);
-            }
-        });
         protectionPanel.add(protectionThicknessTextField);
 
         treatmentRulesPanel.add(protectionPanel);
@@ -427,26 +401,25 @@ public class TgTreatmentMan3 extends JPanel {
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-private void harvestingAmountMaximumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harvestingAmountMaximumTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_harvestingAmountMaximumTextFieldActionPerformed
-
-private void releaseOnlyCropTreesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseOnlyCropTreesCheckBoxActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_releaseOnlyCropTreesCheckBoxActionPerformed
-
-private void simulationDurationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationDurationTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_simulationDurationTextFieldActionPerformed
-
 private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSimulationButtonActionPerformed
     loadSettingsToStandRule();
 
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
     boolean dsiEnabled = useClimateDataCheckBox.isSelected();
-    
-    Simulation simulation = getSimulation(dsiEnabled, useMortalityCheckBox.isSelected());
+    boolean useMortality = useMortalityCheckBox.isSelected();
+    Simulation simulation = new Simulation(st, true, useMortality);
+    if (dsiEnabled) {
+        DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(userSettings.getClimateDatabase());
+        final String climateScenario = (String) climateScenarioComboBox.getSelectedItem();
+        EnvironmentVariables environmentalData = environmentalDatabase.environmentalDataFor(st.location, climateScenario);
+        if (environmentalData.dataMissingFor(Year.of(st.year), Year.of(st.year + simTime))) {
+            if (continueQuestionAnswer() == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+        simulation = new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, climateScenario);
+    }
     
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
@@ -460,9 +433,13 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
 
-private void thinningAmountMaximumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thinningAmountMaximumTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_thinningAmountMaximumTextFieldActionPerformed
+    private int continueQuestionAnswer() throws HeadlessException {
+        return JOptionPane.showConfirmDialog(
+                getParent(),
+                messages.getString("TgTreatmentMan3.climateData.incomplete.message"),
+                messages.getString("TgTreatmentMan3.climateData.incomplete.title"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
 
 private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harvestingTypeComboBoxActionPerformed
     if (harvestingTypeComboBox.getSelectedIndex()==0){
@@ -495,14 +472,6 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         clearingLabel.setVisible(false);
     }
 }//GEN-LAST:event_harvestingTypeComboBoxActionPerformed
-
-private void protectionThicknessTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_protectionThicknessTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_protectionThicknessTextFieldActionPerformed
-
-private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thinningTypeComboBoxActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_thinningTypeComboBoxActionPerformed
    
     public void formUpdate(Stand stand){
         loadTable();
@@ -619,31 +588,11 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
       loadTable();
     }
 
-    public int numberOfCropTrees(int speciesIndex, double diameter, double percentage) {
-        Tree atree = new Tree();
-        atree.st = st;
-        atree.code = st.sp[speciesIndex].code;
-        atree.sp = st.sp[speciesIndex];
-        atree.d = diameter;
-        atree.h = st.sp[speciesIndex].hg;
-        double dist_ct = atree.calculateCw();
-        // Number of crop trees dependent on calcualted distance and actual mixture percent
-        return (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * percentage / 100.0);
-    }
-    
-    private Simulation getSimulation(boolean dsiEnabled, boolean useMortality) {
-        if (dsiEnabled) {
-            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(userSettings.getClimateDatabase());
-            return new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, "rcp85");
-        }
-        return new Simulation(st, true, useMortality);
-    }
-
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel HeadingPanel;
     private javax.swing.JLabel clearingLabel;
     private javax.swing.JTextField clearingTextField;
+    private javax.swing.JComboBox<String> climateScenarioComboBox;
     private javax.swing.JCheckBox developmentCheckBox;
     private javax.swing.JLabel habitatTreesLabel;
     private javax.swing.JTextField habitatTreesTextField;
@@ -654,7 +603,6 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel harvestingPanel;
     private javax.swing.JComboBox harvestingTypeComboBox;
     private javax.swing.JLabel harvestingTypeLabel;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel minimumCoverLabel;
