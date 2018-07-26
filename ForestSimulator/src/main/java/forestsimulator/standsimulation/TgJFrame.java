@@ -101,7 +101,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     String plugIn = "XML";
     String kspDataFile = "";
     String kspNextPlot = "";
-    Dimension scr;
+    private final Dimension screenSize;
 
     int kspTyp = 0;
 
@@ -113,8 +113,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
         st = stneu;
         st.addStandChangeListener(this);
-        scr = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(scr.width, (scr.height - (scr.height / 50)));
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, (screenSize.height - (screenSize.height / 50)));
         File workingDirectory = new java.io.File(".");
         // TODO: move loading of settings and setting of the locale into ForestSimulator.main()
         user = new TgUser(workingDirectory);
@@ -170,7 +170,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         if (grafik3D) {
             manager3d = new Manager3D(new JPanel(), programDir, true);
             if (manager3d.get3DAvailable()) {
-                ppneu.setPreferredSize(new Dimension((((scr.width - 140) / 2) - (scr.width / 50)), (scr.height / 2) - (scr.height / 50)));
+                ppneu.setPreferredSize(new Dimension((((screenSize.width - 140) / 2) - (screenSize.width / 50)), (screenSize.height / 2) - (screenSize.height / 50)));
                 manager3d = new Manager3D(ppneu, programDir, true);
                 grafik3D = true;
             }
@@ -231,7 +231,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
         // Adding the InternalFrames
         iframe[0].setLocation(155, 0);
-        iframe[1].setLocation((140 + (scr.width - 140) / 2), 0);
+        iframe[1].setLocation((140 + (screenSize.width - 140) / 2), 0);
         iframe[2].setLocation(100, 0);
         iframe[0].setVisible(false);
         iframe[1].setVisible(false);
@@ -239,9 +239,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         iframe[3].setVisible(false);
         iframe[4].setVisible(false);
         iframe[5].setVisible(false);
-        iframe[3].setLocation(((scr.width - 100) / 2), 0);
+        iframe[3].setLocation(((screenSize.width - 100) / 2), 0);
         iframe[4].setLocation(0, 0);
-        iframe[5].setLocation(0, (scr.height / 2 + (scr.height / 20)));
+        iframe[5].setLocation(0, (screenSize.height / 2 + (screenSize.height / 20)));
         iframe[6].setLocation(0, 0);
         iframe[6].setVisible(true);
 
@@ -658,37 +658,37 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
          */
 // Screen Toolbar                
         if (cmd.equals("screen1")) {
-            int xp = (int) (scr.width * 0.65);
-            int yp = (int) ((scr.height - 105) * 0.5);
+            int xp = (int) (screenSize.width * 0.65);
+            int yp = (int) ((screenSize.height - 105) * 0.5);
             iframe[0].setLocation(xp, 0);
-            iframe[0].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+            iframe[0].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
             iframe[0].setVisible(true);
             iframe[1].setLocation(xp, yp);
-            iframe[1].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+            iframe[1].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
             iframe[1].setVisible(true);
             iframe[2].setVisible(false);
             iframe[3].setVisible(false);
-            yp = (int) ((scr.height - 105) * 0.7);
+            yp = (int) ((screenSize.height - 105) * 0.7);
             iframe[4].setLocation(0, 0);
             iframe[4].setSize(new Dimension(xp, yp));
             iframe[4].setVisible(true);
             iframe[5].setLocation(0, yp);
-            iframe[5].setSize(new Dimension(xp, scr.height - 105 - yp));
+            iframe[5].setSize(new Dimension(xp, screenSize.height - 105 - yp));
             iframe[5].setVisible(true);
             iframe[6].setVisible(false);
         }
         if (cmd.equals("screen2")) {
             iframe[0].setVisible(false);
             iframe[1].setLocation(0, 0);
-            int yp = (int) ((scr.height - 105) * 0.65);
-            iframe[1].setSize(new Dimension(scr.width, yp));
+            int yp = (int) ((screenSize.height - 105) * 0.65);
+            iframe[1].setSize(new Dimension(screenSize.width, yp));
             iframe[1].setVisible(true);
             iframe[2].setVisible(false);
             iframe[3].setVisible(false);
             iframe[4].setVisible(false);
             iframe[5].setVisible(true);
             iframe[5].setLocation(0, yp);
-            iframe[5].setSize(new Dimension(scr.width, scr.height - 105 - yp));
+            iframe[5].setSize(new Dimension(screenSize.width, screenSize.height - 105 - yp));
             iframe[6].setVisible(false);
         }
         if (cmd.equals("screen3")) {
@@ -701,7 +701,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             iframe[6].setVisible(false);
             iframe[1].setLocation(0, 0);
             iframe[1].setVisible(true);
-            iframe[1].setSize(new Dimension(scr.width, scr.height - 105));
+            iframe[1].setSize(new Dimension(screenSize.width, screenSize.height - 105));
         }
 
 // Action commands of stand map menu 
@@ -1066,22 +1066,22 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     void showIframes() {
-        int xp = (int) (scr.width * 0.65);
-        int yp = (int) ((scr.height - 105) * 0.5);
+        int xp = (int) (screenSize.width * 0.65);
+        int yp = (int) ((screenSize.height - 105) * 0.5);
         iframe[0].setLocation(xp, 0);
-        iframe[0].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+        iframe[0].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
         iframe[0].setVisible(true);
         iframe[1].setLocation(xp, yp);
-        iframe[1].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+        iframe[1].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
         iframe[1].setVisible(true);
         iframe[2].setVisible(false);
         iframe[3].setVisible(false);
-        yp = (int) ((scr.height - 105) * 0.7);
+        yp = (int) ((screenSize.height - 105) * 0.7);
         iframe[4].setLocation(0, 0);
         iframe[4].setSize(new Dimension(xp, yp));
         iframe[4].setVisible(true);
         iframe[5].setLocation(0, yp);
-        iframe[5].setSize(new Dimension(xp, scr.height - 105 - yp));
+        iframe[5].setSize(new Dimension(xp, screenSize.height - 105 - yp));
         iframe[5].setVisible(true);
         iframe[6].setVisible(false);
     }
