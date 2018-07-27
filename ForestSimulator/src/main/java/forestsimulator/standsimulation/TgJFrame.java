@@ -58,7 +58,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private final FileHandler logHandler;
     private final TgPPmap pp;  //add prallel projection class
 
-    String bwinproVersion = "Version 7.8-0.5";
+    String bwinproVersion = "Version 7.8-0.6dev";
     String bwinproLastUpdate = "27.07.2018";
     private boolean accessInput = true;
     private Stand st = new Stand();
