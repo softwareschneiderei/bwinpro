@@ -24,20 +24,19 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class TgUser {
-
     private static final Logger logger = Logger.getLogger(TgUser.class.getName());
+
+    String plugIn = "XML";
+    String XMLSettings = "";
+    int grafik3D = 0;
+    String update = "01012007";
+    private final File baseDirectory;
+    private final Properties settings;
     private File workingDir;
     private File programDir;
     private File dataDir;
     private File climateData;
     private String languageCode = "en";
-    String plugIn = "XML";
-    String XMLSettings = "";
-    int grafik3D = 0;
-    String update = "01012007";
-    String nwfva = null;
-    private final File baseDirectory;
-    private final Properties settings;
 
     public TgUser(File baseDirectory) {
         super();
@@ -45,10 +44,6 @@ public class TgUser {
         this.settings = new Settings();
     }
 
-    /**
-     * The user settings are load from a file TgUser.txt, which has to be in the
-     * same directory
-     */
     public void loadSettings() {
         try (Reader iniFile = settingsFileReader()) {
             loadSettings(iniFile);
@@ -70,13 +65,13 @@ public class TgUser {
         programDir = parseToFile(settings.getProperty("program.directory")).getCanonicalFile();
         dataDir = parseToFile(settings.getProperty("data.directory")).getCanonicalFile();
         workingDir = parseToFile(settings.getProperty("working.directory")).getCanonicalFile();
+        workingDir.mkdirs();
         languageCode = settings.getProperty("language.code", "");
         XMLSettings = settings.getProperty("settings.file", "");
         climateData = parseToFile(settings.getProperty("climate_data.file", ""));
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
         if (m > 0) {
-            nwfva = XMLSettings.substring(m + 2);
             XMLSettings = XMLSettings.substring(0, m);
         }
         grafik3D = Integer.parseInt(settings.getProperty("graphics3d", "0"));
