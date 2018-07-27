@@ -1,6 +1,10 @@
 package treegross.dynamic.siteindex;
 
 public class EnvironmentStandardizer {
+
+    private EnvironmentStandardizer() {
+        super();
+    }
     
     public static EnvironmentVariables standardize(EnvironmentVariables variables) {
         EnvironmentVariables mean5YearVariables = variables.calculate5YearMeans();

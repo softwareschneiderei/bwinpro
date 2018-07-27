@@ -515,7 +515,11 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
     }
     
     public ComboBoxModel loadClimateScenarios() {
-        if (!userSettings.getClimateDatabase().exists()) {
+        final boolean climateDataAvailable = userSettings.getClimateDatabase().exists();
+        useClimateDataCheckBox.setSelected(climateDataAvailable);
+        useClimateDataCheckBox.setEnabled(climateDataAvailable);
+        climateScenarioComboBox.setEnabled(climateDataAvailable);
+        if (!climateDataAvailable) {
             return new DefaultComboBoxModel();
         }
         List<String> scenarios = new ArrayList<>();
