@@ -31,7 +31,7 @@ public class TgUserTest {
         assertThat(userSettings.getLanguageShort()).isEqualTo(new Locale("de"));
         assertThat(userSettings.getXMLSettings()).isEqualTo("ForestSimulatorSettingsBW.xml");
         assertThat(userSettings.getPlugIn()).isEqualTo("ForestSimulatorSettingsBW.xml");
-        assertThat(userSettings.getClimateDatabase()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "climate_data.mdb"));
+        assertThat(userSettings.getClimateDatabase().getCanonicalFile()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "climate_data.mdb"));
         
         assertThat(userSettings.getGrafik3D()).isFalse();
     }
