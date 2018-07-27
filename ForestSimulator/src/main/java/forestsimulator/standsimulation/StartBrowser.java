@@ -24,7 +24,7 @@ import java.io.*;
  */
 public class StartBrowser {
 
-    static String url;
+    private final String url;
 //start local HTML Page
 
     public StartBrowser(String urlx) {

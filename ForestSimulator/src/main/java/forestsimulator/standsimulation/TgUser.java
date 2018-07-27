@@ -29,6 +29,7 @@ public class TgUser {
     private File workingDir;
     private File programDir;
     private File dataDir;
+    private File climateData;
     private String languageCode = "en";
     String plugIn = "XML";
     String XMLSettings = "";
@@ -71,6 +72,7 @@ public class TgUser {
         workingDir = parseToFile(settings.getProperty("working.directory")).getCanonicalFile();
         languageCode = settings.getProperty("language.code", "");
         XMLSettings = settings.getProperty("settings.file", "");
+        climateData = parseToFile(settings.getProperty("climate_data.file", ""));
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
         if (m > 0) {
@@ -125,7 +127,10 @@ public class TgUser {
     
     // TODO: http://issuetracker.intranet:20002/browse/BWIN-76
     public File getClimateDatabase() {
-        return new File(getDataDir(), "climate_data.mdb");
+        if (climateData == null) {
+            return new File(getDataDir(), "climate_data.mdb");
+        }
+        return climateData;
     }
 
     public String getXMLSettings() {
@@ -179,19 +184,20 @@ public class TgUser {
         return erg;
     }
 
-    public void saveSettings(String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
+    public void saveSettings(String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, String climateDatabaseFileName, int g3D) throws IOException {
         try (Writer ausgabe = new FileWriter(settingsFile())) {
-            saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, g3D);
+            saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, climateDatabaseFileName, g3D);
         }        
     }
 
-    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
+    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, String climateDatabaseFileName, int g3D) throws IOException {
         settings.setProperty("program.directory", programDir);
         settings.setProperty("data.directory", dataDir);
         settings.setProperty("working.directory", workingDir);
         settings.setProperty("language.code", Language.toString());
         settings.setProperty("settings.file", settingsFileName);
         settings.setProperty("graphics3d", String.valueOf(g3D));
+        settings.setProperty("climate_data.file", climateDatabaseFileName);
         settings.store(ausgabe, null);
     }
 }

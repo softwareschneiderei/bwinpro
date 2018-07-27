@@ -56,20 +56,15 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private final TgInternalFrame[] iframe = new TgInternalFrame[8];
     private final SpeciesDefMap speciesDefinitions = new SpeciesDefMap();
     private final FileHandler logHandler;
+    private final TgPPmap pp;  //add prallel projection class
 
     String bwinproVersion = "Version 7.8-0.5dev";
     String bwinproLastUpdate = "11.07.2018";
     private boolean accessInput = true;
     private Stand st = new Stand();
-    File currentFile;
-    StringBuffer ColorInfo;
-    String seite;
-//   TgStandMap zf  = new TgStandMap(st, this); //add standmap class
-//   TgPPmap pp = new TgPPmap(st, this); //add prallel projection class
+    private File currentFile;
     TgStandMap zf;   //add standmap class
-    TgPPmap pp;  //add prallel projection class
     TgHTMLsv sv = new TgHTMLsv(st);
-//   TgGrafik gr = new TgGrafik(st);
     TgGrafik gr;
     TgProgramInfo tgProgramInfo;
     TgDesign sd;
@@ -92,8 +87,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
     private Manager3D manager3d;
 
-    private boolean grafik3D = false;
-    boolean StandardColors = false;
+    private boolean grafik3D;
+    boolean StandardColors;
     boolean tfUpdateTrue = true;
     File programDir;
     File workingDir;
@@ -445,7 +440,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 st.descspecies();
                 yt.enterStandDesc(st);
                 yt.writeTable(st, workingDir.getAbsolutePath(), "standtable.html", language.locale());
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + yt.getFilename();
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -455,7 +450,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 st.descspecies();
                 TgStructureTable tgStructureTable = new TgStructureTable();
                 tgStructureTable.writeTable(st, workingDir.getAbsolutePath(), "standstructure.html", language.locale());
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + tgStructureTable.getFilename();
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -463,7 +458,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             if (cmd.equals("Definition")) {
                 try {
                     st.getSDM().listCurrentSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciesdefinition.html");
-                    seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
+                    String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
                             + System.getProperty("file.separator") + "speciesdefinition.html";
                     StartBrowser startBrowser = new StartBrowser(seite);
                     startBrowser.start();
@@ -473,7 +468,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             }
             if (cmd.equals("species_code")) {
                 st.getSDM().listAllSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciescode.html");
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
                         + System.getProperty("file.separator") + "speciescode.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -485,13 +480,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 dataex.writeTreeTable(st);
             }
             if (cmd.equals("Info page")) {
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "index.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
             if (cmd.equals("License")) {
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "gpl.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();

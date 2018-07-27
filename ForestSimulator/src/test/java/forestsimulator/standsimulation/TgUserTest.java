@@ -6,9 +6,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Locale;
-import static org.hamcrest.CoreMatchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class TgUserTest {
     private static final File BASE_DIRECTORY = new File("D:\\some\\base\\directory");
@@ -19,19 +18,22 @@ public class TgUserTest {
             + "working.directory=output_standsimulation\n"
             + "language.code=de\n"
             + "settings.file=ForestSimulatorSettingsBW.xml\n"
+            + "climate_data.file=climate_data.mdb\n"
             + "graphics3d=0\n";
     
     @Test
     public void settingsParsedCorrectly() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
-        assertThat(userSettings.getProgramDir(), is(canonicalFileOf(BASE_DIRECTORY, "user")));
-        assertThat(userSettings.getDataDir(), is(canonicalFileOf(BASE_DIRECTORY, "data_standsimulation")));
-        assertThat(userSettings.getWorkingDir(), is(canonicalFileOf(BASE_DIRECTORY, "output_standsimulation")));
-        assertThat(userSettings.getLanguageShort(), is(new Locale("de")));
-        assertThat(userSettings.getXMLSettings(), is("ForestSimulatorSettingsBW.xml"));
-        assertThat(userSettings.getPlugIn(), is("ForestSimulatorSettingsBW.xml"));
-        assertThat(userSettings.getGrafik3D(), is(false));
+        assertThat(userSettings.getProgramDir()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "user"));
+        assertThat(userSettings.getDataDir()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "data_standsimulation"));
+        assertThat(userSettings.getWorkingDir()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "output_standsimulation"));
+        assertThat(userSettings.getLanguageShort()).isEqualTo(new Locale("de"));
+        assertThat(userSettings.getXMLSettings()).isEqualTo("ForestSimulatorSettingsBW.xml");
+        assertThat(userSettings.getPlugIn()).isEqualTo("ForestSimulatorSettingsBW.xml");
+        assertThat(userSettings.getClimateDatabase()).isEqualTo(canonicalFileOf(BASE_DIRECTORY, "climate_data.mdb"));
+        
+        assertThat(userSettings.getGrafik3D()).isFalse();
     }
     
     @Test
@@ -39,14 +41,15 @@ public class TgUserTest {
         StringWriter buffer = new StringWriter();
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(iniContent());
-        userSettings.saveSettingsTo(buffer, "D:\\program_dir", "data_dir", "output_dir", Locale.forLanguageTag("en"), "Settings.xml", 1);
-        assertThat(buffer.toString(), is(
+        userSettings.saveSettingsTo(buffer, "D:\\program_dir", "data_dir", "output_dir", Locale.forLanguageTag("en"), "Settings.xml", "data_dir\\climate.mdb", 1);
+        assertThat(buffer.toString()).isEqualTo(
                 "program.directory=D:\\program_dir" + LINE_SEP
                 + "data.directory=data_dir" + LINE_SEP
                 + "working.directory=output_dir" + LINE_SEP
                 + "language.code=en" + LINE_SEP
                 + "settings.file=Settings.xml" + LINE_SEP
-                + "graphics3d=1" + LINE_SEP));
+                + "climate_data.file=data_dir\\climate.mdb" + LINE_SEP
+                + "graphics3d=1" + LINE_SEP);
     }
     
     @Test
@@ -54,14 +57,14 @@ public class TgUserTest {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         String absolutePath = makeAbsolute("D:\\some\\\\base");
         userSettings.loadSettings(new StringReader("data.directory=" + absolutePath));
-        assertThat(userSettings.getDataDir(), is(new File(absolutePath).getCanonicalFile()));
+        assertThat(userSettings.getDataDir()).isEqualTo(new File(absolutePath).getCanonicalFile());
     }
 
     @Test
     public void configuredLanguageCodeUsed() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(new StringReader("language.code=es"));
-        assertThat(userSettings.getLanguageShort(), is(new Locale("es")));
+        assertThat(userSettings.getLanguageShort()).isEqualTo(new Locale("es"));
     }
     
     @Test
@@ -69,14 +72,14 @@ public class TgUserTest {
         System.setProperty("user.language", "fr");
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(new StringReader("language.code="));
-        assertThat(userSettings.getLanguageShort(), is(new Locale("fr")));
+        assertThat(userSettings.getLanguageShort()).isEqualTo(new Locale("fr"));
     }
     
     @Test
     public void graphicSettingParsedCorrectly() throws IOException {
         TgUser userSettings = new TgUser(BASE_DIRECTORY);
         userSettings.loadSettings(new StringReader("graphics3d=1"));
-        assertThat(userSettings.getGrafik3D(), is(true));
+        assertThat(userSettings.getGrafik3D()).isTrue();
     }
 
     private static String makeAbsolute(String absolutePath) {
