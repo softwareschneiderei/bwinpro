@@ -4,7 +4,7 @@ package treegross.base;
  *  Wraps the site index value for type safety
  */
 public class SiteIndex {
-    public static SiteIndex undefined = si(-9.0);
+    public static final SiteIndex undefined = si(-9.0);
 
     public final double value;
 

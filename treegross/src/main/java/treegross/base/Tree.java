@@ -381,17 +381,9 @@ public class Tree implements Cloneable {
             cberg = 0.01;
         }
         if (Double.isNaN(cberg)) {
-            boolean errout = false;
-            if (st != null) {
-                if (st.debug) {
-                    errout = true;
-                }
-            }
-            if (errout) {
-                String msg = "calculated crown base is NaN for:" + st.standname + "/" + no + "\n\t"
-                        + sp.spDef.crownbaseXML + " dbh: " + d + " height: " + h + " sp.h100: " + sp.h100;
-                LOGGER.log(Level.WARNING, msg);
-            }
+            LOGGER.log(Level.FINE,
+                    "calculated crown base is NaN for:{0}/{1}\n\t{2} dbh: {3} height: {4} sp.h100: {5}",
+                    new Object[]{st.standname, no, sp.spDef.crownbaseXML, d, h, sp.h100});
             cberg = h / 2.0;
         }
         return cberg;
@@ -437,8 +429,7 @@ public class Tree implements Cloneable {
     public void ageBasedMortality() {
         double ageindex = (1.0 * age / (1.0 * sp.spDef.maximumAge)) - 1.0;
         if (ageindex > st.random.nextUniform()) {
-            out = st.year;
-            outtype = OutType.FALLEN;
+            takeOut(st.year, OutType.FALLEN);
         }
     }
 
@@ -494,13 +485,10 @@ public class Tree implements Cloneable {
         } else {
             bhdinc = fi.getValueForTree(this, sp.spDef.diameterIncrementXML);
             if (Double.isInfinite(bhdinc) || Double.isNaN(bhdinc) || bhdinc < 0) {
-                boolean errout = false;
                 if (st != null) {
-                    st.debug = errout;
+                    st.debug = false;
                 }
-                if (errout) {
-                    LOGGER.log(Level.WARNING, "dbh increment is < 0, NaN or infinite for: {0}/{1}\n\tbhdinc: {2}\n\tc66cxy: {3} c66xy: {4}crown width {5}\n\tcrown base {6} species: {7} h100 for species: {8}", new Object[]{st.standname, no, bhdinc, c66cxy, c66xy, cw, cb, code, sp.h100});
-                }
+                LOGGER.log(Level.FINE, "dbh increment is < 0, NaN or infinite for: {0}/{1}\n\tbhdinc: {2}\n\tc66cxy: {3} c66xy: {4}crown width {5}\n\tcrown base {6} species: {7} h100 for species: {8}", new Object[]{st.standname, no, bhdinc, c66cxy, c66xy, cw, cb, code, sp.h100});
                 bhdinc = 0;
             }
 
@@ -538,8 +526,6 @@ public class Tree implements Cloneable {
         v = calculateVolume();
     }
 
-    // TODO: http://issuetracker.intranet:20002/browse/BWIN-79
-    // implement a climate-sensitive calculation here if it is activated in the process
     private void calculateHeightIncrement(FunctionInterpreter fi, RandomNumber rn) {
         // grow height (hinc????):
         double ihpot_l = fi.getValueForTree(this, sp.spDef.potentialHeightIncrementXML);
