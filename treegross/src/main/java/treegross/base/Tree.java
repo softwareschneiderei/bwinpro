@@ -485,9 +485,6 @@ public class Tree implements Cloneable {
         } else {
             bhdinc = fi.getValueForTree(this, sp.spDef.diameterIncrementXML);
             if (Double.isInfinite(bhdinc) || Double.isNaN(bhdinc) || bhdinc < 0) {
-                if (st != null) {
-                    st.debug = false;
-                }
                 LOGGER.log(Level.FINE, "dbh increment is < 0, NaN or infinite for: {0}/{1}\n\tbhdinc: {2}\n\tc66cxy: {3} c66xy: {4}crown width {5}\n\tcrown base {6} species: {7} h100 for species: {8}", new Object[]{st.standname, no, bhdinc, c66cxy, c66xy, cw, cb, code, sp.h100});
                 bhdinc = 0;
             }
