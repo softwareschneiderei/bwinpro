@@ -188,7 +188,7 @@ public class DataExchangeFormat {
 
                 out.println(st.tr[i].code + ";1;" + st.tr[i].no + ";" + st.tr[i].age + ";"
                         + f.format(st.tr[i].d) + ";" + f.format(st.tr[i].h) + ";"
-                        + f.format(st.tr[i].si) + ";"
+                        + f.format(st.tr[i].si.value) + ";"
                         + f.format(st.tr[i].cb) + ";" + f.format(st.tr[i].cw) + ";"
                         + +st.tr[i].out + ";" + st.tr[i].outtype + ";"
                         + f.format(st.tr[i].x) + ";" + f.format(st.tr[i].y) + ";" + f.format(st.tr[i].z)

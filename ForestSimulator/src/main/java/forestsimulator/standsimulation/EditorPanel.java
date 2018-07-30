@@ -190,7 +190,7 @@ public class EditorPanel extends JPanel {
             treeTable.setValueAt(Integer.toString(st.tr[i].age), i, 2);
             treeTable.setValueAt(f.format(st.tr[i].d), i, 3);
             treeTable.setValueAt(f.format(st.tr[i].h), i, 4);
-            treeTable.setValueAt(f.format(st.tr[i].si), i, 5);
+            treeTable.setValueAt(f.format(st.tr[i].si.value), i, 5);
             treeTable.setValueAt(f.format(st.tr[i].cb), i, 6);
             treeTable.setValueAt(f.format(st.tr[i].cw), i, 7);
             treeTable.setValueAt(Integer.toString(st.tr[i].out), i, 8);

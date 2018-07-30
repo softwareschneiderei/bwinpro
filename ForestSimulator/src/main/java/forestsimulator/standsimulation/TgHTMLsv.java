@@ -128,7 +128,7 @@ class TgHTMLsv {
                 + valueCellOf(tree.crop)
                 + valueCellOf(tree.outtype)
                 + valueCellOf(tree.layer)
-                + valueCellOf(f.format(tree.si))
+                + valueCellOf(f.format(tree.si.value))
                 + "</tr>");
     }
     

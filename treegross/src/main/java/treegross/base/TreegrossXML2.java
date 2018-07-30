@@ -42,8 +42,8 @@ import static treegross.base.SiteIndex.si;
  */
 public class TreegrossXML2 {
 
-    static Element rootElt;
     private final static Logger LOGGER = Logger.getLogger(TreegrossXML2.class.getName());
+    private Element rootElt;
 
     /**
      * Creates an Treegross xml
@@ -123,7 +123,7 @@ public class TreegrossXML2 {
             elt = addString(elt, "Hoehe_m", f.format(st.tr[i].h));
             elt = addString(elt, "Kronenansatz_m", f.format(st.tr[i].cb));
             elt = addString(elt, "MittlererKronenDurchmesser_m", f.format(st.tr[i].cw));
-            elt = addString(elt, "SiteIndex_m", f.format(st.tr[i].si));
+            elt = addString(elt, "SiteIndex_m", f.format(st.tr[i].si.value));
             elt = addString(elt, "RelativeXKoordinate_m", f.format(st.tr[i].x));
             elt = addString(elt, "RelativeYKoordinate_m", f.format(st.tr[i].y));
             elt = addString(elt, "RelativeBodenhoehe_m", f.format(st.tr[i].z));
