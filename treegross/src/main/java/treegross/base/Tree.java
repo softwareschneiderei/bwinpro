@@ -84,10 +84,6 @@ public class Tree implements Cloneable {
      */
     public double si;
     /**
-     * dynamic, climate-sensitive site index
-     */
-    public SiteIndex dsi;
-    /**
      * reference to species
      */
     public Species sp;
@@ -240,7 +236,6 @@ public class Tree implements Cloneable {
         cb = cbx;
         cw = cwx;
         si = six;
-        dsi = SiteIndex.si(si);
         fac = facx;
         x = xx;
         y = yx;
@@ -301,7 +296,6 @@ public class Tree implements Cloneable {
         clone.shareXtimber = this.shareXtimber;
         clone.sharelog = this.sharelog;
         clone.si = this.si;
-        clone.dsi = this.dsi;
         clone.sp = new Species(sp);
         //clone.st has to be added in the super clone call
         clone.v = this.v;
@@ -525,23 +519,7 @@ public class Tree implements Cloneable {
 
             bhdinc = 2.0 * Math.sqrt((Math.PI * Math.pow((d / 2.0), 2.0) + bhdinc * 10000.0) / Math.PI) - d;
 
-            // grow height (hinc????):
-            double ihpot_l = fi.getValueForTree(this, sp.spDef.potentialHeightIncrementXML);
-            if (h / sp.h100 >= 1.0) {
-                hinc = 1.0;
-            } else {
-                hinc = sp.h100 / h;
-            }
-
-            hinc = fi.getValueForTree(this, sp.spDef.heightIncrementXML);
-            if (rn.randomOn) {
-                double effect = sp.spDef.heightIncrementError;
-                hinc += effect * rn.nextNormal(1);
-            }
-
-            if (hinc > ihpot_l * 1.2) {
-                hinc = ihpot_l * 1.2;   //ihpot*1.2 is max
-            }
+            calculateHeightIncrement(fi, rn);
         }
 
         //no negative height growth allowed
@@ -558,6 +536,28 @@ public class Tree implements Cloneable {
         d += years * bhdinc * ts;
         age += years;
         v = calculateVolume();
+    }
+
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-79
+    // implement a climate-sensitive calculation here if it is activated in the process
+    private void calculateHeightIncrement(FunctionInterpreter fi, RandomNumber rn) {
+        // grow height (hinc????):
+        double ihpot_l = fi.getValueForTree(this, sp.spDef.potentialHeightIncrementXML);
+        if (h / sp.h100 >= 1.0) {
+            hinc = 1.0;
+        } else {
+            hinc = sp.h100 / h;
+        }
+        
+        hinc = fi.getValueForTree(this, sp.spDef.heightIncrementXML);
+        if (rn.randomOn) {
+            double effect = sp.spDef.heightIncrementError;
+            hinc += effect * rn.nextNormal(1);
+        }
+        
+        if (hinc > ihpot_l * 1.2) {
+            hinc = ihpot_l * 1.2;   //ihpot*1.2 is max
+        }
     }
 
     private void youthGrowth(FunctionInterpreter fi, int years) {

@@ -53,7 +53,7 @@ public class EditorPanel extends JPanel {
         initComponents();
         st = new Stand();
         ExcelAdapter myAd = new ExcelAdapter(jTable1);
-        ExcelAdapter myAd2 = new ExcelAdapter(jTable2);
+        ExcelAdapter myAd2 = new ExcelAdapter(treeTable);
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
@@ -120,28 +120,28 @@ public class EditorPanel extends JPanel {
             }
         }
         int m = 0;
-        for (int i = 0; i < jTable2.getRowCount(); i++) {
-            String dStr = (String) jTable2.getValueAt(i, 3);
+        for (int i = 0; i < treeTable.getRowCount(); i++) {
+            String dStr = (String) treeTable.getValueAt(i, 3);
             dStr = dStr.trim();
             if (dStr.length() > 0) {
                 try {
-                    st.addTree(getInt((String) jTable2.getValueAt(i, 0)), (String) jTable2.getValueAt(i, 1), getInt((String) jTable2.getValueAt(i, 2)), getInt((String) jTable2.getValueAt(i, 8)), getDouble((String) jTable2.getValueAt(i, 3)), getDouble((String) jTable2.getValueAt(i, 4)), getDouble((String) jTable2.getValueAt(i, 6)), getDouble((String) jTable2.getValueAt(i, 7)), getDouble((String) jTable2.getValueAt(i, 5)), getDouble((String) jTable2.getValueAt(i, 10)), getDouble((String) jTable2.getValueAt(i, 11)), getDouble((String) jTable2.getValueAt(i, 12)), 0, 0, 0);
+                    st.addTree(getInt((String) treeTable.getValueAt(i, 0)), (String) treeTable.getValueAt(i, 1), getInt((String) treeTable.getValueAt(i, 2)), getInt((String) treeTable.getValueAt(i, 8)), getDouble((String) treeTable.getValueAt(i, 3)), getDouble((String) treeTable.getValueAt(i, 4)), getDouble((String) treeTable.getValueAt(i, 6)), getDouble((String) treeTable.getValueAt(i, 7)), getDouble((String) treeTable.getValueAt(i, 5)), getDouble((String) treeTable.getValueAt(i, 10)), getDouble((String) treeTable.getValueAt(i, 11)), getDouble((String) treeTable.getValueAt(i, 12)), 0, 0, 0);
                 } catch (SpeciesNotDefinedException ex) {
                     Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                st.tr[m].fac = getDouble((String) jTable2.getValueAt(i, 15));
-                st.tr[m].outtype = (OutType) jTable2.getValueAt(i, 9);
-                st.tr[m].crop = getBoolean((String) jTable2.getValueAt(i, 13));
-                st.tr[m].habitat = getBoolean((String) jTable2.getValueAt(i, 14));
+                st.tr[m].fac = getDouble((String) treeTable.getValueAt(i, 15));
+                st.tr[m].outtype = (OutType) treeTable.getValueAt(i, 9);
+                st.tr[m].crop = getBoolean((String) treeTable.getValueAt(i, 13));
+                st.tr[m].habitat = getBoolean((String) treeTable.getValueAt(i, 14));
 //            st.tr[m].c66=  Double.parseDouble( (String) jTable2.getValueAt(i,15));         
 //            st.tr[m].c66c=  Double.parseDouble( (String) jTable2.getValueAt(i,16));         
-                if (jTable2.getValueAt(i, 16) != null) {
-                    st.tr[m].remarks = (String) jTable2.getValueAt(i, 16);
+                if (treeTable.getValueAt(i, 16) != null) {
+                    st.tr[m].remarks = (String) treeTable.getValueAt(i, 16);
                 } else {
                     st.tr[m].remarks = "";
                 }
-                if (jTable2.getValueAt(i, 17) != null) {
-                    st.tr[m].layer = Layer.fromInt(getInt((String) jTable2.getValueAt(i, 17)));
+                if (treeTable.getValueAt(i, 17) != null) {
+                    st.tr[m].layer = Layer.fromInt(getInt((String) treeTable.getValueAt(i, 17)));
                 } else {
                     st.tr[m].layer = Layer.NONE;
                 }
@@ -184,29 +184,29 @@ public class EditorPanel extends JPanel {
 // Tree data        
         for (int i = 0; i < st.ntrees; i++) {
             data.addRow(rowData);
-            jTable2.setValueAt(Integer.toString(st.tr[i].code), i, 0);
-            jTable2.setValueAt(st.tr[i].no, i, 1);
-            jTable2.setValueAt(Integer.toString(st.tr[i].age), i, 2);
-            jTable2.setValueAt(f.format(st.tr[i].d), i, 3);
-            jTable2.setValueAt(f.format(st.tr[i].h), i, 4);
-            jTable2.setValueAt(f.format(st.tr[i].si), i, 5);
-            jTable2.setValueAt(f.format(st.tr[i].cb), i, 6);
-            jTable2.setValueAt(f.format(st.tr[i].cw), i, 7);
-            jTable2.setValueAt(Integer.toString(st.tr[i].out), i, 8);
-            jTable2.setValueAt(st.tr[i].outtype, i, 9);
-            jTable2.setValueAt(f.format(st.tr[i].x), i, 10);
-            jTable2.setValueAt(f.format(st.tr[i].y), i, 11);
-            jTable2.setValueAt(f.format(st.tr[i].z), i, 12);
-            jTable2.setValueAt(Boolean.toString(st.tr[i].crop), i, 13);
-            jTable2.setValueAt(Boolean.toString(st.tr[i].habitat), i, 14);
+            treeTable.setValueAt(Integer.toString(st.tr[i].code), i, 0);
+            treeTable.setValueAt(st.tr[i].no, i, 1);
+            treeTable.setValueAt(Integer.toString(st.tr[i].age), i, 2);
+            treeTable.setValueAt(f.format(st.tr[i].d), i, 3);
+            treeTable.setValueAt(f.format(st.tr[i].h), i, 4);
+            treeTable.setValueAt(f.format(st.tr[i].si), i, 5);
+            treeTable.setValueAt(f.format(st.tr[i].cb), i, 6);
+            treeTable.setValueAt(f.format(st.tr[i].cw), i, 7);
+            treeTable.setValueAt(Integer.toString(st.tr[i].out), i, 8);
+            treeTable.setValueAt(st.tr[i].outtype, i, 9);
+            treeTable.setValueAt(f.format(st.tr[i].x), i, 10);
+            treeTable.setValueAt(f.format(st.tr[i].y), i, 11);
+            treeTable.setValueAt(f.format(st.tr[i].z), i, 12);
+            treeTable.setValueAt(Boolean.toString(st.tr[i].crop), i, 13);
+            treeTable.setValueAt(Boolean.toString(st.tr[i].habitat), i, 14);
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
 
-            jTable2.setValueAt(f.format(st.tr[i].fac), i, 15);
+            treeTable.setValueAt(f.format(st.tr[i].fac), i, 15);
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
-            jTable2.setValueAt(st.tr[i].remarks, i, 16);
-            jTable2.setValueAt(String.valueOf(st.tr[i].layer.toInt()), i, 17);
+            treeTable.setValueAt(st.tr[i].remarks, i, 16);
+            treeTable.setValueAt(String.valueOf(st.tr[i].layer), i, 17);
         }
     }
 
@@ -265,7 +265,7 @@ public class EditorPanel extends JPanel {
         deleteCornerPointButton = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        treeTable = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         addEmptyLineButton = new javax.swing.JButton();
         deleteTreeButton = new javax.swing.JButton();
@@ -456,9 +456,9 @@ public class EditorPanel extends JPanel {
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(300, 200));
 
-        jTable2.setModel(data);
-        jTable2.setCellSelectionEnabled(true);
-        jScrollPane2.setViewportView(jTable2);
+        treeTable.setModel(data);
+        treeTable.setCellSelectionEnabled(true);
+        jScrollPane2.setViewportView(treeTable);
 
         jPanel5.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
@@ -492,9 +492,9 @@ public class EditorPanel extends JPanel {
             jTable1.getColumnModel().getColumn(1).setHeaderValue("x");
             jTable1.getColumnModel().getColumn(2).setHeaderValue("y");
             jTable1.getTableHeader().resizeAndRepaint();
-            jTable2.getColumnModel().getColumn(10).setHeaderValue("x");
-            jTable2.getColumnModel().getColumn(11).setHeaderValue("y");
-            jTable2.getTableHeader().resizeAndRepaint();
+            treeTable.getColumnModel().getColumn(10).setHeaderValue("x");
+            treeTable.getColumnModel().getColumn(11).setHeaderValue("y");
+            treeTable.getTableHeader().resizeAndRepaint();
             polar = false;
         } else {
             xy2polar();
@@ -502,9 +502,9 @@ public class EditorPanel extends JPanel {
             jTable1.getColumnModel().getColumn(1).setHeaderValue("Dist");
             jTable1.getColumnModel().getColumn(2).setHeaderValue("Gon");
             jTable1.getTableHeader().resizeAndRepaint();
-            jTable2.getColumnModel().getColumn(10).setHeaderValue("Dist");
-            jTable2.getColumnModel().getColumn(11).setHeaderValue("Gon");
-            jTable2.getTableHeader().resizeAndRepaint();
+            treeTable.getColumnModel().getColumn(10).setHeaderValue("Dist");
+            treeTable.getColumnModel().getColumn(11).setHeaderValue("Gon");
+            treeTable.getTableHeader().resizeAndRepaint();
             polar = true;
         }
         loadStand();
@@ -579,12 +579,13 @@ public class EditorPanel extends JPanel {
     }//GEN-LAST:event_addCornerPointButtonActionPerformed
 
     private void deleteTreeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteTreeButtonActionPerformed
-        if (jTable2.getSelectedRowCount() > 0) {
-            int m[] = jTable2.getSelectedRows();
-            for (int j = 0; j < jTable2.getSelectedRowCount(); j++) {
-                for (int i = 0; i < 15; i++) {
-                    jTable2.setValueAt("", m[j], i);
-                }
+        if (treeTable.getSelectedRowCount() == 0) {
+            return;
+        }
+        int m[] = treeTable.getSelectedRows();
+        for (int rowIndex : m) {
+            for (int i = 0; i < 15; i++) {
+                treeTable.setValueAt("", rowIndex, i);
             }
         }
     }//GEN-LAST:event_deleteTreeButtonActionPerformed
@@ -627,9 +628,9 @@ public class EditorPanel extends JPanel {
                 jTable1.setValueAt("", j, i);
             }
         }
-        for (int j = 0; j < jTable2.getRowCount(); j++) {
-            for (int i = 0; i < jTable2.getColumnCount(); i++) {
-                jTable2.setValueAt("", j, i);
+        for (int j = 0; j < treeTable.getRowCount(); j++) {
+            for (int i = 0; i < treeTable.getColumnCount(); i++) {
+                treeTable.setValueAt("", j, i);
             }
         }
     }
@@ -742,7 +743,6 @@ public class EditorPanel extends JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JLabel locationCodeLabel;
     private javax.swing.JTextField locationCodeTextField;
     private javax.swing.JLabel locationLabel;
@@ -762,6 +762,7 @@ public class EditorPanel extends JPanel {
     private javax.swing.JTextField standNameTextField;
     private javax.swing.JLabel standSizeLabel;
     private javax.swing.JTextField standSizeTextField;
+    private javax.swing.JTable treeTable;
     // End of variables declaration//GEN-END:variables
 
 }
