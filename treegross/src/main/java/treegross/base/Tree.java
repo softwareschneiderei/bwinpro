@@ -478,7 +478,6 @@ public class Tree implements Cloneable {
 
     void initializeSiteIndex(double value) {
         si = value;
-        dsi = SiteIndex.si(si);
     }
 
     /**

@@ -448,7 +448,6 @@ public class LoadTreegrossStand {
                 stmt.setDouble(20, tree.x);
                 stmt.setDouble(21, tree.y);
                 stmt.setInt(22, boolToDB(tree.crop));
-                stmt.setDouble(23, tree.dsi.value);
                 stmt.addBatch();
             }
             stmt.executeBatch();

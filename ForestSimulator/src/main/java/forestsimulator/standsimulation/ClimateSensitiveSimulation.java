@@ -4,7 +4,6 @@ import forestsimulator.util.StopWatch;
 import java.text.MessageFormat;
 import java.time.Year;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import static treegross.base.SiteIndex.si;
 import treegross.base.Stand;
@@ -34,7 +33,7 @@ public class ClimateSensitiveSimulation extends Simulation {
                 }
                 // TODO: check if computing for each species is enough
                 getStand().forAllTrees(tree -> 
-                    tree.dsi = si(tree.sp.spDef.dsiCalculator.computeSiteIndex(year, tree.dsi.value, environmentVariables))
+                    tree.si = tree.sp.spDef.dsiCalculator.computeSiteIndex(year, tree.si, environmentVariables)
                 );
         });
         dsi.printElapsedTime();
