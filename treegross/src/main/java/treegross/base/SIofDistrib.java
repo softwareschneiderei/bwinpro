@@ -48,7 +48,7 @@ public class SIofDistrib {
         // the restiction to only taking trees with site index -9 is because in SimWald
         // several different stands are generated
         {
-            if (st.tr[i].code == code && st.tr[i].si == -9 && st.tr[i].isLiving()) {
+            if (st.tr[i].code == code && st.tr[i].si.undefined() && st.tr[i].isLiving()) {
                 n++;
                 gsum += Math.PI * Math.pow(st.tr[i].d / 200, 2);
             }
@@ -67,10 +67,10 @@ public class SIofDistrib {
         tree.sp = species;
         tree.sp.h100 = h100;
         tree.age = alter;
-        double siteindex = fi.getValueForTree(tree, species.spDef.siteindexXML);
+        SiteIndex siteindex = SiteIndex.si(fi.getValueForTree(tree, species.spDef.siteindexXML));
         // assign all trees an individual site index
         for (i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].si == -9 && st.tr[i].code == code) {
+            if (st.tr[i].si.undefined() && st.tr[i].code == code) {
                 st.tr[i].si = siteindex;
             }
         }

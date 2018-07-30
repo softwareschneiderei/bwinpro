@@ -192,16 +192,14 @@ public class Species {
             int k = 0;
 
             while (jj < n100 && k < st.ntrees) {
-
                 if (st.tr[k].d >= 7 && st.tr[k].code == code && st.tr[k].isLiving()) {
                     d100 = d100 + st.tr[k].fac * Math.PI * (st.tr[k].d / 200.0) * (st.tr[k].d / 200.0);
                     h100age = h100age + st.tr[k].fac * st.tr[k].age;
 
-                    if (st.tr[k].si > 0.0) {
-                        siH100 = siH100 + st.tr[k].si * st.tr[k].fac;
+                    if (st.tr[k].si.defined()) {
+                        siH100 = siH100 + st.tr[k].si.value * st.tr[k].fac;
                         nsiH100 = nsiH100 + st.tr[k].fac;
                     }
-
                     jj = jj + st.tr[k].fac;
                 }
                 k = k + 1;
@@ -229,7 +227,6 @@ public class Species {
         }
 
         int missingheights = st.getMissingHeight(0);
-
         // number of diameter-height values > 5 then height curve
         if (ndh > 5) {
             int k = ndh / 1000; //if there are more than 1000 ndh then use only every k th tree
@@ -374,13 +371,13 @@ public class Species {
             hbon = siH100;
         } else {
             Tree atree = new Tree();
+            atree.sp = this;
             atree.d = 30;
             atree.age = (int) h100age;
             atree.h = h100;
             atree.code = code;
-            atree.sp = this;
             if (hbon <= 0.0) {
-                hbon = atree.calculateSiteIndex();
+                hbon = atree.calculateSiteIndex().value;
             }
         }
     }

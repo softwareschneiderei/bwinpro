@@ -22,6 +22,7 @@ import java.text.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static treegross.base.SiteIndex.si;
 import treegross.random.RandomNumber;
 
 /**
@@ -459,7 +460,7 @@ public class DataExchangeFormat {
                 int age = Integer.parseInt(stx.nextToken());
                 double dbh = Double.parseDouble(stx.nextToken());
                 double height = Double.parseDouble(stx.nextToken());
-                double site = Double.parseDouble(stx.nextToken());
+                SiteIndex site = si(Double.parseDouble(stx.nextToken()));
                 double crbase = Double.parseDouble(stx.nextToken());
                 double crwidth = Double.parseDouble(stx.nextToken());
                 int out = Integer.parseInt(stx.nextToken());
@@ -724,7 +725,7 @@ public class DataExchangeFormat {
                 int age = Integer.parseInt(stx.nextToken());
                 double dbh = Double.parseDouble(stx.nextToken());
                 double height = Double.parseDouble(stx.nextToken());
-                double site = Double.parseDouble(stx.nextToken());
+                SiteIndex site = si(Double.parseDouble(stx.nextToken()));
                 double crbase = Double.parseDouble(stx.nextToken());
                 double crwidth = Double.parseDouble(stx.nextToken());
                 int out = Integer.parseInt(stx.nextToken());
@@ -767,11 +768,7 @@ public class DataExchangeFormat {
 
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }
@@ -934,7 +931,7 @@ public class DataExchangeFormat {
                 int age = Integer.parseInt(stx.nextToken());
                 double dbh = Double.parseDouble(stx.nextToken());
                 double height = Double.parseDouble(stx.nextToken());
-                double site = Double.parseDouble(stx.nextToken());
+                SiteIndex site = si(Double.parseDouble(stx.nextToken()));
                 double crbase = Double.parseDouble(stx.nextToken());
                 double crwidth = Double.parseDouble(stx.nextToken());
                 int out = Integer.parseInt(stx.nextToken());
@@ -975,11 +972,7 @@ public class DataExchangeFormat {
                     }
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }
@@ -1034,7 +1027,7 @@ public class DataExchangeFormat {
                 int age = Integer.parseInt(stx.nextToken());
                 double dbh = Double.parseDouble(stx.nextToken());
                 double height = Double.parseDouble(stx.nextToken());
-                double site = Double.parseDouble(stx.nextToken());
+                SiteIndex site = si(Double.parseDouble(stx.nextToken()));
                 double crbase = Double.parseDouble(stx.nextToken());
                 double crwidth = Double.parseDouble(stx.nextToken());
                 int out = Integer.parseInt(stx.nextToken());
@@ -1063,11 +1056,7 @@ public class DataExchangeFormat {
                             site, x, y, z, zb, 0, 0);
                 }
             }
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (NumberFormatException e) {
-            LOGGER.log(Level.SEVERE, "treegross", e);
-        } catch (SpeciesNotDefinedException e) {
+        } catch (IOException | NumberFormatException | SpeciesNotDefinedException e) {
             LOGGER.log(Level.SEVERE, "treegross", e);
         }
     }

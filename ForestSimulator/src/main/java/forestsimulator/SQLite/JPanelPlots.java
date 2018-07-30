@@ -21,6 +21,8 @@ import javax.swing.JTextArea;
 import treegross.base.GenerateXY;
 import treegross.base.Layer;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.Stand;
 
 /**
@@ -313,7 +315,7 @@ public class JPanelPlots extends JPanel {
                         ps.setInt(5, st.tr[i].age);
                         ps.setDouble(6, st.tr[i].d);
                         ps.setDouble(7, st.tr[i].h);
-                        ps.setDouble(8, st.tr[i].si);
+                        ps.setDouble(8, st.tr[i].si.value);
                         ps.setDouble(9, st.tr[i].cb);
                         ps.setDouble(10, st.tr[i].cw);
                         ps.setInt(11, st.tr[i].out);
@@ -542,7 +544,7 @@ public class JPanelPlots extends JPanel {
                     int aa = rs.getInt("age");
                     double dd = Double.parseDouble(rs.getString("dbh"));
                     double hh = Double.parseDouble(rs.getString("h"));
-                    double si = Double.parseDouble(rs.getString("si"));
+                    SiteIndex si = si(Double.parseDouble(rs.getString("si")));
                     double ccb = Double.parseDouble(rs.getString("cb"));
                     double ccw = Double.parseDouble(rs.getString("cw"));
                     int oout = rs.getInt("alive");

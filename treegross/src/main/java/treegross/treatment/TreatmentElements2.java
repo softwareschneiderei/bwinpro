@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import treegross.base.GenerateXY;
 import treegross.base.Layer;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
@@ -428,13 +430,11 @@ public class TreatmentElements2 {
      */
     public void harvestClearCut(Stand st) {
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 1 && st.tr[i].h >= (st.tr[i].si * 0.6) && !st.tr[i].habitat) {
+            if (st.tr[i].isLiving() && st.tr[i].h >= (st.tr[i].si.value * 0.6) && !st.tr[i].habitat) {
                 if (getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                     break;
                 }
-                st.tr[i].out = st.year;
-                st.tr[i].outtype = OutType.HARVESTED;
-                //st.tr[i].no+="_ks";
+                st.tr[i].takeOut(st.year, OutType.HARVESTED);
             }
         }
         //clear all remaining trees if wanted
@@ -1073,13 +1073,13 @@ public class TreatmentElements2 {
                 site = 31.0;
             }
             for (int j = 0; j < st.ntrees; j++) {
-                if (art == st.tr[j].code && site < st.tr[j].si) {
-                    site = st.tr[j].si;
+                if (art == st.tr[j].code && site < st.tr[j].si.value) {
+                    site = st.tr[j].si.value;
                 }
             }
             double spcov = getDegreeOfCover(art, st, false);
             // get crown width at dbh = 7 cm of species at point of ingrowth            
-            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
+            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, SiteIndex.undefined, 1.0, 0.0, 0.0, 0.0, false, false,
                     false, Layer.UNDERSTORY, 0.0, "");
             try {
                 atree.sp = st.addspecies(atree);
@@ -1103,7 +1103,7 @@ public class TreatmentElements2 {
             // create trees
             for (int j = 0; j < npl; j++) {
                 try {
-                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, site, -9.0, -9.0, 0, 0, 0, 0)) {
+                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, si(site), -9.0, -9.0, 0, 0, 0, 0)) {
                         break;
                     }
                 } catch (SpeciesNotDefinedException e) {

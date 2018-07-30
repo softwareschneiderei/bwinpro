@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
 import treegross.base.Stand;
 import treegross.base.Tree;
 
@@ -26,7 +27,7 @@ public class MixedTreeInfo {
                     Double cc66c = st.tr[i].c66c;
                     Double cc66xy = st.tr[i].c66xy;
                     Double cc66cxy = st.tr[i].c66cxy;
-                    Double ssi = st.tr[i].si;
+                    SiteIndex ssi = st.tr[i].si;
                     Double xx = st.tr[i].x;
                     Double yy = st.tr[i].y;
                     int zbx = 0;
@@ -69,7 +70,7 @@ public class MixedTreeInfo {
                     stmt.setDouble(14, cc66c);
                     stmt.setDouble(15, cc66xy);
                     stmt.setDouble(16, cc66cxy);
-                    stmt.setDouble(17, ssi);
+                    stmt.setDouble(17, ssi.value);
                     stmt.setDouble(18, xx);
                     stmt.setDouble(19, yy);
                     stmt.setDouble(20, c66art);

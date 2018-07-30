@@ -1,10 +1,11 @@
 package treegross.dynamic.siteindex;
 
-import java.text.MessageFormat;
 import java.time.Year;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.nfunk.jep.JEP;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.TGFunction;
 
 public class DynamicSiteIndexCalculator {
@@ -26,12 +27,12 @@ public class DynamicSiteIndexCalculator {
         evaluator.parseExpression(modelFunctionText(model));
     }
 
-    public double computeSiteIndex(Year year, double previousSiteIndex, EnvironmentVariables environment) {
+    public SiteIndex computeSiteIndex(Year year, SiteIndex previousSiteIndex, EnvironmentVariables environment) {
         if (!environment.hasDataFor(year)) {
             return previousSiteIndex;
         }
         logger.log(Level.INFO, "Previous site index: {0}", previousSiteIndex);
-        evaluator.setVarValue("prevSI", previousSiteIndex);
+        evaluator.setVarValue("prevSI", previousSiteIndex.value);
         logger.log(Level.INFO, "Mean teamperature: {0}", environment.growingSeasonMeanTemperatureOf(year));
         evaluator.setVarValue("env.tMean", environment.growingSeasonMeanTemperatureOf(year));
         logger.log(Level.INFO, "Mean precipitation sum: {0}", environment.growingSeasonPrecipitationSumOf(year));
@@ -40,7 +41,7 @@ public class DynamicSiteIndexCalculator {
         evaluator.setVarValue("env.NOTotal", environment.nitrogenDepositionOf(year).value);
         logger.log(Level.INFO, "Aridity index: {0}", environment.aridityIndexOf(year));
         evaluator.setVarValue("env.AI", environment.aridityIndexOf(year));
-        return evaluator.getValue();
+        return si(evaluator.getValue());
     }
 
     private static String modelFunctionText(TGFunction model) {

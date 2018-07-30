@@ -18,6 +18,7 @@ package treegross.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static treegross.base.SiteIndex.si;
 import treegross.base.thinning.ModerateThinning;
 import treegross.random.RandomNumber;
 
@@ -82,7 +83,7 @@ public class Tree implements Cloneable {
     /**
      * site index
      */
-    public double si;
+    public SiteIndex si;
     /**
      * reference to species
      */
@@ -224,7 +225,7 @@ public class Tree implements Cloneable {
      * @param remarksx
      */
     public Tree(int codex, String nox, int agex, int outx, OutType outtypex, double dx, double hx, double cbx, double cwx,
-            double six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
+            SiteIndex six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
             boolean habitatTreex, Layer treeLayerx, double volumeDeadwoodx, String remarksx) {
         code = codex;
         no = nox;
@@ -424,9 +425,9 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    public double calculateSiteIndex() {
+    public SiteIndex calculateSiteIndex() {
         FunctionInterpreter fi = new FunctionInterpreter();
-        return fi.getValueForTree(this, sp.spDef.siteindexXML);
+        return si(fi.getValueForTree(this, sp.spDef.siteindexXML));
     }
 
     public double calculateMaxBasalArea() {
@@ -456,14 +457,14 @@ public class Tree implements Cloneable {
 
     public void setMissingData() {
         //if the first tree of a species is added there is no site index
-        if (si <= -9.0 && sp.hbon <= 0.0) {
+        if (si.undefined() && sp.hbon <= 0.0) {
             if (sp.h100 <= 1.3 || Double.isNaN(sp.h100)) {
                 sp.h100 = st.h100;
             }
             initializeSiteIndex(calculateSiteIndex());
         }
-        if (si <= -9.0) {
-            initializeSiteIndex(sp.hbon);
+        if (si.undefined()) {
+            initializeSiteIndex(si(sp.hbon));
         }
         if (cb < 0.01) {
             cb = calculateCb();
@@ -476,7 +477,7 @@ public class Tree implements Cloneable {
         }
     }
 
-    void initializeSiteIndex(double value) {
+    void initializeSiteIndex(SiteIndex value) {
         si = value;
     }
 

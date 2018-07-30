@@ -30,6 +30,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import static treegross.base.ScaleManager.SCALE_AUTO;
+import static treegross.base.SiteIndex.si;
 import treegross.random.RandomNumber;
 
 /**
@@ -420,7 +421,7 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public boolean addTreeFromPlanting(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 1;
             return true;
@@ -449,7 +450,7 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public void addTreeFromNaturalIngrowth(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 2;
             tr[ntrees - 1].layer = Layer.UNDERSTORY;
@@ -478,7 +479,7 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public boolean addTree(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         try {
             addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, Layer.NONE, null);
             return true;
@@ -490,13 +491,13 @@ public class Stand {
 
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
         addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, Layer.NONE, null);
     }
 
     /* add a tree from Dbase NFV*/
     public void addtreeNFV(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, double fac, Layer ou, String rm) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb, double fac, Layer ou, String rm) throws SpeciesNotDefinedException {
         if (ntrees + 1 > maxStandTrees) {
             throw new IllegalStateException(
                     MessageFormat.format("Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}",
@@ -533,7 +534,7 @@ public class Stand {
     /* add a tree to the stand including factor*/
     public void addXMLTree(int codenumber, String number, int age, int out, OutType outtype,
             double d, double h, double cb, double cw,
-            double si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
+            SiteIndex si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
             Layer layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
         Tree tree = new Tree(codenumber, number, age, out, outtype, d, h, cb, cw, si, fac, x, y, z, zb, tzb, hb, layer,
                 volumeDeadwood, remarks);
@@ -954,13 +955,13 @@ public class Stand {
                                     dgGen, sp[i].hg, dMaxGen, ghaToGen * size, true);
                             double si_soll = -9;
                             for (int j = 0; j < this.ntrees; j++) {
-                                if (this.tr[j].si > 0.0 && this.tr[j].code == sp[i].code) {
-                                    si_soll = this.tr[j].si;
+                                if (this.tr[j].si.defined() && this.tr[j].code == sp[i].code) {
+                                    si_soll = this.tr[j].si.value;
                                 }
                             }
                             for (int j = 0; j < this.ntrees; j++) {
-                                if (this.tr[j].si <= -9) {
-                                    this.tr[j].si = si_soll;
+                                if (this.tr[j].si.undefined()) {
+                                    this.tr[j].si = si(si_soll);
                                 }
                             }
                             for (int j = 0; j < this.ntrees; j++) {
@@ -1448,16 +1449,16 @@ public class Stand {
             double avSiteIndex = 0.0;
             double nSiteIndex = 0.0;
             for (int j = 0; j < ntrees; j++) {
-                if (tr[j].code == sp[jj].code && tr[j].si > 0) {
-                    avSiteIndex = avSiteIndex + tr[j].si * tr[j].fac;
+                if (tr[j].code == sp[jj].code && tr[j].si.defined()) {
+                    avSiteIndex = avSiteIndex + tr[j].si.value * tr[j].fac;
                     nSiteIndex = nSiteIndex + tr[j].fac;
                 }
             }
             if (nSiteIndex > 0) {
                 avSiteIndex = avSiteIndex / nSiteIndex;
                 for (int j = 0; j < ntrees; j++) {
-                    if (tr[j].code == sp[jj].code && tr[j].si < 0) {
-                        tr[j].initializeSiteIndex(avSiteIndex);
+                    if (tr[j].code == sp[jj].code && tr[j].si.undefined()) {
+                        tr[j].initializeSiteIndex(si(avSiteIndex));
                     }
                 }
                 sp[jj].hbon = avSiteIndex;

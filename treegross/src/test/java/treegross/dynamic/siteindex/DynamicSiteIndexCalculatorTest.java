@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
 import org.nfunk.jep.ParseException;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.TGTextFunction;
 
 public class DynamicSiteIndexCalculatorTest {
@@ -15,7 +17,7 @@ public class DynamicSiteIndexCalculatorTest {
     public void calculateDSIforSpruce() throws ParseException {
         DynamicSiteIndexCalculator calculator = new DynamicSiteIndexCalculator(spruceFunction);
         
-        assertThat(calculator.computeSiteIndex(Year.of(2018), 39.80825d, testEnvironment()))
+        assertThat(calculator.computeSiteIndex(Year.of(2018), si(39.80825), testEnvironment()).value)
                 .isCloseTo(39.78825479, delta);
     }
     
@@ -25,7 +27,7 @@ public class DynamicSiteIndexCalculatorTest {
     @Test
     public void computeConstantDSIWhenClimateDataMissing() {
         DynamicSiteIndexCalculator calculator = new DynamicSiteIndexCalculator(spruceFunction);
-        final double previousSiteIndex = 40.762d;
+        final SiteIndex previousSiteIndex = si(40.762d);
         
         assertThat(calculator.computeSiteIndex(Year.of(2201), previousSiteIndex, testEnvironment())).isEqualTo(previousSiteIndex);
     }

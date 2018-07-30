@@ -3,22 +3,22 @@ package treegross.dynamic.siteindex;
 import java.time.Year;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import treegross.base.SiteIndex;
 
 public class DynamicSiteIndexProgression {
     public int year;
-    public final double si0;
+    public final SiteIndex si0;
     /**
      * one site index per year
      */
-    // TODO: Introduce SiteIndex type instead of double
-    public Map<Year, Double> siIntermediates = new LinkedHashMap<>();
+    public Map<Year, SiteIndex> siIntermediates = new LinkedHashMap<>();
 
-    public DynamicSiteIndexProgression(double initialSiteIndex) {
+    public DynamicSiteIndexProgression(SiteIndex initialSiteIndex) {
         super();
         si0 = initialSiteIndex;
     }
     
-    public double endSiteIndex() {
+    public SiteIndex endSiteIndex() {
         return siIntermediates.entrySet().stream()
                 .max((a, b) -> a.getKey().compareTo(b.getKey()))
                 .map(entry -> entry.getValue())

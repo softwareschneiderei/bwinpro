@@ -38,6 +38,7 @@ import java.text.MessageFormat;
 
 import javax.swing.*;
 import org.jdom.JDOMException;
+import static treegross.base.SiteIndex.si;
 
 public class TgDesign extends JPanel {
 
@@ -361,8 +362,8 @@ public class TgDesign extends JPanel {
                         int lay = Integer.parseInt(jComboBox5.getSelectedItem().toString());
                         gdb.weibull(st, Integer.parseInt(codex), Integer.parseInt(td2.getText()), parseDouble(td3.getText()), parseDouble(td4.getText()), parseDouble(td5.getText()), parseDouble(td6.getText()) * st.size, false);
 // missing data fuer die Verteilung generieren
-                        if (siteIndexFromInput() > -9) {
-                            st.forTreesMatching(tree -> tree.si <= -9d, tree -> tree.si = siteIndexFromInput());
+                        if (siteIndexFromInput().defined()) {
+                            st.forTreesMatching(tree -> tree.si.undefined(), tree -> tree.si = siteIndexFromInput());
                         }
                         SIofDistrib siod = new SIofDistrib();
                         FunctionInterpreter fi = new FunctionInterpreter();
@@ -449,7 +450,7 @@ public class TgDesign extends JPanel {
                     String codex = (String) (speciesCodeComboBox.getSelectedItem());
                     int m = codex.indexOf(":");
                     codex = codex.substring(0, m);
-                    double bon = siteIndexFromInput();
+                    SiteIndex bon = siteIndexFromInput();
                     double hei = parseDouble(td4.getText());
                     double d = hei;
                     int artx = Integer.parseInt(codex);
@@ -457,7 +458,7 @@ public class TgDesign extends JPanel {
                     double gx = 0.0;
                     if (d < 7.0) {
 // get crown width at dbh= 7 cm of species at point of ingrowth            
-                        Tree atree = new Tree(artx, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
+                        Tree atree = new Tree(artx, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, SiteIndex.undefined, 1.0, 0.0, 0.0, 0.0, false, false,
                                 false, Layer.UNDERSTORY, 0.0, "");
                         try {
                             atree.sp = st.addspecies(atree);
@@ -497,12 +498,12 @@ public class TgDesign extends JPanel {
         frame.updatetp(false);
     }//GEN-LAST:event_ActionPerformed
 
-    private double siteIndexFromInput() {
+    private SiteIndex siteIndexFromInput() {
         try {
-            return parseDouble(siteIndexTextField.getText());
+            return si(parseDouble(siteIndexTextField.getText()));
         } catch (NumberFormatException e) {
             logger.log(Level.INFO, "Could not parse site index from user input. Leaving unspecified", e);
-            return -9;
+            return SiteIndex.undefined;
         }
     }
 

@@ -6,6 +6,7 @@ package forestsimulator.dbaccess;
 
 import java.sql.*;
 import treegross.base.*;
+import static treegross.base.SiteIndex.si;
 
 /**
  *
@@ -45,8 +46,9 @@ public class EtafelSim {
                 gdb.weibull(st, art, alt, dg, hg, d100, g * st.size * mixPerc, false);
 // missing data fuer die Verteilung generieren
                 for (int j = 0; j < st.ntrees; j++) {
-                    if (st.tr[j].si <= -9) {
-                        st.tr[j].si = yc;
+                    if (st.tr[j].si.undefined()) {
+                        // TODO: check if this assignment is correct
+                        st.tr[j].si = si((double) yc);
                     }
                 }
                 SIofDistrib siod = new SIofDistrib();

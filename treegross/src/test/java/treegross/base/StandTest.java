@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.Test;
+import static treegross.base.SiteIndex.si;
 
 public class StandTest {
     
@@ -94,7 +95,7 @@ public class StandTest {
         stand.ntrees = stand.maxStandTrees;
         
         assertThatThrownBy(() -> {
-            stand.addtreefac(1, "", 10, 0, 5, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+            stand.addtreefac(1, "", 10, 0, 5, 7, 0, 0, SiteIndex.undefined, 0, 0, 0, 0, 0, 0, 0);
         }).hasMessage("Maximum tree number reached! Tree not added! no name 0 d=5 species=1 height=7");
     }
 
@@ -108,14 +109,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 9);
         
-        s.addtreefac(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -1.9, 0, 1, 1, 1.5);
+        s.addtreefac(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, si(15.1), 2.1, 3.2, -1.9, 0, 1, 1, 1.5);
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(9, "n1", 12, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.5, 0, 2014, Layer.NONE, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2014, Layer.NONE, 0, null, si(15.1), -1,
                         false, true, true);
     }
 
@@ -129,14 +130,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 7);
         
-        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isTrue();
+        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, si(15.1), 2.1, 3.2, -0.1, 0, 1, 0)).isTrue();
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 0, 2013, Layer.NONE, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 0, 2013, Layer.NONE, 0, null, si(15.1), -1,
                         false, true, false);
     }
 
@@ -150,14 +151,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 7);
         
-        assertThat(s.addTreeFromPlanting(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.5, 0, 1, 0)).isTrue();
+        assertThat(s.addTreeFromPlanting(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, si(15.1), 2.1, 3.2, -0.5, 0, 1, 0)).isTrue();
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 1, 2013, Layer.NONE, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 1, 2013, Layer.NONE, 0, null, si(15.1), -1,
                         false, true, false);
     }
 
@@ -171,14 +172,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 7);
         
-        s.addTreeFromNaturalIngrowth(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.5, 0, 1, 0);
+        s.addTreeFromNaturalIngrowth(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, si(15.1), 2.1, 3.2, -0.5, 0, 1, 0);
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(7, "n10", 19, 1, 12.9, 6.4, 5.5, 4.3, 2.1, 3.2, 0.0,
-                        OutType.STANDING, 1.0, 2, 2013, Layer.UNDERSTORY, 0, null, 15.1, -1,
+                        OutType.STANDING, 1.0, 2, 2013, Layer.UNDERSTORY, 0, null, si(15.1), -1,
                         false, true, false);
     }
 
@@ -190,7 +191,7 @@ public class StandTest {
         Stand s = new Stand();
         s.ntrees = s.maxStandTrees;
         
-        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, 15.1, 2.1, 3.2, -0.1, 0, 1, 0)).isFalse();
+        assertThat(s.addTree(7, "n1", 18, 1, 12.9, 6.4, 5.5, 4.3, si(15.1), 2.1, 3.2, -0.1, 0, 1, 0)).isFalse();
     }
 
     /*
@@ -203,14 +204,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 1);
         
-        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
+        s.addtreeNFV(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, si(15.1), 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(1, "number", 23, 2, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
-                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", si(15.1), -1,
                         true, false, true);
     }
     
@@ -224,14 +225,14 @@ public class StandTest {
         s.clear();
         addSpeciesDef(s, 1);
         
-        s.addtreeNFV(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 15.1, 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
+        s.addtreeNFV(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, si(15.1), 2.1, 3.2, -4.31, 1, 0, 1, 1.5, Layer.ZWISCHENSTAND, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
                 .extracting("code", "no", "age", "out", "d", "h", "cb", "cw", "x", "y", "z",
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat")
                 .containsExactly(1, "number", 23, -1, 12.3, 2.4, 3.5, 4.3, 2.1, 3.2, -4.31,
-                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", 15.1, -1,
+                        OutType.STANDING, 1.5, 0, 2015, Layer.ZWISCHENSTAND, 2, "remark", si(15.1), -1,
                         true, false, true);
     }
     
@@ -247,7 +248,7 @@ public class StandTest {
         
         s.addXMLTree(1, "number", 23, 9, OutType.FALLEN,
                 2.4, 12.4, 3.5, 4.3,
-                0.89, 1.7, 15.1, 2.1, -2.22, true, false, false,
+                si(0.89), 1.7, 15.1, 2.1, -2.22, true, false, false,
                 Layer.UPPERSTORY, 9.32, "remark");
         assertThat(s.trees()).size().isEqualTo(1);
         assertThat(s.trees()).first()
@@ -255,7 +256,7 @@ public class StandTest {
                         "outtype", "fac", "origin", "year", "layer", "ou", "remarks", "si", "group",
                         "crop", "tempcrop", "habitat", "volumeDeadwood")
                 .containsExactly(1, "number", 23, 9, 2.4, 12.4, 3.5, 4.3, 15.1, 2.1, -2.22,
-                        OutType.FALLEN, 1.7, 0, 0, Layer.UPPERSTORY, 0, "remark", 0.89, 0,
+                        OutType.FALLEN, 1.7, 0, 0, Layer.UPPERSTORY, 0, "remark", si(0.89), 0,
                         true, false, false, 9.32);
     }
     

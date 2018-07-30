@@ -9,6 +9,7 @@ import java.util.*;
 import javax.swing.*;
 import java.net.*;
 import javax.swing.table.DefaultTableModel;
+import static treegross.base.SiteIndex.si;
 
 /**
  * EditorPanel
@@ -125,7 +126,7 @@ public class EditorPanel extends JPanel {
             dStr = dStr.trim();
             if (dStr.length() > 0) {
                 try {
-                    st.addTree(getInt((String) treeTable.getValueAt(i, 0)), (String) treeTable.getValueAt(i, 1), getInt((String) treeTable.getValueAt(i, 2)), getInt((String) treeTable.getValueAt(i, 8)), getDouble((String) treeTable.getValueAt(i, 3)), getDouble((String) treeTable.getValueAt(i, 4)), getDouble((String) treeTable.getValueAt(i, 6)), getDouble((String) treeTable.getValueAt(i, 7)), getDouble((String) treeTable.getValueAt(i, 5)), getDouble((String) treeTable.getValueAt(i, 10)), getDouble((String) treeTable.getValueAt(i, 11)), getDouble((String) treeTable.getValueAt(i, 12)), 0, 0, 0);
+                    st.addTree(getInt((String) treeTable.getValueAt(i, 0)), (String) treeTable.getValueAt(i, 1), getInt((String) treeTable.getValueAt(i, 2)), getInt((String) treeTable.getValueAt(i, 8)), getDouble((String) treeTable.getValueAt(i, 3)), getDouble((String) treeTable.getValueAt(i, 4)), getDouble((String) treeTable.getValueAt(i, 6)), getDouble((String) treeTable.getValueAt(i, 7)), si(getDouble((String) treeTable.getValueAt(i, 5))), getDouble((String) treeTable.getValueAt(i, 10)), getDouble((String) treeTable.getValueAt(i, 11)), getDouble((String) treeTable.getValueAt(i, 12)), 0, 0, 0);
                 } catch (SpeciesNotDefinedException ex) {
                     Logger.getLogger(EditorPanel.class.getName()).log(Level.SEVERE, null, ex);
                 }

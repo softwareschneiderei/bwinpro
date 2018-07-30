@@ -51,13 +51,10 @@ public class LoadProbekreis {
             }
         }
 // Probekreis aufbauen
-        double xp = 0.0;
-        double yp = 0.0;
-        double radius = 0.0;
-        radius = Math.sqrt(10000.0 * st.size / Math.PI);
+        double radius = Math.sqrt(10000.0 * st.size / Math.PI);
         for (int i = 0; i < 18; i++) {
-            xp = radius + Math.sin(Math.PI * i * 20.0 / 180.0) * radius;
-            yp = radius + Math.cos(Math.PI * i * 20.0 / 180.0) * radius;
+            double xp = radius + Math.sin(Math.PI * i * 20.0 / 180.0) * radius;
+            double yp = radius + Math.cos(Math.PI * i * 20.0 / 180.0) * radius;
             st.addcornerpoint("ECKP" + i, xp, yp, 0.0);
         }
         st.center.no = "circle";
@@ -115,8 +112,8 @@ public class LoadProbekreis {
                         double h = rs.getDouble("DatPh2_Vorr_Hoehe") / 10.0;
                         double ka = rs.getDouble("DatPh2_Vorr_Krone") / 10.0;
                         String nr = rs.getString("DatPh2_Vorr_ID");
-                        xp = radius + Math.sin(Math.PI * win / 200.0) * ent;
-                        yp = radius + Math.cos(Math.PI * win / 200.0) * ent;
+                        double xp = radius + Math.sin(Math.PI * win / 200.0) * ent;
+                        double yp = radius + Math.cos(Math.PI * win / 200.0) * ent;
                         double fac = 88.419 * st.size;
                         if (d >= 30.0) {
                             fac = 18.835 * st.size;
@@ -189,7 +186,7 @@ public class LoadProbekreis {
                                     yp = -9.0;
                                 }
 
-                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, -9.0, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
+                                st.addtreeNFV(art, nrx, alt, out, d, h, ka, -9.0, SiteIndex.undefined, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
                             }
                         }
                     }
@@ -268,7 +265,7 @@ public class LoadProbekreis {
                     double xp = 25 + Math.sin(Math.PI * win / 180.0) * ent;
                     double yp = 25 + Math.cos(Math.PI * win / 180.0) * ent;
                     double fac = 1.0;
-                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, -9.0, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
+                    st.addtreeNFV(art, nr, alt, out, d, h, ka, kb, SiteIndex.undefined, xp, yp, -9.0, 0, 0, 0, fac, Layer.NONE, "");
                 }
             }
         } catch (Exception e) {

@@ -3,6 +3,8 @@ package forestsimulator.dbaccess.tools;
 import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
 import java.io.File;
 import java.time.Year;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
 import treegross.dynamic.siteindex.EnvironmentStandardizer;
@@ -18,8 +20,8 @@ public class DynamicSiteIndexCalculationDemo {
         return result;
     }
     
-    public static double initialSiteIndex() {
-        return 39.80825;
+    public static SiteIndex initialSiteIndex() {
+        return si(39.80825);
     }
     
     public static void main(String[] args) {

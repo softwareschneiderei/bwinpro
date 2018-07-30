@@ -25,8 +25,10 @@
 package treegross.base;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static treegross.base.SiteIndex.si;
 import treegross.random.RandomNumber;
 
 public class Ingrowth2 implements PlugInIngrowth {
@@ -40,7 +42,7 @@ public class Ingrowth2 implements PlugInIngrowth {
         411, 412, 421, 422, 430, 431, 441, 451, 452,
         511, 512, 513, 521, 525,/*531,*/ 611, 711, 731, 811, 812, 999};
 
-    ArrayList<Integer> existingSpecies = new ArrayList<Integer>();
+    List<Integer> existingSpecies = new ArrayList<>();
 
     int nExistingSpecies = 0;
 
@@ -213,8 +215,8 @@ public class Ingrowth2 implements PlugInIngrowth {
                         // Find Site Index
                         int nSiteIndex = 0;
                         for (int ii = 0; ii < st.ntrees; ii++) {
-                            if (st.tr[ii].code == treeCode && st.tr[ii].si > 0) {
-                                siteIndex = siteIndex + st.tr[ii].si;
+                            if (st.tr[ii].code == treeCode && st.tr[ii].si.defined()) {
+                                siteIndex += st.tr[ii].si.value;
                                 nSiteIndex++;
                             }
                         }
@@ -222,8 +224,8 @@ public class Ingrowth2 implements PlugInIngrowth {
                             siteIndex = siteIndex / nSiteIndex;
                         } else {
                             for (int ii = 0; ii < st.ntrees; ii++) {
-                                if (st.tr[ii].si > 0 && st.tr[ii].code < 900) {
-                                    siteIndex = siteIndex + st.tr[ii].si;
+                                if (st.tr[ii].si.defined() && st.tr[ii].code < 900) {
+                                    siteIndex += st.tr[ii].si.value;
                                     nSiteIndex++;
                                 }
                             }
@@ -255,7 +257,7 @@ public class Ingrowth2 implements PlugInIngrowth {
                         if (treeCode != -1) {
                             try {
                                 // Change of Model, we will start one tree as a placeholder for regeneration 5yr, dbh 0.25 cm, Height 0.5 m, cw = 5m2
-                                st.addTreeFromNaturalIngrowth(treeCode, "v" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5, 0.1, 2.52, siteIndex, -9.0, -9.0, 0, 0, 0, 0); //first is site index
+                                st.addTreeFromNaturalIngrowth(treeCode, "v" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5, 0.1, 2.52, si(siteIndex), -9.0, -9.0, 0, 0, 0, 0); //first is site index
                             } catch (SpeciesNotDefinedException ex) {
                                 LOGGER.log(Level.SEVERE, "treegross", ex);
                             }
@@ -955,7 +957,7 @@ public class Ingrowth2 implements PlugInIngrowth {
             }
             for (int i = 0; i < ntr; i++) {
                 try {
-                    st.addTreeFromNaturalIngrowth(452, "tkir", 5, -1, 0.25, 0.5, 0.1, 2.52, 10.0, -9.0, -9.0, 0, 0, 0, 0);  //first is site index
+                    st.addTreeFromNaturalIngrowth(452, "tkir", 5, -1, 0.25, 0.5, 0.1, 2.52, si(10.0), -9.0, -9.0, 0, 0, 0, 0);  //first is site index
                 } catch (SpeciesNotDefinedException e) {
                     System.err.println(e);
                 }
@@ -986,7 +988,7 @@ public class Ingrowth2 implements PlugInIngrowth {
         ngrass = (int) (Math.round(st.random.nextUniform() * ngrass));
         for (int i = 0; i < ngrass; i++) {
             try {
-                st.addTreeFromNaturalIngrowth(999, "grass", 5, -1, 0.25, 0.5, 0.1, 2.52, 2, -9.0, -9.0, 0, 0, 0, 0);  //first is site index
+                st.addTreeFromNaturalIngrowth(999, "grass", 5, -1, 0.25, 0.5, 0.1, 2.52, si(2), -9.0, -9.0, 0, 0, 0, 0);  //first is site index
             } catch (SpeciesNotDefinedException e) {
                 System.err.println(e);
             }

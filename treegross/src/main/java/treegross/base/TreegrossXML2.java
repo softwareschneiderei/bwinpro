@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.JDOMException;
+import static treegross.base.SiteIndex.si;
 
 /**
  * TreeGrOSS : TreegrossXML2.java version 7.5 18-Mar-2010 author	Juergen Nagel
@@ -262,7 +263,7 @@ public class TreegrossXML2 {
                             Double.parseDouble(baum.getChild("Hoehe_m").getText()),
                             Double.parseDouble(baum.getChild("Kronenansatz_m").getText()),
                             Double.parseDouble(baum.getChild("MittlererKronenDurchmesser_m").getText()),
-                            Double.parseDouble(baum.getChild("SiteIndex_m").getText()),
+                            si(Double.parseDouble(baum.getChild("SiteIndex_m").getText())),
                             Double.parseDouble(baum.getChild("Flaechenfaktor").getText()),
                             Double.parseDouble(baum.getChild("RelativeXKoordinate_m").getText()),
                             Double.parseDouble(baum.getChild("RelativeYKoordinate_m").getText()),

@@ -193,7 +193,7 @@ public class LoadTreegrossStand {
                             if (i > 0) {
                                 nrx = nr + "_" + i;
                             }
-                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, fac, Layer.fromInt(ou), rm);
+                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, SiteIndex.undefined, -9.0, -9.0, -9.0, zf, nx, nx, fac, Layer.fromInt(ou), rm);
                         }
                         if (out > 0) {
                             stand.tr[stand.ntrees - 1].outtype = OutType.THINNED;
@@ -444,7 +444,7 @@ public class LoadTreegrossStand {
                 stmt.setDouble(16, tree.c66c);
                 stmt.setDouble(17, tree.c66xy);
                 stmt.setDouble(18, tree.c66cxy);
-                stmt.setDouble(19, tree.si);
+                stmt.setDouble(19, tree.si.value);
                 stmt.setDouble(20, tree.x);
                 stmt.setDouble(21, tree.y);
                 stmt.setInt(22, boolToDB(tree.crop));

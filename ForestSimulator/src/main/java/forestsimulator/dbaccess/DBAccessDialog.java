@@ -34,6 +34,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
+import static treegross.base.SiteIndex.si;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.ThinningType;
@@ -945,7 +946,7 @@ public class DBAccessDialog extends JDialog {
                         GenDistribution gdb = new GenDistribution();
                         gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size, false);
                         // missing data fuer die Verteilung generieren
-                        st.forTreesMatching(tree -> tree.si <= -9, tree -> tree.si = h100);
+                        st.forTreesMatching(tree -> tree.si.undefined(), tree -> tree.si = si(h100));
                         SIofDistrib siod = new SIofDistrib();
                         FunctionInterpreter fi = new FunctionInterpreter();
                         siod.si(st, art, alt, dg, hg);
