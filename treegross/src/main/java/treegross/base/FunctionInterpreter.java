@@ -69,7 +69,7 @@ public class FunctionInterpreter {
             jep.addVariable("t.out", t.out);
         }
         if (function.contains("t.si")) {
-            jep.addVariable("t.si", t.si);
+            jep.addVariable("t.si", t.si.value);
         }
         if (function.contains("t.ihpot")) {
             jep.addVariable("t.ihpot", t.ihpot);

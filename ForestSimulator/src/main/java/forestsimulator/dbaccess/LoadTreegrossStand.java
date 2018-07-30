@@ -420,8 +420,8 @@ public class LoadTreegrossStand {
     
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBaum "
-                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, zb, dsi) "
-                + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, zb) "
+                + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (Tree tree : st.trees()) {
                 if (tree.no.contains("_")) {
                     continue;
