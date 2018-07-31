@@ -763,6 +763,9 @@ public class TreatmentElements2 {
     }
 
     private static double calculateMaxBasalArea(Stand st) {
+        if (st.nspecies == 0) {
+            LOGGER.log(Level.SEVERE, "Stand contains no species.");
+        }
         double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
         if (st.trule.thinningIntensity == 0.0) {
             maxStandBasalArea *= 100.0;
@@ -923,6 +926,10 @@ public class TreatmentElements2 {
 
     /**
      * calculate overlap area of two circle only if they overlap
+     * @param r1
+     * @param r2
+     * @param e
+     * @return 
      */
     public static double overlap(double r1, double r2, double e) {
         double x, y, f;

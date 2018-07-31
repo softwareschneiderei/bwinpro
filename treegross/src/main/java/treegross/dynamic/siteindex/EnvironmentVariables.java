@@ -74,7 +74,9 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
     
     public EnvironmentVariables calculate5YearMeans() {
         final SlidingMeanCalculator<GrowingSeasonValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
-        slidingMeanCalculator.fillCalculatorWindow(iterator().next());
+        if (!growingSeasons.isEmpty()) {
+            slidingMeanCalculator.fillCalculatorWindow(iterator().next());
+        }
         return calculateMeanWith(slidingMeanCalculator);
     }
 
