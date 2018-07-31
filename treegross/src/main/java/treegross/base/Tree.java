@@ -184,13 +184,8 @@ public class Tree implements Cloneable {
     // for Viswin 
     /* Ober- u. Unterstand */
     public int ou = 0;
-    /**
-     * index of vitality
-     */    
-    public double vitality = 1;
 
     public boolean outBySkidtrail = false;
-    public int bioMass = 0; // kg   
 
     private final static Logger LOGGER = Logger.getLogger(Tree.class.getName());
 
@@ -308,9 +303,7 @@ public class Tree implements Cloneable {
         clone.zGrad = this.zGrad;
         clone.volumeDeadwood = this.volumeDeadwood;
         clone.degreeOfDecay = this.degreeOfDecay;
-        clone.vitality = vitality;
         clone.outBySkidtrail = this.outBySkidtrail;
-        clone.bioMass = this.bioMass;
         clone.group = this.group;
         return clone;
     }
