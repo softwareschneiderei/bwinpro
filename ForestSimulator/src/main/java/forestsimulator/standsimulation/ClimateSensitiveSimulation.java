@@ -3,10 +3,13 @@ package forestsimulator.standsimulation;
 import forestsimulator.util.StopWatch;
 import java.text.MessageFormat;
 import java.time.Year;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.stream.IntStream;
-import static treegross.base.SiteIndex.si;
+import treegross.base.SiteIndex;
 import treegross.base.Stand;
+import treegross.base.Tree;
 import static treegross.dynamic.siteindex.EnvironmentStandardizer.standardize;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.EnvironmentalDataProvider;
@@ -31,12 +34,19 @@ public class ClimateSensitiveSimulation extends Simulation {
                 if (!environmentVariables.hasDataFor(year)) {
                     logToBatchLog(MessageFormat.format("No climate data for year {0} in scenario {1}. Using previous site index.", year, climateScenario));
                 }
-                // TODO: check if computing for each species is enough
-                getStand().forAllTrees(tree -> 
-                    tree.si = tree.sp.spDef.dsiCalculator.computeSiteIndex(year, tree.si, environmentVariables)
-                );
+                Map<Integer, SiteIndex> speciesSi = new HashMap<>();
+                getStand().forAllTrees(tree -> {
+                    if (!speciesSi.containsKey(tree.sp.code)) {
+                        speciesSi.put(tree.sp.code, dsiFor(tree, year));
+                    }
+                    tree.si = speciesSi.get(tree.sp.code);
+                });
         });
         dsi.printElapsedTime();
+    }
+    
+    private SiteIndex dsiFor(Tree tree, Year year) {
+        return tree.sp.spDef.dsiCalculator.computeSiteIndex(year, tree.si, environmentVariables);
     }
     
     private void logToBatchLog(String message) {
