@@ -35,7 +35,7 @@ public class ClimateSensitiveSimulation extends Simulation {
                     logToBatchLog(MessageFormat.format("No climate data for year {0} in scenario {1}. Using previous site index.", year, climateScenario));
                 }
                 Map<Integer, SiteIndex> speciesSi = new HashMap<>();
-                getStand().forAllTrees(tree -> {
+                getStand().forTreesMatching(tree -> tree.isLiving(), tree -> {
                     if (!speciesSi.containsKey(tree.sp.code)) {
                         speciesSi.put(tree.sp.code, dsiFor(tree, year));
                     }
