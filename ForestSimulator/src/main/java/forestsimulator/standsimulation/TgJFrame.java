@@ -148,10 +148,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 // Simple parallel project  or 3D View of stand              
         JPanel ppneu = new JPanel();
         if (grafik3D) {
-            manager3d = new Manager3D(new JPanel(), programDir, true);
+            manager3d = new Manager3D(ppneu, programDir, true);
             if (manager3d.get3DAvailable()) {
                 ppneu.setPreferredSize(new Dimension((((screenSize.width - 140) / 2) - (screenSize.width / 50)), (screenSize.height / 2) - (screenSize.height / 50)));
-                manager3d = new Manager3D(ppneu, programDir, true);
                 grafik3D = true;
             }
         } else {

@@ -120,22 +120,18 @@ public class Stand3DScene extends JPanel {
         setupUniverse();
         //canvas.getView().setTransparencySortingPolicy(View.TRANSPARENCY_SORT_GEOMETRY);
         BranchGroup newScene = createScene();
-        attachScene(newScene);
+        if (scene != null) {
+            universe.getLocale().replaceBranchGraph(scene, newScene);
+        } else {
+            universe.getLocale().addBranchGraph(newScene);
+        }
+        scene = newScene;
         // Set up the HUD
         //hud3d =new HUD3D(universe);   
         pickCanvas = new PickCanvas(canvas, scene);
         pickCanvas.setMode(PickCanvas.GEOMETRY);
         pickCanvas.setTolerance(0f);
         System.out.println("Stand3DScene: scene build.");
-    }
-
-    private void attachScene(BranchGroup newScene) {
-        if (scene == null) {
-            universe.addBranchGraph(newScene);
-            scene = newScene;
-            return;
-        }
-        universe.getLocale().replaceBranchGraph(scene, newScene);
     }
 
     private Texture2D[] copyTextures(Texture2D[] source) {
