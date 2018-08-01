@@ -44,7 +44,7 @@ public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvi
                         "select * from input_data where Bundesland = ? and Wuchsbezirk = ? and Scenario = ?"
                         + " and month >= ? and month <= ?")) {
             ps.setString(1, location.federalState);
-            ps.setString(2, location.subRegion);
+            ps.setString(2, location.growingSubRegion);
             ps.setString(3, scenario);
             ps.setInt(4, vegetationStart.getValue());
             ps.setInt(5, vegetationEnd.getValue());

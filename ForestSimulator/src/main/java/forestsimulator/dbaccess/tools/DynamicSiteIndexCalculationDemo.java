@@ -35,8 +35,8 @@ public class DynamicSiteIndexCalculationDemo {
         System.out.println("Dynamic site index after " + dsiProjection.length + " years: " + dsi.endSiteIndex());
     }
 
-    private static EnvironmentVariables loadEnvironmentData(String region, String subRegion, String scenario) {
-        return new DatabaseEnvironmentalDataProvider(new File("data_standsimulation/climate_data.mdb")).environmentalDataFor(new StandLocation(region, subRegion), scenario);
+    private static EnvironmentVariables loadEnvironmentData(String federalState, String subRegion, String scenario) {
+        return new DatabaseEnvironmentalDataProvider(new File("data_standsimulation/climate_data.mdb")).environmentalDataFor(new StandLocation(federalState, subRegion), scenario);
     }
 
 }
