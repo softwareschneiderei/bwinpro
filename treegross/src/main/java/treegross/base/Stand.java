@@ -1073,7 +1073,10 @@ public class Stand {
                 }
                 k++;
             }
-            d100 = 200 * Math.sqrt(d100 / (Math.PI * jj));
+            // TODO: decide what to do if there are no living trees in stand, see http://issuetracker.intranet:20002/browse/BWIN-78
+            if (d100 != 0) {
+                d100 = 200 * Math.sqrt(d100 / (Math.PI * jj));
+            }
         }
 
         // calculate diameter-height curve  

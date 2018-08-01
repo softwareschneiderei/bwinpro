@@ -579,8 +579,8 @@ public class LoadTreegrossStand {
 
             stmt.execute();
         } catch (SQLException e) {
-            System.out.println("d100" + st.d100);
-            logger.log(Level.SEVERE, "d100={0} h100= {1}", new Object[]{st.d100, st.h100});
+            System.out.println("d100=" + st.d100);
+            logger.log(Level.SEVERE, "d100={0} h100= {1}", new Object[]{String.valueOf(st.d100), String.valueOf(st.h100)});
             logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }
