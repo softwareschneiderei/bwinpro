@@ -817,22 +817,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         try {
             PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
             dialog.startDialog(this, st, user);
-            st.sortbyd();
-            st.missingData();
-            st.descspecies();
-            // set Löwe default
-//                       GenerateXY gxy =new GenerateXY();
-//                       gxy.zufall(st);
-            if (grafik3D) {
-                manager3d.setStand(st);
-            }
-            tfUpdateTrue = true;
-            updatetp(false);
-            tfUpdateTrue = true;
-
-            st.ingrowthActive = false;
-            gr.starten();
-            showIframes();
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
             LOGGER.info(ex.toString());
         }
@@ -846,8 +830,21 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     @Override
-    public void StandChanged(StandChangeEvent evt) {
+    public void standChanged(StandChangeEvent evt) {
         LOGGER.log(Level.FINE, "stand changed {0}", evt.getName());
+        if (evt.getAction().equals(Stand.loadedEvent)) {
+            if (grafik3D) {
+                manager3d.setStand(st);
+            }
+            tfUpdateTrue = true;
+            updatetp(false);
+            tfUpdateTrue = true;
+
+            st.ingrowthActive = false;
+            gr.starten();
+            showIframes();
+            return;
+        }
         StopWatch update = new StopWatch("Updating tp").start();
         updatetp(false);
         update.printElapsedTime();

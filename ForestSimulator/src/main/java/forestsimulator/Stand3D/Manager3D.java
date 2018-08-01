@@ -55,18 +55,18 @@ public class Manager3D implements ActionListener {
     private boolean showinfo = true;
     private boolean showfog = true;
     private boolean showmesh = true;
-    private int[] speciestoshow = null;
     private File texpath = null;
     //new swing components:
-    private JPanel jPanel2;
+    private JPanel scenePanel;
     private ToolBar3D toolbar3d;
-
-    public boolean isStandLoaded = false;
 
     /**
      * Creates a new instance of Manager3D homepanel (JPanel) the place where
      * teh 3dcanvas should be drawn texturepath (String) the path to the
      * textures for crowns etc if null the option texture will not be available
+     * @param homepanel
+     * @param texturepath
+     * @param showtoolbar
      */
     public Manager3D(JPanel homepanel, File texturepath, boolean showtoolbar) {
         home = homepanel;
@@ -78,7 +78,7 @@ public class Manager3D implements ActionListener {
             new Query3DProperties().print();
             available3d = true;
         }
-        if (showtoolbar == false) {
+        if (!showtoolbar) {
             showinfo = false;
             showfog = false;
             showmesh = false;
@@ -97,16 +97,17 @@ public class Manager3D implements ActionListener {
     private void initSwing(File iconpath) {
         home.setLayout(new BorderLayout());
         home.setOpaque(false);
-        jPanel2 = new JPanel();
-        jPanel2.setLayout(new BorderLayout());
-        home.add("Center", jPanel2);
+        scenePanel = new JPanel();
+        scenePanel.setLayout(new BorderLayout());
+        home.add(scenePanel, BorderLayout.CENTER);
         // ToolBar:
         if (iconpath != null) {
             toolbar3d = new ToolBar3D(this, true, iconpath);
         } else {
             toolbar3d = new ToolBar3D(this, false, iconpath);
         }
-        home.add("North", toolbar3d);
+        home.add(toolbar3d, BorderLayout.NORTH);
+        add3dScene();
     }
 
     public boolean get3DAvailable() {
@@ -165,22 +166,18 @@ public class Manager3D implements ActionListener {
         setStand(stand, Arrays.stream(stand.sp, 0, stand.nspecies).mapToInt(species -> species.code).toArray());
     }
 
-    public void setStand(Stand stand, int[] species) {
+    private void setStand(Stand stand, int[] species) {
         if (!available3d) {
             return;
         }
-        speciestoshow = species;
-        clean3D();
         st = stand;
-        if (stand != null) {
-            add3dScene();
-        }
+        scene.loadStand(st, species);
     }
 
     private void add3dScene() {
-        scene = new Stand3DScene(st, speccol, showharvested, textured, treestatus, showinfo, showfog, showmesh, speciestoshow, textures);
-        jPanel2.add(scene);
-        isStandLoaded = true;
+        System.out.println("Adding new 3d scene");
+        scene = new Stand3DScene(speccol, showharvested, textured, treestatus, showinfo, showfog, showmesh, textures);
+        scenePanel.add(scene);
         scene.setPickFocus();
     }
 
@@ -190,13 +187,6 @@ public class Manager3D implements ActionListener {
         }
         scene.setShowingSpecies(null);
         scene.setNewTreeDataAndRefresh(null);
-    }
-
-    public void refreshStand(int[] species) {
-        if (scene != null) {
-            scene.setShowingSpecies(species);
-            scene.setNewTreeDataAndRefresh(null);
-        }
     }
 
     public void showAllSpecies() {
@@ -229,25 +219,6 @@ public class Manager3D implements ActionListener {
         if (scene != null) {
             scene.harvestTreeInStand(treeno);
         }
-    }
-
-    public void clean3D() {
-        double freemb = Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        double totalmb = Runtime.getRuntime().totalMemory() / 1024 / 1024;
-        double maxmb = Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        System.out.println("MB free before clean3D: " + freemb + " total MB: " + totalmb + " max MB: " + maxmb);
-        if (scene != null) {
-            scene.cleanScene();
-            jPanel2.remove(scene);
-        }
-        jPanel2.removeAll();
-        scene = null;
-        st = null;
-        isStandLoaded = false;
-        //System.runFinalization();
-        System.gc();
-        freemb = Runtime.getRuntime().freeMemory() / 1024 / 1024;
-        System.out.println("MB free after clean3D: " + freemb);
     }
 
     public void setToolbarVisible(boolean visible) {

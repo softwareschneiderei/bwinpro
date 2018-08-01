@@ -466,6 +466,7 @@ public class DBAccessDialog extends JDialog {
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
             takeOutIrrelevantTrees();
+            st.notifyStandChanged(Stand.loadedEvent);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Problem with database", e);
         }
@@ -514,7 +515,6 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        System.out.println("Parent: " + getParent());
         AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(
                 new ConnectionFactory((RootPaneContainer) getParent()),
                 userSettings.getClimateDatabase(),

@@ -58,7 +58,9 @@ import treegross.random.RandomNumber;
  */
 public class Stand {
 
-    private final static Logger LOGGER = Logger.getLogger(Stand.class.getName());
+    public static final String loadedEvent = "Stand loaded"; 
+    private static final Logger LOGGER = Logger.getLogger(Stand.class.getName());
+    
     public boolean debug = true;
 
     /**
@@ -280,7 +282,7 @@ public class Stand {
 
     /*added by jhansen*/
     /* a container to store all added StandChangeListeners*/
-    private final List<StandChangeListener> StandChangeListeners = new ArrayList<>();
+    private final List<StandChangeListener> standChangeListeners = new ArrayList<>();
     private boolean notifyListeners = true;
     
     /**
@@ -667,10 +669,10 @@ public class Stand {
         nhatotal = 0.0;
         bhatotal = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0) {
+            if (tr[i].isLiving()) {
                 nha = nha + 1;
                 if (tr[i].d >= 7.0) {
-                    bha = bha + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
+                    bha += tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
                 }
             }
             if (tr[i].out == year) {
@@ -679,7 +681,7 @@ public class Stand {
                     bhaout = bhaout + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
                 }
             }
-            if (tr[i].out > 0 && tr[i].out < year) {
+            if (tr[i].isDead() && tr[i].out < year) {
                 nhatotal = nhatotal + tr[i].fac;
                 if (tr[i].d >= 7.0) {
                     bhatotal = bhatotal + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
@@ -824,15 +826,6 @@ public class Stand {
                 }
             }
         }
-    }
-
-    public void grow2(int period, boolean naturalIngrowth) {
-        //long ts = System.currentTimeMillis();
-        executeMortality();
-        //System.out.println("mortality: "+ntrees+":"+(System.currentTimeMillis()-ts));
-        //ts = System.currentTimeMillis();
-        grow(period, naturalIngrowth);
-        //System.out.println("growth: "+ntrees+":"+(System.currentTimeMillis()-ts));
     }
 
     /**
@@ -1320,7 +1313,7 @@ public class Stand {
         bha = 0.0;
         for (int i = 0; i < ntrees; i++) {
             if (tr[i].isLiving() && tr[i].d >= 7.0) {
-                bha = bha + tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
+                bha += tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
             }
         }
 
@@ -1586,31 +1579,26 @@ public class Stand {
 
     /*added by jhansen*/
     public void notifyStandChanged(String action) {
-        if (!notifyListeners) {
-            return;
-        }
-        if (StandChangeListeners.isEmpty()) {
+        if (!notifyListeners || standChangeListeners.isEmpty()) {
             return;
         }
         StandChangeEvent sce = new StandChangeEvent(this, "StandChangeEvent", action);
-        for (Object vtemp1 : StandChangeListeners.toArray()) {
-            StandChangeListener target;
-            target = (StandChangeListener) vtemp1;
-            target.StandChanged(sce);
+        for (StandChangeListener target : standChangeListeners.toArray(new StandChangeListener[0])) {
+            target.standChanged(sce);
         }
     }
 
     /*added by jhansen*/
     public void addStandChangeListener(StandChangeListener scl) {
-        if (StandChangeListeners.contains(scl)) {
+        if (standChangeListeners.contains(scl)) {
             return;
         }
-        StandChangeListeners.add(scl);
+        standChangeListeners.add(scl);
     }
 
     /*added by jhansen*/
     public void removeAllStandChangeListeners() {
-        StandChangeListeners.clear();
+        standChangeListeners.clear();
     }
 
     /**

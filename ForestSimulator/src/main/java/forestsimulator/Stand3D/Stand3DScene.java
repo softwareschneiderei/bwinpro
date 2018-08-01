@@ -23,6 +23,7 @@ import com.sun.j3d.utils.picking.*;
 import com.sun.j3d.utils.geometry.Cone;
 import forestsimulator.util.StopWatch;
 import java.awt.image.BufferedImage;
+import javax.swing.event.MouseInputAdapter;
 import treegross.base.OutType;
 
 /**
@@ -42,7 +43,7 @@ public class Stand3DScene extends JPanel {
     private Texture2D[] textures = null;
     private final Point3d atpoint = new Point3d(); // starting point the user looks at
     private Point3d frompoint = new Point3d(); // starting point of the user's position 
-    private final PickCanvas pickCanvas;
+    private PickCanvas pickCanvas;
     private TransformGroup pickgroup;
     private TransformGroup forestergroup;
     private Shape3D mesh = null;
@@ -63,6 +64,8 @@ public class Stand3DScene extends JPanel {
     public boolean showfog = false;
     public boolean showmesh = true;
     public boolean showstatus = false;
+    private final Canvas3D canvas;
+    private BranchGroup scene;
 
     /**
      * Creates a new instance of Stand3DScene _st Stand: a treegross stand ts
@@ -71,23 +74,34 @@ public class Stand3DScene extends JPanel {
      * harvested) trees speciestoshow: array of integer the species code(s) of
      * the species to show if is null all species will be shown
      */
-    public Stand3DScene(Stand _st, boolean sc, boolean sd, boolean tex, boolean status, boolean info, boolean sfog, boolean smesh, int[] speciestoshow, Texture2D[] alltextures) {
-        st = _st;// must be set at first!!        
-        meshconstructor = new FieldSquares(5.0);
-        setShowingSpecies(speciestoshow);
-        textured = tex;
-        showstatus = status;
+    public Stand3DScene(boolean sc, boolean sd, boolean tex, boolean status, boolean info, boolean sfog, boolean smesh, Texture2D[] alltextures) {
+        super();
         speccolor = sc;
         showdead = sd;
+        textured = tex;
+        showstatus = status;
         showtreeinfo = info;
         showfog = sfog;
         showmesh = smesh;
+        textures = copyTextures(alltextures);
+        
+        meshconstructor = new FieldSquares(5.0);
         initSwing();
         GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
-        Canvas3D canvas = new Canvas3D(config);
-        add("Center", canvas);
+        canvas = new Canvas3D(config);
+        add(canvas, BorderLayout.CENTER);
         universe = new SimpleUniverse(canvas);
-        copyTextures(alltextures);
+        setupUniverse();
+        // add mousepicking:
+        canvas.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                pick(e);
+            }
+        });
+    }
+
+    private void setupUniverse() {
         // add orbit behavior
         OrbitBehavior orbit
                 = new OrbitBehavior(canvas, OrbitBehavior.REVERSE_ALL | OrbitBehavior.PROPORTIONAL_ZOOM);
@@ -98,36 +112,44 @@ public class Stand3DScene extends JPanel {
         // set the max viewing distance:
         universe.getViewer().getView().setBackClipDistance(2000); // range of view 2000 meters
         universe.getViewer().getView().setFrontClipDistance(0.01);
+    }
+
+    public void loadStand(Stand stand, int[] speciestoshow) {
+        st = stand;
+        setShowingSpecies(speciestoshow);
+        setupUniverse();
         //canvas.getView().setTransparencySortingPolicy(View.TRANSPARENCY_SORT_GEOMETRY);
-        BranchGroup scene = createScene();
-        universe.addBranchGraph(scene);
+        BranchGroup newScene = createScene();
+        attachScene(newScene);
         // Set up the HUD
         //hud3d =new HUD3D(universe);   
-        System.out.println("Stand3DScene: scene build.");
-        // add mousepicking:
         pickCanvas = new PickCanvas(canvas, scene);
         pickCanvas.setMode(PickCanvas.GEOMETRY);
         pickCanvas.setTolerance(0f);
-        canvas.addMouseListener(new javax.swing.event.MouseInputAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                pick(e);
-            }
-        });
+        System.out.println("Stand3DScene: scene build.");
     }
 
-    private void copyTextures(Texture2D[] source) {
-        textures = source.clone();
+    private void attachScene(BranchGroup newScene) {
+        if (scene == null) {
+            universe.addBranchGraph(newScene);
+            scene = newScene;
+            return;
+        }
+        universe.getLocale().replaceBranchGraph(scene, newScene);
+    }
+
+    private Texture2D[] copyTextures(Texture2D[] source) {
+        return source.clone();
     }
 
     private void initSwing() {
-        this.setLayout(new BorderLayout());
-        this.setOpaque(false);
-        System.out.println("Stand3DScene: swing components build.");
+        setLayout(new BorderLayout());
+        setOpaque(false);
     }
 
     public final BranchGroup createScene() {
         BranchGroup rootobj = new BranchGroup();
+        rootobj.setCapability(BranchGroup.ALLOW_DETACH);
         BoundingSphere bounds = new BoundingSphere(new Point3d(0.0, 0.0, 0.0), 10000.0);
         fog = new LinearFog(new Color3f(0.8f, 0.8f, 0.9f));
         fog.setFrontDistance(7.0);
@@ -391,35 +413,11 @@ public class Stand3DScene extends JPanel {
     public void harvestTreeInStand(String treeno) {
         for (int i = 0; i < st.ntrees; i++) {
             if (st.tr[i].no.equals(treeno)) {
-                st.tr[i].out = st.year;
-                st.tr[i].outtype = OutType.THINNED;
+                st.tr[i].takeOut(st.year, OutType.THINNED);
                 treelist.trees[treelist.findTreeByName(treeno)].harvestTree(base);
                 i = st.ntrees; // sofortiger Abbruch
             }
         }
-    }
-
-    public void cleanScene() {
-        System.out.println("Stand3DScene: scene cleaning...");
-        /*if(treelist!=null)treelist.clear();
-        treelist=null;*/
-        //universe.removeAllLocales();         
-        /*sceneTG=null;   
-        coord.clean();
-        coord=null;       
-        pickgroup=null; 
-        forestergroup=null;
-        cd=null;
-        fog=null;
-        sts=null;
-        textures=null;
-        sts=null;        
-        base.destroyBase();
-        base=null;*/
-        universe.cleanup();
-        /*universe=null; 
-        this.removeAll();*/
-        System.out.println("Stand3DScene: scene cleaned");
     }
 
     private void movePickMarker(double x, double y, double z) {
