@@ -483,6 +483,9 @@ public class LoadTreegrossStand {
                 stmt.execute();
             }
         } catch (SQLException e) {
+            for (int i = 0; i < st.nspecies; i++) {
+                logger.log(Level.FINE, "gha = {0}, bha = {1}", new Object[]{st.sp[i].gha, st.bha});
+            }
             logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
