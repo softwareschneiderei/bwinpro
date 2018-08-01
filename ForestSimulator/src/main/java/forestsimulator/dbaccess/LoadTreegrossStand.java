@@ -231,7 +231,7 @@ public class LoadTreegrossStand {
             stmt.setInt(2, auf);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsgebiet"), rs.getString("Wuchsbezirk"));
+                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
                 }
             }
         } catch (SQLException e) {
@@ -579,6 +579,7 @@ public class LoadTreegrossStand {
 
             stmt.execute();
         } catch (SQLException e) {
+            System.out.println("d100" + st.d100);
             logger.log(Level.SEVERE, "d100={0} h100= {1}", new Object[]{st.d100, st.h100});
             logger.log(Level.SEVERE, "Could not save stand to database", e);
         }

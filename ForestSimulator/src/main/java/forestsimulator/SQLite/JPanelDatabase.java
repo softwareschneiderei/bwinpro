@@ -24,6 +24,7 @@ import treegross.base.SiteIndex;
 import static treegross.base.SiteIndex.si;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
+import treegross.base.StandLocation;
 
 /**
  *
@@ -274,8 +275,8 @@ public class JPanelDatabase extends JPanel {
                 stm.setDouble(5, st.hochwert_m);
                 stm.setDouble(6, st.rechtswert_m);
                 stm.setDouble(7, st.hoehe_uNN_m);
-                stm.setString(8, st.wuchsgebiet);
-                stm.setString(9, st.wuchsgebiet);
+                stm.setString(8, st.location.growingRegion);
+                stm.setString(9, st.location.growingSubRegion);
                 stm.setString(10, st.standort);
                 stm.setInt(11, st.exposition_Gon);
                 stm.setDouble(12, st.hangneigungProzent);
@@ -531,8 +532,7 @@ public class JPanelDatabase extends JPanel {
                     st.rechtswert_m = Double.parseDouble(rs.getString("lat"));
                     st.hochwert_m = Double.parseDouble(rs.getString("lon"));
                     st.hoehe_uNN_m = Double.parseDouble(rs.getString("masl"));
-                    st.wuchsgebiet = rs.getString("region");
-                    st.wuchsbezirk = rs.getString("district");
+                    st.location = new StandLocation("", rs.getString("region"), rs.getString("district"));
                     st.standort = rs.getString("sitetype");
                     st.exposition_Gon = (int) (Math.round(Double.parseDouble(rs.getString("exposition_gon"))));
                     st.hangneigungProzent = Double.parseDouble(rs.getString("slope_percentage"));

@@ -102,8 +102,7 @@ public class EditorPanel extends JPanel {
         st.rechtswert_m = Double.parseDouble(positionRightValueTextField.getText());
         st.hochwert_m = Double.parseDouble(positionTopValueTextField.getText());
         st.hoehe_uNN_m = Double.parseDouble(altitudeTextField.getText());
-        st.wuchsgebiet = regionTextField.getText();
-        st.wuchsbezirk = districtTextField.getText();
+        st.location = new StandLocation(st.location.federalState, regionTextField.getText(), districtTextField.getText());
         st.standort = locationTextField.getText();
         st.exposition_Gon = Integer.parseInt(expositionTextField.getText());
         st.hangneigungProzent = Double.parseDouble(gradientTextField.getText());
@@ -154,7 +153,6 @@ public class EditorPanel extends JPanel {
 
     // Stand in die Table1 einladen
     public void loadStand() {
-//        for (int j=st.ntrees; j>0; j--) data.removeRow(j-1);
         standNameTextField.setText(st.standname);
         standSizeTextField.setText(Double.toString(st.size));
         registrationDateYearTextField.setText(Integer.toString(st.year));
@@ -162,8 +160,8 @@ public class EditorPanel extends JPanel {
         positionRightValueTextField.setText(Double.toString(st.rechtswert_m));
         positionTopValueTextField.setText(Double.toString(st.hochwert_m));
         altitudeTextField.setText(Double.toString(st.hoehe_uNN_m));
-        regionTextField.setText(st.wuchsgebiet);
-        districtTextField.setText(st.wuchsbezirk);
+        regionTextField.setText(st.location.growingRegion);
+        districtTextField.setText(st.location.growingSubRegion);
         locationTextField.setText(st.standort);
         expositionTextField.setText(Integer.toString(st.exposition_Gon));
         gradientTextField.setText(Double.toString(st.hangneigungProzent));

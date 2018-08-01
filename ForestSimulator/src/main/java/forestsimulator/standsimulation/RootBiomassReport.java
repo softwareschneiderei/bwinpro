@@ -31,32 +31,24 @@ import java.io.*;
  */
 public class RootBiomassReport {
 
-    static Document doc;
-    static Element rootElt;
-
     public void report(Stand st, String programDir, String workingDir) {
         // Calculate and write xml
-        String pa = "";
-        pa = workingDir + System.getProperty("file.separator") + "rootbiomass.xml";
-//
+        String pa = workingDir + System.getProperty("file.separator") + "rootbiomass.xml";
         NumberFormat f = NumberFormat.getInstance(new Locale("en", "US"));
         f.setMaximumFractionDigits(2);
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
         Element elt;
-        Element elt2;
-        Element elt3;
         /**
          * Creates an Treegross xml
          */
         Document doc = new Document();
-        rootElt = new Element("Rootbiomass");
+        Element rootElt = new Element("Rootbiomass");
         ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
                 "type=\"text/xsl\" href=\"rootbiomass.xsl\"");
         doc.addContent(pi);
         doc.setRootElement(rootElt);
         try {
-// File 
             rootElt = addString(rootElt, "Id", "1");
             rootElt = addString(rootElt, "Kennung", st.standname);
             rootElt = addString(rootElt, "Allgemeines", " ");
@@ -72,8 +64,8 @@ public class RootBiomassReport {
             rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
             rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
             rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
+            rootElt = addString(rootElt, "Wuchsgebiet", st.location.growingRegion);
+            rootElt = addString(rootElt, "Wuchsbezirk", st.location.growingSubRegion);
             rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
 
 // Table of functions

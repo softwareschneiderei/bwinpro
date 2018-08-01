@@ -228,15 +228,6 @@ public class Stand {
      * Hangneigung_Prozent
      */
     public double hangneigungProzent = -99.9;
-    // TODO: use location instead of wuchsgebiet and wuchsbezirk
-    /**
-     * Wuchsgebiet
-     */
-    public String wuchsgebiet = "";
-    /**
-     * Wuchsbezirk
-     */
-    public String wuchsbezirk = "";
     /**
      * FileXMLSettings
      */

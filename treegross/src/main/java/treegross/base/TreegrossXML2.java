@@ -79,8 +79,8 @@ public class TreegrossXML2 {
             rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
             rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
             rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
+            rootElt = addString(rootElt, "Wuchsgebiet", st.location.growingRegion);
+            rootElt = addString(rootElt, "Wuchsbezirk", st.location.growingSubRegion);
             rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
         }
         /* Baumarten */
@@ -218,8 +218,7 @@ public class TreegrossXML2 {
             st.hoehe_uNN_m = Double.parseDouble(bestand.getChild("Hoehe_uNN_m").getText());
             st.exposition_Gon = Integer.parseInt(bestand.getChild("Exposition_Gon").getText());
             st.hangneigungProzent = Double.parseDouble(bestand.getChild("Hangneigung_Prozent").getText());
-            st.wuchsgebiet = bestand.getChild("Wuchsgebiet").getText();
-            st.wuchsbezirk = bestand.getChild("Wuchsbezirk").getText();
+            st.location = new StandLocation(st.location.federalState, bestand.getChild("Wuchsgebiet").getText(), bestand.getChild("Wuchsbezirk").getText());
             st.standortsKennziffer = bestand.getChild("Standortskennziffer").getText();
 
             st.clear();

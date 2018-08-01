@@ -15,7 +15,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.roots;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.*;
@@ -24,6 +23,7 @@ import java.util.*;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.ProcessingInstruction;
 import org.jdom.input.*;
 import org.jdom.output.XMLOutputter;
@@ -129,11 +129,6 @@ public class RootsPanel extends javax.swing.JPanel {
         jPanel8.add(filenameTextField);
 
         loadButton.setText(bundle.getString("RootsPanel.loadButton.text")); // NOI18N
-        loadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadButtonActionPerformed(evt);
-            }
-        });
         jPanel8.add(loadButton);
 
         add(jPanel8, java.awt.BorderLayout.NORTH);
@@ -290,11 +285,6 @@ public class RootsPanel extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
-       
-// TODO add your handling code here:
-    }//GEN-LAST:event_loadButtonActionPerformed
-
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
 // Chane of species List
        showFunctions();
@@ -303,7 +293,6 @@ public class RootsPanel extends javax.swing.JPanel {
     private void calculateBiomassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBiomassButtonActionPerformed
         // Calculate and write xml
         String pa = "";
-        String dn = "";
         pa = workDir + System.getProperty("file.separator") + "rootbiomass.xml";
         NumberFormat f = NumberFormat.getInstance();
         f = NumberFormat.getInstance(new Locale("en", "US"));
@@ -311,8 +300,6 @@ public class RootsPanel extends javax.swing.JPanel {
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
         Element elt;
-        Element elt2;
-        Element elt3;
         /**
          * Creates an Treegross xml
          */
@@ -339,8 +326,8 @@ public class RootsPanel extends javax.swing.JPanel {
             rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
             rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
             rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
+            rootElt = addString(rootElt, "Wuchsgebiet", st.location.growingRegion);
+            rootElt = addString(rootElt, "Wuchsbezirk", st.location.growingSubRegion);
             rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
 
 // Table of functions
@@ -438,12 +425,11 @@ public class RootsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_calculateBiomassButtonActionPerformed
 
 private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFunctionsButtonActionPerformed
-// Load alternative functions
+    // Load alternative functions
     int codex = Integer.parseInt(speciesCodeTextField.getText());
     int m = jList1.getSelectedIndex();
     loadAlternativeCodeFunctions(urlRootFun, m, codex);
     showFunctions();
-    
 }//GEN-LAST:event_loadFunctionsButtonActionPerformed
     
     Element addString(Element elt, String variable, String text){
@@ -452,7 +438,6 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
             elt.addContent(var);
             return elt;
     }
-   
        
     public void loadSpecies(){
         nrss=0;
@@ -464,18 +449,15 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
 
             nrss=nrss+1;
          } 
-
-
     }    
-   public void loadSpeciesFunctions(URL url){
+ 
+    public void loadSpeciesFunctions(URL url){
       try {
          SAXBuilder builder = new SAXBuilder();
          URLConnection urlcon = url.openConnection();
 
          Document doc = builder.build(urlcon.getInputStream());
          
-         DocType docType = doc.getDocType();
-//        
          Element rootelemente =  doc.getRootElement();  
          List liste = rootelemente.getChildren("Function");
          Iterator i = liste.iterator();
@@ -485,18 +467,18 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
             int co = Integer.parseInt(rootelement.getChild("Code").getText());
             for (int j=0; j< nrss; j++)
                 if (co == rss[j].code){
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfCoarseRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfCoarseRoots"))
                         rss[j].coarseRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfFineRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfFineRoots"))
                         rss[j].fineRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfSmallRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfSmallRoots"))
                         rss[j].smallRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfTotalRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfTotalRoots"))
                         rss[j].totalRootFun=rootelement.getChild("Function").getText();
                 }
          } 
 
-       } catch (Exception e) {e.printStackTrace();}
+       } catch (IOException | NumberFormatException | JDOMException e) {e.printStackTrace();}
       
    }; 
    public void loadAlternativeCodeFunctions(URL url, int nrss, int codex){
