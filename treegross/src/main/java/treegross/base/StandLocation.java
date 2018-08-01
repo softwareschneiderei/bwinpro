@@ -17,6 +17,9 @@ public class StandLocation {
     }
     
     private static String regionFrom(String growthSubregion) {
-        return growthSubregion.split("/")[0];
+        if (growthSubregion.contains("/")) {
+            return growthSubregion.split("/")[0];
+        }
+        return growthSubregion;
     }
 }

@@ -41,7 +41,7 @@ public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvi
         try (
                 Connection con = databaseConnector.openDBConnection(databaseFile, "", "");
                 PreparedStatement ps = con.prepareStatement(
-                        "select * from input_data where Bundesland = ? and Wuchsbezirk = ? and Scenario = ?"
+                        "select * from input_data where federal_state_code = ? and growing_subregion = ? and scenario = ?"
                         + " and month >= ? and month <= ?")) {
             ps.setString(1, location.federalState);
             ps.setString(2, location.growingSubRegion);

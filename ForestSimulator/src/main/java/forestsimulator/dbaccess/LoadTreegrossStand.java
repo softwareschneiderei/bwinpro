@@ -226,12 +226,11 @@ public class LoadTreegrossStand {
     }
     
     public StandLocation loadLocation(Connection dbconn, String edvId, int auf) {
-        try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ?)")) {
+        try (PreparedStatement stmt = dbconn.prepareStatement("select * from stand_location where edvid = ?")) {
             stmt.setString(1, edvId);
-            stmt.setInt(2, auf);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
+                    return new StandLocation(rs.getString("federal_state_code"), rs.getString("growing_region"), rs.getString("growing_subregion"));
                 }
             }
         } catch (SQLException e) {
@@ -240,10 +239,10 @@ public class LoadTreegrossStand {
         return new StandLocation("", "");
     }
 
-    public Stand loadRules(Connection dbconn, Stand stand, String idx, int auf, int scen) {
+    public Stand loadRules(Connection dbconn, Stand stand, String edvid, int auf, int scen) {
         durchforstung_an = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ? AND Szenario = ?)")) {
-            stmt.setString(1, idx);
+            stmt.setString(1, edvid);
             stmt.setInt(2, auf);
             stmt.setInt(3, scen);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -255,7 +254,6 @@ public class LoadTreegrossStand {
                     }
                     stand.ingrowthActive = rs.getInt("Einwuchs") != 0;
                     stand.temp_Integer = rs.getInt("Schritte");
-                    stand.location = new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
                     ebaum = rs.getInt("EBaum");
                     bestand = rs.getInt("Bestand");
                     baumart = rs.getInt("Baumart");
