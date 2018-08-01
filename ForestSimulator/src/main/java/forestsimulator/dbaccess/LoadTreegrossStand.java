@@ -231,7 +231,7 @@ public class LoadTreegrossStand {
             stmt.setInt(2, auf);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsbezirk"));
+                    return new StandLocation(rs.getString("Bundesland"), rs.getString("Wuchsgebiet"), rs.getString("Wuchsbezirk"));
                 }
             }
         } catch (SQLException e) {
@@ -458,7 +458,7 @@ public class LoadTreegrossStand {
 
     public void saveSpecies(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement(
-                "INSERT INTO ProgArt (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
+                "INSERT INTO ProgArt (edvid, auf, art, wiederholung, szenario, gpro, simschritt, alt, nha, gha, vha,"
                 + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
                 + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
@@ -467,7 +467,7 @@ public class LoadTreegrossStand {
                 stmt.setInt(3, st.sp[i].code);
                 stmt.setInt(4, nwieder);
                 stmt.setInt(5, scenario);
-                stmt.setDouble(6, 100.0 * st.sp[i].gha / st.bha);
+                stmt.setDouble(6, calculateGPro(st, st.sp[i]));
                 stmt.setInt(7, sims);
                 stmt.setDouble(8, st.sp[i].h100age);
                 stmt.setDouble(9, st.sp[i].nha);
@@ -484,7 +484,7 @@ public class LoadTreegrossStand {
             }
         } catch (SQLException e) {
             for (int i = 0; i < st.nspecies; i++) {
-                logger.log(Level.FINE, "gha = {0}, bha = {1}", new Object[]{st.sp[i].gha, st.bha});
+                logger.log(Level.SEVERE, "gha = {0}, bha = {1}", new Object[]{st.sp[i].gha, st.bha});
             }
             logger.log(Level.SEVERE, "Could not save species to database", e);
         }
@@ -504,7 +504,7 @@ public class LoadTreegrossStand {
                 Double hh100 = st.sp[i].h100;
                 Double nnha = st.sp[i].nha;
                 Double aalt = st.sp[i].h100age;
-                Double gpro = 100.0 * st.sp[i].gha / st.bha;
+                Double gpro = calculateGPro(st, st.sp[i]);
                 int art = st.sp[i].code;
 
                 // SUMME Grundfläche und Volumen der Nutzung  
@@ -543,6 +543,15 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
+    
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-78
+    // What should happen in the case of bha == 0
+    private static double calculateGPro(Stand st, Species species) {
+        if (st.bha == 0) {
+            return 0;
+        }
+        return 100.0 * species.gha / st.bha;
+    }
 
     public void saveStand(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha, dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
@@ -570,6 +579,7 @@ public class LoadTreegrossStand {
 
             stmt.execute();
         } catch (SQLException e) {
+            logger.log(Level.SEVERE, "d100={0} h100= {1}", new Object[]{st.d100, st.h100});
             logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }

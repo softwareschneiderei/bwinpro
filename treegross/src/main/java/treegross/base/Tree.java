@@ -701,4 +701,9 @@ public class Tree implements Cloneable {
     public boolean isOf(Species species) {
         return sp.code == species.code;
     }
+
+    @Override
+    public String toString() {
+        return "Tree{" + "code=" + code + ", no=" + no + ", age=" + age + ", out=" + out + ", outtype=" + outtype + ", d=" + d + ", h=" + h + ", cb=" + cb + ", cw=" + cw + '}';
+    }
 }

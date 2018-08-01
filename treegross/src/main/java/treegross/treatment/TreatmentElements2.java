@@ -705,11 +705,12 @@ public class TreatmentElements2 {
     public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
         double maxBa = calculateMaxBasalArea(st);
-        if (maxBa == 0d) {
-            throw new IllegalStateException("Max basal area must not be 0.");
-        }
         double maxBasalAreaOut = st.bha - maxBa;
-        double baFac = st.bha / maxBa;
+        // TODO: decide what to do, see http://issuetracker.intranet:20002/browse/BWIN-78
+        if (maxBa == 0d) {
+            logger.log(Level.SEVERE, "Max basal area must not be 0.");
+        }
+        double baFac = st.bha / Math.max(1, maxBa);
         
         // http://issuetracker.intranet:20002/browse/BWIN-57:
         //   Removed additional criterion based on first species (st.sp[0])
@@ -746,6 +747,10 @@ public class TreatmentElements2 {
         if (withModerateThinningFactor) {
             basalAreaForSpecies *= atree.getModerateThinningFactor();
         }
+        if (basalAreaForSpecies == 0d) {
+            logger.log(Level.SEVERE, "Max basal area is 0 for species {0}\n and reference tree {1} with moderate thinning {2}",
+                    new Object[]{ aSpecies, atree, atree.getModerateThinningFactor()});
+        }
         return basalAreaForSpecies;
     }
 
@@ -763,9 +768,6 @@ public class TreatmentElements2 {
     }
 
     private static double calculateMaxBasalArea(Stand st) {
-        if (st.nspecies == 0) {
-            logger.log(Level.SEVERE, "Stand contains no species.");
-        }
         double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
         logger.log(Level.FINE, "Max stand basal area before thinning intensity {0}", maxStandBasalArea);
         if (st.trule.thinningIntensity == 0.0) {
