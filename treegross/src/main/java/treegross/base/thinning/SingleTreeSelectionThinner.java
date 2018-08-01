@@ -121,8 +121,7 @@ public class SingleTreeSelectionThinner implements Thinner {
                 if (merk == -9) {
                     continueThinning = false;
                 } else {
-                    st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = OutType.THINNED;
+                    st.tr[merk].takeOut(st.year, OutType.THINNED);
                     thinned += (st.tr[merk].fac * st.tr[merk].v);
                     maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
                     if (maxBasalAreaOut <= 0.0) {

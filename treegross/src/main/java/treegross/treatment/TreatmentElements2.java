@@ -58,7 +58,7 @@ public class TreatmentElements2 {
 
     HabitatTreeSelection htselect = new HabitatTreeSelection();
 
-    private final static Logger LOGGER = Logger.getLogger(TreatmentElements2.class.getName());
+    private final static Logger logger = Logger.getLogger(TreatmentElements2.class.getName());
 
     /**
      * set volume of trees, which are taken out to 0. This sets the variables
@@ -764,9 +764,10 @@ public class TreatmentElements2 {
 
     private static double calculateMaxBasalArea(Stand st) {
         if (st.nspecies == 0) {
-            LOGGER.log(Level.SEVERE, "Stand contains no species.");
+            logger.log(Level.SEVERE, "Stand contains no species.");
         }
         double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
+        logger.log(Level.FINE, "Max stand basal area before thinning intensity {0}", maxStandBasalArea);
         if (st.trule.thinningIntensity == 0.0) {
             maxStandBasalArea *= 100.0;
         } else {
@@ -1091,7 +1092,7 @@ public class TreatmentElements2 {
             try {
                 atree.sp = st.addspecies(atree);
             } catch (SpeciesNotDefinedException ex) {
-                LOGGER.log(Level.SEVERE, "treegross", ex);
+                logger.log(Level.SEVERE, "treegross", ex);
             }
             double cbx = atree.calculateCw();
             double gx = Math.PI * Math.pow(cbx / 2.0, 2.0);
@@ -1114,7 +1115,7 @@ public class TreatmentElements2 {
                         break;
                     }
                 } catch (SpeciesNotDefinedException e) {
-                    LOGGER.log(Level.SEVERE, "treegross", e);
+                    logger.log(Level.SEVERE, "treegross", e);
                 }
             }
             for (int i = 0; i < st.ntrees; i++) {
