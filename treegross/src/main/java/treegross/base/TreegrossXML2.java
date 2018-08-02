@@ -64,24 +64,7 @@ public class TreegrossXML2 {
 
         //Bestandesinformation 
         if (st.nspecies > 0) {
-            rootElt = addString(rootElt, "Id", "1");
-            rootElt = addString(rootElt, "Kennung", st.standname);
-            rootElt = addString(rootElt, "Allgemeines", " ");
-            rootElt = addString(rootElt, "Flaechengroesse_m2", Double.toString(st.size * 10000));
-            rootElt = addString(rootElt, "HauptbaumArtCodeStd", Integer.toString(st.sp[0].code));
-            rootElt = addString(rootElt, "HauptbaumArtCodeLokal", Integer.toString(st.sp[0].code));
-            rootElt = addString(rootElt, "AufnahmeJahr", Integer.toString(st.year));
-            rootElt = addString(rootElt, "AufnahmeMonat", Integer.toString(st.monat));
-            rootElt = addString(rootElt, "DatenHerkunft", st.datenHerkunft);
-            rootElt = addString(rootElt, "Standort", st.standort);
-            rootElt = addString(rootElt, "Hochwert_m", Double.toString(st.hochwert_m));
-            rootElt = addString(rootElt, "Rechtswert_m", Double.toString(st.rechtswert_m));
-            rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
-            rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
-            rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.location.growingRegion);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.location.growingSubRegion);
-            rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
+            rootElt = buildDocumentHeader(st, rootElt);
         }
         /* Baumarten */
         for (int i = 0; i < st.nspecies; i++) {
@@ -181,6 +164,27 @@ public class TreegrossXML2 {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "", e);
         }
+    }
+
+    public static Element buildDocumentHeader(Stand st, Element rootElement) {
+        rootElement = addString(rootElement, "Id", "1");
+        rootElement = addString(rootElement, "Kennung", st.standname);
+        rootElement = addString(rootElement, "Allgemeines", " ");
+        rootElement = addString(rootElement, "Flaechengroesse_m2", Double.toString(st.size * 10000));
+        rootElement = addString(rootElement, "HauptbaumArtCodeStd", Integer.toString(st.sp[0].code));
+        rootElement = addString(rootElement, "HauptbaumArtCodeLokal", Integer.toString(st.sp[0].code));
+        rootElement = addString(rootElement, "AufnahmeJahr", Integer.toString(st.year));
+        rootElement = addString(rootElement, "AufnahmeMonat", Integer.toString(st.monat));
+        rootElement = addString(rootElement, "DatenHerkunft", st.datenHerkunft);
+        rootElement = addString(rootElement, "Standort", st.standort);
+        rootElement = addString(rootElement, "Hochwert_m", Double.toString(st.hochwert_m));
+        rootElement = addString(rootElement, "Rechtswert_m", Double.toString(st.rechtswert_m));
+        rootElement = addString(rootElement, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
+        rootElement = addString(rootElement, "Exposition_Gon", Integer.toString(st.exposition_Gon));
+        rootElement = addString(rootElement, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
+        rootElement = addString(rootElement, "Wuchsgebiet", st.location.growingRegion);
+        rootElement = addString(rootElement, "Wuchsbezirk", st.location.growingSubRegion);
+        return addString(rootElement, "Standortskennziffer", st.standortsKennziffer);
     }
 
     public Stand readTreegrossStand(Stand stand, URL url) {
@@ -298,7 +302,7 @@ public class TreegrossXML2 {
         return OutType.STANDING;
     }
 
-    private Element addString(Element elt, String variable, String text) {
+    private static Element addString(Element elt, String variable, String text) {
         Element var = new Element(variable);
         var.addContent(text);
         elt.addContent(var);
