@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.net.*;
 import java.text.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -34,17 +38,13 @@ import treegross.base.*;
  *
  * @author  nagel
  */
-public class RootsPanel extends javax.swing.JPanel {
+public class RootsPanel extends JPanel {
     
-    RootsSpeciesSetting rss[] = new RootsSpeciesSetting[500]; 
-    int nrss=-9;
-    static Document doc;
-    static Element rootElt;
-    
+    private static final Logger logger = Logger.getLogger(RootsPanel.class.getName());
+    private RootsSpeciesSetting rss[] = new RootsSpeciesSetting[500]; 
+    private int nrss=-9;
 
-    javax.swing.DefaultListModel listModel = new javax.swing.DefaultListModel();
-    int nlist = 0;
-    boolean neuspeichern = false;
+    private DefaultListModel listModel = new DefaultListModel();
     String fname="";
     String proDir;
     boolean dialogActive = true;
@@ -54,7 +54,6 @@ public class RootsPanel extends javax.swing.JPanel {
     Stand st = null;
     URL urlRootFun = null;
     
-    /** Creates new form LoggingPanel */
     public RootsPanel(Stand stand, String programDir, boolean interActive, String workingDir) {
         initComponents();
         dialogActive = interActive;
@@ -304,7 +303,7 @@ public class RootsPanel extends javax.swing.JPanel {
          * Creates an Treegross xml
          */
         Document doc = new Document();
-        rootElt = new Element("Rootbiomass");
+        Element rootElt = new Element("Rootbiomass");
         ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
                 "type=\"text/xsl\" href=\"rootbiomass.xsl\"");
         doc.addContent(pi);
@@ -406,7 +405,7 @@ public class RootsPanel extends javax.swing.JPanel {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, "Problem building document.", e);
         }
         try (FileOutputStream result = new FileOutputStream(pa)) {
             XMLOutputter outputter = new XMLOutputter();
@@ -415,12 +414,12 @@ public class RootsPanel extends javax.swing.JPanel {
                 String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + pa;
                 try {
                     Runtime.getRuntime().exec(" rundll32 url.dll,FileProtocolHandler " + seite);
-                } catch (Exception e2) {
-                    System.out.println(e2);
+                } catch (IOException e2) {
+                    logger.log(Level.INFO, "Problem executing file protocol handler.", e2);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Problem writing document.", e);
         }
     }//GEN-LAST:event_calculateBiomassButtonActionPerformed
 
@@ -477,8 +476,9 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
                         rss[j].totalRootFun=rootelement.getChild("Function").getText();
                 }
          } 
-
-       } catch (IOException | NumberFormatException | JDOMException e) {e.printStackTrace();}
+       } catch (IOException | NumberFormatException | JDOMException e) {
+           logger.log(Level.SEVERE, "Problem loading species functions from XML.", e);
+       }
       
    }; 
    public void loadAlternativeCodeFunctions(URL url, int nrss, int codex){
@@ -487,9 +487,6 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
          URLConnection urlcon = url.openConnection();
 
          Document doc = builder.build(urlcon.getInputStream());
-         
-         DocType docType = doc.getDocType();
-//        
          Element rootelemente =  doc.getRootElement();  
          List liste = rootelemente.getChildren("Function");
          Iterator i = liste.iterator();
@@ -509,8 +506,9 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
                 }
          } 
 
-       } catch (Exception e) {e.printStackTrace();}
-      
+       } catch (IOException | NumberFormatException | JDOMException e) {
+           logger.log(Level.SEVERE, "Problem loading species functions from XML.", e);
+       }
    }; 
 
    private void showFunctions(){
