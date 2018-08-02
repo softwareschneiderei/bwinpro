@@ -10,6 +10,7 @@
 package forestsimulator.dbaccess;
 
 import forestsimulator.gui.TaskSpinner;
+import java.io.File;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -45,8 +46,16 @@ public class ConnectionFactory {
         props.put("charSet", charset);
     }
 
-    public Connection openDBConnection(String database, String username, String password) {
-        return new TaskSpinner<Connection>(parent).execute(() -> openDBConnection(ACCESS, database, username, password));
+    public Connection openDBConnection(File database, String username, String password) throws SQLException {
+        return openDBConnection(database.getAbsolutePath(), username, password);
+    }
+    
+    public Connection openDBConnection(String database, String username, String password) throws SQLException {
+        Connection result = new TaskSpinner<Connection>(parent).execute(() -> openDBConnection(ACCESS, database, username, password));
+        if (result == null) {
+            throw new SQLException("Connection to database failed!");
+        }
+        return result;
     }
     
     public Connection openDBConnection(int dbtype, String database, String username, String password) {

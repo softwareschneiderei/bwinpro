@@ -1,8 +1,8 @@
 package forestsimulator.dbaccess;
 
 import forestsimulator.standsimulation.PlugInDBSQLite;
+import forestsimulator.standsimulation.TgUser;
 import treegross.base.*;
-import java.io.File;
 import javax.swing.JFrame;
 
 /**
@@ -12,9 +12,9 @@ import javax.swing.JFrame;
 public class DBAccess implements PlugInDBSQLite {
 
     @Override
-    public void startDialog(JFrame frame, Stand st, File dirx) {
+    public void startDialog(JFrame frame, Stand st, TgUser userSettings) {
         System.out.println("starte Dialog");
-        DBAccessDialog dialog = new DBAccessDialog(frame, true, st, dirx);
+        DBAccessDialog dialog = new DBAccessDialog(frame, true, st, userSettings);
         dialog.setVisible(true);
     }
 }

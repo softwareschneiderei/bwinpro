@@ -74,8 +74,8 @@ public class Groups {
         double si = 0.0;
         double n = 0.0;
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].out < 1) {
-                si += st.tr[i].si;
+            if (st.tr[i].group == gr && st.tr[i].d >= 7.0 && st.tr[i].isLiving()) {
+                si += st.tr[i].si.value;
                 n++;
             }
         }

@@ -15,5 +15,5 @@ package treegross.base;
  */
 public interface StandChangeListener {
 
-    public void StandChanged(StandChangeEvent sce);
+    public void standChanged(StandChangeEvent sce);
 }

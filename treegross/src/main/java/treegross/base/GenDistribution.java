@@ -35,7 +35,7 @@ public class GenDistribution {
             gsum += g;
             Integer nox = st.ntrees + 2;
             String nr = nox.toString();
-            added = st.addTree(art, nr, alter, -1, dg, hg, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+            added = st.addTree(art, nr, alter, -1, dg, hg, 0.0, 0.0, SiteIndex.undefined, 0.0, 0.0, 0.0, 0, 0, 0);
             if (correct) {
                 checkGAndCorrectFactor(gfl, gsum, st);
             }
@@ -84,7 +84,7 @@ public class GenDistribution {
             gsum +=  Math.PI * (dgen / 200.0) * (dgen / 200.0);
             Integer nox = st.ntrees + 2;
             nr = nox.toString();
-            st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+            st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, SiteIndex.undefined, 0.0, 0.0, 0.0, 0, 0, 0);
             if (correct) {
                 checkGAndCorrectFactor(gfl, gsum, st);
             }
@@ -117,7 +117,6 @@ public class GenDistribution {
             nr = "";
             Species spx = new Species();
 
-            //spx.spDef.loadSpeciesDefXML(art,st.programDir,st.FileXMLSettings);
             spx.spDef = st.getSDM().getByCode(art);
 
             spx.dg = dg;
@@ -143,7 +142,7 @@ public class GenDistribution {
                         gsum += Math.PI * (dgen / 200.0) * (dgen / 200.0);
                         Integer nox = st.ntrees + 2;
                         nr = nox.toString();
-                        st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+                        st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, SiteIndex.undefined, 0.0, 0.0, 0.0, 0, 0, 0);
                         if (correct) {
                             checkGAndCorrectFactor(gfl, gsum, st);
                         }
@@ -161,7 +160,7 @@ public class GenDistribution {
                     gsum += Math.PI * (dgen / 200.0) * (dgen / 200.0);
                     Integer nox = st.ntrees + 2;
                     nr = nox.toString();
-                    st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+                    st.addTree(art, nr, alter, -1, dgen, 0.0, 0.0, 0.0, SiteIndex.undefined, 0.0, 0.0, 0.0, 0, 0, 0);
                     if (correct) {
                         checkGAndCorrectFactor(gfl, gsum, st);
                     }
@@ -172,7 +171,7 @@ public class GenDistribution {
         }
         // generate at least one tree             
         if (ngen == 0) {
-            st.addTree(art, nr, alter, -1, dg, hg, 0.0, 0.0, -9.0, 0.0, 0.0, 0.0, 0, 0, 0);
+            st.addTree(art, nr, alter, -1, dg, hg, 0.0, 0.0, SiteIndex.undefined, 0.0, 0.0, 0.0, 0, 0, 0);
         }
     }
 

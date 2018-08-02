@@ -1,39 +1,42 @@
 package forestsimulator.dbaccess.tools;
 
-import forestsimulator.dbaccess.DatabaseEnvirionmentalDataProvider;
+import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
+import java.io.File;
 import java.time.Year;
-import treegross.dynamic.siteindex.DynamicSiteIndex;
-import treegross.dynamic.siteindex.DynamicSiteIndexCalculation;
-import treegross.dynamic.siteindex.DynamicSiteIndexModel;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
+import treegross.base.StandLocation;
+import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
+import treegross.dynamic.siteindex.EnvironmentStandardizer;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.Projection;
-import treegross.dynamic.siteindex.Regression;
 
 public class DynamicSiteIndexCalculationDemo {
     public static Projection basicInfoSpecification() {
         Projection result = new Projection(Year.of(2006));
         result.standName = "fi 150/   b";
         result.treeSpecies = "Fi";
-        result.rcp = "MISC";
+        result.rcp = "misc";
         return result;
     }
     
-    public static double initialSiteIndex() {
-        return 39.80825;
+    public static SiteIndex initialSiteIndex() {
+        return si(39.80825);
     }
     
     public static void main(String[] args) {
         Projection dsiProjection = basicInfoSpecification();
-        EnvironmentVariables dsiEnvironment = loadEnvironmentData("1", "1/01", dsiProjection.rcp);
+        EnvironmentVariables dsiEnvironment = loadEnvironmentData("BW", "1/01", dsiProjection.rcp);
         
         dsiProjection.length = 5;
-        Regression dsiFunction = new DynamicSiteIndexModel().modelParameters();
-        DynamicSiteIndex dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndex(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, dsiEnvironment);
+        DynamicSiteIndexModel dsiFunction = new DynamicSiteIndexModel();
+        DynamicSiteIndexProgression dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndexProgression(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, EnvironmentStandardizer.standardize(dsiEnvironment));
         System.out.println("Dynamic site index: " + dsi.siIntermediates);
         System.out.println("Dynamic site index after " + dsiProjection.length + " years: " + dsi.endSiteIndex());
     }
 
-    private static EnvironmentVariables loadEnvironmentData(String region, String subRegion, String scenario) {
-        return new DatabaseEnvirionmentalDataProvider("data_standsimulation/climate_database.mdb").environmentalDataFor(region, subRegion, scenario);
+    private static EnvironmentVariables loadEnvironmentData(String federalState, String subRegion, String scenario) {
+        return new DatabaseEnvironmentalDataProvider(new File("data_standsimulation/climate_data.mdb")).environmentalDataFor(new StandLocation(federalState, subRegion), scenario);
     }
+
 }

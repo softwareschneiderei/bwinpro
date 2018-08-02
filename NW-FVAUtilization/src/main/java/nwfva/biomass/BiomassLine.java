@@ -51,45 +51,37 @@ public class BiomassLine {
     double sumBOup=0.0;
     double sumBNH4=0.0;
     double sumBNO3=0.0;
-
     
-    
-    /** Creates a new instance of LoggingSortiment */
-    public BiomassLine() {
-    }
-
     public BiomassLine clone(){
         BiomassLine clone = new BiomassLine();
-        clone.year = new Integer(this.year);
-        clone.cutVolume = new Double(this.cutVolume);
-        clone.sortiments = new Boolean(this.sortiments);
-        clone.firewood = new Boolean(this.firewood);
-        clone.restwood = new Boolean(this.restwood);
-        clone.firewoodPerc = new Double(this.firewoodPerc);
-        clone.needlePerc = new Double(this.needlePerc);
-        clone.sortimentsBM = new Double(this.sortimentsBM);
-        clone.barksortimentsBM = new Double(this.barksortimentsBM);
-        clone.barkfirewoodBM = new Double(this.barkfirewoodBM);
-        clone.barkrestwoodBM = new Double(this.barkrestwoodBM);
-        clone.branchBM = new Double(this.branchBM);
-        clone.reisigBM = new Double(this.reisigBM);
-        clone.firewoodBM = new Double(this.firewoodBM);
-        clone.restwoodBM = new Double(this.restwoodBM);
-        clone.leafBM = new Double(this.leafBM);
-        clone.sumC = new Double(this.sumC);
-        clone.sumN = new Double(this.sumN);
-        clone.sumS = new Double(this.sumS);
-        clone.sumP = new Double(this.sumP);
-        clone.sumK = new Double(this.sumK);
-        clone.sumCa = new Double(this.sumCa);
-        clone.sumMg = new Double(this.sumMg);
-        clone.sumMn = new Double(this.sumMn);
-        clone.sumFe = new Double(this.sumFe);
-        clone.sumBNH4 = new Double(this.sumBNH4);
-        clone.sumBOup = new Double(this.sumBOup);
-        clone.sumBNO3 = new Double(this.sumBNO3);
+        clone.year = this.year;
+        clone.cutVolume = this.cutVolume;
+        clone.sortiments = this.sortiments;
+        clone.firewood = this.firewood;
+        clone.restwood = this.restwood;
+        clone.firewoodPerc = this.firewoodPerc;
+        clone.needlePerc = this.needlePerc;
+        clone.sortimentsBM = this.sortimentsBM;
+        clone.barksortimentsBM = this.barksortimentsBM;
+        clone.barkfirewoodBM = this.barkfirewoodBM;
+        clone.barkrestwoodBM = this.barkrestwoodBM;
+        clone.branchBM = this.branchBM;
+        clone.reisigBM = this.reisigBM;
+        clone.firewoodBM = this.firewoodBM;
+        clone.restwoodBM = this.restwoodBM;
+        clone.leafBM = this.leafBM;
+        clone.sumC = this.sumC;
+        clone.sumN = this.sumN;
+        clone.sumS = this.sumS;
+        clone.sumP = this.sumP;
+        clone.sumK = this.sumK;
+        clone.sumCa = this.sumCa;
+        clone.sumMg = this.sumMg;
+        clone.sumMn = this.sumMn;
+        clone.sumFe = this.sumFe;
+        clone.sumBNH4 = this.sumBNH4;
+        clone.sumBOup = this.sumBOup;
+        clone.sumBNO3 = this.sumBNO3;
         return clone;
     }
-    
-    
 }

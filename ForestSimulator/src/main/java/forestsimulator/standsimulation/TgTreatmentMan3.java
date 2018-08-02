@@ -16,16 +16,29 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import forestsimulator.dbaccess.ConnectionFactory;
+import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import treegross.base.thinning.ThinningType;
 import java.text.*;
+import java.time.Year;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.treatment.*;
+import treegross.dynamic.siteindex.EnvironmentVariables;
+import treegross.random.RandomNumber;
 
 
 /**
@@ -33,16 +46,21 @@ import treegross.treatment.*;
  * @author  nagel
  */
 public class TgTreatmentMan3 extends JPanel {
+    private static final Logger logger = Logger.getLogger(TgTreatmentMan3.class.getName());
     private final DefaultTableModel data;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     private final Stand st;
+    private final TgUser userSettings;
+    private final TgYieldTable yt;
+    private final ConnectionFactory connectionFactory;
     Object[] rowData={" "," "," "," "," "," "};
-    TgYieldTable  yt  = null;
     
-    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent) {
-        initComponents();
+    public TgTreatmentMan3(Stand stparent,  TgJFrame frameparent, TgUser userSettings) {
+        connectionFactory = new ConnectionFactory();
+        this.userSettings = userSettings;
         st = stparent;
         yt = frameparent.yt;
+        initComponents();
 
         thinningIntensityComboBox.removeAllItems();
         thinningIntensityComboBox.addItem(ThinningIntensity.None);
@@ -63,7 +81,7 @@ public class TgTreatmentMan3 extends JPanel {
             new Object [][] {  },
             TreatmentTableColumn.values()
         );
-        jTable1.setModel(data);
+        speciesTable.setModel(data);
         
         thinningIntensityComboBox.setSelectedIndex(2);
         loadTable();
@@ -85,19 +103,21 @@ public class TgTreatmentMan3 extends JPanel {
         useIngrowthModelCheckBox = new javax.swing.JCheckBox();
         useMortalityCheckBox = new javax.swing.JCheckBox();
         useRiskModelCheckBox = new javax.swing.JCheckBox();
+        useClimateDataCheckBox = new javax.swing.JCheckBox();
+        climateScenarioComboBox = new javax.swing.JComboBox<>();
         startSimulationButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel11 = new javax.swing.JPanel();
+        treatmentRulesPanel = new javax.swing.JPanel();
+        HeadingPanel = new javax.swing.JPanel();
         scenarioSettingsHeadingLabel = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        developmentLabel = new javax.swing.JLabel();
+        skidtrailsPanel = new javax.swing.JPanel();
         developmentCheckBox = new javax.swing.JCheckBox();
         skidtrailDistanceLabel = new javax.swing.JLabel();
         skidtrailDistanceTextField = new javax.swing.JTextField();
         skidtrailWidthLabel = new javax.swing.JLabel();
         skidtrailWidthTextField = new javax.swing.JTextField();
-        jPanel7 = new javax.swing.JPanel();
+        thinningPanel = new javax.swing.JPanel();
+        releaseOnlyCropTreesCheckBox = new javax.swing.JCheckBox();
         thinningTypeLabel = new javax.swing.JLabel();
         thinningTypeComboBox = new javax.swing.JComboBox();
         thinningIntensityLabel = new javax.swing.JLabel();
@@ -106,18 +126,16 @@ public class TgTreatmentMan3 extends JPanel {
         thinningAmountMinimumTextField = new javax.swing.JTextField();
         thinningAmountMaximumLabel = new javax.swing.JLabel();
         thinningAmountMaximumTextField = new javax.swing.JTextField();
-        releaseOnlyCropTreesCheckBox = new javax.swing.JCheckBox();
-        jPanel8 = new javax.swing.JPanel();
+        harvestingPanel = new javax.swing.JPanel();
         harvestingTypeLabel = new javax.swing.JLabel();
         harvestingTypeComboBox = new javax.swing.JComboBox();
+        clearingLabel = new javax.swing.JLabel();
+        clearingTextField = new javax.swing.JTextField();
         harvestingAmountMinimumLabel = new javax.swing.JLabel();
         harvestingAmountMinimumTextField = new javax.swing.JTextField();
         harvestingAmountMaximumLabel = new javax.swing.JLabel();
         harvestingAmountMaximumTextField = new javax.swing.JTextField();
-        clearingLabel = new javax.swing.JLabel();
-        clearingTextField = new javax.swing.JTextField();
-        jPanel9 = new javax.swing.JPanel();
-        natureProtectionLabel = new javax.swing.JLabel();
+        protectionPanel = new javax.swing.JPanel();
         habitatTreesLabel = new javax.swing.JLabel();
         habitatTreesTextField = new javax.swing.JTextField();
         woodTypeComboBox = new javax.swing.JComboBox();
@@ -126,18 +144,17 @@ public class TgTreatmentMan3 extends JPanel {
         minimumCoverTextField = new javax.swing.JTextField();
         protectionThicknessLabel = new javax.swing.JLabel();
         protectionThicknessTextField = new javax.swing.JTextField();
-        jPanel10 = new javax.swing.JPanel();
-        plantingLabel = new javax.swing.JLabel();
+        plantingPanel = new javax.swing.JPanel();
         plantingCheckbox = new javax.swing.JCheckBox();
         unterstoryRemovalCheckBox = new javax.swing.JCheckBox();
         plantAtLabel = new javax.swing.JLabel();
         plantAtTextField = new javax.swing.JTextField();
         speciesCodeLabel = new javax.swing.JLabel();
         speciesCodeTextField = new javax.swing.JTextField();
-        jPanel5 = new javax.swing.JPanel();
+        speciesSettingsPanel = new javax.swing.JPanel();
         speciesSettingsLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        speciesScrollPane = new javax.swing.JScrollPane();
+        speciesTable = new javax.swing.JTable();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -149,13 +166,8 @@ public class TgTreatmentMan3 extends JPanel {
         simulationDurationLabel.setText(bundle.getString("TgTreatmentMan3.simulationDurationLabel.text")); // NOI18N
         jPanel1.add(simulationDurationLabel);
 
-        simulationDurationTextField.setText(bundle.getString("TgTreatmentMan3.simulationDurationTextField.text")); // NOI18N
+        simulationDurationTextField.setText("5"); // NOI18N
         simulationDurationTextField.setPreferredSize(new java.awt.Dimension(22, 20));
-        simulationDurationTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simulationDurationTextFieldActionPerformed(evt);
-            }
-        });
         jPanel1.add(simulationDurationTextField);
 
         simulationDurationUnitLabel.setText(bundle.getString("TgTreatmentMan3.simulationDurationUnitLabel.text")); // NOI18N
@@ -175,11 +187,20 @@ public class TgTreatmentMan3 extends JPanel {
 
         useMortalityCheckBox.setSelected(true);
         useMortalityCheckBox.setText(bundle.getString("TgTreatmentMan3.useMortalityCheckBox.text")); // NOI18N
+        useMortalityCheckBox.setPreferredSize(new java.awt.Dimension(67, 15));
         jPanel1.add(useMortalityCheckBox);
 
         useRiskModelCheckBox.setSelected(true);
         useRiskModelCheckBox.setText(bundle.getString("TgTreatmentMan3.useRiskModelCheckBox.text")); // NOI18N
+        useRiskModelCheckBox.setPreferredSize(new java.awt.Dimension(75, 15));
         jPanel1.add(useRiskModelCheckBox);
+
+        useClimateDataCheckBox.setSelected(true);
+        useClimateDataCheckBox.setText(bundle.getString("TgTreatmentMan3.useClimateDataCheckBox.text")); // NOI18N
+        jPanel1.add(useClimateDataCheckBox);
+
+        climateScenarioComboBox.setModel(loadClimateScenarios());
+        jPanel1.add(climateScenarioComboBox);
 
         startSimulationButton.setText(bundle.getString("TgTreatmentMan3.startSimulationButton.text")); // NOI18N
         startSimulationButton.addActionListener(new java.awt.event.ActionListener() {
@@ -191,100 +212,79 @@ public class TgTreatmentMan3 extends JPanel {
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jPanel2.setLayout(new java.awt.GridLayout(2, 0));
+        jPanel2.setLayout(new java.awt.BorderLayout());
 
-        jPanel4.setLayout(new java.awt.GridLayout(6, 0));
+        treatmentRulesPanel.setLayout(new javax.swing.BoxLayout(treatmentRulesPanel, javax.swing.BoxLayout.PAGE_AXIS));
 
-        jPanel11.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        HeadingPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-        scenarioSettingsHeadingLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        scenarioSettingsHeadingLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         scenarioSettingsHeadingLabel.setText(bundle.getString("TgTreatmentMan3.scenarioSettingsHeadingLabel.text")); // NOI18N
-        jPanel11.add(scenarioSettingsHeadingLabel);
+        HeadingPanel.add(scenarioSettingsHeadingLabel);
 
-        jPanel4.add(jPanel11);
+        treatmentRulesPanel.add(HeadingPanel);
 
-        jPanel6.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        developmentLabel.setText(bundle.getString("TgTreatmentMan3.developmentLabel.text")); // NOI18N
-        jPanel6.add(developmentLabel);
+        skidtrailsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), bundle.getString("TgTreatmentMan3.skidtrailPanel.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        skidtrailsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         developmentCheckBox.setText(bundle.getString("TgTreatmentMan3.developmentCheckBox.text")); // NOI18N
-        developmentCheckBox.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        developmentCheckBox.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        developmentCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                developmentCheckBoxActionPerformed(evt);
-            }
-        });
-        jPanel6.add(developmentCheckBox);
+        skidtrailsPanel.add(developmentCheckBox);
 
         skidtrailDistanceLabel.setText(bundle.getString("TgTreatmentMan3.skidtrailDistanceLabel.text")); // NOI18N
-        jPanel6.add(skidtrailDistanceLabel);
+        skidtrailsPanel.add(skidtrailDistanceLabel);
 
-        skidtrailDistanceTextField.setText(bundle.getString("TgTreatmentMan3.skidtrailDistanceTextField.text")); // NOI18N
+        skidtrailDistanceTextField.setText("20.0"); // NOI18N
         skidtrailDistanceTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel6.add(skidtrailDistanceTextField);
+        skidtrailsPanel.add(skidtrailDistanceTextField);
 
         skidtrailWidthLabel.setText(bundle.getString("TgTreatmentMan3.skidtrailWidthLabel.text")); // NOI18N
-        jPanel6.add(skidtrailWidthLabel);
+        skidtrailsPanel.add(skidtrailWidthLabel);
 
-        skidtrailWidthTextField.setText(bundle.getString("TgTreatmentMan3.skidtrailWidthTextField.text")); // NOI18N
+        skidtrailWidthTextField.setText("4.0"); // NOI18N
         skidtrailWidthTextField.setPreferredSize(new java.awt.Dimension(30, 20));
-        jPanel6.add(skidtrailWidthTextField);
+        skidtrailsPanel.add(skidtrailWidthTextField);
 
-        jPanel4.add(jPanel6);
+        treatmentRulesPanel.add(skidtrailsPanel);
 
-        jPanel7.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        thinningTypeLabel.setText(bundle.getString("TgTreatmentMan3.thinningTypeLabel.text")); // NOI18N
-        jPanel7.add(thinningTypeLabel);
-
-        thinningTypeComboBox.setModel(new DefaultComboBoxModel(ThinningType.values()));
-        thinningTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                thinningTypeComboBoxActionPerformed(evt);
-            }
-        });
-        jPanel7.add(thinningTypeComboBox);
-
-        thinningIntensityLabel.setText(bundle.getString("TgTreatmentMan3.thinningIntensityLabel.text")); // NOI18N
-        jPanel7.add(thinningIntensityLabel);
-
-        jPanel7.add(thinningIntensityComboBox);
-
-        thinningAmountMinimumLabel.setText(bundle.getString("TgTreatmentMan3.thinningAmountMinimumLabel.text")); // NOI18N
-        jPanel7.add(thinningAmountMinimumLabel);
-
-        thinningAmountMinimumTextField.setText(bundle.getString("TgTreatmentMan3.thinningAmountMinimumTextField.text")); // NOI18N
-        thinningAmountMinimumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel7.add(thinningAmountMinimumTextField);
-
-        thinningAmountMaximumLabel.setText(bundle.getString("TgTreatmentMan3.thinningAmountMaximumLabel.text")); // NOI18N
-        jPanel7.add(thinningAmountMaximumLabel);
-
-        thinningAmountMaximumTextField.setText(bundle.getString("TgTreatmentMan3.thinningAmountMaximumTextField.text")); // NOI18N
-        thinningAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        thinningAmountMaximumTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                thinningAmountMaximumTextFieldActionPerformed(evt);
-            }
-        });
-        jPanel7.add(thinningAmountMaximumTextField);
+        thinningPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), bundle.getString("TgTreatmentMan3.thinningPanel.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        thinningPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         releaseOnlyCropTreesCheckBox.setText(bundle.getString("TgTreatmentMan3.releaseOnlyCropTreesCheckBox.text")); // NOI18N
-        releaseOnlyCropTreesCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                releaseOnlyCropTreesCheckBoxActionPerformed(evt);
-            }
-        });
-        jPanel7.add(releaseOnlyCropTreesCheckBox);
+        thinningPanel.add(releaseOnlyCropTreesCheckBox);
 
-        jPanel4.add(jPanel7);
+        thinningTypeLabel.setText(bundle.getString("TgTreatmentMan3.thinningTypeLabel.text")); // NOI18N
+        thinningPanel.add(thinningTypeLabel);
 
-        jPanel8.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        thinningTypeComboBox.setModel(new DefaultComboBoxModel(ThinningType.values()));
+        thinningPanel.add(thinningTypeComboBox);
+
+        thinningIntensityLabel.setText(bundle.getString("TgTreatmentMan3.thinningIntensityLabel.text")); // NOI18N
+        thinningPanel.add(thinningIntensityLabel);
+
+        thinningPanel.add(thinningIntensityComboBox);
+
+        thinningAmountMinimumLabel.setText(bundle.getString("TgTreatmentMan3.thinningAmountMinimumLabel.text")); // NOI18N
+        thinningPanel.add(thinningAmountMinimumLabel);
+
+        thinningAmountMinimumTextField.setText("0"); // NOI18N
+        thinningAmountMinimumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
+        thinningPanel.add(thinningAmountMinimumTextField);
+
+        thinningAmountMaximumLabel.setText(bundle.getString("TgTreatmentMan3.thinningAmountMaximumLabel.text")); // NOI18N
+        thinningPanel.add(thinningAmountMaximumLabel);
+
+        thinningAmountMaximumTextField.setText("60"); // NOI18N
+        thinningAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
+        thinningPanel.add(thinningAmountMaximumTextField);
+
+        treatmentRulesPanel.add(thinningPanel);
+
+        harvestingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), bundle.getString("TgTreatmentMan3.harvestingPanel.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        harvestingPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         harvestingTypeLabel.setText(bundle.getString("TgTreatmentMan3.harvestingTypeLabel.text")); // NOI18N
-        jPanel8.add(harvestingTypeLabel);
+        harvestingTypeLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        harvestingPanel.add(harvestingTypeLabel);
 
         harvestingTypeComboBox.setModel(new DefaultComboBoxModel(HarvestingType.values()));
         harvestingTypeComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -292,108 +292,99 @@ public class TgTreatmentMan3 extends JPanel {
                 harvestingTypeComboBoxActionPerformed(evt);
             }
         });
-        jPanel8.add(harvestingTypeComboBox);
-
-        harvestingAmountMinimumLabel.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMinimumLabel.text")); // NOI18N
-        jPanel8.add(harvestingAmountMinimumLabel);
-
-        harvestingAmountMinimumTextField.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMinimumTextField.text")); // NOI18N
-        harvestingAmountMinimumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel8.add(harvestingAmountMinimumTextField);
-
-        harvestingAmountMaximumLabel.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMaximumLabel.text")); // NOI18N
-        jPanel8.add(harvestingAmountMaximumLabel);
-
-        harvestingAmountMaximumTextField.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMaximumTextField.text")); // NOI18N
-        harvestingAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        harvestingAmountMaximumTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                harvestingAmountMaximumTextFieldActionPerformed(evt);
-            }
-        });
-        jPanel8.add(harvestingAmountMaximumTextField);
+        harvestingPanel.add(harvestingTypeComboBox);
 
         clearingLabel.setText(bundle.getString("TgTreatmentMan3.clearingLabel.text")); // NOI18N
-        jPanel8.add(clearingLabel);
+        harvestingPanel.add(clearingLabel);
 
-        clearingTextField.setText(bundle.getString("TgTreatmentMan3.clearingTextField.text")); // NOI18N
+        clearingTextField.setText("0.3"); // NOI18N
         clearingTextField.setPreferredSize(new java.awt.Dimension(135, 20));
-        jPanel8.add(clearingTextField);
+        harvestingPanel.add(clearingTextField);
 
-        jPanel4.add(jPanel8);
+        harvestingAmountMinimumLabel.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMinimumLabel.text")); // NOI18N
+        harvestingPanel.add(harvestingAmountMinimumLabel);
 
-        jPanel9.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        harvestingAmountMinimumTextField.setText("10"); // NOI18N
+        harvestingAmountMinimumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
+        harvestingPanel.add(harvestingAmountMinimumTextField);
 
-        natureProtectionLabel.setText(bundle.getString("TgTreatmentMan3.natureProtectionLabel.text")); // NOI18N
-        jPanel9.add(natureProtectionLabel);
+        harvestingAmountMaximumLabel.setText(bundle.getString("TgTreatmentMan3.harvestingAmountMaximumLabel.text")); // NOI18N
+        harvestingPanel.add(harvestingAmountMaximumLabel);
+
+        harvestingAmountMaximumTextField.setText("120"); // NOI18N
+        harvestingAmountMaximumTextField.setPreferredSize(new java.awt.Dimension(35, 20));
+        harvestingPanel.add(harvestingAmountMaximumTextField);
+
+        treatmentRulesPanel.add(harvestingPanel);
+
+        protectionPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), bundle.getString("TgTreatmentMan3.natureProtectionPanel.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        protectionPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         habitatTreesLabel.setText(bundle.getString("TgTreatmentMan3.habitatTreesLabel.text")); // NOI18N
-        jPanel9.add(habitatTreesLabel);
+        habitatTreesLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        protectionPanel.add(habitatTreesLabel);
 
-        habitatTreesTextField.setText(bundle.getString("TgTreatmentMan3.habitatTreesTextField.text")); // NOI18N
+        habitatTreesTextField.setText("0"); // NOI18N
         habitatTreesTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel9.add(habitatTreesTextField);
+        protectionPanel.add(habitatTreesTextField);
 
         woodTypeComboBox.setModel(new DefaultComboBoxModel(WoodType.values()));
-        jPanel9.add(woodTypeComboBox);
+        protectionPanel.add(woodTypeComboBox);
 
         minorityProtectionCheckBox.setText(bundle.getString("TgTreatmentMan3.minorityProtectionCheckBox.text")); // NOI18N
-        jPanel9.add(minorityProtectionCheckBox);
+        protectionPanel.add(minorityProtectionCheckBox);
 
         minimumCoverLabel.setText(bundle.getString("TgTreatmentMan3.minimumCoverLabel.text")); // NOI18N
-        jPanel9.add(minimumCoverLabel);
+        protectionPanel.add(minimumCoverLabel);
 
-        minimumCoverTextField.setText(bundle.getString("TgTreatmentMan3.minimumCoverTextField.text")); // NOI18N
+        minimumCoverTextField.setText("0.0"); // NOI18N
         minimumCoverTextField.setPreferredSize(new java.awt.Dimension(26, 20));
-        jPanel9.add(minimumCoverTextField);
+        protectionPanel.add(minimumCoverTextField);
 
         protectionThicknessLabel.setText(bundle.getString("TgTreatmentMan3.protectionThicknessLabel.text")); // NOI18N
-        jPanel9.add(protectionThicknessLabel);
+        protectionPanel.add(protectionThicknessLabel);
 
-        protectionThicknessTextField.setText(bundle.getString("TgTreatmentMan3.protectionThicknessTextField.text")); // NOI18N
-        protectionThicknessTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                protectionThicknessTextFieldActionPerformed(evt);
-            }
-        });
-        jPanel9.add(protectionThicknessTextField);
+        protectionThicknessTextField.setText("150"); // NOI18N
+        protectionPanel.add(protectionThicknessTextField);
 
-        jPanel4.add(jPanel9);
+        treatmentRulesPanel.add(protectionPanel);
 
-        jPanel10.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
-
-        plantingLabel.setText(bundle.getString("TgTreatmentMan3.plantingLabel.text")); // NOI18N
-        jPanel10.add(plantingLabel);
+        plantingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), bundle.getString("TgTreatmentMan3.plantingPanel.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
+        plantingPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         plantingCheckbox.setText(bundle.getString("TgTreatmentMan3.plantingCheckbox.text")); // NOI18N
-        jPanel10.add(plantingCheckbox);
+        plantingPanel.add(plantingCheckbox);
 
         unterstoryRemovalCheckBox.setText(bundle.getString("TgTreatmentMan3.unterstoryRemovalCheckBox.text")); // NOI18N
-        jPanel10.add(unterstoryRemovalCheckBox);
+        plantingPanel.add(unterstoryRemovalCheckBox);
 
         plantAtLabel.setText(bundle.getString("TgTreatmentMan3.plantAtLabel.text")); // NOI18N
-        jPanel10.add(plantAtLabel);
+        plantingPanel.add(plantAtLabel);
 
-        plantAtTextField.setText(bundle.getString("TgTreatmentMan3.plantAtTextField.text")); // NOI18N
+        plantAtTextField.setText("0.1"); // NOI18N
         plantAtTextField.setPreferredSize(new java.awt.Dimension(35, 20));
-        jPanel10.add(plantAtTextField);
+        plantingPanel.add(plantAtTextField);
 
         speciesCodeLabel.setText(bundle.getString("TgTreatmentMan3.speciesCodeLabel.text")); // NOI18N
-        jPanel10.add(speciesCodeLabel);
+        plantingPanel.add(speciesCodeLabel);
 
         speciesCodeTextField.setPreferredSize(new java.awt.Dimension(50, 20));
-        jPanel10.add(speciesCodeTextField);
+        plantingPanel.add(speciesCodeTextField);
 
-        jPanel4.add(jPanel10);
+        treatmentRulesPanel.add(plantingPanel);
 
-        jPanel2.add(jPanel4);
+        jPanel2.add(treatmentRulesPanel, java.awt.BorderLayout.NORTH);
 
-        jPanel5.setLayout(new java.awt.BorderLayout());
+        speciesSettingsPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 8, 5, 5));
+        speciesSettingsPanel.setPreferredSize(new java.awt.Dimension(452, 150));
+        speciesSettingsPanel.setLayout(new java.awt.BorderLayout());
 
+        speciesSettingsLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         speciesSettingsLabel.setText(bundle.getString("TgTreatmentMan3.speciesSettingsLabel.text")); // NOI18N
-        jPanel5.add(speciesSettingsLabel, java.awt.BorderLayout.PAGE_START);
+        speciesSettingsLabel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 0, 5, 0));
+        speciesSettingsPanel.add(speciesSettingsLabel, java.awt.BorderLayout.PAGE_START);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        speciesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -401,33 +392,35 @@ public class TgTreatmentMan3 extends JPanel {
 
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        speciesScrollPane.setViewportView(speciesTable);
 
-        jPanel5.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+        speciesSettingsPanel.add(speciesScrollPane, java.awt.BorderLayout.CENTER);
 
-        jPanel2.add(jPanel5);
+        jPanel2.add(speciesSettingsPanel, java.awt.BorderLayout.CENTER);
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-private void harvestingAmountMaximumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harvestingAmountMaximumTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_harvestingAmountMaximumTextFieldActionPerformed
-
-private void releaseOnlyCropTreesCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_releaseOnlyCropTreesCheckBoxActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_releaseOnlyCropTreesCheckBoxActionPerformed
-
-private void simulationDurationTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simulationDurationTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_simulationDurationTextFieldActionPerformed
 
 private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSimulationButtonActionPerformed
     loadSettingsToStandRule();
 
     int simTime = Integer.parseInt(simulationDurationTextField.getText());
     int nSimSteps = (int) Math.ceil(Double.parseDouble(simulationDurationTextField.getText()) / st.timeStep);
-    Simulation simulation = new Simulation(st, true, useMortalityCheckBox.isSelected());
+    boolean dsiEnabled = useClimateDataCheckBox.isSelected();
+    boolean useMortality = useMortalityCheckBox.isSelected();
+    Simulation simulation = new Simulation(st, true, useMortality);
+    if (dsiEnabled) {
+        DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(userSettings.getClimateDatabase());
+        final String climateScenario = (String) climateScenarioComboBox.getSelectedItem();
+        EnvironmentVariables environmentalData = environmentalDatabase.environmentalDataFor(st.location, climateScenario);
+        if (environmentalData.dataMissingFor(Year.of(st.year), Year.of(st.year + simTime))) {
+            if (continueQuestionAnswer() == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+        simulation = new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, climateScenario);
+    }
+    
     for (int i = 0; i < nSimSteps; i++){
         int time = st.timeStep;
         if (simTime < st.timeStep) {
@@ -440,13 +433,13 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
 
-private void developmentCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_developmentCheckBoxActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_developmentCheckBoxActionPerformed
-
-private void thinningAmountMaximumTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thinningAmountMaximumTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_thinningAmountMaximumTextFieldActionPerformed
+    private int continueQuestionAnswer() throws HeadlessException {
+        return JOptionPane.showConfirmDialog(
+                getParent(),
+                messages.getString("TgTreatmentMan3.climateData.incomplete.message"),
+                messages.getString("TgTreatmentMan3.climateData.incomplete.title"),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
 
 private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_harvestingTypeComboBoxActionPerformed
     if (harvestingTypeComboBox.getSelectedIndex()==0){
@@ -479,14 +472,6 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         clearingLabel.setVisible(false);
     }
 }//GEN-LAST:event_harvestingTypeComboBoxActionPerformed
-
-private void protectionThicknessTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_protectionThicknessTextFieldActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_protectionThicknessTextFieldActionPerformed
-
-private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_thinningTypeComboBoxActionPerformed
-    // TODO add your handling code here:
-}//GEN-LAST:event_thinningTypeComboBoxActionPerformed
    
     public void formUpdate(Stand stand){
         loadTable();
@@ -511,16 +496,16 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         if (st.nspecies == 1) st.sp[0].trule.targetCrownPercent=100.0;
         for (int i=0; i< st.nspecies; i++){
                data.addRow(rowData);
-               jTable1.setValueAt(st.sp[i].spDef.shortName,i,0);
-               jTable1.setValueAt(st.sp[i].code,i,1);
-               jTable1.setValueAt(f.format(st.sp[i].trule.minCropTreeHeight),i,2);
-               jTable1.setValueAt(f.format(st.sp[i].trule.targetDiameter),i,3);
-               jTable1.setValueAt(f.format(st.sp[i].trule.targetCrownPercent),i,5);
+               speciesTable.setValueAt(st.sp[i].spDef.shortName,i,0);
+               speciesTable.setValueAt(st.sp[i].code,i,1);
+               speciesTable.setValueAt(f.format(st.sp[i].trule.minCropTreeHeight),i,2);
+               speciesTable.setValueAt(f.format(st.sp[i].trule.targetDiameter),i,3);
+               speciesTable.setValueAt(f.format(st.sp[i].trule.targetCrownPercent),i,5);
                Integer nct = (int) Math.round(st.sp[i].trule.numberCropTreesWanted/(st.sp[i].trule.targetCrownPercent/100.0));
                if (nct <= 1) nct = st.sp[i].spDef.cropTreeNumber;
  //              if (nct <= 2) nct = numberOfCropTrees(i,st.sp[i].trule.targetDiameter,
  //                                                          st.sp[i].trule.targetCrownPercent);
-               jTable1.setValueAt(nct.toString(),i,4);
+               speciesTable.setValueAt(nct.toString(),i,4);
                Double flant = Math.round(st.sp[i].trule.targetCrownPercent/(10.0 ))/10.0;
                pflArten = pflArten + st.sp[i].code + "["+flant.toString()+"];";
         }
@@ -529,11 +514,33 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         }
     }
     
+    public ComboBoxModel loadClimateScenarios() {
+        final boolean climateDataAvailable = userSettings.getClimateDatabase().exists();
+        useClimateDataCheckBox.setSelected(climateDataAvailable);
+        useClimateDataCheckBox.setEnabled(climateDataAvailable);
+        climateScenarioComboBox.setEnabled(climateDataAvailable);
+        if (!climateDataAvailable) {
+            return new DefaultComboBoxModel();
+        }
+        List<String> scenarios = new ArrayList<>();
+        try (Connection connection = connectionFactory.openDBConnection(userSettings.getClimateDatabase(), "", "");
+                Statement stmt = connection.createStatement()) {
+            try (ResultSet rs = stmt.executeQuery("select distinct scenario from input_data")) {
+                while (rs.next()) {
+                    scenarios.add(rs.getString("scenario"));
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Problem with database", e);
+        }
+        return new DefaultComboBoxModel(scenarios.toArray());
+    }
+    
     public void loadSettingsToStandRule() {
       if (useRandomEffectsCheckBox.isSelected()) {
-          st.random.setRandomType(11);
+          st.random.setRandomType(RandomNumber.PSEUDO_FIXED);
       } else {
-          st.random.setRandomType(10);
+          st.random.setRandomType(RandomNumber.OFF);
       }
       st.ingrowthActive = useIngrowthModelCheckBox.isSelected();
       st.riskActive = useRiskModelCheckBox.isSelected();
@@ -566,17 +573,17 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
         st.trule.setNatureProtection(Integer.parseInt(habitatTreesTextField.getText()), woodTypeComboBox.getSelectedIndex(), 
                 minorityProtectionCheckBox.isSelected(),Double.parseDouble(minimumCoverTextField.getText()),Integer.parseInt(protectionThicknessTextField.getText()));
       }
-      for (int i=0; i < jTable1.getRowCount(); i++){
+      for (int i=0; i < speciesTable.getRowCount(); i++){
           int merk = -9;
           for (int j = 0; j < st.nspecies; j++){
-              int codex = (Integer) (jTable1.getValueAt(i,1));
+              int codex = (Integer) (speciesTable.getValueAt(i,1));
               if (st.sp[j].code == codex) merk= j;
           }
           if (merk > -9){
-             st.sp[merk].trule.minCropTreeHeight = Double.parseDouble((String)(jTable1.getValueAt(i,2))); 
-             st.sp[merk].trule.targetCrownPercent = Double.parseDouble((String)(jTable1.getValueAt(i,5))); 
-             st.sp[merk].trule.targetDiameter = Double.parseDouble((String)(jTable1.getValueAt(i,3))); 
-             st.sp[merk].trule.numberCropTreesWanted = (int)(Integer.parseInt((String)(jTable1.getValueAt(i,4)))*st.sp[merk].trule.targetCrownPercent/100.0);
+             st.sp[merk].trule.minCropTreeHeight = Double.parseDouble((String)(speciesTable.getValueAt(i,2))); 
+             st.sp[merk].trule.targetCrownPercent = Double.parseDouble((String)(speciesTable.getValueAt(i,5))); 
+             st.sp[merk].trule.targetDiameter = Double.parseDouble((String)(speciesTable.getValueAt(i,3))); 
+             st.sp[merk].trule.numberCropTreesWanted = (int)(Integer.parseInt((String)(speciesTable.getValueAt(i,4)))*st.sp[merk].trule.targetCrownPercent/100.0);
           }
        }
       double sum=0.0; 
@@ -585,51 +592,31 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
       loadTable();
     }
 
-    public int numberOfCropTrees(int speciesIndex, double diameter, double percentage) {
-        Tree atree = new Tree();
-        atree.st = st;
-        atree.code = st.sp[speciesIndex].code;
-        atree.sp = st.sp[speciesIndex];
-        atree.d = diameter;
-        atree.h = st.sp[speciesIndex].hg;
-        double dist_ct = atree.calculateCw();
-        // Number of crop trees dependent on calcualted distance and actual mixture percent
-        return (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * percentage / 100.0);
-    }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel HeadingPanel;
     private javax.swing.JLabel clearingLabel;
     private javax.swing.JTextField clearingTextField;
+    private javax.swing.JComboBox<String> climateScenarioComboBox;
     private javax.swing.JCheckBox developmentCheckBox;
-    private javax.swing.JLabel developmentLabel;
     private javax.swing.JLabel habitatTreesLabel;
     private javax.swing.JTextField habitatTreesTextField;
     private javax.swing.JLabel harvestingAmountMaximumLabel;
     private javax.swing.JTextField harvestingAmountMaximumTextField;
     private javax.swing.JLabel harvestingAmountMinimumLabel;
     private javax.swing.JTextField harvestingAmountMinimumTextField;
+    private javax.swing.JPanel harvestingPanel;
     private javax.swing.JComboBox harvestingTypeComboBox;
     private javax.swing.JLabel harvestingTypeLabel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel minimumCoverLabel;
     private javax.swing.JTextField minimumCoverTextField;
     private javax.swing.JCheckBox minorityProtectionCheckBox;
-    private javax.swing.JLabel natureProtectionLabel;
     private javax.swing.JLabel plantAtLabel;
     private javax.swing.JTextField plantAtTextField;
     private javax.swing.JCheckBox plantingCheckbox;
-    private javax.swing.JLabel plantingLabel;
+    private javax.swing.JPanel plantingPanel;
+    private javax.swing.JPanel protectionPanel;
     private javax.swing.JLabel protectionThicknessLabel;
     private javax.swing.JTextField protectionThicknessTextField;
     private javax.swing.JCheckBox releaseOnlyCropTreesCheckBox;
@@ -641,9 +628,13 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField skidtrailDistanceTextField;
     private javax.swing.JLabel skidtrailWidthLabel;
     private javax.swing.JTextField skidtrailWidthTextField;
+    private javax.swing.JPanel skidtrailsPanel;
     private javax.swing.JLabel speciesCodeLabel;
     private javax.swing.JTextField speciesCodeTextField;
+    private javax.swing.JScrollPane speciesScrollPane;
     private javax.swing.JLabel speciesSettingsLabel;
+    private javax.swing.JPanel speciesSettingsPanel;
+    private javax.swing.JTable speciesTable;
     private javax.swing.JButton startSimulationButton;
     private javax.swing.JLabel thinningAmountMaximumLabel;
     private javax.swing.JTextField thinningAmountMaximumTextField;
@@ -651,9 +642,12 @@ private void thinningTypeComboBoxActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JTextField thinningAmountMinimumTextField;
     private javax.swing.JComboBox thinningIntensityComboBox;
     private javax.swing.JLabel thinningIntensityLabel;
+    private javax.swing.JPanel thinningPanel;
     private javax.swing.JComboBox thinningTypeComboBox;
     private javax.swing.JLabel thinningTypeLabel;
+    private javax.swing.JPanel treatmentRulesPanel;
     private javax.swing.JCheckBox unterstoryRemovalCheckBox;
+    private javax.swing.JCheckBox useClimateDataCheckBox;
     private javax.swing.JCheckBox useIngrowthModelCheckBox;
     private javax.swing.JCheckBox useMortalityCheckBox;
     private javax.swing.JCheckBox useRandomEffectsCheckBox;

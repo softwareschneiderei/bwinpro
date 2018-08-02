@@ -15,15 +15,19 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
  */
 package forestsimulator.roots;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.text.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JPanel;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.ProcessingInstruction;
 import org.jdom.input.*;
 import org.jdom.output.XMLOutputter;
@@ -34,17 +38,13 @@ import treegross.base.*;
  *
  * @author  nagel
  */
-public class RootsPanel extends javax.swing.JPanel {
+public class RootsPanel extends JPanel {
     
-    RootsSpeciesSetting rss[] = new RootsSpeciesSetting[500]; 
-    int nrss=-9;
-    static Document doc;
-    static Element rootElt;
-    
+    private static final Logger logger = Logger.getLogger(RootsPanel.class.getName());
+    private RootsSpeciesSetting rss[] = new RootsSpeciesSetting[500]; 
+    private int nrss=-9;
 
-    javax.swing.DefaultListModel listModel = new javax.swing.DefaultListModel();
-    int nlist = 0;
-    boolean neuspeichern = false;
+    private DefaultListModel listModel = new DefaultListModel();
     String fname="";
     String proDir;
     boolean dialogActive = true;
@@ -54,7 +54,6 @@ public class RootsPanel extends javax.swing.JPanel {
     Stand st = null;
     URL urlRootFun = null;
     
-    /** Creates new form LoggingPanel */
     public RootsPanel(Stand stand, String programDir, boolean interActive, String workingDir) {
         initComponents();
         dialogActive = interActive;
@@ -129,11 +128,6 @@ public class RootsPanel extends javax.swing.JPanel {
         jPanel8.add(filenameTextField);
 
         loadButton.setText(bundle.getString("RootsPanel.loadButton.text")); // NOI18N
-        loadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loadButtonActionPerformed(evt);
-            }
-        });
         jPanel8.add(loadButton);
 
         add(jPanel8, java.awt.BorderLayout.NORTH);
@@ -290,11 +284,6 @@ public class RootsPanel extends javax.swing.JPanel {
         add(jPanel1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
-       
-// TODO add your handling code here:
-    }//GEN-LAST:event_loadButtonActionPerformed
-
     private void jList1ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList1ValueChanged
 // Chane of species List
        showFunctions();
@@ -303,7 +292,6 @@ public class RootsPanel extends javax.swing.JPanel {
     private void calculateBiomassButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateBiomassButtonActionPerformed
         // Calculate and write xml
         String pa = "";
-        String dn = "";
         pa = workDir + System.getProperty("file.separator") + "rootbiomass.xml";
         NumberFormat f = NumberFormat.getInstance();
         f = NumberFormat.getInstance(new Locale("en", "US"));
@@ -311,13 +299,11 @@ public class RootsPanel extends javax.swing.JPanel {
         f.setMinimumFractionDigits(2);
         f.setGroupingUsed(false);
         Element elt;
-        Element elt2;
-        Element elt3;
         /**
          * Creates an Treegross xml
          */
         Document doc = new Document();
-        rootElt = new Element("Rootbiomass");
+        Element rootElt = new Element("Rootbiomass");
         ProcessingInstruction pi = new ProcessingInstruction("xml-stylesheet",
                 "type=\"text/xsl\" href=\"rootbiomass.xsl\"");
         doc.addContent(pi);
@@ -339,8 +325,8 @@ public class RootsPanel extends javax.swing.JPanel {
             rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
             rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
             rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
+            rootElt = addString(rootElt, "Wuchsgebiet", st.location.growingRegion);
+            rootElt = addString(rootElt, "Wuchsbezirk", st.location.growingSubRegion);
             rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
 
 // Table of functions
@@ -419,7 +405,7 @@ public class RootsPanel extends javax.swing.JPanel {
                 }
             }
         } catch (Exception e) {
-            System.out.println(e);
+            logger.log(Level.SEVERE, "Problem building document.", e);
         }
         try (FileOutputStream result = new FileOutputStream(pa)) {
             XMLOutputter outputter = new XMLOutputter();
@@ -428,22 +414,21 @@ public class RootsPanel extends javax.swing.JPanel {
                 String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + System.getProperty("file.separator") + pa;
                 try {
                     Runtime.getRuntime().exec(" rundll32 url.dll,FileProtocolHandler " + seite);
-                } catch (Exception e2) {
-                    System.out.println(e2);
+                } catch (IOException e2) {
+                    logger.log(Level.INFO, "Problem executing file protocol handler.", e2);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Problem writing document.", e);
         }
     }//GEN-LAST:event_calculateBiomassButtonActionPerformed
 
 private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadFunctionsButtonActionPerformed
-// Load alternative functions
+    // Load alternative functions
     int codex = Integer.parseInt(speciesCodeTextField.getText());
     int m = jList1.getSelectedIndex();
     loadAlternativeCodeFunctions(urlRootFun, m, codex);
     showFunctions();
-    
 }//GEN-LAST:event_loadFunctionsButtonActionPerformed
     
     Element addString(Element elt, String variable, String text){
@@ -452,7 +437,6 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
             elt.addContent(var);
             return elt;
     }
-   
        
     public void loadSpecies(){
         nrss=0;
@@ -464,18 +448,15 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
 
             nrss=nrss+1;
          } 
-
-
     }    
-   public void loadSpeciesFunctions(URL url){
+ 
+    public void loadSpeciesFunctions(URL url){
       try {
          SAXBuilder builder = new SAXBuilder();
          URLConnection urlcon = url.openConnection();
 
          Document doc = builder.build(urlcon.getInputStream());
          
-         DocType docType = doc.getDocType();
-//        
          Element rootelemente =  doc.getRootElement();  
          List liste = rootelemente.getChildren("Function");
          Iterator i = liste.iterator();
@@ -485,18 +466,19 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
             int co = Integer.parseInt(rootelement.getChild("Code").getText());
             for (int j=0; j< nrss; j++)
                 if (co == rss[j].code){
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfCoarseRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfCoarseRoots"))
                         rss[j].coarseRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfFineRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfFineRoots"))
                         rss[j].fineRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfSmallRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfSmallRoots"))
                         rss[j].smallRootFun=rootelement.getChild("Function").getText();
-                    if (rootelement.getChild("Component").getText().indexOf("biomassOfTotalRoots")>-1)
+                    if (rootelement.getChild("Component").getText().contains("biomassOfTotalRoots"))
                         rss[j].totalRootFun=rootelement.getChild("Function").getText();
                 }
          } 
-
-       } catch (Exception e) {e.printStackTrace();}
+       } catch (IOException | NumberFormatException | JDOMException e) {
+           logger.log(Level.SEVERE, "Problem loading species functions from XML.", e);
+       }
       
    }; 
    public void loadAlternativeCodeFunctions(URL url, int nrss, int codex){
@@ -505,9 +487,6 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
          URLConnection urlcon = url.openConnection();
 
          Document doc = builder.build(urlcon.getInputStream());
-         
-         DocType docType = doc.getDocType();
-//        
          Element rootelemente =  doc.getRootElement();  
          List liste = rootelemente.getChildren("Function");
          Iterator i = liste.iterator();
@@ -527,8 +506,9 @@ private void loadFunctionsButtonActionPerformed(java.awt.event.ActionEvent evt) 
                 }
          } 
 
-       } catch (Exception e) {e.printStackTrace();}
-      
+       } catch (IOException | NumberFormatException | JDOMException e) {
+           logger.log(Level.SEVERE, "Problem loading species functions from XML.", e);
+       }
    }; 
 
    private void showFunctions(){

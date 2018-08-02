@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * @author jhansen
  */
 public class TGClassFunction implements TGFunction {
+    private static final String prefix = "CLASS:";
 
     private PlugInFunctionClass fc;
     private String function;
@@ -19,12 +20,7 @@ public class TGClassFunction implements TGFunction {
 
     @Override
     public void init(String xmlText) {
-        // remove CLASS:
-        function = xmlText;
-        int m = function.indexOf("CLASS:");
-        if (m > -1) {
-            function = function.substring(m + 6);
-        }
+        function = removePrefix(xmlText.trim());
         // so können die Plugins nur im Package treegross.plugin paziert werden
         String modelPlugIn = "treegross.plugin." + function;
         try {
@@ -32,6 +28,14 @@ public class TGClassFunction implements TGFunction {
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             LOGGER.log(Level.SEVERE, "function class loading: ", e);
         }
+    }
+
+    private String  removePrefix(String xmlText) {
+        int m = xmlText.indexOf(prefix);
+        if (m > -1) {
+            return xmlText.substring(m + prefix.length());
+        }
+        return xmlText;
     }
 
     @Override
@@ -58,5 +62,10 @@ public class TGClassFunction implements TGFunction {
     @Override
     public String toString() {
         return "CLASS:" + function;
+    }
+
+    @Override
+    public boolean undefined() {
+        return function.isEmpty();
     }
 }

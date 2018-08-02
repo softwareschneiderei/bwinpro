@@ -22,7 +22,7 @@ public class Simulation {
         this.executeMortality = executeMortality;
     }
 
-    public void executeStep(int time, Consumer<Stand> publishStand) {
+    public void executeStep(int numberOfYears, Consumer<Stand> publishStand) {
         if (applyTreatment) {
             StopWatch treatment = new StopWatch("Applying treatment").start();
             treat.executeManager2(st);
@@ -36,10 +36,20 @@ public class Simulation {
         }
         st.descspecies();
         StopWatch grow = new StopWatch("Growing").start();
-        st.grow(time, st.ingrowthActive);
+        // first year of dsi calculation is the next year
+        int startYear = st.year + 1;
+        st.grow(numberOfYears, st.ingrowthActive);
         grow.printElapsedTime();
+        actionsAfterGrowing(startYear, numberOfYears);
         StopWatch save = new StopWatch("Publishing stand").start();
         publishStand.accept(st);
         save.printElapsedTime();
+    }
+    
+    protected Stand getStand() {
+        return st;
+    }
+
+    protected void actionsAfterGrowing(int startYear, int numberOfYears) {
     }
 }

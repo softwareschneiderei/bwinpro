@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import treegross.base.GenerateXY;
 import treegross.base.Layer;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
@@ -56,7 +58,7 @@ public class TreatmentElements2 {
 
     HabitatTreeSelection htselect = new HabitatTreeSelection();
 
-    private final static Logger LOGGER = Logger.getLogger(TreatmentElements2.class.getName());
+    private final static Logger logger = Logger.getLogger(TreatmentElements2.class.getName());
 
     /**
      * set volume of trees, which are taken out to 0. This sets the variables
@@ -428,13 +430,11 @@ public class TreatmentElements2 {
      */
     public void harvestClearCut(Stand st) {
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 1 && st.tr[i].h >= (st.tr[i].si * 0.6) && !st.tr[i].habitat) {
+            if (st.tr[i].isLiving() && st.tr[i].h >= (st.tr[i].si.value * 0.6) && !st.tr[i].habitat) {
                 if (getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                     break;
                 }
-                st.tr[i].out = st.year;
-                st.tr[i].outtype = OutType.HARVESTED;
-                //st.tr[i].no+="_ks";
+                st.tr[i].takeOut(st.year, OutType.HARVESTED);
             }
         }
         //clear all remaining trees if wanted
@@ -705,11 +705,12 @@ public class TreatmentElements2 {
     public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
         double maxBa = calculateMaxBasalArea(st);
-        if (maxBa == 0d) {
-            throw new IllegalStateException("Max basal area must not be 0.");
-        }
         double maxBasalAreaOut = st.bha - maxBa;
-        double baFac = st.bha / maxBa;
+        // TODO: decide what to do, see http://issuetracker.intranet:20002/browse/BWIN-78
+        if (maxBa == 0d) {
+            logger.log(Level.SEVERE, "Max basal area must not be 0.");
+        }
+        double baFac = st.bha / Math.max(1, maxBa);
         
         // http://issuetracker.intranet:20002/browse/BWIN-57:
         //   Removed additional criterion based on first species (st.sp[0])
@@ -746,6 +747,10 @@ public class TreatmentElements2 {
         if (withModerateThinningFactor) {
             basalAreaForSpecies *= atree.getModerateThinningFactor();
         }
+        if (basalAreaForSpecies == 0d) {
+            logger.log(Level.SEVERE, "Max basal area is 0 for species {0}\n and reference tree {1} with moderate thinning {2}",
+                    new Object[]{ aSpecies, atree, atree.getModerateThinningFactor()});
+        }
         return basalAreaForSpecies;
     }
 
@@ -764,10 +769,11 @@ public class TreatmentElements2 {
 
     private static double calculateMaxBasalArea(Stand st) {
         double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
+        logger.log(Level.FINE, "Max stand basal area before thinning intensity {0}", maxStandBasalArea);
         if (st.trule.thinningIntensity == 0.0) {
-            maxStandBasalArea = maxStandBasalArea * 100.0;
+            maxStandBasalArea *= 100.0;
         } else {
-            maxStandBasalArea = maxStandBasalArea * (2.0 - st.trule.thinningIntensity);
+            maxStandBasalArea *= (2.0 - st.trule.thinningIntensity);
         }
         return maxStandBasalArea;
     }
@@ -923,6 +929,10 @@ public class TreatmentElements2 {
 
     /**
      * calculate overlap area of two circle only if they overlap
+     * @param r1
+     * @param r2
+     * @param e
+     * @return 
      */
     public static double overlap(double r1, double r2, double e) {
         double x, y, f;
@@ -1073,18 +1083,18 @@ public class TreatmentElements2 {
                 site = 31.0;
             }
             for (int j = 0; j < st.ntrees; j++) {
-                if (art == st.tr[j].code && site < st.tr[j].si) {
-                    site = st.tr[j].si;
+                if (art == st.tr[j].code && site < st.tr[j].si.value) {
+                    site = st.tr[j].si.value;
                 }
             }
             double spcov = getDegreeOfCover(art, st, false);
             // get crown width at dbh = 7 cm of species at point of ingrowth            
-            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
+            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, SiteIndex.undefined, 1.0, 0.0, 0.0, 0.0, false, false,
                     false, Layer.UNDERSTORY, 0.0, "");
             try {
                 atree.sp = st.addspecies(atree);
             } catch (SpeciesNotDefinedException ex) {
-                LOGGER.log(Level.SEVERE, "treegross", ex);
+                logger.log(Level.SEVERE, "treegross", ex);
             }
             double cbx = atree.calculateCw();
             double gx = Math.PI * Math.pow(cbx / 2.0, 2.0);
@@ -1103,11 +1113,11 @@ public class TreatmentElements2 {
             // create trees
             for (int j = 0; j < npl; j++) {
                 try {
-                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, site, -9.0, -9.0, 0, 0, 0, 0)) {
+                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, si(site), -9.0, -9.0, 0, 0, 0, 0)) {
                         break;
                     }
                 } catch (SpeciesNotDefinedException e) {
-                    LOGGER.log(Level.SEVERE, "treegross", e);
+                    logger.log(Level.SEVERE, "treegross", e);
                 }
             }
             for (int i = 0; i < st.ntrees; i++) {

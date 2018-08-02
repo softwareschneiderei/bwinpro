@@ -16,6 +16,8 @@ public interface TGFunction {
     public int getType();
 
     public TGFunction clone();
+    
+    public boolean undefined();
 
     @Override
     public String toString();

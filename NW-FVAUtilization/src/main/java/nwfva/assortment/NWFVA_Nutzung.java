@@ -23,7 +23,6 @@ import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import javax.swing.JFileChooser;
