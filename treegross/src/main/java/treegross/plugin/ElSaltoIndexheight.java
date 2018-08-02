@@ -53,7 +53,7 @@ public class ElSaltoIndexheight implements PlugInFunctionClass {
                 double Asi = 20.0;
                 double d = Math.pow(hb1 / Asi, hb0);
                 double r = Math.sqrt((Math.pow((t.sp.h100 - d), 2.0) + (4 * hb1 * t.sp.h100) / Math.pow(t.age, hb0)));
-                indexheight = (t.si + d + r) / (2 + (4 * hb1 / (Math.pow((t.age + 5), hb0))) / (t.si - d + r));
+                indexheight = (t.si.value + d + r) / (2 + (4 * hb1 / (Math.pow((t.age + 5), hb0))) / (t.si.value - d + r));
                 if (indexheight <= 0.0) {
                     indexheight = 0.01;
                 }

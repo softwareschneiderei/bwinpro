@@ -14,8 +14,10 @@
 *  GNU General Public License for more details.
 */
 package forestsimulator.dbaccess;
+import forestsimulator.standsimulation.ClimateSensitiveSimulation;
 import forestsimulator.standsimulation.Simulation;
 import static forestsimulator.standsimulation.Simulation.publishNothing;
+import forestsimulator.standsimulation.TgUser;
 import forestsimulator.util.StandGeometry;
 import java.awt.Frame;
 import java.io.File;
@@ -32,6 +34,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
+import static treegross.base.SiteIndex.si;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.ScenarioThinningSettings;
@@ -52,13 +55,15 @@ public class DBAccessDialog extends JDialog {
     int growthCycles = 0;
     private final ConnectionFactory connectionFactory;
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
+    private final TgUser userSettings;
     
-    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, File dir) {
+    public DBAccessDialog(JFrame parent, boolean modal, Stand stand, TgUser userSettings) {
         super(parent, modal);
         initComponents();
+        this.userSettings = userSettings;
         connectionFactory = new ConnectionFactory(parent);
         st = stand;
-        databaseFilenameTextField.setText(new File(dir, "localdata.mdb").getPath());
+        databaseFilenameTextField.setText(new File(this.userSettings.getDataDir(), "localdata.mdb").getPath());
         elsaltoPanel.setVisible(false);
         calculateStandButton.setVisible(false);
         if (st.FileXMLSettings.indexOf("ElSalto") > 0) {
@@ -260,7 +265,7 @@ public class DBAccessDialog extends JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        standNameTextField.setText("test0001"); // NOI18N
+        standNameTextField.setText("Dgl_MDf_"); // NOI18N
 
         databaseFilenameTextField.setText(bundle.getString("DBAccessDialog.databaseFilenameTextField.text")); // NOI18N
 
@@ -445,9 +450,15 @@ public class DBAccessDialog extends JDialog {
         LoadTreegrossStand lts = new LoadTreegrossStand();
 
         String ids = standNameTextField.getText();
-        Object txt = recordingComboBox.getSelectedItem();
-
-        int aufs = Integer.parseInt(txt.toString());
+        Integer aufs = (Integer) recordingComboBox.getSelectedItem();
+        if (aufs == null) {
+            JOptionPane.showMessageDialog(
+                    rootPane,
+                    messages.getString("DBAccessDialog.inventory.not.found.message"),
+                    messages.getString("DBAccessDialog.inventory.not.found.title"),
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         try (Connection con = connectionFactory.openDBConnection(aktivesDatenfile, "", "")) {
             st = lts.loadFromDB(con, st, ids, aufs, true, true);
@@ -455,26 +466,23 @@ public class DBAccessDialog extends JDialog {
             st.missingData();
             GenerateXY gxy = new GenerateXY();
             gxy.zufall(st);
-            // Test if all trees are in area           
-            for (int k = 0; k < st.ntrees; k++) {
-                if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                    killTree(k);
-                }
-            }
-            st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth          
-            for (int k = 0; k < st.ntrees; k++) {
-                if (st.tr[k].fac == 0.0) {
-                    killTree(k);
-                }
-            }
-            st.descspecies();
+            takeOutIrrelevantTrees();
+            st.notifyStandChanged(Stand.loadedEvent);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Problem with database", e);
         }
 
         dispose();
     }//GEN-LAST:event_loadStandButtonActionPerformed
+
+    private void takeOutIrrelevantTrees() {
+        // Test if all trees are in area
+        st.forTreesMatching(tree -> StandGeometry.pnpoly(tree.x, tree.y, st) == 0, this::killTree);
+        st.descspecies();
+        // Define all trees with fac = 0.0 as dead zu that there is no growth
+        st.forTreesMatching(tree -> tree.fac == 0.0, this::killTree);
+        st.descspecies();
+    }
 
     private void calculateStandButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateStandButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
@@ -492,7 +500,7 @@ public class DBAccessDialog extends JDialog {
             st = lts.loadRules(con, st, edvId, aufId, 0);
             // XXX: Why is not AllCalculationRulesProcessor.saveStand() called?
             lts.saveBaum(con, st, edvId, aufId, 0, 0);
-            Simulation simulation = new Simulation(st, lts.applyTreatment(), lts.executeMortality());
+            Simulation simulation = getSimulation(lts.calculateDynamicSiteIndex(), lts);
             for (int step = 0; step < st.temp_Integer; step++) {
                 simulation.executeStep(5, publishNothing);
                 st.sortbyd();
@@ -508,8 +516,13 @@ public class DBAccessDialog extends JDialog {
 
     private void calculateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calculateAllButtonActionPerformed
         String aktivesDatenfile = databaseFilenameTextField.getText();
-        System.out.println("Parent: " + getParent());
-        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(new ConnectionFactory((RootPaneContainer) getParent()), aktivesDatenfile, st, updateViewCheckbox.isSelected());
+        AllCalculationRulesProcessor processor = new AllCalculationRulesProcessor(
+                new ConnectionFactory((RootPaneContainer) getParent()),
+                userSettings.getClimateDatabase(),
+                aktivesDatenfile,
+                st,
+                updateViewCheckbox.isSelected()
+        );
         BatchProgressDialog progress = new BatchProgressDialog((Frame) getParent(), new File(aktivesDatenfile).getName(), processor);
         processor.setProgressListener(progress);
         progress.pack();
@@ -584,20 +597,7 @@ public class DBAccessDialog extends JDialog {
                     st.missingData();
                     GenerateXY gxy = new GenerateXY();
                     gxy.zufall(st);
-                    // Test if all trees are in area           
-                    for (int k = 0; k < st.ntrees; k++) {
-                        if (StandGeometry.pnpoly(st.tr[k].x, st.tr[k].y, st) == 0) {
-                            killTree(k);
-                        }
-                    }
-                    st.descspecies();
-// Define all trees with fac = 0.0 as dead zu that there is no growth          
-                    for (int k = 0; k < st.ntrees; k++) {
-                        if (st.tr[k].fac == 0.0) {
-                            killTree(k);
-                        }
-                    }
-                    st.descspecies();
+                    takeOutIrrelevantTrees();
                 }
             }
 // Daten speichern        
@@ -615,9 +615,17 @@ public class DBAccessDialog extends JDialog {
         dispose();
     }//GEN-LAST:event_specialMixtureButtonActionPerformed
 
-    private void killTree(int k) {
-        st.tr[k].out = 1900;
-        st.tr[k].outtype = OutType.FALLEN;
+    // TODO: move into something like a Simulation factory
+    private Simulation getSimulation(boolean climateSensitive, LoadTreegrossStand lts) {
+        if (climateSensitive) {
+            DatabaseEnvironmentalDataProvider environmentalDatabase = new DatabaseEnvironmentalDataProvider(userSettings.getClimateDatabase());
+            return new ClimateSensitiveSimulation(st, lts.applyTreatment(), lts.executeMortality(), environmentalDatabase, lts.dynamicSiteIndexScenario());
+        }
+        return new Simulation(st, lts.applyTreatment(), lts.executeMortality());
+    }
+    
+    private void killTree(Tree tree) {
+        tree.takeOut(1900, OutType.FALLEN);
     }
 
     private void jButton14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton14ActionPerformed
@@ -943,7 +951,7 @@ public class DBAccessDialog extends JDialog {
                         GenDistribution gdb = new GenDistribution();
                         gdb.weibull(st, art, alt, dg, hg, dmax, g * st.size, false);
                         // missing data fuer die Verteilung generieren
-                        st.forTreesMatching(tree -> tree.si <= -9, tree -> tree.si = h100);
+                        st.forTreesMatching(tree -> tree.si.undefined(), tree -> tree.si = si(h100));
                         SIofDistrib siod = new SIofDistrib();
                         FunctionInterpreter fi = new FunctionInterpreter();
                         siod.si(st, art, alt, dg, hg);
@@ -964,9 +972,7 @@ public class DBAccessDialog extends JDialog {
                                 st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                             }
                         }
-                        for (int j = 0; j < st.ntrees; j++) {
-                            st.tr[j].setMissingData();
-                        }
+                        st.forAllTrees(tree -> tree.setMissingData());
                         GenerateXY gxy = new GenerateXY();
                         gxy.setGroupRadius(0.0);
                         gxy.zufall(st);
@@ -979,7 +985,6 @@ public class DBAccessDialog extends JDialog {
                         LoadTreegrossStand lts = new LoadTreegrossStand();
                         lts.saveStand(con, st, id, alt, 0, 0);
                         lts.saveSpecies(con, st, id, alt, 0, 0);
-                        //
                         st.grow(5, false);
                         st.sortbyd();
                         st.missingData();
@@ -987,7 +992,6 @@ public class DBAccessDialog extends JDialog {
                         lts.saveStand(con, st, id, alt, 1, 0);
                         lts.saveSpecies(con, st, id, alt, 1, 0);
                     }
-
                 }
             }
         } catch (Exception e) {

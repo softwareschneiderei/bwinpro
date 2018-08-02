@@ -18,7 +18,7 @@ public class TGTextFunction implements TGFunction {
 
     public TGTextFunction(String function) {
         super();
-        this.function = function;
+        this.function = function.trim();
     }
 
     @Override
@@ -44,5 +44,10 @@ public class TGTextFunction implements TGFunction {
     @Override
     public String toString() {
         return function;
+    }
+
+    @Override
+    public boolean undefined() {
+        return this.function.isEmpty();
     }
 }

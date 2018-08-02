@@ -22,12 +22,15 @@ package treegross.treatment;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import treegross.base.GenerateXY;
+import treegross.base.Layer;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
-import treegross.base.TreatmentRuleStand;
 import treegross.base.Tree;
+import treegross.base.thinning.ScenarioThinningSettings;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -39,12 +42,7 @@ public class TreatmentElements2 {
     /**
      * maximal harvest volume
      */
-    double vmaxharvest;
-
-    /**
-     * maximal thinningvolume
-     */
-    double vmaxthinning;
+    private double vmaxharvest;
 
     /**
      * The actual harvested volume
@@ -56,17 +54,12 @@ public class TreatmentElements2 {
      */
     double harvested;
 
-    /**
-     * volume thinned
-     */
-    double thinned;
-
     //Choose trees for stand target mixture dependant on scenario
     CropTreeSelection ctselect = new CropTreeSelection();
 
     HabitatTreeSelection htselect = new HabitatTreeSelection();
 
-    private final static Logger LOGGER = Logger.getLogger(TreatmentElements2.class.getName());
+    private final static Logger logger = Logger.getLogger(TreatmentElements2.class.getName());
 
     /**
      * set volume of trees, which are taken out to 0. This sets the variables
@@ -79,10 +72,8 @@ public class TreatmentElements2 {
         vout = 0;
         //reset counter for harvested and thinned ammount
         harvested = 0;
-        thinned = 0;
         //reset max volumes
         vmaxharvest = 0;
-        vmaxthinning = 0;
     }
 
     /**
@@ -477,13 +468,11 @@ public class TreatmentElements2 {
      */
     public void harvestClearCut(Stand st) {
         for (int i = 0; i < st.ntrees; i++) {
-            if (st.tr[i].out < 1 && st.tr[i].h >= (st.tr[i].si * 0.6) && !st.tr[i].habitat) {
+            if (st.tr[i].isLiving() && st.tr[i].h >= (st.tr[i].si.value * 0.6) && !st.tr[i].habitat) {
                 if (getDegreeOfCover(0, st, true) < st.trule.minimumCoverage) {
                     break;
                 }
-                st.tr[i].out = st.year;
-                st.tr[i].outtype = OutType.HARVESTED;
-                //st.tr[i].no+="_ks";
+                st.tr[i].takeOut(st.year, OutType.HARVESTED);
             }
         }
         //clear all remaining trees if wanted
@@ -537,7 +526,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -600,7 +589,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -751,12 +740,15 @@ public class TreatmentElements2 {
         st.trule.standTypeAtStatus1 = -1;
     }
     
-    private double reduceBaOut(Stand st) {
-        double maxStandBasalArea = getMaxStandBasalArea(st, true);
+    public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
-        double maxBa = maxStandBasalArea;
+        double maxBa = getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true);
         double maxBasalAreaOut = st.bha - maxBa;
-        double baFac = st.bha / maxBa;
+        // TODO: decide what to do, see http://issuetracker.intranet:20002/browse/BWIN-78
+        if (maxBa == 0d) {
+            logger.log(Level.SEVERE, "Max basal area must not be 0.");
+        }
+        double baFac = st.bha / Math.max(1, maxBa);
         
         // http://issuetracker.intranet:20002/browse/BWIN-57:
         //   Removed additional criterion based on first species (st.sp[0])
@@ -773,419 +765,54 @@ public class TreatmentElements2 {
      * reduced with the ModerateThinningFactor and the calculated basal area is
      * similar to yield table basal area for degree of stocking 1.0.
      *
-     * @param stand the stand to calculate the basal area for
+     * @param species
+     * @param settings
      * @param withModerateThinningFactor <code>boolean</code>      
      * @return maximum basal area or reduced maximum basal [m²/ha] area as
      * <code>double</code>
      */
-    public double getMaxStandBasalArea(Stand stand, boolean withModerateThinningFactor) {
-        double maxBA = 0.0;
-        for (Species aSpecies : stand.species()) {
-            maxBA += maxBasalAreaFor(aSpecies, stand.trule, withModerateThinningFactor);
+    public static double getMaxStandBasalArea(Iterable<Species> species, ScenarioThinningSettings settings, boolean withModerateThinningFactor) {
+        double result = 0.0;
+        for (Species aSpecies : species) {
+            double maxBasalAreaForSpecies = maxBasalAreaFor(aSpecies, withModerateThinningFactor);
+            logger.log(Level.FINE, "Max species {0} basal area before thinning intensity {1}", new Object[]{ aSpecies.code, maxBasalAreaForSpecies});
+            
+            final double intensityForSpecies = settings.intensityFor(aSpecies.referenceTree());
+            maxBasalAreaForSpecies = applyThinningIntensityTo(maxBasalAreaForSpecies, intensityForSpecies);
+            result += maxBasalAreaForSpecies;
         }
-        return maxBA;
+
+        return result;
     }
 
-    private double maxBasalAreaFor(Species aSpecies, TreatmentRuleStand rules, boolean withModerateThinningFactor) {
-        Tree atree = aSpecies.normTree();
+    private static double maxBasalAreaFor(Species aSpecies, boolean withModerateThinningFactor) {
+        Tree atree = aSpecies.referenceTree();
         //bei allen Durchforstungen:
         double basalAreaForSpecies = atree.calculateMaxBasalArea() * (aSpecies.percCSA / 100.0);
         if (withModerateThinningFactor) {
             basalAreaForSpecies *= atree.getModerateThinningFactor();
         }
-        if (rules.thinningSettings.intensityFor(atree) == 0.0) {
-            basalAreaForSpecies = basalAreaForSpecies * 100.0;
-        } else {
-            basalAreaForSpecies = basalAreaForSpecies * (2.0 - rules.thinningSettings.intensityFor(atree));
+        if (basalAreaForSpecies == 0d) {
+            logger.log(Level.SEVERE, "Max basal area is 0 for species {0}\n and reference tree {1} with moderate thinning {2}",
+                    new Object[]{ aSpecies, atree, atree.getModerateThinningFactor()});
         }
         return basalAreaForSpecies;
     }
 
-    /**
-     * Check all trees if they are no crop tree, if they are competing with a
-     * crop tree Mesurement: is the overlap of the crown This void needs
-     * CropTreeSelection
-     *
-     * @param st stand object
-     */
-    public void thinCropTreeCompetition(Stand st) {
-
-        //set max thinning volume (vmaxthinning) if outaken amount (vout) 
-        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
-
-        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
-        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
-            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
-        }
-
-        if (vmaxthinning <= 0) {
-            return;
-        }
-        // Thinning is done iteratively tree by tree
-        // 1. Calculate the overlap of all crop trees
-        // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
-        //    Heidi Doebbeler and crown width functions
-        // 3. Find tree with the highest differenz in overlap - tolerable overlap
-        // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
-        // 5. Start with 1. again
-
-
-        //double maxBasalAreaOut = st.bha - maxStandBasalArea;
-        double maxBasalAreaOut = reduceBaOut(st);
-
-        if (maxBasalAreaOut <= 0.0) {
-            return;
-        }
-        boolean continueThinning = true;
-        do {
-// update competition overlap for crop trees
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    st.tr[i].updateCompetition();
-                }
-            }
-// find crop with most competition, defined as that tree with greates ratio of
-// actual c66xy divided by maximum c66
-            int indexOfCroptree = -9;
-            double maxCompetition = -99999.9;
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(st.tr[i]));
-                    // remember tree if c66Ratio is greater than maxCompetition
-                    if (c66Ratio > maxCompetition) {
-                        indexOfCroptree = i;
-                        maxCompetition = c66Ratio;
-                    }
-                }
-            }
-// release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
-// crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
-// into the limit of twice the crown radius of the crop tree size
-//
-// Find neighbor who comes closest
-            if (indexOfCroptree >= 0) {
-                double dist = 9999.0;
-                int merk = -9;
-                Tree cropTree = st.tr[indexOfCroptree];
-                double intensity = 2.0 - st.trule.thinningSettings.intensityFor(cropTree);
-                if (intensity == 0.0) {
-                    intensity = 1.0;
-                }
-                double h66 = cropTree.cb;
-                for (int i = 0; i < cropTree.nNeighbor; i++) {
-                    Tree neighbor = st.tr[cropTree.neighbor[i]];
-                    if (neighbor.d > 7
-                            && neighbor.isLiving()
-                            && (st.trule.cutCompetingCropTrees || neighbor.crop == false)
-                            && neighbor.habitat == false) {
-                        double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
-                        double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
-                                + Math.pow(cropTree.y - neighbor.y, 2.0));
-                        if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                            merk = cropTree.neighbor[i];
-                            dist = ent - radius;
-                        }
-                    }
-                }
-                // if merk > 9 then cut tree else stop crop tree release
-                if (merk == -9) {
-                    continueThinning = false;
-                } else {
-                    st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = OutType.THINNED;
-                    thinned += (st.tr[merk].fac * st.tr[merk].v);
-                    maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
-                    if (maxBasalAreaOut <= 0.0) {
-                        continueThinning = false;
-                    }
-                }
-            } else {
-                continueThinning = false;
-            }
-        } //stop if max thinning amount is reached or all competitors are taken out
-        while (thinned < vmaxthinning && continueThinning);
-    }
-
-    
-    /**
-     * Thinning by Q-D-Rule is a specail thinning from Rheinland-Pfalz The
-     * selected crop trees are released so that there will be no crown contact
-     * after one growing cyle. In this routine it is simlypied the crop trees
-     * get 25 cm distance to the crown. This strong thinning is performed when
-     * the height of the crop tree is between greater 35% or smalerequal 80% of
-     * the site-index height at age 100. If the height is 100% only trees will
-     * be removed which have contact to the crown of the crop tree. The thinning
-     * method assumes that there is no competition of other crop trees and that
-     * the number of crop trees is low
-     *
-     * @param st
-     */
-    public void thinByQD(Stand st) {
-        st.forTreesMatching(tree -> tree.isLiving() && tree.crop, tree -> {
-            // we found a crop tree and remove now all other trees
-            for (int j = 0; j < st.ntrees; j++) {
-                if (st.tr[j].d > 7 && st.tr[j].isLiving() && st.tr[j].crop == false && st.tr[j].habitat == false) {
-                    double ent = Math.sqrt(Math.pow(tree.x - st.tr[j].x, 2.0) + Math.pow(tree.y - st.tr[j].y, 2.0));
-                    if (tree.h > tree.si * 0.8) {
-                        if (ent < 0.9 * (tree.cw + st.tr[j].cw) / 2.0 && st.tr[j].h * 1.1 > tree.cb) {
-                            st.tr[j].out = st.year;
-                            st.tr[j].outtype = OutType.THINNED;
-                        }
-                    }
-                    if (tree.h > tree.si * 0.3 && tree.h < tree.si * 0.8) {
-                        if (ent < 0.20 + (tree.cw + st.tr[j].cw) / 2.0) {
-                            st.tr[j].out = st.year;
-                            st.tr[j].outtype = OutType.THINNED;
-                        }
-                    }
-                }
-            }
-        });
-    }
-    
-    /**
-     * Check all trees if they are no crop tree, if they are competing with a
-     * crop tree Mesurement: a-value This void needs CropTreeSelection Thinning
-     * degree for each species is taken from st.tr[j].sp.trule.thinningIntensity
-     *
-     * @param st stand object
-     */
-    public void thinTempCropTreeCompetition(Stand st) {
-        //set max thinning volume (vmaxthinning) if outaken amount (vout) 
-        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
-
-        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
-        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
-            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
-        }
-
-        if (vmaxthinning > 0) {
-        // Thinning is done iteratively tree by tree
-            // 1. Calculate the overlap of all crop trees
-            // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
-            //    Heidi Doebbeler and crown width functions
-            // 3. Find tree with the highest differenz in overlap - tolerable overlap
-            // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
-            // 5. Start with 1. again 
-
-            double maxBasalAreaOut = reduceBaOut(st);
-            
-            boolean continueThinning = true;
-            if (maxBasalAreaOut <= 0.0) {
-                return;
-            }
-            do {
-// update competition overlap for crop trees 
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
-                        st.tr[i].updateCompetition();
-                    }
-                }
-// find crop with most competition, defined as that tree with greates ratio of
-// actual c66xy devided by maximum c66
-                int indexOfCroptree = -9;
-                double maxCompetition = -99999.9;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
-// calculate maxc66
-                        double c66Ratio = calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(st.tr[i]));
-// remember tree if c66Ratio is greater than maxCompetition
-                        if (c66Ratio > maxCompetition) {
-                            indexOfCroptree = i;
-                            maxCompetition = c66Ratio;
-                        }
-                    }
-                }
-// release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
-// crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
-// into the limit of twice the crown radius of the crop tree size 
-//                 
-// Find neighbor who comes closest 
-                if (indexOfCroptree < 0) {
-                    continueThinning = false;
-                } else {
-                    double dist = 9999.0;
-                    int merk = -9;
-                    final Tree cropTree = st.tr[indexOfCroptree];
-                    double h66 = cropTree.cb;
-                    double intensity = st.trule.thinningSettings.intensityFor(cropTree);
-                    if (intensity == 0.0) {
-                        intensity = 1.0;
-                    }
-                    for (int i = 0; i < st.tr[indexOfCroptree].nNeighbor; i++) {
-                        if (st.tr[st.tr[indexOfCroptree].neighbor[i]].d < 7
-                                && st.tr[st.tr[indexOfCroptree].neighbor[i]].out < 0
-                                && (st.trule.cutCompetingCropTrees || st.tr[st.tr[indexOfCroptree].neighbor[i]].tempcrop == false)
-                                && !st.tr[st.tr[indexOfCroptree].neighbor[i]].habitat) {
-                            double radius = st.tr[st.tr[indexOfCroptree].neighbor[i]].calculateCwAtHeight(h66) / 2.0;
-                            double ent = Math.sqrt(Math.pow(st.tr[indexOfCroptree].x - st.tr[st.tr[indexOfCroptree].neighbor[i]].x, 2.0)
-                                    + Math.pow(st.tr[indexOfCroptree].y - st.tr[st.tr[indexOfCroptree].neighbor[i]].y, 2.0));
-                            if ((ent - radius < st.tr[indexOfCroptree].cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                                merk = st.tr[indexOfCroptree].neighbor[i];
-                                dist = ent - radius;
-                            }
-                        }
-                    }
-// if merk > 9 then cut tree else stop crop tree release                    
-                    if (merk == -9) {
-                        continueThinning = false;
-                    } else {
-                        st.tr[merk].out = st.year;
-                        st.tr[merk].outtype = OutType.THINNED;
-                        thinned += st.tr[merk].fac * st.tr[merk].v;
-                        maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
-                        if (maxBasalAreaOut <= 0.0) {
-                            continueThinning = false;
-                        }
-                    }
-                }
-
-            } //stop if max thinning amount is reached or all competitors are taken out
-            while (thinned < vmaxthinning && continueThinning);
-        }
-    }
-
-    public void thinCompetitionFromAbove(Stand st) {
-        //set max thinning volume (vmaxthinning) if outaken amount (vout)
-        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
-
-        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
-        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
-            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
-        }
-
-        if (vmaxthinning > 0) {
-            // Thinning is done iteratively tree by tree
-            // 1. Calculate the overlap of all crop trees
-            // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
-            //    Heidi Doebbeler and crown width functions
-            // 3. Find tree with the highest differenz in overlap - tolerable overlap
-            // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
-            // 5. Start with 1. again
-
-            // Festlegen der Grundflächenabsenkung
-            st.bha = 0.0;
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out == -1) {
-                    st.bha += Math.PI * Math.pow(st.tr[i].d / 200.0, 2.0) * st.tr[i].fac;
-                }
-            }
-            st.bha = st.bha / st.size;
-
-            double maxBasalAreaOut = reduceBaOut(st);
-
-            boolean continueThinning = true;
-            if (maxBasalAreaOut <= 0.0) {
-                return;
-            }
-            do {
-                // find non crop tree with most competition to other trees, defined as that the maximum overlap area for neighbor trees
-                int indextree = -9;
-                double maxOverlap = -99999.9;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].d > 7 && st.tr[i].isLiving() && st.tr[i].crop == false && st.tr[i].tempcrop == false && st.tr[i].habitat == false) {
-                        double ovlp = 0.0;
-                        for (int j = 0; j < st.tr[i].nNeighbor; j++) {
-                            double distance = Math.sqrt(Math.pow(st.tr[i].x - st.tr[st.tr[i].neighbor[j]].x, 2.0)
-                                    + Math.pow(st.tr[i].y - st.tr[st.tr[i].neighbor[j]].y, 2.0));
-                            double ri = st.tr[i].cw / 2.0;
-                            double rj = st.tr[st.tr[i].neighbor[j]].cw / 2.0;
-                            // only if there is an overlap and ri > rj
-                            if (ri + rj > distance && ri > rj) {
-                                ovlp += overlap(rj, ri, distance);
-                            }
-                        }
-                        if (ovlp > maxOverlap) {
-                            maxOverlap = ovlp;
-                            indextree = i;
-                        }
-                    }
-                }
-
-                // release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
-                // crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
-                // into the limit of twice the crown radius of the crop tree size
-                // if merk > 9 then cut tree else stop crop tree release
-                if (indextree == -9) {
-                    continueThinning = false;
-                } else {
-                    st.tr[indextree].out = st.year;
-                    st.tr[indextree].outtype = OutType.THINNED;
-                    thinned = thinned + (st.tr[indextree].fac * st.tr[indextree].v);
-                    maxBasalAreaOut = maxBasalAreaOut - (st.tr[indextree].fac * Math.PI * Math.pow(st.tr[indextree].d / 200.0, 2.0)) / st.size;
-                    if (maxBasalAreaOut <= 0.0) {
-                        continueThinning = false;
-                    }
-                }
-            } //stop if max thinning amount is reached or all competitors are taken out
-            while (thinned < vmaxthinning && continueThinning);
-        }
-    }
-
-    public void thinFromBelow(Stand st) {
-        //Max. Harvestvolume is defined
-        //set max thinning volume (vmaxthinning) if outaken amount (vout) 
-        //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
-
-        //reduce max thinning if max allowed amount for stand (st.size*st.trule.maxThinningVolume)
-        // minus outaken amount (vout) is less than set max thinning volume (vmaxthinning)
-        if ((st.size * st.trule.maxOutVolume - vout) < vmaxthinning) {
-            vmaxthinning = st.size * st.trule.maxOutVolume - vout;
-        }
-
-        if (vmaxthinning > 0) {
-            double maxBasalAreaOut = reduceBaOut(st);
-
-            double baout = 0.0;
-            boolean doNotEndThinning = true;
-            do {
-                // update competition overlap for crop trees
-                double dmin = 99999.9;
-                int merk = -9;
-                for (int i = 0; i < st.ntrees; i++) {
-                    if (st.tr[i].isLiving()
-                            && dmin > st.tr[i].d
-                            && !st.tr[i].habitat) {
-                        dmin = st.tr[i].d;
-                        merk = i;
-                    }
-                }
-                // Baum entfernen, sofern eine Überlappung besteht
-                if (merk > -1 && baout < maxBasalAreaOut) {
-                    st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = OutType.THINNED;
-                    thinned = thinned + st.tr[merk].fac * st.tr[merk].v;
-                    baout = baout + (st.tr[merk].fac * Math.PI * Math.pow((st.tr[merk].d / 200.0), 2.0)) / st.size;
-                } else {
-                    doNotEndThinning = false;
-                }
-
-                if (baout >= maxBasalAreaOut) {
-                    doNotEndThinning = false;
-                }
-            } //stop if max thinning amount is reached or all competitors are taken out
-            while (thinned < vmaxthinning && doNotEndThinning);
-        }
-    }
-
-    private double calculateC66Ratio(Tree tree, double thinningIntensity) {
+    public static double calculateC66Ratio(Tree tree, double thinningIntensity) {
         // calculate maxc66
         double maxBasalArea = tree.calculateMaxBasalArea() * tree.getModerateThinningFactor();
-        if (thinningIntensity == 0.0) {
-            maxBasalArea = maxBasalArea * 100.0;
-        } else {
-            maxBasalArea = maxBasalArea * (2.0 - thinningIntensity);
-        }
+        maxBasalArea = applyThinningIntensityTo(maxBasalArea, thinningIntensity);
         double maxN = maxBasalArea / (Math.PI * Math.pow((tree.d / 200.0), 2.0));
         double maxC66 = maxN * Math.PI * Math.pow((tree.cw / 2.0), 2.0) / 10000.0;
         return tree.c66xy / maxC66;
+    }
+
+    private static double applyThinningIntensityTo(double maxBasalArea, double thinningIntensity) {
+        if (thinningIntensity == 0.0) {
+            return maxBasalArea * 100.0;
+        }
+        return maxBasalArea * (2.0 - thinningIntensity);
     }
 
     /**
@@ -1339,8 +966,12 @@ public class TreatmentElements2 {
 
     /**
      * calculate overlap area of two circle only if they overlap
+     * @param r1
+     * @param r2
+     * @param e
+     * @return 
      */
-    private double overlap(double r1, double r2, double e) {
+    public static double overlap(double r1, double r2, double e) {
         double x, y, f;
         f = 0.0;
         //r1 should always be the smaller radius
@@ -1425,81 +1056,6 @@ public class TreatmentElements2 {
         return (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * percentage / 100.0);
     }
 
-    public void removeTargetTreesBySpecies(Stand st, int species, double volume) {
-        //set max harvest volume (vmaxharvest) if outaken amount (vout) 
-        //has not reached max allowed amount for stand (st.size*st.trule.maxHarvestVolume)
-        vmaxharvest = st.size * volume;
-        st.resetCropTrees();
-        // Select all trees of species as crop trees
-        for (int i = 0; i < st.nspecies; i++) {
-            if (species == st.sp[i].code) {
-                st.sp[i].trule.numberCropTreesWanted = 1000;
-                st.sp[i].trule.targetCrownPercent = 99.9;
-                st.sp[i].trule.targetDiameter = 7.0;
-                st.sp[i].trule.minCropTreeHeight = 8.0;
-            } else {
-                st.sp[i].trule.numberCropTreesWanted = 0;
-                st.sp[i].trule.targetCrownPercent = 0.1;
-                st.sp[i].trule.targetDiameter = 200.0;
-                st.sp[i].trule.minCropTreeHeight = 12.0;
-            }
-        }
-        selectNCropTrees(st);
-        if (vmaxharvest > 0) {
-            sortStandByTargetDiameter(st);
-
-            /**
-             * distance of two trees
-             */
-            double dist_trees, dist_min;
-
-            /**
-             * height for the cross section of crop tree cb(i)+ (h(i)+cb(i)/3)
-             */
-            double h66_i;
-            /**
-             * cb(j)+ (h(j)+cb(j)/3)
-             */
-
-            for (int i = 0; i < st.ntrees; i++) {
-                //check only crop trees for competing crop trees
-                if (st.tr[i].out < 1 && st.tr[i].crop) {
-                    for (int j = 0; j < st.ntrees; j++) {
-                        //competitor has to be a crop tree                            
-                        if (st.tr[j].out < 0 && st.tr[j].crop && st.tr[i].no.equals(st.tr[j].no) == false) {
-                            //caluclate distance between crop trees                                
-                            dist_trees = Math.sqrt(Math.pow(st.tr[i].x - st.tr[j].x, 2.0) + Math.pow(st.tr[i].y - st.tr[j].y, 2.0));
-
-                            //calculate height of considered trees in 1/3 of the height their crown
-                            h66_i = st.tr[i].cb + (st.tr[i].h - st.tr[i].cb) / 3;
-
-                            //tree (j) can only be a competitor 
-                            // if it is higher than potentially pressed tree (i) in its h66
-                            if (h66_i < st.tr[j].h) {
-                                //potentially pressed tree (i) is higher than tree (j)
-                                //calcualte minimal distance, trees has to have to be competitive
-                                // from crown of higher competitor in its h66(j)
-                                dist_min = (st.tr[i].calculateCwAtHeight(h66_i) + st.tr[j].calculateCwAtHeight(h66_i)) / 2;
-                            } // tree is no competitor
-                            else {
-                                dist_min = 0.0;
-                            }
-
-                            if (harvested < vmaxharvest
-                                    && dist_trees < dist_min
-                                    && (st.tr[j].sp.trule.targetDiameter - st.tr[j].d) <= (st.tr[i].sp.trule.targetDiameter - st.tr[i].d)) {
-                                st.tr[j].out = st.year;
-                                st.tr[j].outtype = OutType.HARVESTED;
-                                vout = vout + st.tr[j].fac * st.tr[j].v;
-                                harvested += st.tr[j].fac * st.tr[j].v;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public double getDegreeOfCover(int code, Stand st, boolean overstoryOnly) {
         double degree;
         double ks = 0.0;
@@ -1564,18 +1120,18 @@ public class TreatmentElements2 {
                 site = 31.0;
             }
             for (int j = 0; j < st.ntrees; j++) {
-                if (art == st.tr[j].code && site < st.tr[j].si) {
-                    site = st.tr[j].si;
+                if (art == st.tr[j].code && site < st.tr[j].si.value) {
+                    site = st.tr[j].si.value;
                 }
             }
             double spcov = getDegreeOfCover(art, st, false);
             // get crown width at dbh = 7 cm of species at point of ingrowth            
-            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, -99, 1.0, 0.0, 0.0, 0.0, false, false,
-                    false, 3, 0.0, "");
+            Tree atree = new Tree(art, "atree", 20, -1, OutType.STANDING, 7.0, 8.0, 2.0, 0.0, SiteIndex.undefined, 1.0, 0.0, 0.0, 0.0, false, false,
+                    false, Layer.UNDERSTORY, 0.0, "");
             try {
                 atree.sp = st.addspecies(atree);
             } catch (SpeciesNotDefinedException ex) {
-                LOGGER.log(Level.SEVERE, "treegross", ex);
+                logger.log(Level.SEVERE, "treegross", ex);
             }
             double cbx = atree.calculateCw();
             double gx = Math.PI * Math.pow(cbx / 2.0, 2.0);
@@ -1594,11 +1150,11 @@ public class TreatmentElements2 {
             // create trees
             for (int j = 0; j < npl; j++) {
                 try {
-                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, site, -9.0, -9.0, 0, 0, 0, 0)) {
+                    if (!st.addTreeFromPlanting(art, "p" + st.ntrees + "_" + st.year, 5, -1, 0.25, 0.5 * ra, 0.1, cbx, si(site), -9.0, -9.0, 0, 0, 0, 0)) {
                         break;
                     }
                 } catch (SpeciesNotDefinedException e) {
-                    LOGGER.log(Level.SEVERE, "treegross", e);
+                    logger.log(Level.SEVERE, "treegross", e);
                 }
             }
             for (int i = 0; i < st.ntrees; i++) {

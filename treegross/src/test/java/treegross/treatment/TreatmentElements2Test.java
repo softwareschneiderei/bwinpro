@@ -1,6 +1,8 @@
 package treegross.treatment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
@@ -22,7 +24,7 @@ public class TreatmentElements2Test {
     public void maxBasalAreaWithoutModerateThinning() {
         TreatmentElements2 te = new TreatmentElements2();
         
-        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), false)).isCloseTo(31.03320, delta);
+        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), thinningSettings(), false)).isCloseTo(31.03320, delta);
     }
 
     /*
@@ -32,10 +34,11 @@ public class TreatmentElements2Test {
     public void maxBasalAreaWithModerateThinning() {
         TreatmentElements2 te = new TreatmentElements2();
 
-        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), true)).isCloseTo(23.86773, delta);
+        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), thinningSettings(), true)).isCloseTo(23.86773, delta);
     }
 
-    private Stand addSpeciesTo() {
+    private Iterable<Species> addSpeciesTo() {
+        List<Species> result = new ArrayList<>();
         final Species oak = new Species();
         oak.percCSA = 70d;
         oak.spDef.crownwidthXML = new TGTextFunction("(2.6618+0.1152*t.d)*(1.0-exp(-exp(ln(t.d/8.3381)*1.4083))) /* Eiche (DÖBBELER ET. AL. 2001) */");
@@ -43,6 +46,7 @@ public class TreatmentElements2Test {
         oak.spDef.moderateThinning = new HeightBasedThinning("", Arrays.asList(new ThinningValueRange(20, 35, 0.8)));
         oak.d100 = 2d;
         oak.h100 = 30d;
+        result.add(oak);
         final Species spruce = new Species();
         spruce.percCSA = 30d;
         spruce.spDef.crownwidthXML = new TGTextFunction("(2.79563+0.07358*t.d)*(1.0-exp(-exp(ln(t.d/5.43234)*1.34187))) /* Fichte (Albrecht 2010) FVA-BaWü */");
@@ -50,12 +54,11 @@ public class TreatmentElements2Test {
         spruce.spDef.moderateThinning = new HeightBasedThinning("", Arrays.asList(new ThinningValueRange(20, 37, 0.7)));
         spruce.d100 = 1.5d;
         spruce.h100 = 35d;
-        Stand result = new Stand();
-        result.trule.thinningSettings = ScenarioThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1);
-        result.sp[0] = oak;
-        result.nspecies++;
-        result.sp[1] = spruce;
-        result.nspecies++;
+        result.add(spruce);
         return result;
+    }
+
+    private static ScenarioThinningSettings thinningSettings() {
+        return ScenarioThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1);
     }
 }

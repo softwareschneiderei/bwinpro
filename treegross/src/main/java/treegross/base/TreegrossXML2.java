@@ -20,7 +20,6 @@ import org.jdom.Element;
 import org.jdom.ProcessingInstruction;
 import org.jdom.output.XMLOutputter;
 import org.jdom.input.*;
-//import org.jdom.DocType;
 import java.net.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +29,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom.JDOMException;
+import static treegross.base.SiteIndex.si;
 
 /**
  * TreeGrOSS : TreegrossXML2.java version 7.5 18-Mar-2010 author	Juergen Nagel
@@ -42,8 +42,8 @@ import org.jdom.JDOMException;
  */
 public class TreegrossXML2 {
 
-    static Element rootElt;
     private final static Logger LOGGER = Logger.getLogger(TreegrossXML2.class.getName());
+    private Element rootElt;
 
     /**
      * Creates an Treegross xml
@@ -64,24 +64,7 @@ public class TreegrossXML2 {
 
         //Bestandesinformation 
         if (st.nspecies > 0) {
-            rootElt = addString(rootElt, "Id", "1");
-            rootElt = addString(rootElt, "Kennung", st.standname);
-            rootElt = addString(rootElt, "Allgemeines", " ");
-            rootElt = addString(rootElt, "Flaechengroesse_m2", Double.toString(st.size * 10000));
-            rootElt = addString(rootElt, "HauptbaumArtCodeStd", Integer.toString(st.sp[0].code));
-            rootElt = addString(rootElt, "HauptbaumArtCodeLokal", Integer.toString(st.sp[0].code));
-            rootElt = addString(rootElt, "AufnahmeJahr", Integer.toString(st.year));
-            rootElt = addString(rootElt, "AufnahmeMonat", Integer.toString(st.monat));
-            rootElt = addString(rootElt, "DatenHerkunft", st.datenHerkunft);
-            rootElt = addString(rootElt, "Standort", st.standort);
-            rootElt = addString(rootElt, "Hochwert_m", Double.toString(st.hochwert_m));
-            rootElt = addString(rootElt, "Rechtswert_m", Double.toString(st.rechtswert_m));
-            rootElt = addString(rootElt, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
-            rootElt = addString(rootElt, "Exposition_Gon", Integer.toString(st.exposition_Gon));
-            rootElt = addString(rootElt, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
-            rootElt = addString(rootElt, "Wuchsgebiet", st.wuchsgebiet);
-            rootElt = addString(rootElt, "Wuchsbezirk", st.wuchsbezirk);
-            rootElt = addString(rootElt, "Standortskennziffer", st.standortsKennziffer);
+            rootElt = buildDocumentHeader(st, rootElt);
         }
         /* Baumarten */
         for (int i = 0; i < st.nspecies; i++) {
@@ -123,7 +106,7 @@ public class TreegrossXML2 {
             elt = addString(elt, "Hoehe_m", f.format(st.tr[i].h));
             elt = addString(elt, "Kronenansatz_m", f.format(st.tr[i].cb));
             elt = addString(elt, "MittlererKronenDurchmesser_m", f.format(st.tr[i].cw));
-            elt = addString(elt, "SiteIndex_m", f.format(st.tr[i].si));
+            elt = addString(elt, "SiteIndex_m", f.format(st.tr[i].si.value));
             elt = addString(elt, "RelativeXKoordinate_m", f.format(st.tr[i].x));
             elt = addString(elt, "RelativeYKoordinate_m", f.format(st.tr[i].y));
             elt = addString(elt, "RelativeBodenhoehe_m", f.format(st.tr[i].z));
@@ -163,7 +146,7 @@ public class TreegrossXML2 {
             elt = addString(elt, "ZBaumtemporaer", Boolean.toString(st.tr[i].tempcrop));
             elt = addString(elt, "HabitatBaum", Boolean.toString(st.tr[i].habitat));
             elt = addString(elt, "KraftscheKlasse", "0");
-            elt = addString(elt, "Schicht", Integer.toString(st.tr[i].layer));
+            elt = addString(elt, "Schicht", String.valueOf(st.tr[i].layer.toInt()));
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
             elt = addString(elt, "Flaechenfaktor", f.format(st.tr[i].fac));
@@ -181,6 +164,27 @@ public class TreegrossXML2 {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "", e);
         }
+    }
+
+    public static Element buildDocumentHeader(Stand st, Element rootElement) {
+        rootElement = addString(rootElement, "Id", "1");
+        rootElement = addString(rootElement, "Kennung", st.standname);
+        rootElement = addString(rootElement, "Allgemeines", " ");
+        rootElement = addString(rootElement, "Flaechengroesse_m2", Double.toString(st.size * 10000));
+        rootElement = addString(rootElement, "HauptbaumArtCodeStd", Integer.toString(st.sp[0].code));
+        rootElement = addString(rootElement, "HauptbaumArtCodeLokal", Integer.toString(st.sp[0].code));
+        rootElement = addString(rootElement, "AufnahmeJahr", Integer.toString(st.year));
+        rootElement = addString(rootElement, "AufnahmeMonat", Integer.toString(st.monat));
+        rootElement = addString(rootElement, "DatenHerkunft", st.datenHerkunft);
+        rootElement = addString(rootElement, "Standort", st.standort);
+        rootElement = addString(rootElement, "Hochwert_m", Double.toString(st.hochwert_m));
+        rootElement = addString(rootElement, "Rechtswert_m", Double.toString(st.rechtswert_m));
+        rootElement = addString(rootElement, "Hoehe_uNN_m", Double.toString(st.hoehe_uNN_m));
+        rootElement = addString(rootElement, "Exposition_Gon", Integer.toString(st.exposition_Gon));
+        rootElement = addString(rootElement, "Hangneigung_Prozent", Double.toString(st.hangneigungProzent));
+        rootElement = addString(rootElement, "Wuchsgebiet", st.location.growingRegion);
+        rootElement = addString(rootElement, "Wuchsbezirk", st.location.growingSubRegion);
+        return addString(rootElement, "Standortskennziffer", st.standortsKennziffer);
     }
 
     public Stand readTreegrossStand(Stand stand, URL url) {
@@ -218,15 +222,14 @@ public class TreegrossXML2 {
             st.hoehe_uNN_m = Double.parseDouble(bestand.getChild("Hoehe_uNN_m").getText());
             st.exposition_Gon = Integer.parseInt(bestand.getChild("Exposition_Gon").getText());
             st.hangneigungProzent = Double.parseDouble(bestand.getChild("Hangneigung_Prozent").getText());
-            st.wuchsgebiet = bestand.getChild("Wuchsgebiet").getText();
-            st.wuchsbezirk = bestand.getChild("Wuchsbezirk").getText();
+            st.location = new StandLocation(st.location.federalState, bestand.getChild("Wuchsgebiet").getText(), bestand.getChild("Wuchsbezirk").getText());
             st.standortsKennziffer = bestand.getChild("Standortskennziffer").getText();
 
             st.clear();
             st.center.no = "undefined";
 
             List<Element> eckpunkte = bestand.getChildren("Eckpunkt");
-            for (Element eckpunkt : eckpunkte) {
+            eckpunkte.forEach((eckpunkt) -> {
                 String nrx = eckpunkt.getChild("Nr").getText();
                 if (nrx.contains("circle") || nrx.contains("polygon")) {
                     st.center.no = nrx;
@@ -239,7 +242,7 @@ public class TreegrossXML2 {
                             Double.parseDouble(eckpunkt.getChild("RelativeYKoordinate_m").getText()),
                             Double.parseDouble(eckpunkt.getChild("RelativeBodenhoehe_m").getText()));
                 }
-            }
+            });
 //       if no corner point wa stored in xml create square with size equal to stand size
             if (eckpunkte.isEmpty()) {
                 double length = Math.sqrt(st.size * 10000);
@@ -263,7 +266,7 @@ public class TreegrossXML2 {
                             Double.parseDouble(baum.getChild("Hoehe_m").getText()),
                             Double.parseDouble(baum.getChild("Kronenansatz_m").getText()),
                             Double.parseDouble(baum.getChild("MittlererKronenDurchmesser_m").getText()),
-                            Double.parseDouble(baum.getChild("SiteIndex_m").getText()),
+                            si(Double.parseDouble(baum.getChild("SiteIndex_m").getText())),
                             Double.parseDouble(baum.getChild("Flaechenfaktor").getText()),
                             Double.parseDouble(baum.getChild("RelativeXKoordinate_m").getText()),
                             Double.parseDouble(baum.getChild("RelativeYKoordinate_m").getText()),
@@ -271,7 +274,7 @@ public class TreegrossXML2 {
                             Boolean.parseBoolean(baum.getChild("ZBaum").getText()),
                             Boolean.parseBoolean(baum.getChild("ZBaumtemporaer").getText()),
                             Boolean.parseBoolean(baum.getChild("HabitatBaum").getText()),
-                            Integer.parseInt(baum.getChild("Schicht").getText()),
+                            Layer.fromInt(Integer.parseInt(baum.getChild("Schicht").getText())),
                             Double.parseDouble(baum.getChild("VolumenTotholz_cbm").getText()),
                             baum.getChild("Bemerkung").getText()
                     );
@@ -299,7 +302,7 @@ public class TreegrossXML2 {
         return OutType.STANDING;
     }
 
-    private Element addString(Element elt, String variable, String text) {
+    private static Element addString(Element elt, String variable, String text) {
         Element var = new Element(variable);
         var.addContent(text);
         elt.addContent(var);

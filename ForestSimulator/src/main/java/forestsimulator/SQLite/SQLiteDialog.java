@@ -4,30 +4,32 @@
  */
 package forestsimulator.SQLite;
 
+import java.awt.Frame;
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JDialog;
 import treegross.base.Stand;
 
 /**
  *
  * @author nagel
  */
-public class SQLiteDialog extends javax.swing.JDialog {
+public class SQLiteDialog extends JDialog {
     
     String pluginPanel=null;
-    File dir;
-    Stand st = null;
+    private final File dir;
+    private Stand st;
     JPanelNutzungsplaner jp = null;
     JPanelDatabase jpd = null;
     JPanelPlots jpp = null;
     /**
      * Creates new form SQLiteDialog
      */
-    public SQLiteDialog(java.awt.Frame parent, boolean modal,Stand St, File Dir) throws IOException {
+    public SQLiteDialog(Frame parent, boolean modal, Stand St, File dataDirectory) throws IOException {
         super(parent, modal);
         initComponents();
         st = St;
-        dir = Dir; 
+        dir = dataDirectory; 
         jpd = new JPanelDatabase(st, dir);
         jTabbedPane1.add("ForestSimulator Database",jpd);
         jpp = new JPanelPlots(st, dir);

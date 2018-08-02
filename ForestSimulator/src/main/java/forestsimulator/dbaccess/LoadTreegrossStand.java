@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import treegross.base.StandLocation;
 import forestsimulator.util.StopWatch;
 import java.sql.*;
 import java.text.MessageFormat;
@@ -26,11 +27,14 @@ public class LoadTreegrossStand {
     private int durchforstung_an = 0;
     private int scenario = 0;
     private boolean executeMortality;
+    private boolean calculateDSI;
+    private String dsiScenario;
 
     public Stand loadFromDB(Connection connection, Stand stand, String edvId, int selectedAufn, boolean missingDataAutomatisch,
             boolean missingDataReplace) {
         StopWatch loadFromDB = new StopWatch("Load from Database").start();
         stand.setMetaData(standMetadata(connection, edvId, selectedAufn));
+        stand.location = loadLocation(connection, edvId, selectedAufn);
         stand.clear();
         addTrees(connection, edvId, selectedAufn, stand);
         addCoordinates(connection, edvId, stand);
@@ -65,9 +69,9 @@ public class LoadTreegrossStand {
                 while (rs.next()) {
                     double xp = rs.getDouble("x");
                     double yp = rs.getDouble("y");
-                    final String nox = rs.getString("nr").trim();
-                    int artx = rs.getInt("art");
-                    stand.forTreesMatching(tree -> nox.equals(tree.no.trim()) && (artx == tree.code), tree -> {
+                    final String nr = rs.getString("nr").trim();
+                    int species = rs.getInt("art");
+                    stand.forTreesMatching(tree -> nr.equals(tree.no.trim()) && (species == tree.code), tree -> {
                         tree.x = xp;
                         tree.y = yp;
                     });
@@ -189,7 +193,7 @@ public class LoadTreegrossStand {
                             if (i > 0) {
                                 nrx = nr + "_" + i;
                             }
-                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, -9.0, -9.0, -9.0, -9.0, zf, nx, nx, fac, ou, rm);
+                            stand.addtreeNFV(art, nrx, age, out, d, h, ka, kb, SiteIndex.undefined, -9.0, -9.0, -9.0, zf, nx, nx, fac, Layer.fromInt(ou), rm);
                         }
                         if (out > 0) {
                             stand.tr[stand.ntrees - 1].outtype = OutType.THINNED;
@@ -220,24 +224,36 @@ public class LoadTreegrossStand {
         }
         return new StandMetaData(standName(connection, edvId, selectedAufn), year, size);
     }
+    
+    public StandLocation loadLocation(Connection dbconn, String edvId, int auf) {
+        try (PreparedStatement stmt = dbconn.prepareStatement("select * from stand_location where edvid = ?")) {
+            stmt.setString(1, edvId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new StandLocation(rs.getString("federal_state_code"), rs.getString("growing_region"), rs.getString("growing_subregion"));
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Could not load rules from database", e);
+        }
+        return new StandLocation("", "");
+    }
 
-    public Stand loadRules(Connection dbconn, Stand stl, String idx, int auf, int scen) {
+    public Stand loadRules(Connection dbconn, Stand stand, String edvid, int auf, int scen) {
         durchforstung_an = 0;
         try (PreparedStatement stmt = dbconn.prepareStatement("select * from Vorschrift where (edvid = ? AND auf = ? AND Szenario = ?)")) {
-            stmt.setString(1, idx);
+            stmt.setString(1, edvid);
             stmt.setInt(2, auf);
             stmt.setInt(3, scen);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    int jj = rs.getInt("Zufall");
-                    if (jj == 0) {
-                        stl.random.setRandomType(RandomNumber.OFF);
+                    if (rs.getInt("Zufall") == 0) {
+                        stand.random.setRandomType(RandomNumber.OFF);
                     } else {
-                        stl.random.setRandomType(RandomNumber.PSEUDO);
+                        stand.random.setRandomType(RandomNumber.PSEUDO);
                     }
-                    jj = rs.getInt("Einwuchs");
-                    stl.ingrowthActive = jj != 0;
-                    stl.temp_Integer = rs.getInt("Schritte");
+                    stand.ingrowthActive = rs.getInt("Einwuchs") != 0;
+                    stand.temp_Integer = rs.getInt("Schritte");
                     ebaum = rs.getInt("EBaum");
                     bestand = rs.getInt("Bestand");
                     baumart = rs.getInt("Baumart");
@@ -248,17 +264,19 @@ public class LoadTreegrossStand {
                     } else {
                         scenario = rs.getInt("Szenario");
                     }
+                    calculateDSI = intToBool(rs.getInt("dsi_enabled"));
+                    dsiScenario = rs.getString("dsi_scenario");
                 }
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Could not load rules from database", e);
         }
         if (applyTreatment() && scenario > 0) {
-            stl.distanceDependent = true;
-            applyTreatmentRulesTo(stl);
-            loadScenario(dbconn, stl, scenario);
+            stand.distanceDependent = true;
+            applyTreatmentRulesTo(stand);
+            loadScenario(dbconn, stand, scenario);
         }
-        return stl;
+        return stand;
     }
 
     protected void applyTreatmentRulesTo(Stand stl) {
@@ -394,9 +412,17 @@ public class LoadTreegrossStand {
         return executeMortality;
     }
     
+    public boolean calculateDynamicSiteIndex() {
+        return calculateDSI;
+    }
+    
+    public String dynamicSiteIndexScenario() {
+        return dsiScenario;
+    }
+    
     public void saveBaum(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBaum "
-                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66,c66c, c66xy, c66cxy, si,x,y, zb) "
+                + "(edvid, auf, simschritt, wiederholung, szenario, nr, art, alt, aus, d, h, ka, kb, v, c66, c66c, c66xy, c66cxy, si, x, y, zb) "
                 + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (Tree tree : st.trees()) {
                 if (tree.no.contains("_")) {
@@ -420,7 +446,7 @@ public class LoadTreegrossStand {
                 stmt.setDouble(16, tree.c66c);
                 stmt.setDouble(17, tree.c66xy);
                 stmt.setDouble(18, tree.c66cxy);
-                stmt.setDouble(19, tree.si);
+                stmt.setDouble(19, tree.si.value);
                 stmt.setDouble(20, tree.x);
                 stmt.setDouble(21, tree.y);
                 stmt.setInt(22, boolToDB(tree.crop));
@@ -434,7 +460,7 @@ public class LoadTreegrossStand {
 
     public void saveSpecies(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement(
-                "INSERT INTO ProgArt (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
+                "INSERT INTO ProgArt (edvid, auf, art, wiederholung, szenario, gpro, simschritt, alt, nha, gha, vha,"
                 + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
                 + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
@@ -443,7 +469,7 @@ public class LoadTreegrossStand {
                 stmt.setInt(3, st.sp[i].code);
                 stmt.setInt(4, nwieder);
                 stmt.setInt(5, scenario);
-                stmt.setDouble(6, 100.0 * st.sp[i].gha / st.bha);
+                stmt.setDouble(6, calculateGPro(st, st.sp[i]));
                 stmt.setInt(7, sims);
                 stmt.setDouble(8, st.sp[i].h100age);
                 stmt.setDouble(9, st.sp[i].nha);
@@ -459,6 +485,9 @@ public class LoadTreegrossStand {
                 stmt.execute();
             }
         } catch (SQLException e) {
+            for (int i = 0; i < st.nspecies; i++) {
+                logger.log(Level.SEVERE, "gha = {0}, bha = {1}", new Object[]{st.sp[i].gha, st.bha});
+            }
             logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
@@ -477,15 +506,15 @@ public class LoadTreegrossStand {
                 Double hh100 = st.sp[i].h100;
                 Double nnha = st.sp[i].nha;
                 Double aalt = st.sp[i].h100age;
-                Double gpro = 100.0 * st.sp[i].gha / st.bha;
+                Double gpro = calculateGPro(st, st.sp[i]);
                 int art = st.sp[i].code;
 
-// SUMME Grundfläche und Volumen der Nutzung  
+                // SUMME Grundfläche und Volumen der Nutzung  
                 double nnhaa = 0.0;
                 double gghaa = 0.0;
                 double vvhaa = 0.0;
                 for (int ik = 0; ik < st.ntrees; ik++) {
-                    if (st.tr[ik].out > 0 && st.tr[ik].code == st.sp[i].code) {
+                    if (st.tr[ik].isDead() && st.tr[ik].code == st.sp[i].code) {
                         nnhaa = nnhaa + 1.0 * st.tr[ik].fac / st.size;
                         gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
                         vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
@@ -516,6 +545,15 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not save species to database", e);
         }
     }
+    
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-78
+    // What should happen in the case of bha == 0
+    private static double calculateGPro(Stand st, Species species) {
+        if (st.bha == 0) {
+            return 0;
+        }
+        return 100.0 * species.gha / st.bha;
+    }
 
     public void saveStand(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha, dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
@@ -543,6 +581,8 @@ public class LoadTreegrossStand {
 
             stmt.execute();
         } catch (SQLException e) {
+            System.out.println("d100=" + st.d100);
+            logger.log(Level.SEVERE, "d100={0} h100= {1}", new Object[]{String.valueOf(st.d100), String.valueOf(st.h100)});
             logger.log(Level.SEVERE, "Could not save stand to database", e);
         }
     }
@@ -558,7 +598,7 @@ public class LoadTreegrossStand {
             double vvhaaz = 0.0;
             double gghaa = 0.0;
             for (int ik = 0; ik < st.ntrees; ik++) {
-                if (st.tr[ik].out > 0) {
+                if (st.tr[ik].isDead()) {
                     gghaa = gghaa + Math.PI * Math.pow((st.tr[ik].d / 200), 2.0) * st.tr[ik].fac / st.size;
                     vvhaa = vvhaa + st.tr[ik].v * st.tr[ik].fac / st.size;
                     if (st.tr[ik].outtype == OutType.FALLEN) {
@@ -648,7 +688,7 @@ public class LoadTreegrossStand {
                     stmt.execute();
                 }
             }
-// In auf Datei schreiben
+            // In auf tabelle schreiben
             String idx = st.standname + " 1";
             try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO Auf (id, edvid, auf, monat, jahr, flha)"
                     + " values (?, ?, 1, 1, ?, ?)")) {
@@ -718,9 +758,7 @@ public class LoadTreegrossStand {
                         st.tr[j].h = fi.getValueForTree(tree, tree.sp.spDef.uniformHeightCurveXML);
                     }
                 }
-                for (int j = 0; j < st.ntrees; j++) {
-                    st.tr[j].setMissingData();
-                }
+                st.forAllTrees(tree -> tree.setMissingData());
                 GenerateXY gxy = new GenerateXY();
                 gxy.setGroupRadius(0.0);
                 gxy.zufall(st);

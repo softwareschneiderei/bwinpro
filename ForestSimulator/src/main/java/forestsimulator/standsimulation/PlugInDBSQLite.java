@@ -17,7 +17,6 @@ http://www.nw-fva.de/~nagel/treegross/
  */
 package forestsimulator.standsimulation;
 
-import java.io.File;
 import javax.swing.JFrame;
 import treegross.base.*;
 
@@ -26,5 +25,5 @@ import treegross.base.*;
  */
 public interface PlugInDBSQLite {
 
-    public void startDialog(JFrame frame, Stand st, File dir);
+    public void startDialog(JFrame frame, Stand st, TgUser userSettings);
 }

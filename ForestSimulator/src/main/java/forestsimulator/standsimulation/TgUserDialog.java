@@ -29,48 +29,30 @@ import java.util.logging.Logger;
 import javax.swing.*;
 
 public class TgUserDialog extends JDialog {
+    private static final Logger logger = Logger.getLogger(TgUserDialog.class.getName());
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    File WorkingDir;
-    File ProgramDir;
-    File DataDir;
-    UserLanguage Language;
-    File localPath;
-    String XMLSettings = "";
-    String plugIn = "";
-    File verzeichnis;
-    File localF = null;
-    private TgUser user = new TgUser(new File("."));
+    private final UserLanguage Language;
+    private final TgUser user = new TgUser(new File("."));
    
     public TgUserDialog(Frame parent, boolean modal) {
         super(parent, modal);
-        if (user.fileExists("ForestSimulator.ini")) {
-            System.out.println("Settings laden");
+        if (user.fileExistsInWorkingDir("ForestSimulator.ini")) {
+            logger.info("Settings laden");
             user.loadSettings();
-              
-            ProgramDir=user.getProgramDir();
-            WorkingDir=user.getWorkingDir();
-            DataDir=user.getDataDir();
-            XMLSettings=user.getXMLSettings();
-            plugIn = user.getPlugIn();
         }
         Language = UserLanguage.forLocale(user.getLanguageShort());
         initComponents();
-        File f = new File(".");
-        try {
-            localPath= f.getCanonicalFile();
-        } catch (IOException e) {
-            Logger.getLogger(TgUserDialog.class.getName()).log(Level.SEVERE, "Problem getting working directory: {0}", e.getMessage());
-        }
         if (user.getProgramDir().isDirectory()) {
             loadModels();
         }
-        userDirectoryTextField.setText(ProgramDir.getName());
-        outputDirectoryTextField.setText(WorkingDir.getName());
-        dataDirectoryTextField.setText(DataDir.getName());
-        xmlFileComboBox.setSelectedItem(plugIn);
-// PlugIn Model
+        userDirectoryTextField.setText(user.getProgramDir().getName());
+        outputDirectoryTextField.setText(user.getWorkingDir().getName());
+        dataDirectoryTextField.setText(user.getDataDir().getName());
+        climateDataFileTextField.setText(user.getClimateDatabase().getName());
+        xmlFileComboBox.setSelectedItem(user.plugIn);
         languageSelector.setSelectedItem(Language);
         standGraphicComboBox.setSelectedIndex(user.grafik3D);
+        pack();
     }
 
     private ComboBoxModel languageOptions() {
@@ -106,44 +88,27 @@ public class TgUserDialog extends JDialog {
         standGraphicComboBox = new javax.swing.JComboBox();
         xmlFileLabel = new javax.swing.JLabel();
         xmlFileComboBox = new javax.swing.JComboBox();
+        climateDataFileLabel = new javax.swing.JLabel();
+        climateDataFileTextField = new javax.swing.JTextField();
+        searchClimateDataFileButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
         setTitle(bundle.getString("TgUserDialog.title")); // NOI18N
         setModal(true);
-        setResizable(false);
-        getContentPane().setLayout(null);
 
         languageLabel.setText(bundle.getString("TgUserDialog.languageLabel.text")); // NOI18N
-        getContentPane().add(languageLabel);
-        languageLabel.setBounds(20, 20, 70, 14);
 
         languageSelector.setModel(languageOptions());
         languageSelector.setSelectedItem(activeLanguage());
         languageSelector.setName("languageSelector"); // NOI18N
         languageSelector.setPreferredSize(new java.awt.Dimension(100, 22));
-        languageSelector.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                languageSelectorActionPerformed(evt);
-            }
-        });
-        getContentPane().add(languageSelector);
-        languageSelector.setBounds(80, 20, 100, 22);
 
         userDirectoryLabel.setText(bundle.getString("TgUserDialog.userDirectoryLabel.text")); // NOI18N
-        getContentPane().add(userDirectoryLabel);
-        userDirectoryLabel.setBounds(20, 60, 390, 14);
 
-        userDirectoryTextField.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        userDirectoryTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                userDirectoryTextFieldActionPerformed(evt);
-            }
-        });
-        getContentPane().add(userDirectoryTextField);
-        userDirectoryTextField.setBounds(20, 80, 450, 19);
+        userDirectoryTextField.setFont(userDirectoryTextField.getFont());
 
-        searchUserDirectoryButton.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
+        searchUserDirectoryButton.setFont(searchUserDirectoryButton.getFont());
         searchUserDirectoryButton.setText(bundle.getString("TgUserDialog.searchUserDirectoryButton.text")); // NOI18N
         searchUserDirectoryButton.setAlignmentY(0.0F);
         searchUserDirectoryButton.setMinimumSize(new java.awt.Dimension(100, 25));
@@ -152,8 +117,6 @@ public class TgUserDialog extends JDialog {
                 searchUserDirectoryButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(searchUserDirectoryButton);
-        searchUserDirectoryButton.setBounds(500, 80, 80, 20);
 
         applyButton.setText(bundle.getString("TgUserDialog.applyButton.text")); // NOI18N
         applyButton.addActionListener(new java.awt.event.ActionListener() {
@@ -161,89 +124,143 @@ public class TgUserDialog extends JDialog {
                 applyButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(applyButton);
-        applyButton.setBounds(320, 290, 280, 23);
 
-        outputDirectoryTextField.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        getContentPane().add(outputDirectoryTextField);
-        outputDirectoryTextField.setBounds(20, 190, 450, 19);
+        outputDirectoryTextField.setFont(outputDirectoryTextField.getFont());
 
-        searchOutputDirectoryButton.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
+        searchOutputDirectoryButton.setFont(searchOutputDirectoryButton.getFont());
         searchOutputDirectoryButton.setText(bundle.getString("TgUserDialog.searchOutputDirectoryButton.text")); // NOI18N
         searchOutputDirectoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchOutputDirectoryButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(searchOutputDirectoryButton);
-        searchOutputDirectoryButton.setBounds(500, 190, 80, 21);
 
         outputDirectoryLabel.setText(bundle.getString("TgUserDialog.outputDirectoryLabel.text")); // NOI18N
-        getContentPane().add(outputDirectoryLabel);
-        outputDirectoryLabel.setBounds(20, 170, 390, 14);
 
         dataDirectoryLabel.setText(bundle.getString("TgUserDialog.dataDirectoryLabel.text")); // NOI18N
-        getContentPane().add(dataDirectoryLabel);
-        dataDirectoryLabel.setBounds(20, 110, 240, 14);
 
-        dataDirectoryTextField.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
-        getContentPane().add(dataDirectoryTextField);
-        dataDirectoryTextField.setBounds(20, 130, 450, 20);
+        dataDirectoryTextField.setFont(dataDirectoryTextField.getFont());
 
-        searchDataDirectoryButton.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 10)); // NOI18N
+        searchDataDirectoryButton.setFont(searchDataDirectoryButton.getFont());
         searchDataDirectoryButton.setText(bundle.getString("TgUserDialog.searchDataDirectoryButton.text")); // NOI18N
         searchDataDirectoryButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchDataDirectoryButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(searchDataDirectoryButton);
-        searchDataDirectoryButton.setBounds(500, 130, 80, 21);
 
         standGraphicComboBox.setModel(new DefaultComboBoxModel(StandGraphicMode.values()));
-        standGraphicComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                standGraphicComboBoxActionPerformed(evt);
-            }
-        });
-        getContentPane().add(standGraphicComboBox);
-        standGraphicComboBox.setBounds(360, 20, 150, 20);
 
         xmlFileLabel.setText(bundle.getString("TgUserDialog.xmlFileLabel.text")); // NOI18N
-        getContentPane().add(xmlFileLabel);
-        xmlFileLabel.setBounds(20, 230, 140, 14);
 
-        getContentPane().add(xmlFileComboBox);
-        xmlFileComboBox.setBounds(20, 250, 450, 20);
+        climateDataFileLabel.setText(bundle.getString("TgUserDialog.climateDataFileLabel.text")); // NOI18N
 
-        setSize(new java.awt.Dimension(651, 377));
+        searchClimateDataFileButton.setFont(searchClimateDataFileButton.getFont());
+        searchClimateDataFileButton.setText(bundle.getString("TgUserDialog.searchClimateDataFileButton.text")); // NOI18N
+        searchClimateDataFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchClimateDataFileButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(userDirectoryLabel)
+                        .addComponent(dataDirectoryLabel)
+                        .addComponent(outputDirectoryLabel)
+                        .addComponent(applyButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(climateDataFileTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(xmlFileLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(xmlFileComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(languageLabel)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(standGraphicComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(userDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                                .addComponent(dataDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(outputDirectoryTextField, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(searchOutputDirectoryButton)
+                                .addComponent(searchDataDirectoryButton)
+                                .addComponent(searchUserDirectoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(searchClimateDataFileButton, javax.swing.GroupLayout.Alignment.TRAILING))))
+                    .addComponent(climateDataFileLabel))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(languageSelector, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(standGraphicComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(languageLabel))
+                .addGap(18, 18, 18)
+                .addComponent(userDirectoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(searchUserDirectoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(userDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(dataDirectoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dataDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchDataDirectoryButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(outputDirectoryLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(outputDirectoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchOutputDirectoryButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(climateDataFileLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(climateDataFileTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchClimateDataFileButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(xmlFileComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(xmlFileLabel))
+                .addGap(18, 18, 18)
+                .addComponent(applyButton)
+                .addContainerGap())
+        );
+
+        setSize(new java.awt.Dimension(523, 369));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void standGraphicComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_standGraphicComboBoxActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_standGraphicComboBoxActionPerformed
-
-    private void languageSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_languageSelectorActionPerformed
-// TODO add your handling code here:
-    }//GEN-LAST:event_languageSelectorActionPerformed
 
     private void searchDataDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchDataDirectoryButtonActionPerformed
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(localPath);
+        jf.setCurrentDirectory(user.getWorkingDir());
         jf.setDialogTitle(messages.getString("TgUserDialog.chooseDataDirDialog.title"));
         jf.showOpenDialog(this);
-        DataDir = jf.getSelectedFile();        
+        File DataDir = jf.getSelectedFile();        
         dataDirectoryTextField.setText(DataDir.getAbsolutePath());
     }//GEN-LAST:event_searchDataDirectoryButtonActionPerformed
 
     private void searchOutputDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchOutputDirectoryButtonActionPerformed
         JFileChooser jf = new JFileChooser();
         jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jf.setCurrentDirectory(localPath);
+        jf.setCurrentDirectory(user.getWorkingDir());
         jf.showOpenDialog(this);
-        WorkingDir = jf.getSelectedFile();
+        File WorkingDir = jf.getSelectedFile();
         outputDirectoryTextField.setText(WorkingDir.getAbsolutePath());
     }//GEN-LAST:event_searchOutputDirectoryButtonActionPerformed
 
@@ -255,9 +272,33 @@ public class TgUserDialog extends JDialog {
             System.exit(0);
             dispose();
         } catch (IOException e) {
-            System.out.println("Error! writing File standsimulation.ini");
+            logger.log(Level.SEVERE, "Error! writing File standsimulation.ini", e);
         }
     }//GEN-LAST:event_applyButtonActionPerformed
+
+    private void searchUserDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchUserDirectoryButtonActionPerformed
+        JFileChooser jf = new JFileChooser();
+        jf.setCurrentDirectory(user.getWorkingDir());
+        jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jf.setDialogTitle(messages.getString("TgUserDialog.chooseUserDirDialog.title"));
+        if (jf.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File ProgramDir = jf.getSelectedFile();
+        userDirectoryTextField.setText(ProgramDir.getAbsolutePath());
+        loadModels();
+    }//GEN-LAST:event_searchUserDirectoryButtonActionPerformed
+
+    private void searchClimateDataFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchClimateDataFileButtonActionPerformed
+        JFileChooser jf = new JFileChooser();
+        jf.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jf.setCurrentDirectory(user.getDataDir());
+        if (jf.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+        File climateDataFile = jf.getSelectedFile();
+        climateDataFileTextField.setText(climateDataFile.getAbsolutePath());
+    }//GEN-LAST:event_searchClimateDataFileButtonActionPerformed
 
     private void saveSettings() throws IOException {
         UserLanguage.LanguageEntry selectedLanguage = (UserLanguage.LanguageEntry) languageSelector.getSelectedItem();
@@ -268,27 +309,16 @@ public class TgUserDialog extends JDialog {
                 outputDirectoryTextField.getText(),
                 selectedLanguage.language.locale(),
                 (String) xmlFileComboBox.getSelectedItem(),
+                climateDataFileTextField.getText(),
                 g3D);
     }
 
-    private void userDirectoryTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userDirectoryTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userDirectoryTextFieldActionPerformed
-
-    private void searchUserDirectoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchUserDirectoryButtonActionPerformed
-        javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
-        jf.setCurrentDirectory(localPath);
-        jf.setFileSelectionMode(javax.swing.JFileChooser.DIRECTORIES_ONLY);
-        jf.setDialogTitle(messages.getString("TgUserDialog.chooseUserDirDialog.title"));
-        int k = jf.showOpenDialog(this);
-        ProgramDir = jf.getSelectedFile();
-        userDirectoryTextField.setText(ProgramDir.getAbsolutePath());
-        loadModels();
-    }//GEN-LAST:event_searchUserDirectoryButtonActionPerformed
-
     private void loadModels() {
         xmlFileComboBox.removeAllItems();
-        File modelDirectory = new File(ProgramDir, "models");
+        File modelDirectory = new File(user.getProgramDir(), "models");
+        if (!modelDirectory.isDirectory()) {
+            return;
+        }
 // Liste mit Dateien erstellen 
         String entries[] = modelDirectory.list();
         for (String entry : entries) {
@@ -300,12 +330,15 @@ public class TgUserDialog extends JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyButton;
+    private javax.swing.JLabel climateDataFileLabel;
+    private javax.swing.JTextField climateDataFileTextField;
     private javax.swing.JLabel dataDirectoryLabel;
     private javax.swing.JTextField dataDirectoryTextField;
     private javax.swing.JLabel languageLabel;
     private javax.swing.JComboBox languageSelector;
     private javax.swing.JLabel outputDirectoryLabel;
     private javax.swing.JTextField outputDirectoryTextField;
+    private javax.swing.JButton searchClimateDataFileButton;
     private javax.swing.JButton searchDataDirectoryButton;
     private javax.swing.JButton searchOutputDirectoryButton;
     private javax.swing.JButton searchUserDirectoryButton;

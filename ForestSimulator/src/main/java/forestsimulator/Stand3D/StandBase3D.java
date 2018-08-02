@@ -28,9 +28,7 @@ public class StandBase3D {
     double corry =0;
     double corrx = 0;
     private Corners[] cp;
-    /**
-     * Creates a new instance of StandBase3D 
-     */
+
     public StandBase3D(Corners[] c, int np, Texture2D[] textures, boolean textured, Group parent) { 
         System.out.println("StandBase3Dnew: n corner points: "+np);
         calcMinMax( c, np);

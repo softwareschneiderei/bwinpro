@@ -10,6 +10,8 @@
 package forestsimulator.Stand3D;
 
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.j3d.*;
 import treegross.base.OutType;
 import treegross.base.Tree;
@@ -19,6 +21,7 @@ import treegross.base.Tree;
  * @author jhansen
  */
 public class Tree3DList {
+    private static final Logger logger = Logger.getLogger(Tree3DList.class.getName());
 
     public Tree3D[] trees = null;
     public int[] sts = null;
@@ -40,7 +43,7 @@ public class Tree3DList {
         standyear = year;
         sts = speciestoshow;
         int n3dtrees = countRelevantTrees(tgtrees, ntrees);
-        System.out.println("Tree3DList (setListData): n relevant trees for 3d rendering: " + n3dtrees + " n trees in treegross stand: " + ntrees);
+        logger.log(Level.FINE, "Tree3DList (setListData): n relevant trees for 3d rendering: {0} n trees in treegross stand: {1}", new Object[]{ n3dtrees, ntrees });
         trees = new Tree3D[n3dtrees];
         int indexcounter = 0;
         for (int i = 0; i < ntrees; i++) {
@@ -94,22 +97,29 @@ public class Tree3DList {
 
     public void setSpeciesToShow(int[] speciestoshow, boolean showdead) {
         sts = speciestoshow;
-        if (trees != null) {
-            for (Tree3D tree : trees()) {
-                if (showSpecies(tree.userdata.spec)) {
-                    if (!showdead && !tree.userdata.living && !tree.userdata.standing) {
-                        tree.setVisible(false);
-                    } else {
-                        tree.setVisible(true);
-                    }
-                } else {
+        if (trees == null) {
+            return;
+        }
+        for (Tree3D tree : trees()) {
+            if (showSpecies(tree.userdata.spec)) {
+                if (!showdead && !tree.userdata.living && !tree.userdata.standing) {
                     tree.setVisible(false);
+                } else {
+                    tree.setVisible(true);
                 }
+            } else {
+                tree.setVisible(false);
             }
         }
     }
     
     public Iterable<Tree3D> trees() {
+        logger.log(Level.FINE, "Number of trees in list {0}", trees.length);
+        for (Tree3D tree : trees) {
+            if (tree == null) {
+                logger.log(Level.SEVERE, "Tree is null in treelist");
+            }
+        }
         return Arrays.asList(trees);
     }
     

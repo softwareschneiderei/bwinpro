@@ -19,8 +19,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import treegross.base.GenerateXY;
+import treegross.base.Layer;
 import treegross.base.OutType;
+import treegross.base.SiteIndex;
+import static treegross.base.SiteIndex.si;
 import treegross.base.Stand;
+import treegross.base.StandLocation;
 
 /**
  *
@@ -266,8 +270,8 @@ public class JPanelPlots extends JPanel {
                     stm.setDouble(5, st.hochwert_m);
                     stm.setDouble(6, st.rechtswert_m);
                     stm.setDouble(7, st.hoehe_uNN_m);
-                    stm.setString(8, st.wuchsgebiet);
-                    stm.setString(9, st.wuchsgebiet); // TODO: This looks like a bug, check with FVA
+                    stm.setString(8, st.location.growingRegion);
+                    stm.setString(9, st.location.growingSubRegion);
                     stm.setString(10, st.standort);
                     stm.setDouble(11, st.exposition_Gon);
                     stm.setDouble(12, st.hangneigungProzent);
@@ -312,7 +316,7 @@ public class JPanelPlots extends JPanel {
                         ps.setInt(5, st.tr[i].age);
                         ps.setDouble(6, st.tr[i].d);
                         ps.setDouble(7, st.tr[i].h);
-                        ps.setDouble(8, st.tr[i].si);
+                        ps.setDouble(8, st.tr[i].si.value);
                         ps.setDouble(9, st.tr[i].cb);
                         ps.setDouble(10, st.tr[i].cw);
                         ps.setInt(11, st.tr[i].out);
@@ -324,7 +328,7 @@ public class JPanelPlots extends JPanel {
                         ps.setBoolean(17, st.tr[i].habitat);
                         ps.setDouble(18, st.tr[i].fac);
                         ps.setString(19, st.tr[i].remarks);
-                        ps.setInt(20, st.tr[i].layer);
+                        ps.setInt(20, st.tr[i].layer.toInt());
 
                         ps.execute();
                     }
@@ -513,8 +517,7 @@ public class JPanelPlots extends JPanel {
                     st.rechtswert_m = Double.parseDouble(rs.getString("lat"));
                     st.hochwert_m = Double.parseDouble(rs.getString("lon"));
                     st.hoehe_uNN_m = Double.parseDouble(rs.getString("masl"));
-                    st.wuchsgebiet = rs.getString("region");
-                    st.wuchsbezirk = rs.getString("district");
+                    st.location = new StandLocation("", rs.getString("region"), rs.getString("district"));
                     st.standort = rs.getString("sitetype");
                     st.exposition_Gon = (int) (Math.round(Double.parseDouble(rs.getString("exposition_gon"))));
                     st.hangneigungProzent = Double.parseDouble(rs.getString("slope_percentage"));
@@ -541,7 +544,7 @@ public class JPanelPlots extends JPanel {
                     int aa = rs.getInt("age");
                     double dd = Double.parseDouble(rs.getString("dbh"));
                     double hh = Double.parseDouble(rs.getString("h"));
-                    double si = Double.parseDouble(rs.getString("si"));
+                    SiteIndex si = si(Double.parseDouble(rs.getString("si")));
                     double ccb = Double.parseDouble(rs.getString("cb"));
                     double ccw = Double.parseDouble(rs.getString("cw"));
                     int oout = rs.getInt("alive");
@@ -554,7 +557,7 @@ public class JPanelPlots extends JPanel {
                     double w = Double.parseDouble(rs.getString("azimuth"));
                     double zz = Double.parseDouble(rs.getString("z"));
                     double ff = Double.parseDouble(rs.getString("fac"));
-                    int lay = rs.getInt("layer");
+                    Layer lay = Layer.fromInt(rs.getInt("layer"));
                     double xx = radius + Math.sin(Math.PI * w / 200.0) * e;
                     double yy = radius + Math.cos(Math.PI * w / 200.0) * e;
                     int nclone = 1;
@@ -569,8 +572,7 @@ public class JPanelPlots extends JPanel {
                             xx = -9.0;
                             yy = -9.0;
                         }
-                        st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, 0, 0.0, rm);
-                        st.tr[st.ntrees - 1].layer = lay;
+                        st.addXMLTree(cc, nam, aa, oout, oouttype, dd, hh, ccb, ccw, si, ff, xx, yy, zz, ccrop, tz, hhabitat, lay, 0.0, rm);
                     }
                 }
             }

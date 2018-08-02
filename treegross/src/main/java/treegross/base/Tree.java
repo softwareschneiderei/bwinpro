@@ -18,6 +18,7 @@ package treegross.base;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static treegross.base.SiteIndex.si;
 import treegross.base.thinning.ModerateThinning;
 import treegross.random.RandomNumber;
 
@@ -82,7 +83,7 @@ public class Tree implements Cloneable {
     /**
      * site index
      */
-    public double si;
+    public SiteIndex si;
     /**
      * reference to species
      */
@@ -91,10 +92,8 @@ public class Tree implements Cloneable {
      * reference to stand
      */
     public Stand st;
-    /**
-     * tree layer 1=upper, 2=middel, 3=lower
-     */
-    public int layer;
+
+    public Layer layer;
     /**
      * last diameter amd height increment
      */
@@ -182,20 +181,11 @@ public class Tree implements Cloneable {
      * year of removal in reality
      */
     int yearOfRemovalinReality = 0;
-// for Viswin 
-    /* Ober- u. Unterstand */ public int ou = 0;
-    /**
-     * mortality reason 1= thinned or harvested, 2= dry and standing, 3= wind
-     * throw, 4= other
-     */
-    public int mortalityReason = 0;
-    //for ried
-    /**
-     * index of vitality
-     */    public double vitality = 1;
+    // for Viswin 
+    /* Ober- u. Unterstand */
+    public int ou = 0;
 
     public boolean outBySkidtrail = false;
-    public int bioMass = 0; // kg   
 
     private final static Logger LOGGER = Logger.getLogger(Tree.class.getName());
 
@@ -230,8 +220,8 @@ public class Tree implements Cloneable {
      * @param remarksx
      */
     public Tree(int codex, String nox, int agex, int outx, OutType outtypex, double dx, double hx, double cbx, double cwx,
-            double six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
-            boolean habitatTreex, int treeLayerx, double volumeDeadwoodx, String remarksx) {
+            SiteIndex six, double facx, double xx, double yx, double zx, boolean cropTreex, boolean tempCropTreex,
+            boolean habitatTreex, Layer treeLayerx, double volumeDeadwoodx, String remarksx) {
         code = codex;
         no = nox;
         out = outx;
@@ -302,7 +292,7 @@ public class Tree implements Cloneable {
         clone.shareXtimber = this.shareXtimber;
         clone.sharelog = this.sharelog;
         clone.si = this.si;
-        clone.sp = sp.clone();
+        clone.sp = new Species(sp);
         //clone.st has to be added in the super clone call
         clone.v = this.v;
         clone.x = this.x;
@@ -313,9 +303,7 @@ public class Tree implements Cloneable {
         clone.zGrad = this.zGrad;
         clone.volumeDeadwood = this.volumeDeadwood;
         clone.degreeOfDecay = this.degreeOfDecay;
-        clone.vitality = vitality;
         clone.outBySkidtrail = this.outBySkidtrail;
-        clone.bioMass = this.bioMass;
         clone.group = this.group;
         return clone;
     }
@@ -386,17 +374,9 @@ public class Tree implements Cloneable {
             cberg = 0.01;
         }
         if (Double.isNaN(cberg)) {
-            boolean errout = false;
-            if (st != null) {
-                if (st.debug) {
-                    errout = true;
-                }
-            }
-            if (errout) {
-                String msg = "calculated crown base is NaN for:" + st.standname + "/" + no + "\n\t"
-                        + sp.spDef.crownbaseXML + " dbh: " + d + " height: " + h + " sp.h100: " + sp.h100;
-                LOGGER.log(Level.WARNING, msg);
-            }
+            LOGGER.log(Level.FINE,
+                    "calculated crown base is NaN for:{0}/{1}\n\t{2} dbh: {3} height: {4} sp.h100: {5}",
+                    new Object[]{st.standname, no, sp.spDef.crownbaseXML, d, h, sp.h100});
             cberg = h / 2.0;
         }
         return cberg;
@@ -430,9 +410,9 @@ public class Tree implements Cloneable {
         return erg;
     }
 
-    public double calculateSiteIndex() {
+    public SiteIndex calculateSiteIndex() {
         FunctionInterpreter fi = new FunctionInterpreter();
-        return fi.getValueForTree(this, sp.spDef.siteindexXML);
+        return si(fi.getValueForTree(this, sp.spDef.siteindexXML));
     }
 
     public double calculateMaxBasalArea() {
@@ -442,8 +422,7 @@ public class Tree implements Cloneable {
     public void ageBasedMortality() {
         double ageindex = (1.0 * age / (1.0 * sp.spDef.maximumAge)) - 1.0;
         if (ageindex > st.random.nextUniform()) {
-            out = st.year;
-            outtype = OutType.FALLEN;
+            takeOut(st.year, OutType.FALLEN);
         }
     }
 
@@ -462,14 +441,14 @@ public class Tree implements Cloneable {
 
     public void setMissingData() {
         //if the first tree of a species is added there is no site index
-        if (si <= -9.0 && sp.hbon <= 0.0) {
+        if (si.undefined() && sp.hbon <= 0.0) {
             if (sp.h100 <= 1.3 || Double.isNaN(sp.h100)) {
                 sp.h100 = st.h100;
             }
-            si = calculateSiteIndex();
+            initializeSiteIndex(calculateSiteIndex());
         }
-        if (si <= -9.0) {
-            si = sp.hbon;
+        if (si.undefined()) {
+            initializeSiteIndex(si(sp.hbon));
         }
         if (cb < 0.01) {
             cb = calculateCb();
@@ -480,6 +459,10 @@ public class Tree implements Cloneable {
         if (v <= 0.0) {
             v = calculateVolume();
         }
+    }
+
+    void initializeSiteIndex(SiteIndex value) {
+        si = value;
     }
 
     /**
@@ -495,24 +478,17 @@ public class Tree implements Cloneable {
         } else {
             bhdinc = fi.getValueForTree(this, sp.spDef.diameterIncrementXML);
             if (Double.isInfinite(bhdinc) || Double.isNaN(bhdinc) || bhdinc < 0) {
-                boolean errout = false;
-                if (st != null) {
-                    st.debug = errout;
-                }
-                if (errout) {
-                    LOGGER.log(Level.WARNING, "dbh increment is < 0, NaN or infinite for: {0}/{1}\n\tbhdinc: {2}\n\tc66cxy: {3} c66xy: {4}crown width {5}\n\tcrown base {6} species: {7} h100 for species: {8}", new Object[]{st.standname, no, bhdinc, c66cxy, c66xy, cw, cb, code, sp.h100});
-                }
+                LOGGER.log(Level.FINE, "dbh increment is < 0, NaN or infinite for: {0}/{1}\n\tbhdinc: {2}\n\tc66cxy: {3} c66xy: {4}crown width {5}\n\tcrown base {6} species: {7} h100 for species: {8}", new Object[]{st.standname, no, bhdinc, c66cxy, c66xy, cw, cb, code, sp.h100});
                 bhdinc = 0;
             }
 
             //NormalDistributed ndis = new NormalDistributed();
-            double effect;
             if (/*randomEffects*/rn.randomOn) {
                 if (bhdinc <= 0.0) {
                     bhdinc = 0.0001;
                 }
                 //effect = sp.spDef.diameterIncrementError*ndis.value(1.0);
-                effect = sp.spDef.diameterIncrementError * rn.nextNormal(1);
+                double effect = sp.spDef.diameterIncrementError * rn.nextNormal(1);
                 bhdinc = Math.exp(Math.log(bhdinc) + effect);
             }
             if (bhdinc < 0.0) {
@@ -521,23 +497,7 @@ public class Tree implements Cloneable {
 
             bhdinc = 2.0 * Math.sqrt((Math.PI * Math.pow((d / 2.0), 2.0) + bhdinc * 10000.0) / Math.PI) - d;
 
-            // grow height (hinc????):
-            double ihpot_l = fi.getValueForTree(this, sp.spDef.potentialHeightIncrementXML);
-            if (h / sp.h100 >= 1.0) {
-                hinc = 1.0;
-            } else {
-                hinc = sp.h100 / h;
-            }
-
-            hinc = fi.getValueForTree(this, sp.spDef.heightIncrementXML);
-            if (rn.randomOn) {
-                effect = sp.spDef.heightIncrementError;
-                hinc += effect * rn.nextNormal(1);
-            }
-
-            if (hinc > ihpot_l * 1.2) {
-                hinc = ihpot_l * 1.2;   //ihpot*1.2 is max
-            }
+            calculateHeightIncrement(fi, rn);
         }
 
         //no negative height growth allowed
@@ -554,6 +514,26 @@ public class Tree implements Cloneable {
         d += years * bhdinc * ts;
         age += years;
         v = calculateVolume();
+    }
+
+    private void calculateHeightIncrement(FunctionInterpreter fi, RandomNumber rn) {
+        // grow height (hinc????):
+        double ihpot_l = fi.getValueForTree(this, sp.spDef.potentialHeightIncrementXML);
+        if (h / sp.h100 >= 1.0) {
+            hinc = 1.0;
+        } else {
+            hinc = sp.h100 / h;
+        }
+        
+        hinc = fi.getValueForTree(this, sp.spDef.heightIncrementXML);
+        if (rn.randomOn) {
+            double effect = sp.spDef.heightIncrementError;
+            hinc += effect * rn.nextNormal(1);
+        }
+        
+        if (hinc > ihpot_l * 1.2) {
+            hinc = ihpot_l * 1.2;   //ihpot*1.2 is max
+        }
     }
 
     private void youthGrowth(FunctionInterpreter fi, int years) {
@@ -597,7 +577,6 @@ public class Tree implements Cloneable {
     }
 
     void growBack(int years) {
-        //System.out.println("grow back Tree");
         double ts = st.timeStep;
         if (out == st.year) {
             out = -1;
@@ -708,5 +687,23 @@ public class Tree implements Cloneable {
 
     public boolean isLiving() {
         return out < 0;
+    }
+    
+    public boolean isDead() {
+        return !isLiving();
+    }
+    
+    public void takeOut(int year, OutType reason) {
+        out = year;
+        outtype = reason;
+    }
+    
+    public boolean isOf(Species species) {
+        return sp.code == species.code;
+    }
+
+    @Override
+    public String toString() {
+        return "Tree{" + "code=" + code + ", no=" + no + ", age=" + age + ", out=" + out + ", outtype=" + outtype + ", d=" + d + ", h=" + h + ", cb=" + cb + ", cw=" + cw + '}';
     }
 }

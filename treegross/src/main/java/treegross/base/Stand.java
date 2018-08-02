@@ -27,10 +27,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import static treegross.base.ScaleManager.SCALE_AUTO;
+import static treegross.base.SiteIndex.si;
 import treegross.random.RandomNumber;
 
 /**
@@ -58,6 +58,9 @@ import treegross.random.RandomNumber;
  */
 public class Stand {
 
+    public static final String loadedEvent = "Stand loaded"; 
+    private static final Logger LOGGER = Logger.getLogger(Stand.class.getName());
+    
     public boolean debug = true;
 
     /**
@@ -226,14 +229,6 @@ public class Stand {
      */
     public double hangneigungProzent = -99.9;
     /**
-     * Wuchsgebiet
-     */
-    public String wuchsgebiet = "";
-    /**
-     * Wuchsbezirk
-     */
-    public String wuchsbezirk = "";
-    /**
      * FileXMLSettings
      */
     public String FileXMLSettings = "ForestSimulatorSettings.xml";
@@ -278,11 +273,8 @@ public class Stand {
 
     /*added by jhansen*/
     /* a container to store all added StandChangeListeners*/
-    private final List<StandChangeListener> StandChangeListeners = new ArrayList<>();
+    private final List<StandChangeListener> standChangeListeners = new ArrayList<>();
     private boolean notifyListeners = true;
-    public double ed = 0;
-    public double pd = 0;
-    public int water = -99;
     
     /**
      * parallel Competion Update mechanism
@@ -293,8 +285,7 @@ public class Stand {
      * stopping hook for time consuming loop/calculation
      */
     boolean stop = false;
-
-    private final static Logger LOGGER = Logger.getLogger(Stand.class.getName());
+    public StandLocation location;
 
     public Stand() {
         this(SCALE_AUTO);
@@ -316,11 +307,11 @@ public class Stand {
     }
 
     public Iterable<Tree> trees() {
-        return Arrays.stream(tr, 0, ntrees).collect(Collectors.toList());
+        return Arrays.asList(tr).subList(0, ntrees);
     }
 
     public Iterable<Species> species() {
-        return Arrays.stream(sp, 0, nspecies).collect(Collectors.toList());
+        return Arrays.asList(sp).subList(0, nspecies);
     }
 
     public ScaleManager getScaleManager() {
@@ -347,56 +338,6 @@ public class Stand {
         trule.treatmentStep = 5;
         trule.lastTreatment = 0;
         status = 0;
-    }
-
-    // in Stand ????
-    /**
-     * For simple stand creation. The method does all necessary settings to
-     * start simulation.
-     *
-     * @param localPath = path of the xml file with simulator settings, if null
-     * load std. model
-     * @param xmlSettingsFile = name of file with simulator settings
-     * @param standname = stand name
-     * @param standsize = stand size [ha]
-     * @param year = year that the simulation starts The methods create a square
-     * stand area of the given site. If you need an different area shape or
-     * circular plot you have to overwrite the cornerpoints, the stand.center
-     * information.
-     */
-    public void easyStart(File localPath, String xmlSettingsFile, String standname, double standsize, int year) {
-        SpeciesDefMap SDM = new SpeciesDefMap();
-
-        LOGGER.log(Level.INFO, "SDM loaded from {0}\\{1}", new Object[]{localPath, xmlSettingsFile});
-
-        if (localPath != null && xmlSettingsFile != null) {
-            try {
-                SDM.readFromPath(new File(localPath, xmlSettingsFile));
-                //SDM.readFromURL(new URL(localPath, st.FileXMLSettings));
-            } catch (Exception ex) {
-                LOGGER.log(Level.SEVERE, "loading species definitions", ex);
-            }
-        } else {
-            //load sdm from internal package
-            SDM.readInternal(null);
-        }
-        setSDM(SDM);
-        setProgramDir(localPath);
-        setName(standname);
-        setSize(standsize);
-        this.year = year;
-        // Flächengrenzen festlegen
-        double l = Math.sqrt(10000.0 * standsize);
-        ncpnt = 0;
-        addcornerpoint("ECK1", 0.0, 0.0, 0.0);
-        addcornerpoint("ECK2", 0.0, l, 0.0);
-        addcornerpoint("ECK3", l, l, 0.0);
-        addcornerpoint("ECK4", l, 0, 0.0);
-        center.no = "polygon";
-        center.x = l * 0.5;
-        center.y = l * 0.5;
-        center.z = 0.0;
-        scaleMan.setScaleMethod(ScaleManager.SCALE_FIXED);
     }
 
     /**
@@ -473,7 +414,7 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public boolean addTreeFromPlanting(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 1;
             return true;
@@ -502,10 +443,10 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public void addTreeFromNaturalIngrowth(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         if (addTree(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb)) {
             tr[ntrees - 1].origin = 2;
-            tr[ntrees - 1].layer = 3;
+            tr[ntrees - 1].layer = Layer.UNDERSTORY;
         }
     }
 
@@ -531,9 +472,9 @@ public class Stand {
      * @throws treegross.base.SpeciesNotDefinedException
      */
     public boolean addTree(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb) throws SpeciesNotDefinedException {
         try {
-            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, 0, null);
+            addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, 1.0d, Layer.NONE, null);
             return true;
         } catch (IllegalStateException e) {
             LOGGER.log(Level.INFO, "Tree not added.", e);
@@ -543,13 +484,13 @@ public class Stand {
 
     /* add a tree to the stand including factor*/
     public void addtreefac(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
-        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, 0, null);
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb, double fac) throws SpeciesNotDefinedException {
+        addtreeNFV(co, num, age, out, d, h, cb, cw, si, x, y, Math.max(0d, z), zb, tzb, hb, fac, Layer.NONE, null);
     }
 
     /* add a tree from Dbase NFV*/
     public void addtreeNFV(int co, String num, int age, int out, double d, double h, double cb, double cw,
-            double si, double x, double y, double z, int zb, int tzb, int hb, double fac, int ou, String rm) throws SpeciesNotDefinedException {
+            SiteIndex si, double x, double y, double z, int zb, int tzb, int hb, double fac, Layer ou, String rm) throws SpeciesNotDefinedException {
         if (ntrees + 1 > maxStandTrees) {
             throw new IllegalStateException(
                     MessageFormat.format("Maximum tree number reached! Tree not added! {0} {1} d={2} species={3} height={4}",
@@ -571,8 +512,8 @@ public class Stand {
         tree.fac = fac;
         tree.origin = 0;
         tree.year = this.year;
-        tree.layer = ou;  //0=no layer, 1 upperstory, 2= understory
-        tree.ou = ou;
+        tree.layer = ou;
+        tree.ou = ou.toInt();
         tree.remarks = rm;
         tree.si = si; // no site index set at this point
         tree.group = -1; // no site index set at this point
@@ -586,8 +527,8 @@ public class Stand {
     /* add a tree to the stand including factor*/
     public void addXMLTree(int codenumber, String number, int age, int out, OutType outtype,
             double d, double h, double cb, double cw,
-            double si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
-            int layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
+            SiteIndex si, double fac, double x, double y, double z, boolean zb, boolean tzb, boolean hb,
+            Layer layer, double volumeDeadwood, String remarks) throws SpeciesNotDefinedException {
         Tree tree = new Tree(codenumber, number, age, out, outtype, d, h, cb, cw, si, fac, x, y, z, zb, tzb, hb, layer,
                 volumeDeadwood, remarks);
        addTreeToStand(tree);
@@ -719,10 +660,10 @@ public class Stand {
         nhatotal = 0.0;
         bhatotal = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0) {
+            if (tr[i].isLiving()) {
                 nha = nha + 1;
                 if (tr[i].d >= 7.0) {
-                    bha = bha + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
+                    bha += tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
                 }
             }
             if (tr[i].out == year) {
@@ -731,7 +672,7 @@ public class Stand {
                     bhaout = bhaout + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
                 }
             }
-            if (tr[i].out > 0 && tr[i].out < year) {
+            if (tr[i].isDead() && tr[i].out < year) {
                 nhatotal = nhatotal + tr[i].fac;
                 if (tr[i].d >= 7.0) {
                     bhatotal = bhatotal + tr[i].fac * Math.PI * Math.pow((tr[i].d / 200), 2.0);
@@ -825,7 +766,7 @@ public class Stand {
     public double getVhaResidual(int spe) {
         double vha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0
+            if (tr[i].isLiving()
                     && ((tr[i].code == spe) || (spe == 0))) {
                 vha += tr[i].fac * tr[i].v;
             }
@@ -878,23 +819,12 @@ public class Stand {
         }
     }
 
-    public void grow2(int period, boolean naturalIngrowth) {
-        //long ts = System.currentTimeMillis();
-        executeMortality();
-        //System.out.println("mortality: "+ntrees+":"+(System.currentTimeMillis()-ts));
-        //ts = System.currentTimeMillis();
-        grow(period, naturalIngrowth);
-        //System.out.println("growth: "+ntrees+":"+(System.currentTimeMillis()-ts));
-    }
-
     /**
      * st.grow starts a growth cycle for the class stand, expects an integer for
-     * the number of years of one growing cycle. Should be between 1 -5. The
-     * second parameter controlls the regenration growth and can be set as
-     * either true or false
+     * the number of years of one growing cycle. Should be between 1 -5.
      *
      * @param period
-     * @param naturalIngrowth
+     * @param naturalIngrowth controls the regeneration growth
      */
     public void grow(int period, boolean naturalIngrowth) {
         // Stand is 1=growing, or 2....9 = Period of harvest, or 99=final clear cut
@@ -950,7 +880,7 @@ public class Stand {
     public void growBack(int years, boolean db) {
         // System.out.println("grow back stand "+ntrees);
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0 || tr[i].out == tr[i].st.year) {
+            if (tr[i].isLiving() || tr[i].out == tr[i].st.year) {
                 tr[i].growBack(years);
             }
         }
@@ -964,13 +894,10 @@ public class Stand {
         year -= years;
         sortbyd();
         descspecies();         // new spcies description, dl00, h100 etc.
-        for (int i = 0; i < ntrees; i++) {
-            if (tr[i].out < 0) {
-                tr[i].cw = tr[i].calculateCw();
-                tr[i].cb = tr[i].calculateCb();
-                //System.out.println("grow back stand "+tr[i].h+" "+tr[i].cb);
-            }
-        };
+        forTreesMatching(tree -> tree.isLiving(), tree -> {
+            tree.cw = tree.calculateCw();
+            tree.cb = tree.calculateCb();
+        });
         descspecies();         // new spcies description, dl00, h100 etc.
         // Bestand auf Sollgrundfläche anreichern
         double dgGen, dMaxGen;
@@ -1012,13 +939,13 @@ public class Stand {
                                     dgGen, sp[i].hg, dMaxGen, ghaToGen * size, true);
                             double si_soll = -9;
                             for (int j = 0; j < this.ntrees; j++) {
-                                if (this.tr[j].si > 0.0 && this.tr[j].code == sp[i].code) {
-                                    si_soll = this.tr[j].si;
+                                if (this.tr[j].si.defined() && this.tr[j].code == sp[i].code) {
+                                    si_soll = this.tr[j].si.value;
                                 }
                             }
                             for (int j = 0; j < this.ntrees; j++) {
-                                if (this.tr[j].si <= -9) {
-                                    this.tr[j].si = si_soll;
+                                if (this.tr[j].si.undefined()) {
+                                    this.tr[j].si = si(si_soll);
                                 }
                             }
                             for (int j = 0; j < this.ntrees; j++) {
@@ -1099,11 +1026,11 @@ public class Stand {
         // then for checking j>= a int number, java has a special algorithm to compare numbers with 0.
         // TODO: benchmark against a for-each-loop
         for (int j = startindex; j >= 0; j--) {
-            if (tr[j].out < 1) {
+            if (tr[j].isLiving()) {
                 nTreesAlive++;
             }
             if (tr[j].d >= 7.0) {
-                if (tr[j].out < 1) {
+                if (tr[j].isLiving()) {
                     nha += tr[j].fac;
                     bha += tr[j].fac * Math.PI * (tr[j].d / 200.0) * (tr[j].d / 200.0);
                     if (tr[j].h >= 1.3) {
@@ -1140,13 +1067,16 @@ public class Stand {
             double jj = 0;
             int k = 0;
             while (jj < n100 && k < ntrees) {
-                if (tr[k].d >= 7.0 && tr[k].out < 1) {
+                if (tr[k].d >= 7.0 && tr[k].isLiving()) {
                     d100 = d100 + tr[k].fac * Math.PI * (tr[k].d / 200.0) * (tr[k].d / 200.0);
                     jj += tr[k].fac;
                 }
                 k++;
             }
-            d100 = 200 * Math.sqrt(d100 / (Math.PI * jj));
+            // TODO: decide what to do if there are no living trees in stand, see http://issuetracker.intranet:20002/browse/BWIN-78
+            if (d100 != 0) {
+                d100 = 200 * Math.sqrt(d100 / (Math.PI * jj));
+            }
         }
 
         // calculate diameter-height curve  
@@ -1162,12 +1092,12 @@ public class Stand {
             m.heightcurve();
 
             for (int j = 0; j < ntrees; j = j + k) {
-                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                     ndh++;
                 }
             }
             for (int j = 0; j < ntrees; j = j + k) {
-                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                if (tr[j].d >= 7.0 && tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                     m.adddh(sp[0].spDef.heightCurve, ndh, tr[j].d, tr[j].h);
                 }
             }
@@ -1204,7 +1134,7 @@ public class Stand {
 
         if (ndh > 0 && ndh <= 4) {
             for (int j = startindex; j >= 0; j--) {
-                if (tr[j].d >= 7.0 && tr[j].h > 1.3 && tr[j].out < 1 && hk < tr[j].h) {
+                if (tr[j].d >= 7.0 && tr[j].h > 1.3 && tr[j].isLiving() && hk < tr[j].h) {
                     dk = tr[j].d;
                     hk = tr[j].h;
                 }
@@ -1271,7 +1201,7 @@ public class Stand {
         double sumBA = 0.0;
         double sumCSA = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d >= 7.0 && tr[i].out < 0) {
+            if (tr[i].d >= 7.0 && tr[i].isLiving()) {
                 sumBA = sumBA + tr[i].fac * Math.PI * Math.pow(tr[i].d / 200.0, 2.0);
                 sumCSA = sumCSA + tr[i].fac * Math.PI * Math.pow(tr[i].cw / 2.0, 2.0);
             }
@@ -1285,7 +1215,7 @@ public class Stand {
                 if (tr[j].code != sp[i].code) {
                     continue;
                 }
-                if (tr[j].d >= 7.0 && tr[j].out < 0) {
+                if (tr[j].d >= 7.0 && tr[j].isLiving()) {
                     sp[i].percBA += tr[j].fac * Math.PI * Math.pow(tr[j].d / 200.0, 2.0);
                     sp[i].percCSA += tr[j].fac * Math.PI * Math.pow(tr[j].cw / 2.0, 2.0);
                 }
@@ -1332,7 +1262,7 @@ public class Stand {
                     continue;
                 }
                 if (tr[j].d >= 7.0) {
-                    if (tr[j].out < 1 || tr[j].out == year - 1) {
+                    if (tr[j].isLiving() || tr[j].out == year - 1) {
                         sp[i].vol += tr[j].fac * tr[j].v;
                     }
                     if (tr[j].out == year) {
@@ -1376,9 +1306,8 @@ public class Stand {
         // 0. update st,bha die Bestandesgrundfläche
         bha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            // TODO: Why out < 1? -1 means living, what does 0 mean?
-            if (tr[i].out < 1 && tr[i].d >= 7.0) {
-                bha = bha + tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
+            if (tr[i].isLiving() && tr[i].d >= 7.0) {
+                bha += tr[i].fac * Math.PI * (tr[i].d / 200.0) * (tr[i].d / 200.0);
             }
         }
 
@@ -1402,7 +1331,7 @@ public class Stand {
                 double jj = 0;
                 int k = 0;
                 while (jj < n100 && k < ntrees) {
-                    if (tr[k].out < 1 && tr[k].d >= 7.0) {
+                    if (tr[k].isLiving() && tr[k].d >= 7.0) {
                         d100 = d100 + tr[k].fac * Math.PI * (tr[k].d / 200.0) * (tr[k].d / 200.0);
                         jj = jj + tr[k].fac;
                     }
@@ -1415,7 +1344,7 @@ public class Stand {
             int ndh = 0; // number of diameter and height values
 
             for (int j = 0; j < ntrees; j++) {
-                if (tr[j].h >= 1.3 && tr[j].out < 1) {
+                if (tr[j].h >= 1.3 && tr[j].isLiving()) {
                     ndh++;
                 }
             }
@@ -1429,7 +1358,7 @@ public class Stand {
                 k = k + 1;
                 ndh = 0;
                 for (int j = 0; j < ntrees; j = j + k) {
-                    if (tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                    if (tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                         ndh++;
                     }
                 }
@@ -1438,7 +1367,7 @@ public class Stand {
                 m.heightcurve();
 
                 for (int j = 0; j < ntrees; j = j + k) {
-                    if (tr[j].h >/*=*/ 1.3 && tr[j].out < 1) {
+                    if (tr[j].h >/*=*/ 1.3 && tr[j].isLiving()) {
                         m.adddh(sp[0].spDef.heightCurve, ndh, tr[j].d, tr[j].h);
                     }
                 }
@@ -1467,7 +1396,7 @@ public class Stand {
             double hk = 0.0;
             if (ndh > 0 && ndh <= 5) {
                 for (int j = 0; j < ntrees; j++) {
-                    if (tr[j].h > 1.3 && tr[j].out < 1) {
+                    if (tr[j].h > 1.3 && tr[j].isLiving()) {
                         dk = tr[j].d;
                         hk = tr[j].h;
                     }
@@ -1498,26 +1427,25 @@ public class Stand {
                 }
                 sp[0].dg = dgmerk;
                 sp[0].hg = hgmerk;
-
             }
         }
         //
-        // In case a site index is given to one or more trees, than all trees without
+        // In case a site index is given to one or more trees, then all trees without
         // site index of that species will get the average site index
         for (int jj = 0; jj < nspecies; jj++) {
             double avSiteIndex = 0.0;
             double nSiteIndex = 0.0;
             for (int j = 0; j < ntrees; j++) {
-                if (tr[j].code == sp[jj].code && tr[j].si > 0) {
-                    avSiteIndex = avSiteIndex + tr[j].si * tr[j].fac;
+                if (tr[j].code == sp[jj].code && tr[j].si.defined()) {
+                    avSiteIndex = avSiteIndex + tr[j].si.value * tr[j].fac;
                     nSiteIndex = nSiteIndex + tr[j].fac;
                 }
             }
             if (nSiteIndex > 0) {
                 avSiteIndex = avSiteIndex / nSiteIndex;
                 for (int j = 0; j < ntrees; j++) {
-                    if (tr[j].code == sp[jj].code && tr[j].si < 0) {
-                        tr[j].si = avSiteIndex;
+                    if (tr[j].code == sp[jj].code && tr[j].si.undefined()) {
+                        tr[j].initializeSiteIndex(si(avSiteIndex));
                     }
                 }
                 sp[jj].hbon = avSiteIndex;
@@ -1527,9 +1455,7 @@ public class Stand {
         // generate missing data of trees, sorting by height for dynamical crown base
         //
         sortbyh();
-        for (int j = 0; j < ntrees; j++) {
-            tr[j].setMissingData();
-        }
+        forAllTrees(tree -> tree.setMissingData());
         sortbyd();
         selectNeighborTrees();
         scaleMan.updateCompetition();
@@ -1637,9 +1563,9 @@ public class Stand {
      */
     public String getSpeciesUndefinedCode() {
         String str = "Species code:";
-        for (int i = 0; i < nspecies; i++) {
-            if (sp[i].spDef.defined == false) {
-                str += " " + sp[i].code;
+        for (Species species : species()) {
+            if (!species.spDef.defined) {
+                str += " " + species.code;
             }
         }
         return str;
@@ -1647,31 +1573,26 @@ public class Stand {
 
     /*added by jhansen*/
     public void notifyStandChanged(String action) {
-        if (!notifyListeners) {
-            return;
-        }
-        if (StandChangeListeners.isEmpty()) {
+        if (!notifyListeners || standChangeListeners.isEmpty()) {
             return;
         }
         StandChangeEvent sce = new StandChangeEvent(this, "StandChangeEvent", action);
-        for (Object vtemp1 : StandChangeListeners.toArray()) {
-            StandChangeListener target;
-            target = (StandChangeListener) vtemp1;
-            target.StandChanged(sce);
+        for (StandChangeListener target : standChangeListeners.toArray(new StandChangeListener[0])) {
+            target.standChanged(sce);
         }
     }
 
     /*added by jhansen*/
     public void addStandChangeListener(StandChangeListener scl) {
-        if (StandChangeListeners.contains(scl)) {
+        if (standChangeListeners.contains(scl)) {
             return;
         }
-        StandChangeListeners.add(scl);
+        standChangeListeners.add(scl);
     }
 
     /*added by jhansen*/
     public void removeAllStandChangeListeners() {
-        StandChangeListeners.clear();
+        standChangeListeners.clear();
     }
 
     /**
@@ -1684,14 +1605,13 @@ public class Stand {
         }
         for (int i = 0; i < ntrees; i++) {
             //if (tr[i].no.indexOf("413") >-1)
-            //System.out.println("das ist er");
-            if (tr[i].out < 0 || tr[i].out == year) {
+            if (tr[i].isLiving() || tr[i].out == year) {
                 for (int k = 0; k < tr[i].maxNeighbor; k++) {
                     eA[k] = 9999.9;
                     tr[i].neighbor[k] = -9;
                 }
                 for (int j = 0; j < ntrees; j++) {
-                    if ((tr[j].out < 0 || tr[j].out == year) && (i != j)) {
+                    if ((tr[j].isLiving() || tr[j].out == year) && (i != j)) {
                         double entf = Math.sqrt(Math.pow((tr[i].x - tr[j].x), 2.0) + Math.pow((tr[i].y - tr[j].y), 2.0));
                         //The influence zone should be at least 2m
                         double minimumRadius = 2.0 * tr[i].cw;
@@ -1824,7 +1744,7 @@ public class Stand {
     private Collection getDeadRegTrees() {
         List<Tree> treestoremove = new ArrayList<>();
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d < 7 && tr[i].out > -1) {
+            if (tr[i].d < 7 && tr[i].isDead()) {
                 treestoremove.add(tr[i]);
             }
         }
@@ -1864,7 +1784,7 @@ public class Stand {
         double mean = 0.0;
         int n = 0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].d >= 7.0 && tr[i].out < 0 && (tr[i].code == treeCode || treeCode == 0)) {
+            if (tr[i].d >= 7.0 && tr[i].isLiving() && (tr[i].code == treeCode || treeCode == 0)) {
                 mean += tr[i].cb;
                 n++;
             }

@@ -125,10 +125,7 @@ class TgStandInfo extends JPanel {
         for (int i = 0; i < st.nspecies; i++) {
             for (int j = 0; j < st.ntrees; j++) {
                 if (st.sp[i].code == st.tr[j].code) {
-                    int lay = st.tr[j].layer;
-                    if (lay == 4) {
-                        lay = 0;
-                    }
+                    int lay = st.tr[j].layer.toInt();
                     st.tr[j].group = i * 4 + lay;
                 }
             }
@@ -180,7 +177,7 @@ class TgStandInfo extends JPanel {
                 if (l == 3) {
                     double deck = 0;
                     for (int l3 = 0; l3 < st.ntrees; l3++) {
-                        if (st.tr[l3].code == st.sp[i].code && st.tr[l3].layer == 3 && st.tr[l3].out < 0 && st.tr[l3].d < 7.0) {
+                        if (st.tr[l3].code == st.sp[i].code && st.tr[l3].layer == Layer.UNDERSTORY && st.tr[l3].isLiving() && st.tr[l3].d < 7.0) {
                             deck = deck + Math.PI * Math.pow(st.tr[l3].cw / 2.0, 2.0);
                         }
                     }

@@ -22,7 +22,6 @@ import nwfva.biomass.BiomassDialog;
 import forestsimulator.Stand3D.PackageInfo;
 import forestsimulator.Stand3D.Manager3D;
 import forestsimulator.Stand3D.Query3DProperties;
-import forestsimulator.gui.BlockingSpinner;
 import forestsimulator.language.UserLanguage;
 import forestsimulator.util.StopWatch;
 import java.util.logging.Level;
@@ -54,28 +53,24 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
     private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
-    FileHandler logHandler = null;
+    private final TgInternalFrame[] iframe = new TgInternalFrame[8];
+    private final SpeciesDefMap speciesDefinitions = new SpeciesDefMap();
+    private final FileHandler logHandler;
+    private final TgPPmap pp;  //add prallel projection class
 
-    String bwinproVersion = "Version 7.8-0.4";
-    String bwinproLastUpdate = "15.06.2018";
+    String bwinproVersion = "Version 7.8-0.6dev";
+    String bwinproLastUpdate = "27.07.2018";
     private boolean accessInput = true;
-    static Stand st = new Stand();
-    SpeciesDefMap SDM = new SpeciesDefMap();
-    File currentFile;
-    StringBuffer ColorInfo;
-    String seite;
-//   TgStandMap zf  = new TgStandMap(st, this); //add standmap class
-//   TgPPmap pp = new TgPPmap(st, this); //add prallel projection class
+    private Stand st = new Stand();
+    private File currentFile;
     TgStandMap zf;   //add standmap class
-    TgPPmap pp;  //add prallel projection class
     TgHTMLsv sv = new TgHTMLsv(st);
-//   TgGrafik gr = new TgGrafik(st);
     TgGrafik gr;
     TgProgramInfo tgProgramInfo;
     TgDesign sd;
     TgYieldTable yt = new TgYieldTable();
     Treatment2 tl = new Treatment2();
-    TgTreatmentMan3 treatmentMan3;
+    private final TgTreatmentMan3 treatmentMan3;
     TgStandInfo tsi;
     UserLanguage language;
 
@@ -86,15 +81,14 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     TgGrafikMenu tgGrafikMenu;
     TgToolbar toolbar;
     TgScreentoolbar tgScreentoolbar;
-    private final TgInternalFrame[] iframe = new TgInternalFrame[8];
     JDesktopPane dp = new JDesktopPane();
-    TgUser user;
+    private final TgUser user;
     private JFrame owner;
 
     private Manager3D manager3d;
 
-    private boolean grafik3D = false;
-    boolean StandardColors = false;
+    private boolean grafik3D;
+    boolean StandardColors;
     boolean tfUpdateTrue = true;
     File programDir;
     File workingDir;
@@ -102,40 +96,25 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     String plugIn = "XML";
     String kspDataFile = "";
     String kspNextPlot = "";
-    Dimension scr;
+    private final Dimension screenSize;
 
     int kspTyp = 0;
 
-    public TgJFrame(Stand stneu) throws IOException {
+    public TgJFrame(Stand stneu, TgUser userSettings, UserLanguage language) throws IOException {
+        super();
+        st = stneu;
+        user = userSettings;
+        this.language = language;
+        plugIn = userSettings.plugIn;
         logHandler = new FileHandler("log.txt");
         logHandler.setFormatter(new SimpleFormatter());
         LOGGER.addHandler(logHandler);
         LOGGER.log(Level.INFO, "ForestSimulator Version: {0}", bwinproVersion);
 
-        st = stneu;
         st.addStandChangeListener(this);
-        scr = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(scr.width, (scr.height - (scr.height / 50)));
-        File workingDirectory = new java.io.File(".");
+        screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, (screenSize.height - (screenSize.height / 50)));
         // TODO: move loading of settings and setting of the locale into ForestSimulator.main()
-        this.user = new TgUser(workingDirectory);
-        if (!user.fileExists(workingDirectory.getCanonicalPath() + System.getProperty("file.separator") + "ForestSimulator.ini")) {
-            JDialog settings = new TgUserDialog(this, true);
-            settings.setVisible(true);
-            JTextArea about = new JTextArea(messages.getString("TgJFrame.applySettingsDialog.message"));
-            JOptionPane.showMessageDialog(this, about, messages.getString("TgJFrame.applySettingsDialog.title"), JOptionPane.INFORMATION_MESSAGE);
-            System.exit(0);
-        } else {
-            System.out.println("Settings laden ");
-            LOGGER.log(Level.INFO, "TgJFrame local path : {0}", workingDirectory.getCanonicalPath());
-            user.loadSettings();
-            language = UserLanguage.forLocale(user.getLanguageShort());
-            Locale.setDefault(language.locale());
-            plugIn = user.getPlugIn();
-            st.modelRegion = plugIn;
-            st.FileXMLSettings = user.XMLSettings;
-            LOGGER.log(Level.INFO, "Modell :{0}", plugIn);
-        }
         setTitle(getTitle() + "Forest Simulator BWINPro 7 " + bwinproVersion + " - Modell: " + plugIn);
         boolean available3d = is3dAvailable();
         if (plugIn.indexOf("nwfva") > 0) {
@@ -147,8 +126,8 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         grafik3D = user.getGrafik3D() && is3dAvailable();
 
         programDir = user.getProgramDir();
-        SDM.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings));
-        st.setSDM(SDM);
+        speciesDefinitions.readFromPath(new File(new File(programDir, "models"), st.FileXMLSettings));
+        st.setSDM(speciesDefinitions);
         workingDir = user.getWorkingDir();
         currentFile = user.getDataDir();
         st.setProgramDir(programDir);
@@ -169,10 +148,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 // Simple parallel project  or 3D View of stand              
         JPanel ppneu = new JPanel();
         if (grafik3D) {
-            manager3d = new Manager3D(new JPanel(), programDir, true);
+            manager3d = new Manager3D(ppneu, programDir, true);
             if (manager3d.get3DAvailable()) {
-                ppneu.setPreferredSize(new Dimension((((scr.width - 140) / 2) - (scr.width / 50)), (scr.height / 2) - (scr.height / 50)));
-                manager3d = new Manager3D(ppneu, programDir, true);
+                ppneu.setPreferredSize(new Dimension((((screenSize.width - 140) / 2) - (screenSize.width / 50)), (screenSize.height / 2) - (screenSize.height / 50)));
                 grafik3D = true;
             }
         } else {
@@ -188,16 +166,10 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         }
         tsi = new TgStandInfo(language.locale());
 
-// Treatment Manager Window                
-        treatmentMan3 = new TgTreatmentMan3(st, this);
+        // Treatment Manager Window                
+        treatmentMan3 = new TgTreatmentMan3(st, this, user);
         JPanel treatmentPanel = new JPanel();
         treatmentPanel.setLayout(new BorderLayout());
-        JPanel tgTreatmentMenus = new JPanel();
-        tgTreatmentMenus.setLayout(new BoxLayout(tgTreatmentMenus, BoxLayout.X_AXIS));
-//                tgTreatmentMan2Menu = new TgTreatmentMan2Menu(this,this, language);
-//                tgTreatmentMan2Menu.setAlignmentY(Component.CENTER_ALIGNMENT);
-//                tgTreatmentMenus.add(tgTreatmentMan2Menu);
-        treatmentPanel.add(tgTreatmentMenus, BorderLayout.NORTH);
         treatmentPanel.add(treatmentMan3, BorderLayout.CENTER);
 
         sd = new TgDesign(st, this, language.locale());
@@ -238,7 +210,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
 
         // Adding the InternalFrames
         iframe[0].setLocation(155, 0);
-        iframe[1].setLocation((140 + (scr.width - 140) / 2), 0);
+        iframe[1].setLocation((140 + (screenSize.width - 140) / 2), 0);
         iframe[2].setLocation(100, 0);
         iframe[0].setVisible(false);
         iframe[1].setVisible(false);
@@ -246,9 +218,9 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         iframe[3].setVisible(false);
         iframe[4].setVisible(false);
         iframe[5].setVisible(false);
-        iframe[3].setLocation(((scr.width - 100) / 2), 0);
+        iframe[3].setLocation(((screenSize.width - 100) / 2), 0);
         iframe[4].setLocation(0, 0);
-        iframe[5].setLocation(0, (scr.height / 2 + (scr.height / 20)));
+        iframe[5].setLocation(0, (screenSize.height / 2 + (screenSize.height / 20)));
         iframe[6].setLocation(0, 0);
         iframe[6].setVisible(true);
 
@@ -267,7 +239,6 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 System.exit(0);
             }
         });
-        user.loadSettings();
         zf.neuzeichnen();
         pp.neuzeichnen();
         gr.starten();
@@ -468,7 +439,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 st.descspecies();
                 yt.enterStandDesc(st);
                 yt.writeTable(st, workingDir.getAbsolutePath(), "standtable.html", language.locale());
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + yt.getFilename();
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -478,7 +449,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 st.descspecies();
                 TgStructureTable tgStructureTable = new TgStructureTable();
                 tgStructureTable.writeTable(st, workingDir.getAbsolutePath(), "standstructure.html", language.locale());
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + tgStructureTable.getFilename();
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -486,7 +457,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             if (cmd.equals("Definition")) {
                 try {
                     st.getSDM().listCurrentSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciesdefinition.html");
-                    seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
+                    String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
                             + System.getProperty("file.separator") + "speciesdefinition.html";
                     StartBrowser startBrowser = new StartBrowser(seite);
                     startBrowser.start();
@@ -496,7 +467,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             }
             if (cmd.equals("species_code")) {
                 st.getSDM().listAllSpeciesDefinition(st, workingDir.getAbsolutePath(), "speciescode.html");
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator") + workingDir
                         + System.getProperty("file.separator") + "speciescode.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -508,13 +479,13 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 dataex.writeTreeTable(st);
             }
             if (cmd.equals("Info page")) {
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "index.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
             }
             if (cmd.equals("License")) {
-                seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
+                String seite = "file:" + System.getProperty("file.separator") + System.getProperty("file.separator")
                         + System.getProperty("file.separator") + user.getProgramDir() + System.getProperty("file.separator") + "gpl.html";
                 StartBrowser startBrowser = new StartBrowser(seite);
                 startBrowser.start();
@@ -543,7 +514,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
                 programDir = user.getWorkingDir();
             }
             if (cmd.equals("Species Manager")) {
-                TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir.getAbsolutePath(), st.FileXMLSettings);
+                TgSpeciesManXML spman = new TgSpeciesManXML(this, true, programDir, st.FileXMLSettings);
                 spman.setVisible(true);
             }
             if (cmd.equals("About")) {
@@ -665,37 +636,37 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
          */
 // Screen Toolbar                
         if (cmd.equals("screen1")) {
-            int xp = (int) (scr.width * 0.65);
-            int yp = (int) ((scr.height - 105) * 0.5);
+            int xp = (int) (screenSize.width * 0.65);
+            int yp = (int) ((screenSize.height - 105) * 0.5);
             iframe[0].setLocation(xp, 0);
-            iframe[0].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+            iframe[0].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
             iframe[0].setVisible(true);
             iframe[1].setLocation(xp, yp);
-            iframe[1].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+            iframe[1].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
             iframe[1].setVisible(true);
             iframe[2].setVisible(false);
             iframe[3].setVisible(false);
-            yp = (int) ((scr.height - 105) * 0.7);
+            yp = (int) ((screenSize.height - 105) * 0.7);
             iframe[4].setLocation(0, 0);
             iframe[4].setSize(new Dimension(xp, yp));
             iframe[4].setVisible(true);
             iframe[5].setLocation(0, yp);
-            iframe[5].setSize(new Dimension(xp, scr.height - 105 - yp));
+            iframe[5].setSize(new Dimension(xp, screenSize.height - 105 - yp));
             iframe[5].setVisible(true);
             iframe[6].setVisible(false);
         }
         if (cmd.equals("screen2")) {
             iframe[0].setVisible(false);
             iframe[1].setLocation(0, 0);
-            int yp = (int) ((scr.height - 105) * 0.65);
-            iframe[1].setSize(new Dimension(scr.width, yp));
+            int yp = (int) ((screenSize.height - 105) * 0.65);
+            iframe[1].setSize(new Dimension(screenSize.width, yp));
             iframe[1].setVisible(true);
             iframe[2].setVisible(false);
             iframe[3].setVisible(false);
             iframe[4].setVisible(false);
             iframe[5].setVisible(true);
             iframe[5].setLocation(0, yp);
-            iframe[5].setSize(new Dimension(scr.width, scr.height - 105 - yp));
+            iframe[5].setSize(new Dimension(screenSize.width, screenSize.height - 105 - yp));
             iframe[6].setVisible(false);
         }
         if (cmd.equals("screen3")) {
@@ -708,7 +679,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
             iframe[6].setVisible(false);
             iframe[1].setLocation(0, 0);
             iframe[1].setVisible(true);
-            iframe[1].setSize(new Dimension(scr.width, scr.height - 105));
+            iframe[1].setSize(new Dimension(screenSize.width, screenSize.height - 105));
         }
 
 // Action commands of stand map menu 
@@ -844,23 +815,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     private void batchProcessingUsingDatabase(String modelPlugIn) {
         try {
             PlugInDBSQLite dialog = (PlugInDBSQLite) Class.forName(modelPlugIn).newInstance();
-            dialog.startDialog(this, st, user.getDataDir());
-            st.sortbyd();
-            st.missingData();
-            st.descspecies();
-            // set Löwe default
-//                       GenerateXY gxy =new GenerateXY();
-//                       gxy.zufall(st);
-            if (grafik3D) {
-                manager3d.setStand(st);
-            }
-            tfUpdateTrue = true;
-            updatetp(false);
-            tfUpdateTrue = true;
-
-            st.ingrowthActive = false;
-            gr.starten();
-            showIframes();
+            dialog.startDialog(this, st, user);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
             LOGGER.info(ex.toString());
         }
@@ -874,8 +829,21 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     @Override
-    public void StandChanged(StandChangeEvent evt) {
+    public void standChanged(StandChangeEvent evt) {
         LOGGER.log(Level.FINE, "stand changed {0}", evt.getName());
+        if (evt.getAction().equals(Stand.loadedEvent)) {
+            if (grafik3D) {
+                manager3d.setStand(st);
+            }
+            tfUpdateTrue = true;
+            updatetp(false);
+            tfUpdateTrue = true;
+
+            st.ingrowthActive = false;
+            gr.starten();
+            showIframes();
+            return;
+        }
         StopWatch update = new StopWatch("Updating tp").start();
         updatetp(false);
         update.printElapsedTime();
@@ -1073,22 +1041,22 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     }
 
     void showIframes() {
-        int xp = (int) (scr.width * 0.65);
-        int yp = (int) ((scr.height - 105) * 0.5);
+        int xp = (int) (screenSize.width * 0.65);
+        int yp = (int) ((screenSize.height - 105) * 0.5);
         iframe[0].setLocation(xp, 0);
-        iframe[0].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+        iframe[0].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
         iframe[0].setVisible(true);
         iframe[1].setLocation(xp, yp);
-        iframe[1].setSize(new Dimension(scr.width - xp, scr.height - 105 - yp));
+        iframe[1].setSize(new Dimension(screenSize.width - xp, screenSize.height - 105 - yp));
         iframe[1].setVisible(true);
         iframe[2].setVisible(false);
         iframe[3].setVisible(false);
-        yp = (int) ((scr.height - 105) * 0.7);
+        yp = (int) ((screenSize.height - 105) * 0.7);
         iframe[4].setLocation(0, 0);
         iframe[4].setSize(new Dimension(xp, yp));
         iframe[4].setVisible(true);
         iframe[5].setLocation(0, yp);
-        iframe[5].setSize(new Dimension(xp, scr.height - 105 - yp));
+        iframe[5].setSize(new Dimension(xp, screenSize.height - 105 - yp));
         iframe[5].setVisible(true);
         iframe[6].setVisible(false);
     }

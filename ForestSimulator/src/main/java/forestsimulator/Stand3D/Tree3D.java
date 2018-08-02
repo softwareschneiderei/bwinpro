@@ -69,7 +69,7 @@ public class Tree3D {
         double cw = tgtree.cw;
         double cb = tgtree.cb;
         // add all elements of the tree to roottg:        
-        if ((tgtree.outtype == OutType.STANDING && tgtree.out == -1) || (tgtree.outtype != OutType.STANDING && tgtree.out != -1)) {
+        if ((tgtree.isLiving()) || (tgtree.outtype != OutType.STANDING && tgtree.out != -1)) {
             roottg.addChild(new SimpleCrownSchadow3D(tgtree, 18, ra, base).getShadow());
             if (tgtree.sp.spDef.crownType == 1) {
                 roottg.addChild(this.makeCrownConi(x, y, z, h, cw, cb));

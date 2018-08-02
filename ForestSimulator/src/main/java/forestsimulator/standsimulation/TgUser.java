@@ -23,20 +23,20 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-class TgUser {
+public class TgUser {
+    private static final Logger logger = Logger.getLogger(TgUser.class.getName());
 
-    private File workingDir;
-    private File programDir;
-    private File dataDir;
-    private String languageCode = "en";
     String plugIn = "XML";
     String XMLSettings = "";
     int grafik3D = 0;
     String update = "01012007";
-    String nwfva = null;
-    private static final Logger logger = Logger.getLogger(TgUser.class.getName());
     private final File baseDirectory;
     private final Properties settings;
+    private File workingDir;
+    private File programDir;
+    private File dataDir;
+    private File climateData;
+    private String languageCode = "en";
 
     public TgUser(File baseDirectory) {
         super();
@@ -44,10 +44,6 @@ class TgUser {
         this.settings = new Settings();
     }
 
-    /**
-     * The user settings are load from a file TgUser.txt, which has to be in the
-     * same directory
-     */
     public void loadSettings() {
         try (Reader iniFile = settingsFileReader()) {
             loadSettings(iniFile);
@@ -66,22 +62,23 @@ class TgUser {
 
     void loadSettings(Reader in) throws IOException, NumberFormatException {
         settings.load(in);
-        programDir = parseToFile("program.directory").getCanonicalFile();
-        dataDir = parseToFile("data.directory").getCanonicalFile();
-        workingDir = parseToFile("working.directory").getCanonicalFile();
+        programDir = parseToFile(settings.getProperty("program.directory")).getCanonicalFile();
+        dataDir = parseToFile(settings.getProperty("data.directory")).getCanonicalFile();
+        workingDir = parseToFile(settings.getProperty("working.directory")).getCanonicalFile();
+        workingDir.mkdirs();
         languageCode = settings.getProperty("language.code", "");
         XMLSettings = settings.getProperty("settings.file", "");
+        climateData = parseToFile(settings.getProperty("climate_data.file", ""));
         plugIn = XMLSettings;
         int m = XMLSettings.indexOf(" -");
         if (m > 0) {
-            nwfva = XMLSettings.substring(m + 2);
             XMLSettings = XMLSettings.substring(0, m);
         }
         grafik3D = Integer.parseInt(settings.getProperty("graphics3d", "0"));
     }
 
     private File parseToFile(String property) {
-        final String normalizedPath = normalizePath(settings.getProperty(property));
+        final String normalizedPath = normalizePath(property);
         File f = new File(normalizedPath);
         if (f.isAbsolute()) {
             return f;
@@ -96,22 +93,39 @@ class TgUser {
         return path;
     }
 
-    public boolean fileExists(String fname) {
-        File f = new File(fname);
+    public boolean fileExistsInWorkingDir(String fname) {
+        File f = new File(baseDirectory, fname);
         System.out.println(f + (f.exists() ? " is found " : " is missing "));
         return f.exists();
     }
 
     public File getWorkingDir() {
+        if (workingDir == null) {
+            return new File(baseDirectory, "output_standsimulation");
+        }
         return workingDir;
     }
 
     public File getProgramDir() {
+        if (programDir == null) {
+            return new File(baseDirectory, "user");
+        }
         return programDir;
     }
 
     public File getDataDir() {
+        if (dataDir == null) {
+            return new File(baseDirectory, "data_standsimulation");
+        }
         return dataDir;
+    }
+    
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-76
+    public File getClimateDatabase() {
+        if (climateData == null) {
+            return new File(getDataDir(), "climate_data.mdb");
+        }
+        return climateData;
     }
 
     public String getXMLSettings() {
@@ -143,13 +157,11 @@ class TgUser {
             URLConnection urlcon = url.openConnection();
 
             urlcon.setReadTimeout(1000);
-            java.io.BufferedReader br = new java.io.BufferedReader(
-                    new java.io.InputStreamReader(
-                            urlcon.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlcon.getInputStream()));
             updateInternet = br.readLine();
 
-        } catch (java.io.IOException e) {
-            System.out.println("kein Internet Check möglich !");
+        } catch (IOException e) {
+            logger.info("kein Internet Check möglich !");
         }
         if (updateInternet != null) {
             int yearNet = Integer.parseInt(updateInternet.substring(6, 10));
@@ -167,19 +179,20 @@ class TgUser {
         return erg;
     }
 
-    public void saveSettings(String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
+    public void saveSettings(String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, String climateDatabaseFileName, int g3D) throws IOException {
         try (Writer ausgabe = new FileWriter(settingsFile())) {
-            saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, g3D);
+            saveSettingsTo(ausgabe, programDir, dataDir, workingDir, Language, settingsFileName, climateDatabaseFileName, g3D);
         }        
     }
 
-    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, int g3D) throws IOException {
+    void saveSettingsTo(final Writer ausgabe, String programDir, String dataDir, String workingDir, Locale Language, String settingsFileName, String climateDatabaseFileName, int g3D) throws IOException {
         settings.setProperty("program.directory", programDir);
         settings.setProperty("data.directory", dataDir);
         settings.setProperty("working.directory", workingDir);
         settings.setProperty("language.code", Language.toString());
         settings.setProperty("settings.file", settingsFileName);
         settings.setProperty("graphics3d", String.valueOf(g3D));
+        settings.setProperty("climate_data.file", climateDatabaseFileName);
         settings.store(ausgabe, null);
     }
 }
