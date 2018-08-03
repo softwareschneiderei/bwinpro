@@ -1,20 +1,20 @@
 package forestsimulator.dbaccess;
 
-import treegross.base.thinning.ScenarioThinningSettings;
+import treegross.base.thinning.SpeciesThinningSettings;
 import java.util.NoSuchElementException;
 import treegross.base.thinning.ThinningType;
 
 public enum ScenarioThinningSettingMode {
     AGE(ThinningModeName.AGE.value()) {
         @Override
-        protected ScenarioThinningSettings thinningSetting(ThinningType type, String intensityDefinition) {
-            return ScenarioThinningSettings.ageBasedScenarioSetting(type, intensityDefinition);
+        protected SpeciesThinningSettings thinningSetting(ThinningType type, String intensityDefinition) {
+            return SpeciesThinningSettings.ageBasedScenarioSetting(type, intensityDefinition);
         }
     },
     HEIGHT(ThinningModeName.HEIGHT.value()) {
         @Override
-        protected ScenarioThinningSettings thinningSetting(ThinningType type, String intensityDefinition) {
-            return ScenarioThinningSettings.heightBasedScenarioSetting(type, intensityDefinition);
+        protected SpeciesThinningSettings thinningSetting(ThinningType type, String intensityDefinition) {
+            return SpeciesThinningSettings.heightBasedScenarioSetting(type, intensityDefinition);
         }
     };
     
@@ -24,7 +24,7 @@ public enum ScenarioThinningSettingMode {
         this.name = name;
     }
     
-    public static ScenarioThinningSettings forName(String name, ThinningType type, String intensityDefinition) {
+    public static SpeciesThinningSettings forName(String name, ThinningType type, String intensityDefinition) {
         for (ScenarioThinningSettingMode mode : values()) {
             if (mode.name.equals(name)) {
                 return mode.thinningSetting(type, intensityDefinition);
@@ -33,6 +33,6 @@ public enum ScenarioThinningSettingMode {
         throw new NoSuchElementException("No thinning setting found for name " + name);
     }
 
-    protected abstract ScenarioThinningSettings thinningSetting(ThinningType type, String intensityDefinition);
+    protected abstract SpeciesThinningSettings thinningSetting(ThinningType type, String intensityDefinition);
     
 }

@@ -303,14 +303,10 @@ public class LoadTreegrossStand {
                             rs.getDouble("SkidtrailDistance"),
                             rs.getDouble("SkidtrailWidth")));
                     // Set thinning  and intensity
-                    int thinningType = rs.getInt("ThinningType");
-                    String thinningIntensity = rs.getString("ThinningIntensity");
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
-                    String thinningModeName = thinningModeNameFrom(rs);
                     st.trule.setThinningRegime(new ThinningRegime(
-                            ScenarioThinningSettingMode.forName(thinningModeName, ThinningType.forValue(thinningType), thinningIntensity),
                             thVolMin,
                             thVolMax,
                             ctreesOnly));
@@ -357,12 +353,16 @@ public class LoadTreegrossStand {
                     int target = rs.getInt("targetDBH");
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
+                    int thinningType = rs.getInt("ThinningType");
                     String moderateThinning = rs.getString("ModerateThinning");
+                    String thinningModeName = thinningModeNameFrom(rs);
+                    String thinningIntensity = rs.getString("ThinningIntensity");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
+                        species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, ThinningType.forValue(thinningType), thinningIntensity);
                         species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeNameFrom(rs), moderateThinning);
                     });
                 }

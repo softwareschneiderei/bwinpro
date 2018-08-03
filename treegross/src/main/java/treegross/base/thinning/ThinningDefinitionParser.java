@@ -2,6 +2,7 @@ package treegross.base.thinning;
 
 import static java.lang.Double.parseDouble;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -18,6 +19,9 @@ public class ThinningDefinitionParser<V> {
     }
 
     public List<ThinningValueRange<V>> parseDefinition(String thinningDefinition) throws NumberFormatException {
+        if (thinningDefinition == null) {
+            return Collections.emptyList();
+        }
         return Arrays.stream(thinningDefinition.split(";"))
                 .map(triple -> addThinningFactorRange(triple))
                 .filter(range -> range.isPresent())

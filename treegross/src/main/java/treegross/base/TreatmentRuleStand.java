@@ -20,7 +20,6 @@ package treegross.base;
 
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ScenarioThinningSettings;
 import treegross.treatment.Treatment2;
 
 /**
@@ -140,10 +139,6 @@ public class TreatmentRuleStand {
      * degree of thinning for thinArea
      */
     public double thinningIntensityArea;
-    /**
-     * type of thinning
-     */
-    public ScenarioThinningSettings thinningSettings;
     /**
      * year harvesting was started important for Schirmschlag
      */
@@ -265,11 +260,8 @@ public class TreatmentRuleStand {
 
     public void setThinningRegime(ThinningRegime regime) {
         this.thinAreaSpeciesDependent = true;
-        this.thinArea = true;
         this.minThinningVolume = regime.minVolume;
         this.maxThinningVolume = regime.maxVolume;
-        this.thinningSettings = regime.settings;
-        regime.settings.type().applyTo(this, regime.croptreesOnly);
     }
 
     /*

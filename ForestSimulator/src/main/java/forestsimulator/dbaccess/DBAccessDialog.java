@@ -37,8 +37,6 @@ import javax.swing.RootPaneContainer;
 import static treegross.base.SiteIndex.si;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ScenarioThinningSettings;
-import treegross.base.thinning.ThinningType;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -921,7 +919,6 @@ public class DBAccessDialog extends JDialog {
         st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
         // TODO: get intensity definition from somewhere
         st.trule.setThinningRegime(new ThinningRegime(
-                ScenarioThinningSettings.heightBasedScenarioSetting(ThinningType.ThinningFromBelow, 1.0),
                 10,
                 60,
                 false));
@@ -1032,7 +1029,6 @@ public class DBAccessDialog extends JDialog {
                         st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
                         // TODO: get intensity definition from somewhere
                         st.trule.setThinningRegime(new ThinningRegime(
-                                ScenarioThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1.0),
                                 0,
                                 120,
                                 false));

@@ -7,10 +7,9 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import treegross.base.Species;
-import treegross.base.Stand;
 import treegross.base.TGTextFunction;
 import treegross.base.thinning.HeightBasedThinning;
-import treegross.base.thinning.ScenarioThinningSettings;
+import treegross.base.thinning.SpeciesThinningSettings;
 import treegross.base.thinning.ThinningType;
 import treegross.base.thinning.ThinningValueRange;
 
@@ -22,9 +21,7 @@ public class TreatmentElements2Test {
     */
     @Test
     public void maxBasalAreaWithoutModerateThinning() {
-        TreatmentElements2 te = new TreatmentElements2();
-        
-        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), thinningSettings(), false)).isCloseTo(31.03320, delta);
+        assertThat(TreatmentElements2.getMaxStandBasalArea(exampleSpecies(), false)).isCloseTo(31.03320, delta);
     }
 
     /*
@@ -32,12 +29,10 @@ public class TreatmentElements2Test {
     */
     @Test
     public void maxBasalAreaWithModerateThinning() {
-        TreatmentElements2 te = new TreatmentElements2();
-
-        assertThat(te.getMaxStandBasalArea(addSpeciesTo(), thinningSettings(), true)).isCloseTo(23.86773, delta);
+        assertThat(TreatmentElements2.getMaxStandBasalArea(exampleSpecies(), true)).isCloseTo(23.86773, delta);
     }
 
-    private Iterable<Species> addSpeciesTo() {
+    private Iterable<Species> exampleSpecies() {
         List<Species> result = new ArrayList<>();
         final Species oak = new Species();
         oak.percCSA = 70d;
@@ -46,6 +41,7 @@ public class TreatmentElements2Test {
         oak.spDef.moderateThinning = new HeightBasedThinning("", Arrays.asList(new ThinningValueRange(20, 35, 0.8)));
         oak.d100 = 2d;
         oak.h100 = 30d;
+        oak.trule.thinningSettings = thinningSettings();
         result.add(oak);
         final Species spruce = new Species();
         spruce.percCSA = 30d;
@@ -54,11 +50,12 @@ public class TreatmentElements2Test {
         spruce.spDef.moderateThinning = new HeightBasedThinning("", Arrays.asList(new ThinningValueRange(20, 37, 0.7)));
         spruce.d100 = 1.5d;
         spruce.h100 = 35d;
+        spruce.trule.thinningSettings = thinningSettings();
         result.add(spruce);
         return result;
     }
 
-    private static ScenarioThinningSettings thinningSettings() {
-        return ScenarioThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1);
+    private static SpeciesThinningSettings thinningSettings() {
+        return SpeciesThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1);
     }
 }

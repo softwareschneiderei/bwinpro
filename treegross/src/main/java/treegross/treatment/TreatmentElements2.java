@@ -30,7 +30,6 @@ import treegross.base.Species;
 import treegross.base.SpeciesNotDefinedException;
 import treegross.base.Stand;
 import treegross.base.Tree;
-import treegross.base.thinning.ScenarioThinningSettings;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -526,7 +525,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -589,7 +588,7 @@ public class TreatmentElements2 {
         if (degree > 0.0) {
             //auch beim Schirmschlag ModerateThinningFactor berücksichtigen -> entspricht so
             //etwa dem alten ET-Bestockungsgrad 1.0, der um 1-degree Prozent reduzuiert wird
-            baOut = st.bha - getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true) * degree;
+            baOut = st.bha - getMaxStandBasalArea(st.species(), true) * degree;
             if (baOut < 0.0) {
                 baOut = 0.0;
             }
@@ -742,7 +741,7 @@ public class TreatmentElements2 {
     
     public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
-        double maxBa = getMaxStandBasalArea(st.species(), st.trule.thinningSettings, true);
+        double maxBa = getMaxStandBasalArea(st.species(), true);
         double maxBasalAreaOut = st.bha - maxBa;
         // TODO: decide what to do, see http://issuetracker.intranet:20002/browse/BWIN-78
         if (maxBa == 0d) {
@@ -766,18 +765,17 @@ public class TreatmentElements2 {
      * similar to yield table basal area for degree of stocking 1.0.
      *
      * @param species
-     * @param settings
      * @param withModerateThinningFactor <code>boolean</code>      
      * @return maximum basal area or reduced maximum basal [m²/ha] area as
      * <code>double</code>
      */
-    public static double getMaxStandBasalArea(Iterable<Species> species, ScenarioThinningSettings settings, boolean withModerateThinningFactor) {
+    public static double getMaxStandBasalArea(Iterable<Species> species, boolean withModerateThinningFactor) {
         double result = 0.0;
         for (Species aSpecies : species) {
             double maxBasalAreaForSpecies = maxBasalAreaFor(aSpecies, withModerateThinningFactor);
             logger.log(Level.FINE, "Max species {0} basal area before thinning intensity {1}", new Object[]{ aSpecies.code, maxBasalAreaForSpecies});
             
-            final double intensityForSpecies = settings.intensityFor(aSpecies.referenceTree());
+            final double intensityForSpecies = aSpecies.trule.thinningSettings.intensityFor(aSpecies.referenceTree());
             maxBasalAreaForSpecies = applyThinningIntensityTo(maxBasalAreaForSpecies, intensityForSpecies);
             result += maxBasalAreaForSpecies;
         }

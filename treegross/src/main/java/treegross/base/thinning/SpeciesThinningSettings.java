@@ -7,22 +7,22 @@ import java.util.function.Function;
 import treegross.base.Tree;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningFactorParser;
 
-public class ScenarioThinningSettings {
+public class SpeciesThinningSettings {
     
-    public static final ScenarioThinningSettings ageBasedScenarioSetting(ThinningType type, double intensity) {
-        return new ScenarioThinningSettings(type, "", intensity, tree -> Double.valueOf(tree.age));
+    public static final SpeciesThinningSettings ageBasedScenarioSetting(ThinningType type, double intensity) {
+        return new SpeciesThinningSettings(type, "", intensity, tree -> Double.valueOf(tree.age));
     }
 
-    public static final ScenarioThinningSettings ageBasedScenarioSetting(ThinningType type, String intensityDefinition) {
-        return new ScenarioThinningSettings(type, intensityDefinition, tree -> Double.valueOf(tree.age));
+    public static final SpeciesThinningSettings ageBasedScenarioSetting(ThinningType type, String intensityDefinition) {
+        return new SpeciesThinningSettings(type, intensityDefinition, tree -> Double.valueOf(tree.age));
     }
 
-    public static final ScenarioThinningSettings heightBasedScenarioSetting(ThinningType type, double intensity) {
-        return new ScenarioThinningSettings(type, "", intensity, tree -> tree.h);
+    public static final SpeciesThinningSettings heightBasedScenarioSetting(ThinningType type, double intensity) {
+        return new SpeciesThinningSettings(type, "", intensity, tree -> tree.h);
     }
 
-    public static final ScenarioThinningSettings heightBasedScenarioSetting(ThinningType type, String intensityDefinition) {
-        return new ScenarioThinningSettings(type, intensityDefinition, tree -> tree.h);
+    public static final SpeciesThinningSettings heightBasedScenarioSetting(ThinningType type, String intensityDefinition) {
+        return new SpeciesThinningSettings(type, intensityDefinition, tree -> tree.h);
     }
 
     private final List<ThinningValueRange<Double>> intensityRanges;
@@ -30,11 +30,11 @@ public class ScenarioThinningSettings {
     private final double intensityDefault;
     private final Function<Tree, Double> attributeExtractor;
 
-    private  ScenarioThinningSettings(ThinningType type, String intensityDefinition, Function<Tree, Double> attributeExtractor) {
+    private SpeciesThinningSettings(ThinningType type, String intensityDefinition, Function<Tree, Double> attributeExtractor) {
         this(type, intensityDefinition, ModerateThinning.defaultThinningFactor, attributeExtractor);
     }
 
-    private  ScenarioThinningSettings(ThinningType type, String intensityDefinition, double intensityDefault, Function<Tree, Double> attributeExtractor) {
+    private SpeciesThinningSettings(ThinningType type, String intensityDefinition, double intensityDefault, Function<Tree, Double> attributeExtractor) {
         super();
         intensityRanges = thinningFactorParser.parseDefinition(intensityDefinition);
         this.type = type;
@@ -97,7 +97,7 @@ public class ScenarioThinningSettings {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ScenarioThinningSettings other = (ScenarioThinningSettings) obj;
+        final SpeciesThinningSettings other = (SpeciesThinningSettings) obj;
         if (Double.doubleToLongBits(this.intensityDefault) != Double.doubleToLongBits(other.intensityDefault)) {
             return false;
         }
@@ -107,9 +107,6 @@ public class ScenarioThinningSettings {
         if (this.type != other.type) {
             return false;
         }
-        if (!Objects.equals(this.attributeExtractor, other.attributeExtractor)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.attributeExtractor, other.attributeExtractor);
     }
 }

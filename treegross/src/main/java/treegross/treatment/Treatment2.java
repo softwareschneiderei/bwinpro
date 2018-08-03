@@ -156,7 +156,7 @@ public class Treatment2 {
             }
 
             for (Species species : st.species()) {
-                st.trule.thinningSettings.type().thinner(te.vout).thin(st, species);
+                species.trule.thinningSettings.type().thinner(te.vout).thin(st, species);
             }
             
             //if thinning amount was not high enough: set thinned trees alive

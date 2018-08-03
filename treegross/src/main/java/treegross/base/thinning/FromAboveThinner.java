@@ -152,6 +152,7 @@ public class FromAboveThinner implements Thinner {
      * degree for each species is taken from st.tr[j].sp.trule.thinningIntensity
      *
      * @param st stand object
+     * @param species
      */
     public void thinTempCropTreeCompetition(Stand st, Species species) {
         //set max thinning volume (vmaxthinning) if outaken amount (vout) 
@@ -175,7 +176,7 @@ public class FromAboveThinner implements Thinner {
 
             double maxBasalAreaOut = TreatmentElements2.reduceBaOut(st);
             
-            double intensity = st.trule.thinningSettings.intensityFor(species.referenceTree());
+            double intensity = species.trule.thinningSettings.intensityFor(species.referenceTree());
             if (intensity == 0.0) {
                 intensity = 1.0;
             }
@@ -198,7 +199,7 @@ public class FromAboveThinner implements Thinner {
                 for (int i = 0; i < st.ntrees; i++) {
                     if (st.tr[i].isLiving() && st.tr[i].tempcrop) {
 // calculate maxc66
-                        double c66Ratio = TreatmentElements2.calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(species.referenceTree()));
+                        double c66Ratio = TreatmentElements2.calculateC66Ratio(st.tr[i], species.trule.thinningSettings.intensityFor(species.referenceTree()));
 // remember tree if c66Ratio is greater than maxCompetition
                         if (c66Ratio > maxCompetition) {
                             indexOfCroptree = i;

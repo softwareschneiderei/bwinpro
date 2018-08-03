@@ -60,7 +60,7 @@ public class SingleTreeSelectionThinner implements Thinner {
         // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
         // 5. Start with 1. again
 
-        double intensity = 2.0 - st.trule.thinningSettings.intensityFor(species.referenceTree());
+        double intensity = 2.0 - species.trule.thinningSettings.intensityFor(species.referenceTree());
         if (intensity == 0.0) {
             intensity = 1.0;
         }
@@ -85,7 +85,7 @@ public class SingleTreeSelectionThinner implements Thinner {
             double maxCompetition = -99999.9;
             for (int i = 0; i < st.ntrees; i++) {
                 if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    double c66Ratio = TreatmentElements2.calculateC66Ratio(st.tr[i], st.trule.thinningSettings.intensityFor(st.tr[i].sp.referenceTree()));
+                    double c66Ratio = TreatmentElements2.calculateC66Ratio(st.tr[i], species.trule.thinningSettings.intensityFor(st.tr[i].sp.referenceTree()));
                     // remember tree if c66Ratio is greater than maxCompetition
                     if (c66Ratio > maxCompetition) {
                         indexOfCroptree = i;

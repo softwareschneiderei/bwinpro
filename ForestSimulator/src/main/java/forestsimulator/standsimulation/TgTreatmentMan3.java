@@ -37,7 +37,6 @@ import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ScenarioThinningSettings;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.random.RandomNumber;
 
@@ -558,11 +557,9 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
 // Set thinning  and intensity
         String thtxt = thinningIntensityComboBox.getSelectedItem().toString();
         thtxt = thtxt.substring(0,3);
-        double thIntensity = Double.parseDouble(thtxt);
         boolean ctreesOnly = releaseOnlyCropTreesCheckBox.isSelected();
 
         st.trule.setThinningRegime(new ThinningRegime(
-                ScenarioThinningSettings.heightBasedScenarioSetting((ThinningType) thinningTypeComboBox.getSelectedItem(), thIntensity),
                 Double.parseDouble(thinningAmountMinimumTextField.getText()),
                 Double.parseDouble(thinningAmountMaximumTextField.getText()),
                 ctreesOnly));
