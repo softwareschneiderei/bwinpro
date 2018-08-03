@@ -155,6 +155,7 @@ public class Treatment2 {
                 }
             }
 
+            // species-specific thinning
             for (Species species : st.species()) {
                 species.trule.thinningSettings.type().thinner(te.vout).thin(st, species);
             }

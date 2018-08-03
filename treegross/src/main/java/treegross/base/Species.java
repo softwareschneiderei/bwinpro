@@ -416,4 +416,8 @@ public class Species {
         atree.code = code;
         return atree;
     }
+
+    public double thinningIntensity() {
+        return trule.thinningSettings.intensityFor(referenceTree());
+    }
 }

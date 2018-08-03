@@ -20,24 +20,22 @@ public class QDThinner implements Thinner {
 
     @Override
     public void thin(Stand stand, Species species) {
-        stand.forTreesMatching(tree -> tree.isLiving() && tree.crop, (treegross.base.Tree tree1) -> {
+        stand.forTreesMatching(tree -> tree.isLiving() && tree.crop && tree.isOf(species), tree -> {
             // we found a crop tree and remove now all other trees
-            for (int j = 0; j < stand.ntrees; j++) {
-                if (stand.tr[j].d > 7 && stand.tr[j].isLiving() && !stand.tr[j].crop && !stand.tr[j].habitat) {
-                    double ent = Math.sqrt(Math.pow(tree1.x - stand.tr[j].x, 2.0) + Math.pow(tree1.y - stand.tr[j].y, 2.0));
-                    if (tree1.h > tree1.si.value * 0.8) {
-                        if (ent < 0.9 * (tree1.cw + stand.tr[j].cw) / 2.0 && stand.tr[j].h * 1.1 > tree1.cb) {
-                            stand.tr[j].takeOut(stand.year, OutType.THINNED);
-                        }
-                    }
-                    // TODO: What is this condition? Should it be moved into SiteIndex?
-                    if (tree1.h > tree1.si.value * 0.3 && tree1.h < tree1.si.value * 0.8) {
-                        if (ent < 0.20 + (tree1.cw + stand.tr[j].cw) / 2.0) {
-                            stand.tr[j].takeOut(stand.year, OutType.THINNED);
-                        }
+            stand.forTreesMatching(competitor -> competitor.d > 7 && competitor.isLiving() && !competitor.crop && !competitor.habitat, competitor -> {
+                double ent = Math.sqrt(Math.pow(tree.x - competitor.x, 2.0) + Math.pow(tree.y - competitor.y, 2.0));
+                if (tree.h > tree.si.value * 0.8) {
+                    if (ent < 0.9 * (tree.cw + competitor.cw) / 2.0 && competitor.h * 1.1 > tree.cb) {
+                        competitor.takeOut(stand.year, OutType.THINNED);
                     }
                 }
-            }
+                // TODO: What is this condition? Should it be moved into SiteIndex?
+                if (tree.h > tree.si.value * 0.3 && tree.h < tree.si.value * 0.8) {
+                    if (ent < 0.20 + (tree.cw + competitor.cw) / 2.0) {
+                        competitor.takeOut(stand.year, OutType.THINNED);
+                    }
+                }
+            });
         });
     }
 }
