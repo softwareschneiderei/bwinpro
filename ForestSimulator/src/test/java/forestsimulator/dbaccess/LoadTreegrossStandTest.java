@@ -9,7 +9,7 @@ public class LoadTreegrossStandTest {
     /*
      * #Pinning
      *
-     * #Adjusted
+     * #Adjusted #Adjusted
     */
     @Test
     public void treatmentRulesAreAppliedToStand() {
@@ -18,14 +18,14 @@ public class LoadTreegrossStandTest {
         new LoadTreegrossStand().applyTreatmentRulesTo(stand);
         
         assertThat(stand.trule)
-                .extracting("thinArea", "selectCropTrees", "reselectCropTrees",
-                        "selectCropTreesOfAllSpecies", "releaseCropTrees", "cutCompetingCropTrees",
+                .extracting("selectCropTrees", "reselectCropTrees",
+                        "selectCropTreesOfAllSpecies", "cutCompetingCropTrees",
                         "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume",
                         "thinAreaSpeciesDependent", "thinningIntensityArea", "minHarvestVolume",
                         "maxHarvestVolume", "typeOfHarvest", "harvestLayerFromBelow", "maxHarvestingPeriode",
                         "lastTreatment", "protectMinorities", "nHabitat")
-                .containsExactly(false, true, true,
-                        false, true, false,
+                .containsExactly(true, true,
+                        false, false,
                         true, 0d, 80d,
                         true, 0d, 0d,
                         250d, 0, false, 6,
