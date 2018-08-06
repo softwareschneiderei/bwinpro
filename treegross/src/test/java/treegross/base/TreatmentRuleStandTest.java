@@ -2,6 +2,7 @@ package treegross.base;
 
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
+import org.junit.Ignore;
 import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.SpeciesThinningSettings;
 import static treegross.base.thinning.SpeciesThinningSettings.ageBasedScenarioSetting;
@@ -13,6 +14,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForSingleTreeSelection() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
@@ -31,6 +33,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForSingleTreeSelectionNotOnlyCropTrees() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
@@ -49,6 +52,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForFromAbove() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
@@ -67,6 +71,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForFromBelow() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
@@ -85,6 +90,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForQD() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
@@ -103,6 +109,7 @@ public class TreatmentRuleStandTest {
     /*
      * #Pinning
     */
+    @Ignore
     @Test
     public void applyingThinningRegimeForQDNotOnlyCropTrees() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
