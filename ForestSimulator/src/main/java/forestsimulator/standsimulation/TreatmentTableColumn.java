@@ -90,7 +90,7 @@ public enum TreatmentTableColumn {
         this.resourceKey = resourceKey;
     }
 
-    public static void setCellEditors(TableColumnModel columnModel) {
+    public static void applyCellEditors(TableColumnModel columnModel) {
         for (TreatmentTableColumn value : values()) {
             value.setCellEditor(columnModel);
         }

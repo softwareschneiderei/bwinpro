@@ -69,7 +69,7 @@ public class TgTreatmentMan3 extends JPanel {
 
         speciesData = new DefaultTableModel(TreatmentTableColumn.values(), 0);
         speciesTable.setModel(speciesData);
-        TreatmentTableColumn.setCellEditors(speciesTable.getColumnModel());
+        TreatmentTableColumn.applyCellEditors(speciesTable.getColumnModel());
 
         loadTable();
     }
