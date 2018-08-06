@@ -205,6 +205,43 @@ public class TreatmentElements2 {
         ctselect.selectCropTrees(st, ctspecies);
     }
 
+    /**
+     * select croptrees dependent on target percentages of species
+     *
+     * @param st stand object
+     */
+    public void selectTempCropTreesTargetPercentage(Stand st) {
+
+        CropTreeSpecies ctspecies[] = new CropTreeSpecies[30];
+
+        //Distance CropTrees
+        double dist_ct;
+        //Number of Crop Trees
+        int n_ct_ha;
+        //Find Crownwidth
+        //Define CTSpecies
+        //Initialize Temp Croptrees dependent on target mixture percentage and height of first thinning
+        for (int i = 0; i < st.nspecies; i++) {
+            //if (st.sp[i].nha>0){
+            Tree atree = new Tree();
+            atree.st = st;
+            atree.code = st.sp[i].code;
+            atree.d = st.sp[i].d100;
+            atree.sp = st.sp[i];
+            dist_ct = atree.calculateCw();
+
+            //Number of temp crop trees dependent on calcualted distance and target mixture percent
+            // number: 1/2 of matching tree number
+            n_ct_ha = (int) ((10000.0 / ((Math.PI * Math.pow(dist_ct, 2.0)) / 4)) * st.sp[i].trule.targetCrownPercent / 100.0);
+
+            //Initialize Temp CropTreeSpecies
+            ctspecies[i] = new CropTreeSpecies();
+            ctspecies[i].addCtsp(st.sp[i].code, n_ct_ha, dist_ct, st.sp[i].trule.minCropTreeHeight);
+        }
+        //Select Temp Croptrees dependent on target mixture percentage
+        ctselect.selectTempCropTrees(st, ctspecies);
+    }
+
     public void selectHabitatTrees(Stand st) {
         htselect.selectHabitatTrees(st);
     }
@@ -704,7 +741,7 @@ public class TreatmentElements2 {
     
     public static double reduceBaOut(Stand st) {
         //Festlegen der Grundflächenansenkung
-        double maxBa = calculateMaxBasalArea(st);
+        double maxBa = getMaxStandBasalArea(st.species(), true);
         double maxBasalAreaOut = st.bha - maxBa;
         // TODO: decide what to do, see http://issuetracker.intranet:20002/browse/BWIN-78
         if (maxBa == 0d) {
@@ -727,17 +764,23 @@ public class TreatmentElements2 {
      * reduced with the ModerateThinningFactor and the calculated basal area is
      * similar to yield table basal area for degree of stocking 1.0.
      *
-     * @param species of a stand
+     * @param species
      * @param withModerateThinningFactor <code>boolean</code>      
      * @return maximum basal area or reduced maximum basal [m²/ha] area as
      * <code>double</code>
      */
     public static double getMaxStandBasalArea(Iterable<Species> species, boolean withModerateThinningFactor) {
-        double maxBA = 0.0;
+        double result = 0.0;
         for (Species aSpecies : species) {
-            maxBA += maxBasalAreaFor(aSpecies, withModerateThinningFactor);
+            double maxBasalAreaForSpecies = maxBasalAreaFor(aSpecies, withModerateThinningFactor);
+            logger.log(Level.FINE, "Max species {0} basal area before thinning intensity {1}", new Object[]{ aSpecies.code, maxBasalAreaForSpecies});
+            
+            final double intensityForSpecies = aSpecies.trule.thinningSettings.intensityFor(aSpecies.referenceTree());
+            maxBasalAreaForSpecies = applyThinningIntensityTo(maxBasalAreaForSpecies, intensityForSpecies);
+            result += maxBasalAreaForSpecies;
         }
-        return maxBA;
+
+        return result;
     }
 
     private static double maxBasalAreaFor(Species aSpecies, boolean withModerateThinningFactor) {
@@ -757,25 +800,17 @@ public class TreatmentElements2 {
     public static double calculateC66Ratio(Tree tree, double thinningIntensity) {
         // calculate maxc66
         double maxBasalArea = tree.calculateMaxBasalArea() * tree.getModerateThinningFactor();
-        if (thinningIntensity == 0.0) {
-            maxBasalArea = maxBasalArea * 100.0;
-        } else {
-            maxBasalArea = maxBasalArea * (2.0 - thinningIntensity);
-        }
+        maxBasalArea = applyThinningIntensityTo(maxBasalArea, thinningIntensity);
         double maxN = maxBasalArea / (Math.PI * Math.pow((tree.d / 200.0), 2.0));
         double maxC66 = maxN * Math.PI * Math.pow((tree.cw / 2.0), 2.0) / 10000.0;
         return tree.c66xy / maxC66;
     }
 
-    private static double calculateMaxBasalArea(Stand st) {
-        double maxStandBasalArea = getMaxStandBasalArea(st.species(), true);
-        logger.log(Level.FINE, "Max stand basal area before thinning intensity {0}", maxStandBasalArea);
-        if (st.trule.thinningIntensity == 0.0) {
-            maxStandBasalArea *= 100.0;
-        } else {
-            maxStandBasalArea *= (2.0 - st.trule.thinningIntensity);
+    private static double applyThinningIntensityTo(double maxBasalArea, double thinningIntensity) {
+        if (thinningIntensity == 0.0) {
+            return maxBasalArea * 100.0;
         }
-        return maxStandBasalArea;
+        return maxBasalArea * (2.0 - thinningIntensity);
     }
 
     /**

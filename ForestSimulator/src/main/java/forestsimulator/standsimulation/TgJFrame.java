@@ -556,7 +556,7 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
         if (cmd.equals("Treatment")) {
             st.descspecies();
             st.sortbyd();
-            treatmentMan3.loadSettingsToStandRule();
+            treatmentMan3.applySettingsToStandRule();
             tl.executeManager2(st);
             updatetp(false);
             zf.neuzeichnen(); //Zeichenfläche neu zeichnen

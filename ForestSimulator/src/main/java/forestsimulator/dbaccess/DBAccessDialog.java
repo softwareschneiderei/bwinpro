@@ -37,7 +37,6 @@ import javax.swing.RootPaneContainer;
 import static treegross.base.SiteIndex.si;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ThinningType;
 
 
 /** TreeGrOSS : DBAccessDialog.java
@@ -918,8 +917,11 @@ public class DBAccessDialog extends JDialog {
         st.trule.setSkidTrails(new SkidTrailRules(false));
         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
         st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
-        st.trule.setThinningRegime(new ThinningRegime(ThinningType.ThinningFromBelow, 1.0, 10, 60, false));
-
+        // TODO: get intensity definition from somewhere
+        st.trule.setThinningRegime(new ThinningRegime(
+                10,
+                60,
+                false));
         dispose();
     }//GEN-LAST:event_loadCircleButtonActionPerformed
 
@@ -1025,7 +1027,11 @@ public class DBAccessDialog extends JDialog {
                         st.trule.setSkidTrails(new SkidTrailRules(true));
                         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
                         st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
-                        st.trule.setThinningRegime(new ThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false));
+                        // TODO: get intensity definition from somewhere
+                        st.trule.setThinningRegime(new ThinningRegime(
+                                0,
+                                120,
+                                false));
                         if (st.ntrees > 0) {
                             age = (int) st.tr[0].age;
                             LoadTreegrossStand lts = new LoadTreegrossStand();

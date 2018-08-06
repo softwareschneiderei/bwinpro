@@ -1,6 +1,8 @@
 package treegross.base.thinning;
 
+import java.util.function.Predicate;
 import treegross.base.OutType;
+import treegross.base.Species;
 import treegross.base.Stand;
 import treegross.base.Tree;
 import treegross.treatment.TreatmentElements2;
@@ -9,24 +11,19 @@ import treegross.treatment.TreatmentElements2;
  * Thinning by releasing the crop trees
  *
  */
-public class SingleTreeSelectionThinner implements Thinner {
+public class SingleTreeSelectionThinner extends AreaThinner {
     
-    private final double vout;
-    private double thinned;
-
     SingleTreeSelectionThinner(double volumenAlreadyOut) {
-        vout = volumenAlreadyOut;
+        super(volumenAlreadyOut);
     }
 
     @Override
-    public void thin(Stand stand) {
+    public void thin(Stand stand, Species species) {
         if (!stand.trule.releaseCropTrees) {
             return;
         }
-        thinCropTreeCompetition(stand);
-        if (stand.trule.thinArea) {
-            FromAboveThinner.thinCompetitionFromAbove(stand, thinned, vout);
-        }
+        thinCropTreeCompetition(stand, species);
+        thinArea(stand);
     }
     
     /**
@@ -35,8 +32,9 @@ public class SingleTreeSelectionThinner implements Thinner {
      * CropTreeSelection
      *
      * @param st stand object
+     * @param species the species of the crop trees
      */
-    public void thinCropTreeCompetition(Stand st) {
+    public void thinCropTreeCompetition(Stand st, Species species) {
 
         //set max thinning volume (vmaxthinning) if outaken amount (vout) 
         //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
@@ -59,7 +57,7 @@ public class SingleTreeSelectionThinner implements Thinner {
         // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
         // 5. Start with 1. again
 
-        double intensity = 2.0 - st.trule.thinningIntensity;
+        double intensity = 2.0 - species.thinningIntensity();
         if (intensity == 0.0) {
             intensity = 1.0;
         }
@@ -73,18 +71,16 @@ public class SingleTreeSelectionThinner implements Thinner {
         boolean continueThinning = true;
         do {
 // update competition overlap for crop trees
-            for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    st.tr[i].updateCompetition();
-                }
-            }
+        // TODO: http://issuetracker.intranet:20002/browse/BWIN-63 has this to be species specific?
+            st.forTreesMatching(isCropTreeOf(species), tree -> tree.updateCompetition());
 // find crop with most competition, defined as that tree with greates ratio of
 // actual c66xy divided by maximum c66
             int indexOfCroptree = -9;
             double maxCompetition = -99999.9;
             for (int i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].isLiving() && st.tr[i].crop) {
-                    double c66Ratio = TreatmentElements2.calculateC66Ratio(st.tr[i], st.trule.thinningIntensity);
+                final Tree tree = st.tr[i];
+                if (isCropTreeOf(species).test(tree)) {
+                    double c66Ratio = TreatmentElements2.calculateC66Ratio(tree, species.thinningIntensity());
                     // remember tree if c66Ratio is greater than maxCompetition
                     if (c66Ratio > maxCompetition) {
                         indexOfCroptree = i;
@@ -98,32 +94,15 @@ public class SingleTreeSelectionThinner implements Thinner {
 //
 // Find neighbor who comes closest
             if (indexOfCroptree >= 0) {
-                double dist = 9999.0;
-                int merk = -9;
-                Tree cropTree = st.tr[indexOfCroptree];
-                double h66 = cropTree.cb;
-                for (int i = 0; i < cropTree.nNeighbor; i++) {
-                    Tree neighbor = st.tr[cropTree.neighbor[i]];
-                    if (neighbor.d > 7
-                            && neighbor.isLiving()
-                            && (st.trule.cutCompetingCropTrees || neighbor.crop == false)
-                            && neighbor.habitat == false) {
-                        double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
-                        double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
-                                + Math.pow(cropTree.y - neighbor.y, 2.0));
-                        if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                            merk = cropTree.neighbor[i];
-                            dist = ent - radius;
-                        }
-                    }
-                }
+                int merk = findClosestNeighbor(st, st.tr[indexOfCroptree], intensity);
                 // if merk > 9 then cut tree else stop crop tree release
                 if (merk == -9) {
                     continueThinning = false;
                 } else {
-                    st.tr[merk].takeOut(st.year, OutType.THINNED);
-                    thinned += (st.tr[merk].fac * st.tr[merk].v);
-                    maxBasalAreaOut = maxBasalAreaOut - (st.tr[merk].fac * Math.PI * Math.pow(st.tr[merk].d / 200.0, 2.0)) / st.size;
+                    Tree competitor = st.tr[merk];
+                    competitor.takeOut(st.year, OutType.THINNED);
+                    thinned += (competitor.fac * competitor.v);
+                    maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
                     if (maxBasalAreaOut <= 0.0) {
                         continueThinning = false;
                     }
@@ -133,5 +112,31 @@ public class SingleTreeSelectionThinner implements Thinner {
             }
         } //stop if max thinning amount is reached or all competitors are taken out
         while (thinned < vmaxthinning && continueThinning);
+    }
+
+    private int findClosestNeighbor(Stand st, Tree cropTree, double intensity) {
+        double dist = 9999.0;
+        int merk = -9;
+        double h66 = cropTree.cb;
+        for (int i = 0; i < cropTree.nNeighbor; i++) {
+            Tree neighbor = st.tr[cropTree.neighbor[i]];
+            if (neighbor.d > 7
+                    && neighbor.isLiving()
+                    && (st.trule.cutCompetingCropTrees || !neighbor.crop)
+                    && !neighbor.habitat) {
+                double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
+                double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
+                        + Math.pow(cropTree.y - neighbor.y, 2.0));
+                if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
+                    merk = cropTree.neighbor[i];
+                    dist = ent - radius;
+                }
+            }
+        }
+        return merk;
+    }
+    
+    private Predicate<Tree> isCropTreeOf(Species species) {
+        return tree -> tree.isLiving() && tree.crop && tree.isOf(species);
     }
 }

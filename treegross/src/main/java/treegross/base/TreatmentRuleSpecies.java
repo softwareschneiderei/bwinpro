@@ -16,6 +16,8 @@
  */
 package treegross.base;
 
+import treegross.base.thinning.SpeciesThinningSettings;
+
 /**
  * Created on 15. Dezember 2004, 13:48
  *
@@ -77,7 +79,7 @@ public class TreatmentRuleSpecies implements Cloneable {
      * trees, if amount for thinng is high enough (maxThinningVolume and
      * maxOutVolume)!
      */
-    public double thinningIntensity;
+    public SpeciesThinningSettings thinningSettings;
 
     /**
      * define numbers of treatment regulations
@@ -106,7 +108,7 @@ public class TreatmentRuleSpecies implements Cloneable {
         clone.targetDiameter = this.targetDiameter;
         clone.targetDiameterLayer = this.targetDiameterLayer;
         clone.targetRang = this.targetRang;
-        clone.thinningIntensity = this.thinningIntensity;
+        clone.thinningSettings = this.thinningSettings;
         return clone;
     }
 }

@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import treegross.base.thinning.ThinningModeName;
 import treegross.base.StandLocation;
 import forestsimulator.util.StopWatch;
 import java.sql.*;
@@ -281,7 +282,6 @@ public class LoadTreegrossStand {
 
     protected void applyTreatmentRulesTo(Stand stl) {
         stl.trule = TreatmentRuleStand.rulesWith(
-                ThinningType.SingleTreeSelection,
                 true,
                 true,
                 true,
@@ -304,12 +304,13 @@ public class LoadTreegrossStand {
                             rs.getDouble("SkidtrailDistance"),
                             rs.getDouble("SkidtrailWidth")));
                     // Set thinning  and intensity
-                    int thType = rs.getInt("ThinningType");
-                    double thIntensity = rs.getDouble("ThinningIntensity");
                     double thVolMin = rs.getDouble("ThinningVolumeMin");
                     double thVolMax = rs.getDouble("ThinningVolumeMax");
                     boolean ctreesOnly = rs.getBoolean("ThinningCropTreeOnly");
-                    st.trule.setThinningRegime(new ThinningRegime(ThinningType.forValue(thType), thIntensity, thVolMin, thVolMax, ctreesOnly));
+                    st.trule.setThinningRegime(new ThinningRegime(
+                            thVolMin,
+                            thVolMax,
+                            ctreesOnly));
                     // set Harvesting Regime
                     int hvType = rs.getInt("HarvestType");
                     double hvVolMin = rs.getDouble("HarvestVolumeMin");
@@ -353,13 +354,17 @@ public class LoadTreegrossStand {
                     int target = rs.getInt("targetDBH");
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
+                    int thinningType = rs.getInt("ThinningType");
                     String moderateThinning = rs.getString("ModerateThinning");
+                    String thinningModeName = thinningModeNameFrom(rs);
+                    String thinningIntensity = rs.getString("ThinningIntensity");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.spDef.moderateThinning = ThinningMode.forName(determineThinningMode(rs), moderateThinning);
+                        species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, ThinningType.forValue(thinningType), thinningIntensity);
+                        species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeName, moderateThinning);
                     });
                 }
             }
@@ -370,12 +375,12 @@ public class LoadTreegrossStand {
         loadScenario.printElapsedTime();
     }
 
-    private String determineThinningMode(final ResultSet rs) {
+    private String thinningModeNameFrom(final ResultSet rs) {
         try {
             return rs.getString("ThinningMode");
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not load thinning mode from database. Using default.", ex);
-            return ThinningMode.HEIGHT.name();
+            return ThinningModeName.HEIGHT.value();
         }
     }
 

@@ -8,11 +8,11 @@ import static treegross.base.thinning.ModerateThinning.defaultThinningFactor;
 public class AgeBasedThinning implements ModerateThinning {
 
     private final String thinningDefinition;
-    private final List<ThinningFactorRange> ranges;
+    private final List<ThinningValueRange<Double>> ranges;
 
     public AgeBasedThinning(String thinningDefinition) {
         this.thinningDefinition = thinningDefinition;
-        ranges = new ThinningDefinitionParser().parseDefinition(thinningDefinition);
+        ranges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(thinningDefinition);
     }
 
     /**

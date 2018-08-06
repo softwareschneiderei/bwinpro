@@ -87,7 +87,7 @@ public enum ThinningType {
     public abstract Thinner thinner(double volumeAlreadyOut);
     
     public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
-        rules.typeOfThinning = this;
+        
     }
  
     @Override

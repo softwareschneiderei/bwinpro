@@ -1,5 +1,6 @@
 package treegross.base.thinning;
 
+import treegross.base.Species;
 import treegross.base.Stand;
 
 
@@ -12,6 +13,6 @@ import treegross.base.Stand;
  */
 public interface Thinner {
     
-    void thin(Stand stand);
+    void thin(Stand stand, Species species);
 
 }

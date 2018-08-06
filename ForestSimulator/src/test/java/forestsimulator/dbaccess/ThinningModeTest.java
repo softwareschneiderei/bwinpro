@@ -14,15 +14,15 @@ public class ThinningModeTest {
     */
     @Test
     public void thinningModeReturnsCorrectModerateThinningForName() {
-        assertThat(ThinningMode.forName("age", definition)).isInstanceOf(AgeBasedThinning.class)
+        assertThat(ModerateThinningMode.forName("age", definition)).isInstanceOf(AgeBasedThinning.class)
                 .returns(definition, thinning -> thinning.definition());
-        assertThat(ThinningMode.forName("height", definition)).isInstanceOf(HeightBasedThinning.class)
+        assertThat(ModerateThinningMode.forName("height", definition)).isInstanceOf(HeightBasedThinning.class)
                 .returns(definition, thinning -> thinning.definition());
     }
     
     @Test
     public void thinningModeThrowsExceptionForUnknownMode() {
-        Assertions.assertThatThrownBy(() -> ThinningMode.forName("undefined", definition))
+        Assertions.assertThatThrownBy(() -> ModerateThinningMode.forName("undefined", definition))
                 .hasMessage("No moderate thinning found for name undefined");
     }
 }

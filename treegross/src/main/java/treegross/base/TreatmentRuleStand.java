@@ -20,7 +20,6 @@ package treegross.base;
 
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ThinningType;
 import treegross.treatment.Treatment2;
 
 /**
@@ -141,14 +140,6 @@ public class TreatmentRuleStand {
      */
     public double thinningIntensityArea;
     /**
-     * degree of thinning intensity
-     */
-    public double thinningIntensity = 1.0;
-    /**
-     * type of thinning
-     */
-    public ThinningType typeOfThinning;
-    /**
      * year harvesting was started important for Schirmschlag
      */
     public int typeOfHarvest;
@@ -219,7 +210,6 @@ public class TreatmentRuleStand {
     public String regenerationProcess = "";
     
     public static TreatmentRuleStand rulesWith(
-            ThinningType thinningType,
             boolean selectCropTrees,
             boolean reselectCropTrees,
             boolean releaseCropTrees,
@@ -229,7 +219,6 @@ public class TreatmentRuleStand {
             double maxHarvestVolume,
             int maxHarvestingPeriode) {
         return new TreatmentRuleStand(
-                thinningType,
                 selectCropTrees,
                 reselectCropTrees,
                 releaseCropTrees,
@@ -242,11 +231,10 @@ public class TreatmentRuleStand {
     }
     
     public TreatmentRuleStand() {
-        this(null, false, false, false, false, 0d, false, 0d, 0);
+        this(false, false, false, false, 0d, false, 0d, 0);
     }
 
     private TreatmentRuleStand(
-            ThinningType thinningType,
             boolean selectCropTrees,
             boolean reselectCropTrees,
             boolean releaseCropTrees,
@@ -256,7 +244,6 @@ public class TreatmentRuleStand {
             double maxHarvestVolume,
             int maxHarvestingPeriode) {
         super();
-        this.typeOfThinning = thinningType;
         this.selectCropTrees = selectCropTrees;
         this.reselectCropTrees = reselectCropTrees;
         this.releaseCropTrees = releaseCropTrees;
@@ -273,11 +260,8 @@ public class TreatmentRuleStand {
 
     public void setThinningRegime(ThinningRegime regime) {
         this.thinAreaSpeciesDependent = true;
-        this.thinArea = true;
         this.minThinningVolume = regime.minVolume;
         this.maxThinningVolume = regime.maxVolume;
-        this.thinningIntensity = regime.intensity;
-        regime.type.applyTo(this, regime.croptreesOnly);
     }
 
     /*

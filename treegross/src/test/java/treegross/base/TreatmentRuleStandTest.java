@@ -3,9 +3,12 @@ package treegross.base;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
 import treegross.base.rule.ThinningRegime;
+import treegross.base.thinning.SpeciesThinningSettings;
+import static treegross.base.thinning.SpeciesThinningSettings.ageBasedScenarioSetting;
 import treegross.base.thinning.ThinningType;
 
 public class TreatmentRuleStandTest {
+    private static final String UNUSED = "";
 
     /*
      * #Pinning
@@ -13,15 +16,16 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForSingleTreeSelection() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.SingleTreeSelection, UNUSED);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, true));
+        rules.setThinningRegime(new ThinningRegime(0, 120, true));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.SingleTreeSelection, true, false,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, false,
                         true, true, true, true,
-                        true, 0d, 120d, 1d);
+                        true, 0d, 120d);
     }
     
     /*
@@ -30,15 +34,16 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForSingleTreeSelectionNotOnlyCropTrees() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.SingleTreeSelection, UNUSED);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.SingleTreeSelection, 1.0, 0, 120, false));
+        rules.setThinningRegime(new ThinningRegime(0, 120, false));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.SingleTreeSelection, true, true,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, true,
                         true, true, true, true,
-                        true, 0d, 120d, 1d);
+                        true, 0d, 120d);
     }
     
     /*
@@ -47,15 +52,16 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForFromAbove() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.ThinningFromAbove, 1.2d);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.ThinningFromAbove, 1.0, 0, 60, true));
+        rules.setThinningRegime(new ThinningRegime(0, 60, true));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.ThinningFromAbove, true, true,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, true,
                         false, false, false, false,
-                        false, 0d, 60d, 1d);
+                        false, 0d, 60d);
     }
     
     /*
@@ -64,15 +70,16 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForFromBelow() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.ThinningFromBelow, UNUSED);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.ThinningFromBelow, 1.0, 0, 60, true));
+        rules.setThinningRegime(new ThinningRegime(0, 60, true));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.ThinningFromBelow, true, true,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, true,
                         false, false, false, false,
-                        false, 0d, 60d, 1d);
+                        false, 0d, 60d);
     }
     
     /*
@@ -81,15 +88,16 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForQD() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.ThinningQD, UNUSED);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.ThinningQD, 1.0, 0.5, 58.9, true));
+        rules.setThinningRegime(new ThinningRegime(0.5, 58.9, true));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.ThinningQD, true, false,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, false,
                         true, true, true, true,
-                        true, 0.5d, 58.9d, 1d);
+                        true, 0.5d, 58.9d);
     }
     
     /*
@@ -98,14 +106,15 @@ public class TreatmentRuleStandTest {
     @Test
     public void applyingThinningRegimeForQDNotOnlyCropTrees() {
         TreatmentRuleStand rules = new TreatmentRuleStand();
+        final SpeciesThinningSettings settings = ageBasedScenarioSetting(ThinningType.ThinningQD, UNUSED);
         
-        rules.setThinningRegime(new ThinningRegime(ThinningType.ThinningQD, 1.0, 0.5, 58.9, false));
+        rules.setThinningRegime(new ThinningRegime(0.5, 58.9, false));
         
-        assertThat(rules).extracting("typeOfThinning", "thinAreaSpeciesDependent", "thinArea",
+        assertThat(rules).extracting("thinningSettings", "thinAreaSpeciesDependent", "thinArea",
                 "selectCropTrees", "reselectCropTrees", "releaseCropTrees", "cutCompetingCropTrees",
-                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume", "thinningIntensity")
-                .containsExactly(ThinningType.ThinningQD, true, false,
+                "releaseCropTreesSpeciesDependent", "minThinningVolume", "maxThinningVolume")
+                .containsExactly(settings, true, false,
                         true, true, true, true,
-                        true, 0.5d, 58.9d, 1d);
+                        true, 0.5d, 58.9d);
     }
 }
