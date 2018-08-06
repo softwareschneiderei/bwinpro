@@ -116,10 +116,6 @@ public class TreatmentRuleStand {
      */
     public boolean selectCropTreesOfAllSpecies;
     /**
-     * release crop trees
-     */
-    public boolean releaseCropTrees;
-    /**
      * release crop trees species dependent
      */
     public boolean releaseCropTreesSpeciesDependent;
@@ -127,10 +123,6 @@ public class TreatmentRuleStand {
      * cut competing crop trees
      */
     public boolean cutCompetingCropTrees;
-    /**
-     * thin none crop trees (by using temporary crop trees)
-     */
-    public boolean thinArea;
     /**
      * release temp crop trees species dependent
      */
@@ -208,11 +200,12 @@ public class TreatmentRuleStand {
      * 2nd Period cut Stand to 0.4, then 0.2 and then remove the rest
      */
     public String regenerationProcess = "";
+
+    public boolean cropTreesOnly;
     
     public static TreatmentRuleStand rulesWith(
             boolean selectCropTrees,
             boolean reselectCropTrees,
-            boolean releaseCropTrees,
             boolean releaseCropTreesSpeciesDependent,
             double maxThinningVolume,
             boolean thinAreaSpeciesDependent,
@@ -221,7 +214,6 @@ public class TreatmentRuleStand {
         return new TreatmentRuleStand(
                 selectCropTrees,
                 reselectCropTrees,
-                releaseCropTrees,
                 releaseCropTreesSpeciesDependent,
                 maxThinningVolume,
                 thinAreaSpeciesDependent,
@@ -231,13 +223,12 @@ public class TreatmentRuleStand {
     }
     
     public TreatmentRuleStand() {
-        this(false, false, false, false, 0d, false, 0d, 0);
+        this(false, false, false, 0d, false, 0d, 0);
     }
 
     private TreatmentRuleStand(
             boolean selectCropTrees,
             boolean reselectCropTrees,
-            boolean releaseCropTrees,
             boolean releaseCropTreesSpeciesDependent,
             double maxThinningVolume,
             boolean thinAreaSpeciesDependent,
@@ -246,7 +237,6 @@ public class TreatmentRuleStand {
         super();
         this.selectCropTrees = selectCropTrees;
         this.reselectCropTrees = reselectCropTrees;
-        this.releaseCropTrees = releaseCropTrees;
         this.releaseCropTreesSpeciesDependent = releaseCropTreesSpeciesDependent;
         this.maxThinningVolume = maxThinningVolume;
         this.thinAreaSpeciesDependent = thinAreaSpeciesDependent;
@@ -262,6 +252,7 @@ public class TreatmentRuleStand {
         this.thinAreaSpeciesDependent = true;
         this.minThinningVolume = regime.minVolume;
         this.maxThinningVolume = regime.maxVolume;
+        this.cropTreesOnly = regime.croptreesOnly;
     }
 
     /*

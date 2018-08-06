@@ -7,16 +7,19 @@ import treegross.treatment.TreatmentElements2;
 
 public abstract class AreaThinner implements Thinner {
 
+    private final boolean thinArea;
+
     protected final double vout;
     protected double thinned;
     
-    protected AreaThinner(double vout) {
+    protected AreaThinner(boolean thinArea, double vout) {
         super();
+        this.thinArea = thinArea;
         this.vout = vout;
     }
     
     protected final void thinArea(Stand stand) {
-        if (stand.trule.thinArea) {
+        if (thinArea) {
             thinCompetitionFromAbove(stand, thinned, vout);
         }
     }

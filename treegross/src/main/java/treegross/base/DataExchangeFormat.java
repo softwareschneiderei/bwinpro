@@ -92,38 +92,40 @@ public class DataExchangeFormat {
             out.println(st.trule.treatmentStep + ";Jahre zwischen den Eingriffen");
             out.println(st.trule.harvestingYears + ";Endnutzung startete vor x Jahren");
             out.println(st.trule.maxHarvestingPeriode + ";Endnutzungszeitraum maximal X Jahre");
-            if (st.trule.harvestLayerFromBelow == true) {
+            if (st.trule.harvestLayerFromBelow) {
                 pm = 1;
             }
             out.println(pm + ";1-> Endnutzung einer zielstarken schicht von unten, 0-> Endnutzung einer zielstarken schicht von oben");
-            if (st.trule.selectCropTrees == true) {
+            if (st.trule.selectCropTrees) {
                 pm = 1;
             }
             out.println(pm + ";1-> Z-Baumauswahl an, 0-> Z-Baumauswahl aus");
-            if (st.trule.reselectCropTrees == true) {
+            if (st.trule.reselectCropTrees) {
                 pm = 1;
             }
             out.println(pm + ";1-> Z-Baumnachwahl an, 0-> Z-Baumnachauswahl aus");
-            if (st.trule.selectCropTreesOfAllSpecies == true) {
+            if (st.trule.selectCropTreesOfAllSpecies) {
                 pm = 1;
             }
             out.println(pm + ";1-> Z-Bäume auch von Arten, die nicht dem Zieltyp entsprechen, 0-> Z-Bäume nur von Arten, die dem Zieltyp entsprechen");
-            if (st.trule.releaseCropTrees == true) {
-                pm = 1;
-            }
-            out.println(pm + ";1-> Z-Baumfreistellung an, 0-> Z-Baumfreistellung aus");
-            if (st.trule.releaseCropTreesSpeciesDependent == true) {
+            // TODO: not really used in simulation
+//            if (st.trule.releaseCropTrees) {
+//                pm = 1;
+//            }
+//            out.println(pm + ";1-> Z-Baumfreistellung an, 0-> Z-Baumfreistellung aus");
+            if (st.trule.releaseCropTreesSpeciesDependent) {
                 pm = 1;
             }
             out.println(pm + ";1-> Z-Baumfreistellung entsprechend des Zieltyps, 0-> Z-Baumfreistellung entsprechend der Bedrängungssituation");
-            if (st.trule.cutCompetingCropTrees == true) {
+            if (st.trule.cutCompetingCropTrees) {
                 pm = 1;
             }
             out.println(pm + ";1-> Entnahme von sich bedrängenden Z-Bäumen, 0-> keine Entnahme von sich bedrängenden Z-Bäumen");
-            if (st.trule.thinArea == true) {
-                pm = 1;
-            }
-            out.println(pm + ";1-> Durchforstung der Zwischenräume an, 0-> Durchforstung der Zwischenräume aus");
+            // TODO: use something thinning type dependent...
+//            if (st.trule.thinArea) {
+//                pm = 1;
+//            }
+//            out.println(pm + ";1-> Durchforstung der Zwischenräume an, 0-> Durchforstung der Zwischenräume aus");
             if (st.trule.thinAreaSpeciesDependent == true) {
                 pm = 1;
             }
@@ -323,7 +325,8 @@ public class DataExchangeFormat {
             stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
-                st.trule.releaseCropTrees = true;
+                // TODO: not really used in simulation
+//                st.trule.releaseCropTrees = true;
             } else {
                 st.trule.harvestLayerFromBelow = false;
             }
@@ -350,7 +353,8 @@ public class DataExchangeFormat {
             stx = new StringTokenizer(s, DELIM);
             pm = Integer.parseInt(stx.nextToken());
             if (pm == 1) {
-                st.trule.thinArea = true;
+                // TODO: Implement alternative based on thinning type
+                // st.trule.thinArea = true;
             } else {
                 st.trule.harvestLayerFromBelow = false;
             }

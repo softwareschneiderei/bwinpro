@@ -13,15 +13,12 @@ import treegross.treatment.TreatmentElements2;
  */
 public class SingleTreeSelectionThinner extends AreaThinner {
     
-    SingleTreeSelectionThinner(double volumenAlreadyOut) {
-        super(volumenAlreadyOut);
+    SingleTreeSelectionThinner(boolean cropTreesOnly, double volumeAlreadyOut) {
+        super(!cropTreesOnly, volumeAlreadyOut);
     }
 
     @Override
     public void thin(Stand stand, Species species) {
-        if (!stand.trule.releaseCropTrees) {
-            return;
-        }
         thinCropTreeCompetition(stand, species);
         thinArea(stand);
     }

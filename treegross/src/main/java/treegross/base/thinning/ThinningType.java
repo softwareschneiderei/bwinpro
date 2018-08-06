@@ -9,28 +9,24 @@ public enum ThinningType {
         @Override
         public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
             super.applyTo(rules, cropTreesOnly);
-            rules.thinArea = !cropTreesOnly;
-            rules.selectCropTrees = true;
-            rules.reselectCropTrees = true;
-            rules.releaseCropTrees = true;
             rules.cutCompetingCropTrees = true;
             rules.releaseCropTreesSpeciesDependent = true;
         }
 
         @Override
-        public Thinner thinner(double volumeAlreadyOut) {
-            return new SingleTreeSelectionThinner(volumeAlreadyOut);
+        public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
+            return new SingleTreeSelectionThinner(cropTreesOnly, volumeAlreadyOut);
         }
     },
     ThinningFromAbove("ThinningType.thinningFromAbove", 1) {
         @Override
-        public Thinner thinner(double volumeAlreadyOut) {
+        public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new FromAboveThinner(volumeAlreadyOut);
         }
     },
     ThinningFromBelow("ThinningType.thinningFromBelow", 2) {
         @Override
-        public Thinner thinner(double volumeAlreadyOut) {
+        public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new FromBelowThinner(volumeAlreadyOut);
         }
     },
@@ -38,25 +34,18 @@ public enum ThinningType {
         @Override
         public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
             super.applyTo(rules, cropTreesOnly);
-            rules.thinArea = false;
-            if (cropTreesOnly) {
-                rules.thinArea = false; // oder doch true
-            }
-            rules.selectCropTrees = true;
-            rules.reselectCropTrees = true;
-            rules.releaseCropTrees = true;
             rules.cutCompetingCropTrees = true;
             rules.releaseCropTreesSpeciesDependent = true;
         }
 
         @Override
-        public Thinner thinner(double volumeAlreadyOut) {
-            return new QDThinner();
+        public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
+            return new QDThinner(cropTreesOnly);
         }
     },
     ClearCut("ThinningType.clearCut", 9) {
         @Override
-        public Thinner thinner(double volumeAlreadyOut) {
+        public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
     };
@@ -84,7 +73,7 @@ public enum ThinningType {
         return value;
     }
     
-    public abstract Thinner thinner(double volumeAlreadyOut);
+    public abstract Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut);
     
     public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
         

@@ -18,6 +18,13 @@ import treegross.base.Stand;
  */
 public class QDThinner implements Thinner {
 
+    private final boolean cropTreesOnly;
+
+    public QDThinner(boolean cropTreesOnly) {
+        super();
+        this.cropTreesOnly = cropTreesOnly;
+    }
+    
     @Override
     public void thin(Stand stand, Species species) {
         stand.forTreesMatching(tree -> tree.isLiving() && tree.crop && tree.isOf(species), tree -> {

@@ -150,6 +150,7 @@ public class Treatment2 {
             if (te.getNCropTrees(st) <= 0 || st.trule.reselectCropTrees) {
                 // select defined number of crop trees
                 //number is reduced, depending on dg of leading layer
+                // TODO: maybe take thinning type into account, e.g. if ThinningType.SingleTreeSelection is used
                 if (st.trule.selectCropTrees) {
                     te.selectNCropTrees(st);
                 }
@@ -157,7 +158,7 @@ public class Treatment2 {
 
             // species-specific thinning
             for (Species species : st.species()) {
-                species.trule.thinningSettings.type().thinner(te.vout).thin(st, species);
+                species.trule.thinningSettings.type().thinner(st.trule.cropTreesOnly, te.vout).thin(st, species);
             }
             
             //if thinning amount was not high enough: set thinned trees alive

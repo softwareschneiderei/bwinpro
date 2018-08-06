@@ -285,7 +285,6 @@ public class LoadTreegrossStand {
                 true,
                 true,
                 true,
-                true,
                 80d,
                 true,
                 250d,

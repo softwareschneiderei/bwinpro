@@ -15,7 +15,7 @@ import treegross.treatment.TreatmentElements2;
 public class FromAboveThinner extends AreaThinner {
 
     public FromAboveThinner(double volumeAlreadyOut) {
-        super(volumeAlreadyOut);
+        super(false, volumeAlreadyOut);
     }
 
     // selectCropTreesOfAllSpecies auch hier einbeziehen?
