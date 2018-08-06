@@ -10,64 +10,71 @@ import static treegross.base.thinning.ThinningDefinitionParser.thinningFactorPar
 public class SpeciesThinningSettings {
     
     public static final SpeciesThinningSettings ageBasedScenarioSetting(ThinningType type, double intensity) {
-        return new SpeciesThinningSettings(type, "", intensity, tree -> Double.valueOf(tree.age));
+        return new SpeciesThinningSettings(ThinningModeName.AGE, type, "", intensity, tree -> Double.valueOf(tree.age));
     }
 
     public static final SpeciesThinningSettings ageBasedScenarioSetting(ThinningType type, String intensityDefinition) {
-        return new SpeciesThinningSettings(type, intensityDefinition, tree -> Double.valueOf(tree.age));
+        return new SpeciesThinningSettings(ThinningModeName.AGE, type, intensityDefinition, tree -> Double.valueOf(tree.age));
     }
 
     public static final SpeciesThinningSettings heightBasedScenarioSetting(ThinningType type, double intensity) {
-        return new SpeciesThinningSettings(type, "", intensity, tree -> tree.h);
+        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, type, "", intensity, tree -> tree.h);
     }
 
     public static final SpeciesThinningSettings heightBasedScenarioSetting(ThinningType type, String intensityDefinition) {
-        return new SpeciesThinningSettings(type, intensityDefinition, tree -> tree.h);
+        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, type, intensityDefinition, tree -> tree.h);
     }
 
     private final List<ThinningValueRange<Double>> intensityRanges;
+    private final ThinningModeName mode;
     private final ThinningType type;
     private final double intensityDefault;
     private final Function<Tree, Double> attributeExtractor;
+    private final String intensityDefinition;
 
-    private SpeciesThinningSettings(ThinningType type, String intensityDefinition, Function<Tree, Double> attributeExtractor) {
-        this(type, intensityDefinition, ModerateThinning.defaultThinningFactor, attributeExtractor);
+    private SpeciesThinningSettings(ThinningModeName mode, ThinningType type, String intensityDefinition, Function<Tree, Double> attributeExtractor) {
+        this(mode, type, intensityDefinition, ModerateThinning.defaultThinningFactor, attributeExtractor);
     }
 
-    private SpeciesThinningSettings(ThinningType type, String intensityDefinition, double intensityDefault, Function<Tree, Double> attributeExtractor) {
+    private SpeciesThinningSettings(
+            ThinningModeName mode,
+            ThinningType type,
+            String intensityDefinition,
+            double intensityDefault,
+            Function<Tree, Double> attributeExtractor) {
         super();
+        this.intensityDefinition = intensityDefinition;
         intensityRanges = thinningFactorParser.parseDefinition(intensityDefinition);
+        this.mode = mode;
         this.type = type;
         this.intensityDefault = intensityDefault;
         this.attributeExtractor = attributeExtractor;
     }
 
-    /**
-     * Static thinning type for compatibility
-     * @return the configured thinning type
-     */
+    public SpeciesThinningSettings with(ThinningModeName thinningModeName, ThinningType thinningType, String newIntensityDefinition) {
+        return new SpeciesThinningSettings(thinningModeName, thinningType, newIntensityDefinition, intensityDefault, attributeExtractor);
+    }
+
+    public ThinningModeName getMode() {
+        return mode;
+    }
+    
     public ThinningType type() {
         return type;
     }
 
-    /**
-     * TODO: Think about how to choose the thinning type in treatment to allow
-     *       dynamic thinning depending on the stand 
-     * @param normTree
-     * @return 
-     */
-    public ThinningType typeFor(Tree normTree) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String intensityDefinition() {
+        return intensityDefinition;
     }
 
     /**
      *  intensity Factor to normal stand density 1.0 = normal stand density, no thinning set intensity = 0.0
      * 
-     * @param normTree
+     * @param referenceTree
      * @return intensity for the given tree
      */
-    public double intensityFor(Tree normTree) {
-        return firstFactorFoundFor(normTree).orElse(intensityDefault);
+    public double intensityFor(Tree referenceTree) {
+        return firstFactorFoundFor(referenceTree).orElse(intensityDefault);
     }
 
     private Optional<Double> firstFactorFoundFor(Tree tree) {
@@ -108,5 +115,10 @@ public class SpeciesThinningSettings {
             return false;
         }
         return Objects.equals(this.attributeExtractor, other.attributeExtractor);
+    }
+
+    @Override
+    public String toString() {
+        return "SpeciesThinningSettings{" + "mode=" + mode + ", type=" + type + ", intensityDefinition=" + intensityDefinition + '}';
     }
 }

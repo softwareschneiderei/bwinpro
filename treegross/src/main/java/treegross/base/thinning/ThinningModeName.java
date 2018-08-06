@@ -1,5 +1,6 @@
-package forestsimulator.dbaccess;
+package treegross.base.thinning;
 
+// TODO: i18n!
 public enum ThinningModeName {
     HEIGHT("height"),
     AGE("age");

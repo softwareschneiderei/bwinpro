@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import treegross.base.thinning.ThinningModeName;
 import treegross.base.StandLocation;
 import forestsimulator.util.StopWatch;
 import java.sql.*;
@@ -363,7 +364,7 @@ public class LoadTreegrossStand {
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
                         species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, ThinningType.forValue(thinningType), thinningIntensity);
-                        species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeNameFrom(rs), moderateThinning);
+                        species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeName, moderateThinning);
                     });
                 }
             }

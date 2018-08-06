@@ -1,5 +1,6 @@
 package forestsimulator.dbaccess;
 
+import treegross.base.thinning.ThinningModeName;
 import treegross.base.thinning.SpeciesThinningSettings;
 import java.util.NoSuchElementException;
 import treegross.base.thinning.ThinningType;

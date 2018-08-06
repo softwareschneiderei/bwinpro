@@ -660,7 +660,7 @@ public class Tree implements Cloneable {
             try {
                 String modelPlugIn = "treegross.base." + sp.spDef.competitionXML;
                 PlugInCompetition comp = (PlugInCompetition) Class.forName(modelPlugIn).newInstance();
-                if (fac > 0.0 && out < 1) {
+                if (fac > 0.0 && isLiving()) {
                     c66 = comp.getc66(this);
                     c66c = comp.getc66c(this);
                     comp.replaceC66xyAndC66cxy(this, cw);
