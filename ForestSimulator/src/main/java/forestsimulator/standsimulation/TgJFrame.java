@@ -52,7 +52,7 @@ import org.jdom.JDOMException;
 public class TgJFrame extends JFrame implements ActionListener, ItemListener, StandChangeListener {
 
     private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
-    private static final String bwinproVersion = "Version 7.8-0.6";
+    private static final String bwinproVersion = "Version 7.8-0.7dev";
     private static final String bwinproLastUpdate = "06.08.2018";
     
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
