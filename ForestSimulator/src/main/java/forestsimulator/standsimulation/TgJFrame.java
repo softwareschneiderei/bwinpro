@@ -52,14 +52,15 @@ import org.jdom.JDOMException;
 public class TgJFrame extends JFrame implements ActionListener, ItemListener, StandChangeListener {
 
     private static final Logger LOGGER = Logger.getLogger(TgJFrame.class.getName());
+    private static final String bwinproVersion = "Version 7.8-0.6";
+    private static final String bwinproLastUpdate = "06.08.2018";
+    
     private final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
     private final TgInternalFrame[] iframe = new TgInternalFrame[8];
     private final SpeciesDefMap speciesDefinitions = new SpeciesDefMap();
     private final FileHandler logHandler;
     private final TgPPmap pp;  //add prallel projection class
 
-    String bwinproVersion = "Version 7.8-0.6dev";
-    String bwinproLastUpdate = "27.07.2018";
     private boolean accessInput = true;
     private Stand st = new Stand();
     private File currentFile;
