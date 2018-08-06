@@ -81,6 +81,10 @@ public class TgStandMap extends JPanel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         st.standinfo();
 
 // next few lines are to print the jpg file always in the same size and then reset the size for the screen
@@ -102,19 +106,19 @@ public class TgStandMap extends JPanel implements MouseListener {
 //
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         if (doJPEG == true) {
-            g = img.getGraphics();
+            g2d = (Graphics2D) img.getGraphics();
         }
 //
-        g.setColor(Color.white);
-        g.fillRect(0, 0, w, h);
-        g.setColor(Color.black);
+        g2d.setColor(Color.white);
+        g2d.fillRect(0, 0, w, h);
+        g2d.setColor(Color.black);
 
         if (st.year > 0) //only if a stand is loaded
         {	// draw stand name and size 
-            g.setFont(new java.awt.Font("Tahoma", 0, lettersize));
+            g2d.setFont(new java.awt.Font("Tahoma", 0, lettersize));
 
             if (standMapInfo == true) {
-                g.drawString(st.standname + "  " + st.size + " ha", 0, 10);
+                g2d.drawString(st.standname + "  " + st.size + " ha", 0, 10);
             }
             // write stand values
             NumberFormat number = NumberFormat.getInstance();
@@ -122,13 +126,13 @@ public class TgStandMap extends JPanel implements MouseListener {
             number.setMaximumFractionDigits(1);
             number.setMinimumFractionDigits(1);
             if (standMapInfo == true && lettersize < 20) {
-                g.drawString("Jahr: " + st.year, w - 100, 25);
-                g.drawString("N/ha    : " + number.format(st.nha), w - 100, 50);
-                g.drawString("G/ha    : " + number.format(st.bha), w - 100, 75);
-                g.drawString("N/ha th.: " + number.format(st.nhaout), w - 100, 100);
-                g.drawString("G/ha th.: " + number.format(st.bhaout), w - 100, 125);
-                g.drawString("N/ha to.: " + number.format(st.nhatotal), w - 100, 150);
-                g.drawString("G/ha to.: " + number.format(st.bhatotal), w - 100, 175);
+                g2d.drawString("Jahr: " + st.year, w - 100, 25);
+                g2d.drawString("N/ha    : " + number.format(st.nha), w - 100, 50);
+                g2d.drawString("G/ha    : " + number.format(st.bha), w - 100, 75);
+                g2d.drawString("N/ha th.: " + number.format(st.nhaout), w - 100, 100);
+                g2d.drawString("G/ha th.: " + number.format(st.bhaout), w - 100, 125);
+                g2d.drawString("N/ha to.: " + number.format(st.nhatotal), w - 100, 150);
+                g2d.drawString("G/ha to.: " + number.format(st.bhatotal), w - 100, 175);
             }
 
         }
@@ -191,16 +195,16 @@ public class TgStandMap extends JPanel implements MouseListener {
             yp = h - 40 - (int) ((st.cpnt[i].y - ymin) * sk);
             xp2 = 10 + (int) ((st.cpnt[j].x - xmin) * sk);
             yp2 = h - 40 - (int) ((st.cpnt[j].y - ymin) * sk);
-            g.setColor(Color.lightGray);
-            g.drawLine(xp, yp, xp2, yp2);
+            g2d.setColor(Color.lightGray);
+            g2d.drawLine(xp, yp, xp2, yp2);
         }
 // draw north direction                
         xp2 = 10 + (int) ((xmax) * sk);
         yp2 = h - 40 - (int) ((ymin) * sk);
-        g.drawLine(xp2 + 20, yp2 - 20, xp2 + 20, yp2 - 60);
-        g.drawLine(xp2 + 25, yp2 - 50, xp2 + 20, yp2 - 60);
-        g.drawLine(xp2 + 15, yp2 - 50, xp2 + 20, yp2 - 60);
-        g.drawString("N", xp2 + 10, yp2 - 30);
+        g2d.drawLine(xp2 + 20, yp2 - 20, xp2 + 20, yp2 - 60);
+        g2d.drawLine(xp2 + 25, yp2 - 50, xp2 + 20, yp2 - 60);
+        g2d.drawLine(xp2 + 15, yp2 - 50, xp2 + 20, yp2 - 60);
+        g2d.drawString("N", xp2 + 10, yp2 - 30);
 
 // Plot Crown Width or radius only of the living trees
         if (plotCrownWidth == true) {
@@ -209,9 +213,9 @@ public class TgStandMap extends JPanel implements MouseListener {
                     xp = 10 + (int) ((st.tr[i].x - xmin) * sk);
                     yp = h - 40 - (int) ((st.tr[i].y - ymin) * sk);
                     ra = (int) (sk * st.tr[i].cw / 2.0);
-                    g.setColor(new java.awt.Color(st.tr[i].sp.spDef.colorRed,
+                    g2d.setColor(new java.awt.Color(st.tr[i].sp.spDef.colorRed,
                             st.tr[i].sp.spDef.colorGreen, st.tr[i].sp.spDef.colorBlue));
-                    g.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
+                    g2d.drawOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
                 }
             }
         }
@@ -228,24 +232,24 @@ public class TgStandMap extends JPanel implements MouseListener {
                     ra = 1;
                 }
                 //oval second values is the width and height
-                g.setColor(new Color(tree.sp.spDef.colorRed,
+                g2d.setColor(new Color(tree.sp.spDef.colorRed,
                         tree.sp.spDef.colorGreen, tree.sp.spDef.colorBlue));
                 if (tree.out == st.year) {
-                    g.drawRect(xp - ra, yp - ra, 2 * ra, 2 * ra);
+                    g2d.drawRect(xp - ra, yp - ra, 2 * ra, 2 * ra);
 
                 }
                 if (tree.out <= 0) {
-                    g.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
+                    g2d.fillOval(xp - ra, yp - ra, 2 * ra, 2 * ra);
                 }
 
                 if (tree.crop) {
-                    ra = drawStemCircle(g, Color.red, xp, ra, yp, tree);
+                    ra = drawStemCircle(g2d, Color.red, xp, ra, yp, tree);
                 }
                 if (tree.tempcrop) {
-                    ra = drawStemCircle(g, Color.green, xp, ra, yp, tree);
+                    ra = drawStemCircle(g2d, Color.green, xp, ra, yp, tree);
                 }
                 if (tree.habitat) {
-                    drawStemCircle(g, Color.yellow, xp, ra, yp, tree);
+                    drawStemCircle(g2d, Color.yellow, xp, ra, yp, tree);
                 }
             }
 
@@ -257,8 +261,8 @@ public class TgStandMap extends JPanel implements MouseListener {
                     xp = 10 + (int) ((st.tr[i].x - xmin) * sk);
                     yp = h - 40 - (int) ((st.tr[i].y - ymin) * sk);
                     ra = (int) (dbhFactor * 2 * sk * st.tr[i].d / 200);
-                    g.setColor(Color.black);
-                    g.drawString(st.tr[i].no, xp + ra, yp - ra);
+                    g2d.setColor(Color.black);
+                    g2d.drawString(st.tr[i].no, xp + ra, yp - ra);
                 }
             }
         }
@@ -279,12 +283,12 @@ public class TgStandMap extends JPanel implements MouseListener {
 
 //        
 // Zoom controll
-        g.setColor(Color.red);
+        g2d.setColor(Color.red);
         if (zoomStatus == 1) {
-            g.drawString("select lower corner", 50, h - 5);
+            g2d.drawString("select lower corner", 50, h - 5);
         }
         if (zoomStatus == 2) {
-            g.drawString("select upper corner", 50, h - 5);
+            g2d.drawString("select upper corner", 50, h - 5);
         }
 
     }
