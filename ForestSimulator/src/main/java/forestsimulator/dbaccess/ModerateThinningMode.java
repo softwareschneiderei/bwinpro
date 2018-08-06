@@ -7,28 +7,28 @@ import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.ModerateThinning;
 
 public enum ModerateThinningMode {
-    AGE(ThinningModeName.AGE.value()) {
+    AGE(ThinningModeName.AGE) {
         @Override
         protected ModerateThinning moderateThinning(String definition) {
             return new AgeBasedThinning(definition);
         }
     },
-    HEIGHT(ThinningModeName.HEIGHT.value()) {
+    HEIGHT(ThinningModeName.HEIGHT) {
         @Override
         protected ModerateThinning moderateThinning(String definition) {
             return new HeightBasedThinning(definition);
         }
     };
     
-    private final String name;
+    private final ThinningModeName name;
 
-    private ModerateThinningMode(String name) {
+    private ModerateThinningMode(ThinningModeName name) {
         this.name = name;
     }
     
-    public static ModerateThinning forName(String name, String definition) {
+    public static ModerateThinning forName(ThinningModeName name, String definition) {
         for (ModerateThinningMode mode : values()) {
-            if (mode.name.equals(name)) {
+            if (mode.name == name) {
                 return mode.moderateThinning(definition);
             }
         }

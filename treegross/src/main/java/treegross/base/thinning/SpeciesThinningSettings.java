@@ -119,6 +119,6 @@ public class SpeciesThinningSettings {
 
     @Override
     public String toString() {
-        return "SpeciesThinningSettings{" + "mode=" + mode + ", type=" + type + ", intensityDefinition=" + intensityDefinition + '}';
+        return "SpeciesThinningSettings{" + "mode=" + mode.name() + ", type=" + type.name() + ", intensityDefinition=" + intensityDefinition + '}';
     }
 }

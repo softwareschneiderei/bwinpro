@@ -356,7 +356,7 @@ public class LoadTreegrossStand {
                     int mix = rs.getInt("Mix");
                     int thinningType = rs.getInt("ThinningType");
                     String moderateThinning = rs.getString("ModerateThinning");
-                    String thinningModeName = thinningModeNameFrom(rs);
+                    ThinningModeName thinningModeName = thinningModeNameFrom(rs);
                     String thinningIntensity = rs.getString("ThinningIntensity");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
@@ -375,12 +375,12 @@ public class LoadTreegrossStand {
         loadScenario.printElapsedTime();
     }
 
-    private String thinningModeNameFrom(final ResultSet rs) {
+    private ThinningModeName thinningModeNameFrom(final ResultSet rs) {
         try {
-            return rs.getString("ThinningMode");
-        } catch (SQLException ex) {
+            return ThinningModeName.valueOf(rs.getString("ThinningMode"));
+        } catch (SQLException | IllegalArgumentException ex) {
             logger.log(Level.SEVERE, "Could not load thinning mode from database. Using default.", ex);
-            return ThinningModeName.HEIGHT.value();
+            return ThinningModeName.HEIGHT;
         }
     }
 

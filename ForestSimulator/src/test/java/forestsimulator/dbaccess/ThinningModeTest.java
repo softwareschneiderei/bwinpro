@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import treegross.base.thinning.AgeBasedThinning;
 import treegross.base.thinning.HeightBasedThinning;
+import treegross.base.thinning.ThinningModeName;
 
 public class ThinningModeTest {
     private static final String definition = "1/0.5/2";
@@ -14,15 +15,15 @@ public class ThinningModeTest {
     */
     @Test
     public void thinningModeReturnsCorrectModerateThinningForName() {
-        assertThat(ModerateThinningMode.forName("age", definition)).isInstanceOf(AgeBasedThinning.class)
+        assertThat(ModerateThinningMode.forName(ThinningModeName.AGE, definition)).isInstanceOf(AgeBasedThinning.class)
                 .returns(definition, thinning -> thinning.definition());
-        assertThat(ModerateThinningMode.forName("height", definition)).isInstanceOf(HeightBasedThinning.class)
+        assertThat(ModerateThinningMode.forName(ThinningModeName.HEIGHT, definition)).isInstanceOf(HeightBasedThinning.class)
                 .returns(definition, thinning -> thinning.definition());
     }
     
     @Test
     public void thinningModeThrowsExceptionForUnknownMode() {
-        Assertions.assertThatThrownBy(() -> ModerateThinningMode.forName("undefined", definition))
-                .hasMessage("No moderate thinning found for name undefined");
+        Assertions.assertThatThrownBy(() -> ModerateThinningMode.forName(null, definition))
+                .hasMessage("No moderate thinning found for name null");
     }
 }
