@@ -68,8 +68,6 @@ public class TgEditTreegross extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void applyChangesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyChangesButtonActionPerformed
-// TODO add your handling code here:
-        
         st = editorPanel.updateStand();
         st.sortbyd();
         st.missingData();
@@ -79,24 +77,15 @@ public class TgEditTreegross extends JDialog {
         st.descspecies();
         editorPanel.setStand(st);
         editorPanel.loadStand();
-        
     }//GEN-LAST:event_applyChangesButtonActionPerformed
 
 private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-// TODO add your handling code here:
-            if (editorPanel.getpolar()) {
-               editorPanel.polar2xy();
-               editorPanel.loadStand();
-        }
-        st = editorPanel.updateStand();
-
+    if (editorPanel.getpolar()) {
+        editorPanel.polar2xy();
+        editorPanel.loadStand();
+    }
+    st = editorPanel.updateStand();
 }//GEN-LAST:event_formWindowClosed
-
-
-    
-    /**
-     * @param args the command line arguments
-     */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton applyChangesButton;

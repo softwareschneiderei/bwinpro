@@ -557,8 +557,9 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         for (int i = 0; i < st.nspecies; i++) {
             sum += st.sp[i].trule.targetCrownPercent;
         }
+        // TODO: what to do if sum is 0?
         for (int i = 0; i < st.nspecies; i++) {
-            st.sp[i].trule.targetCrownPercent = 100.0 * st.sp[i].trule.targetCrownPercent / sum;
+            st.sp[i].trule.targetCrownPercent = 100.0 * st.sp[i].trule.targetCrownPercent / sum; //NOSONAR
         }
         loadTable();
     }

@@ -144,11 +144,6 @@ public class DBAccessDialog extends JDialog {
         yearsLabel.setText(bundle.getString("DBAccessDialog.yearsLabel.text")); // NOI18N
 
         yearsTextField.setText("10"); // NOI18N
-        yearsTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                yearsTextFieldActionPerformed(evt);
-            }
-        });
 
         biUpdateButton.setText(bundle.getString("DBAccessDialog.biUpdateButton.text")); // NOI18N
         biUpdateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -233,11 +228,6 @@ public class DBAccessDialog extends JDialog {
         plotNumberLabel.setText(bundle.getString("DBAccessDialog.plotNumberLabel.text")); // NOI18N
 
         plotNumberTextField.setText("1"); // NOI18N
-        plotNumberTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                plotNumberTextFieldActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout elsaltoPanelLayout = new javax.swing.GroupLayout(elsaltoPanel);
         elsaltoPanel.setLayout(elsaltoPanelLayout);
@@ -325,11 +315,6 @@ public class DBAccessDialog extends JDialog {
 
         updateViewCheckbox.setSelected(true);
         updateViewCheckbox.setText(bundle.getString("DBAccessDialog.updateViewCheckbox.text")); // NOI18N
-        updateViewCheckbox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateViewCheckboxActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -718,10 +703,6 @@ public class DBAccessDialog extends JDialog {
         dispose();
     }//GEN-LAST:event_jButton14ActionPerformed
 
-    private void plotNumberTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plotNumberTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_plotNumberTextFieldActionPerformed
-
     private void biPlotInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_biPlotInfoButtonActionPerformed
         // BI Plot Info
         boolean beginnPeriode = beginCheckBox.isSelected();
@@ -890,10 +871,6 @@ public class DBAccessDialog extends JDialog {
         dispose();
     }//GEN-LAST:event_biUpdateButtonActionPerformed
 
-    private void yearsTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearsTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_yearsTextFieldActionPerformed
-
     private void loadCircleButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadCircleButtonActionPerformed
         // BI Probekreis laden
         String aktivesDatenfile = databaseFilenameTextField.getText();
@@ -917,7 +894,6 @@ public class DBAccessDialog extends JDialog {
         st.trule.setSkidTrails(new SkidTrailRules(false));
         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
         st.trule.setHarvestRegime(0, 0, 80, 0.1, "0.3;");
-        // TODO: get intensity definition from somewhere
         st.trule.setThinningRegime(new ThinningRegime(
                 10,
                 60,
@@ -1027,13 +1003,12 @@ public class DBAccessDialog extends JDialog {
                         st.trule.setSkidTrails(new SkidTrailRules(true));
                         st.trule.setNatureProtection(0, 0, false, 0.1, 200);
                         st.trule.setHarvestRegime(2, 0, 180, 0.0, "0.3;");
-                        // TODO: get intensity definition from somewhere
                         st.trule.setThinningRegime(new ThinningRegime(
                                 0,
                                 120,
                                 false));
                         if (st.ntrees > 0) {
-                            age = (int) st.tr[0].age;
+                            age = st.tr[0].age;
                             LoadTreegrossStand lts = new LoadTreegrossStand();
                             lts.saveStand(con, st, id, age, 0, ekl);
                             lts.saveSpecies(con, st, id, age, 0, ekl);
@@ -1046,7 +1021,7 @@ public class DBAccessDialog extends JDialog {
                                 treatment2.executeManager2(st);
                                 st.executeMortality();
                                 st.descspecies();
-                                age = (int) st.tr[0].age;
+                                age = st.tr[0].age;
 
                                 lts.saveStand(con, st, id, age, 1, ekl);
                                 lts.saveSpecies(con, st, id, age, 1, ekl);
@@ -1063,10 +1038,6 @@ public class DBAccessDialog extends JDialog {
         }
         dispose();
     }//GEN-LAST:event_simulationButtonActionPerformed
-
-    private void updateViewCheckboxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateViewCheckboxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_updateViewCheckboxActionPerformed
  
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox beginCheckBox;

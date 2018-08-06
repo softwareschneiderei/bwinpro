@@ -104,7 +104,7 @@ public enum TreatmentTableColumn {
         return row;
     }
 
-    public Object cellValueOf(Species sp) { return null; }
+    protected abstract Object cellValueOf(Species sp);
  
     @Override
     public String toString() {

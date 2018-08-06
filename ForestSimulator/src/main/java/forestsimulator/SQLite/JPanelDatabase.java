@@ -185,12 +185,6 @@ public class JPanelDatabase extends JPanel {
             }
         });
         jPanel6.add(navigateBackButton);
-
-        searchTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchTextFieldActionPerformed(evt);
-            }
-        });
         jPanel6.add(searchTextField);
 
         searchButton.setText(bundle.getString("JPanelDatabase.searchButton.text")); // NOI18N
@@ -437,10 +431,6 @@ public class JPanelDatabase extends JPanel {
             dispStandID();
         } 
     }//GEN-LAST:event_searchButtonActionPerformed
-
-    private void searchTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_searchTextFieldActionPerformed
 
     private void dispStandID(){
         try (Connection cn = DriverManager.getConnection("jdbc:sqlite:" + dir, "", "");

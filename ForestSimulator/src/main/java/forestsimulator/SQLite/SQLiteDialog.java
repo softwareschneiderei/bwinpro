@@ -22,9 +22,7 @@ public class SQLiteDialog extends JDialog {
     JPanelNutzungsplaner jp = null;
     JPanelDatabase jpd = null;
     JPanelPlots jpp = null;
-    /**
-     * Creates new form SQLiteDialog
-     */
+
     public SQLiteDialog(Frame parent, boolean modal, Stand St, File dataDirectory) throws IOException {
         super(parent, modal);
         initComponents();
@@ -73,16 +71,12 @@ public class SQLiteDialog extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
-        // TODO add your handling code here:
         if (jTabbedPane1.getSelectedIndex()==0) st=jpd.createStand();
         if (jTabbedPane1.getSelectedIndex()==1) st=jpp.createStand();
         if (jTabbedPane1.getSelectedIndex()==2) st=jp.createStand();
         dispose();
     }//GEN-LAST:event_loadButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

@@ -72,9 +72,6 @@
               <Dimension value="[232, 20]"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="standNameTextFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="areaLabel">
           <Properties>
@@ -95,9 +92,6 @@
               <Dimension value="[42, 20]"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="areaTextFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="findButton">
           <Properties>

@@ -196,9 +196,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="10" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="yearsTextFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="biUpdateButton">
           <Properties>
@@ -281,9 +278,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="1" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="plotNumberTextFieldActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -474,9 +468,6 @@
               <ResourceString bundle="forestsimulator/gui.properties" key="DBAccessDialog.updateViewCheckbox.text" replaceFormat="java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;)"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="updateViewCheckboxActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>

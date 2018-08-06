@@ -297,9 +297,6 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="gradientTextField">
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="gradientTextFieldActionPerformed"/>
-                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="locationCodeLabel">
                       <Properties>
@@ -309,9 +306,6 @@
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="locationCodeTextField">
-                      <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="locationCodeTextFieldActionPerformed"/>
-                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

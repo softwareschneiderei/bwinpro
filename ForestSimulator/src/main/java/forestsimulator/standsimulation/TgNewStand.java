@@ -139,49 +139,42 @@ public class TgNewStand extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createAreaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAreaButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println("Create area"+tf0.getText());
-                 st.newStand();
-                 st.ncpnt=0;
-                 st.nspecies=0;
-                 st.ntrees=0;
-                 st.setSize(Double.parseDouble(tf0.getText()));
-                 st.standname=standNameTextField.getText();
-                 st.year=2008;
-                 
-                 if (areaShapeComboBox.getSelectedIndex()==0)
-                 {
-                   double len = Math.sqrt(10000*st.size);  
-                   st.addcornerpoint("ECK1",0.0,0.0,0.0);
-                   st.addcornerpoint("ECK2",0.0,len,0.0);
-                   st.addcornerpoint("ECK3",len,len,0.0);
-                   st.addcornerpoint("ECK4",len,0.0,0.0);
-                   st.center.no="polygon";
-                   st.center.x =len/2.0;
-                   st.center.y =len/2.0;
-                   st.center.z =0.0;
+        System.out.println("Create area" + tf0.getText());
+        st.newStand();
+        st.ncpnt = 0;
+        st.nspecies = 0;
+        st.ntrees = 0;
+        st.setSize(Double.parseDouble(tf0.getText()));
+        st.standname = standNameTextField.getText();
+        st.year = 2008;
 
-                 } 
-                 
-                 else
-                 {  
-                     double xp=0.0; double yp=0.0; double radius=0.0;
-                     radius=Math.sqrt(10000.0*st.size/Math.PI);
-                     for (int i=0;i<18;i++)
-                     { 
-                         xp=radius+Math.sin(Math.PI*i*20.0/180.0)*radius;
-                         yp=radius+Math.cos(Math.PI*i*20.0/180.0)*radius;
-                         //System.out.println(xp+" "+yp);
-                         st.addcornerpoint("ECKP"+i,xp,yp,0.0);
-                         st.center.no="circle";
-                         st.center.x =radius;
-                         st.center.y =radius;
-                         st.center.z =0.0;
-                     }
-                 } 
-                 
-                 frame.updatetp(false);
-                 dispose();
+        if (areaShapeComboBox.getSelectedIndex() == 0) {
+            double len = Math.sqrt(10000 * st.size);
+            st.addcornerpoint("ECK1", 0.0, 0.0, 0.0);
+            st.addcornerpoint("ECK2", 0.0, len, 0.0);
+            st.addcornerpoint("ECK3", len, len, 0.0);
+            st.addcornerpoint("ECK4", len, 0.0, 0.0);
+            st.center.no = "polygon";
+            st.center.x = len / 2.0;
+            st.center.y = len / 2.0;
+            st.center.z = 0.0;
+
+        } else {
+            double radius = Math.sqrt(10000.0 * st.size / Math.PI);
+            for (int i = 0; i < 18; i++) {
+                double xp = radius + Math.sin(Math.PI * i * 20.0 / 180.0) * radius;
+                double yp = radius + Math.cos(Math.PI * i * 20.0 / 180.0) * radius;
+                //System.out.println(xp+" "+yp);
+                st.addcornerpoint("ECKP" + i, xp, yp, 0.0);
+                st.center.no = "circle";
+                st.center.x = radius;
+                st.center.y = radius;
+                st.center.z = 0.0;
+            }
+        }
+
+        frame.updatetp(false);
+        dispose();
     }//GEN-LAST:event_createAreaButtonActionPerformed
     
     /**

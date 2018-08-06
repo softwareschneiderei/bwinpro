@@ -399,22 +399,10 @@ public class EditorPanel extends JPanel {
 
         gradientLabel.setText(bundle.getString("EditorPanel.gradientLabel.text")); // NOI18N
         jPanel12.add(gradientLabel);
-
-        gradientTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                gradientTextFieldActionPerformed(evt);
-            }
-        });
         jPanel12.add(gradientTextField);
 
         locationCodeLabel.setText(bundle.getString("EditorPanel.locationCodeLabel.text")); // NOI18N
         jPanel12.add(locationCodeLabel);
-
-        locationCodeTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                locationCodeTextFieldActionPerformed(evt);
-            }
-        });
         jPanel12.add(locationCodeTextField);
 
         jPanel1.add(jPanel12);
@@ -599,14 +587,6 @@ public class EditorPanel extends JPanel {
             }
         }
     }//GEN-LAST:event_deleteCornerPointButtonActionPerformed
-
-    private void gradientTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gradientTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_gradientTextFieldActionPerformed
-
-    private void locationCodeTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationCodeTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_locationCodeTextFieldActionPerformed
 
     private void clearAll() {
         standNameTextField.setText("");

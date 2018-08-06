@@ -121,11 +121,6 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
 
         standNameTextField.setText(bundle.getString("JPanelNutzungsplaner.standNameTextField.text")); // NOI18N
         standNameTextField.setPreferredSize(new java.awt.Dimension(232, 20));
-        standNameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                standNameTextFieldActionPerformed(evt);
-            }
-        });
         jPanel1.add(standNameTextField);
 
         areaLabel.setText(bundle.getString("JPanelNutzungsplaner.areaLabel.text")); // NOI18N
@@ -134,11 +129,6 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         areaTextField.setText(bundle.getString("JPanelNutzungsplaner.areaTextField.text")); // NOI18N
         areaTextField.setMinimumSize(new java.awt.Dimension(26, 20));
         areaTextField.setPreferredSize(new java.awt.Dimension(42, 20));
-        areaTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                areaTextFieldActionPerformed(evt);
-            }
-        });
         jPanel1.add(areaTextField);
 
         findButton.setText(bundle.getString("JPanelNutzungsplaner.findButton.text")); // NOI18N
@@ -172,10 +162,6 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
 
         add(jScrollPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void standNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_standNameTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_standNameTextFieldActionPerformed
 
     private void findButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_findButtonActionPerformed
         // In der Datenbank nach Namen suchen und Tabelle fuellen 
@@ -216,7 +202,6 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
     }//GEN-LAST:event_backButtonActionPerformed
 
     private void changeDatabaseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeDatabaseButtonActionPerformed
-        // TODO add your handling code here:
         JFileChooser fc = new JFileChooser();
         DBFileFilter dbFilter = new DBFileFilter();
         dbFilter.setExtension("db");
@@ -235,10 +220,6 @@ public class JPanelNutzungsplaner extends javax.swing.JPanel {
         catch (Exception eio){System.out.println(eio);}  
         
     }//GEN-LAST:event_changeDatabaseButtonActionPerformed
-
-    private void areaTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_areaTextFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_areaTextFieldActionPerformed
 
     private double setdbh(int code, double a, double h){
         double dgx = 0.0;
