@@ -376,7 +376,7 @@ public class LoadTreegrossStand {
 
     private ThinningModeName thinningModeNameFrom(final ResultSet rs) {
         try {
-            return ThinningModeName.valueOf(rs.getString("ThinningMode"));
+            return ThinningModeName.fromName(rs.getString("ThinningMode"));
         } catch (SQLException | IllegalArgumentException ex) {
             logger.log(Level.SEVERE, "Could not load thinning mode from database. Using default.", ex);
             return ThinningModeName.HEIGHT;
