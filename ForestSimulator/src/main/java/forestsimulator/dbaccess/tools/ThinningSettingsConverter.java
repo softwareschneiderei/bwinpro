@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 
+//NOSONAR
 public class ThinningSettingsConverter {
     
     public static void main(String[] args) throws SQLException {

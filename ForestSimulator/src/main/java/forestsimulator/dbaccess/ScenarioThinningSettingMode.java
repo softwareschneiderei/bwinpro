@@ -20,7 +20,7 @@ public enum ScenarioThinningSettingMode {
     
     private final ThinningModeName name;
 
-    private ScenarioThinningSettingMode(ThinningModeName name) {
+    private ScenarioThinningSettingMode(ThinningModeName name) { //NOSONAR, false positive, enum uses this constructor!
         this.name = name;
     }
     

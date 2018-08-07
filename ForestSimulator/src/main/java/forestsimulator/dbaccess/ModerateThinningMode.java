@@ -22,7 +22,7 @@ public enum ModerateThinningMode {
     
     private final ThinningModeName name;
 
-    private ModerateThinningMode(ThinningModeName name) {
+    private ModerateThinningMode(ThinningModeName name) { //NOSONAR, false positive, enum uses this constructor!
         this.name = name;
     }
     
