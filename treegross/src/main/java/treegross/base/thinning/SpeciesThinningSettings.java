@@ -70,9 +70,7 @@ public class SpeciesThinningSettings {
     }
     
     public ThinningType typeFor(Tree referenceTree) {
-        return typeRanges.stream()
-                .map(range -> range.factorFor(attributeExtractor.apply(referenceTree)))
-                .filter(Optional::isPresent).findFirst().get().orElse(ThinningType.SingleTreeSelection);
+        return firstFactorFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
     }
 
     /**
@@ -82,11 +80,11 @@ public class SpeciesThinningSettings {
      * @return intensity for the given tree
      */
     public double intensityFor(Tree referenceTree) {
-        return firstFactorFoundFor(referenceTree).orElse(intensityDefault);
+        return firstFactorFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
     }
 
-    private Optional<Double> firstFactorFoundFor(Tree tree) {
-        return intensityRanges.stream()
+    private <T> Optional<T> firstFactorFoundFor(List<ThinningValueRange<T>> ranges, Tree tree) {
+        return ranges.stream()
                 .map(range -> range.factorFor(attributeExtractor.apply(tree)))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
