@@ -10,7 +10,7 @@ import static java.util.stream.Collectors.toList;
 
 public class ThinningDefinitionParser<V> {
     public static final ThinningDefinitionParser<Double> thinningFactorParser = new ThinningDefinitionParser<>(s -> parseDouble(s));
-    public static final ThinningDefinitionParser<ThinningType> thinningTypeParser = new ThinningDefinitionParser<>(s -> ThinningType.forValue(0));
+    public static final ThinningDefinitionParser<ThinningType> thinningTypeParser = new ThinningDefinitionParser<>(s -> ThinningType.forShortName(s));
 
     private final Function<String, V> valueParser;
     

@@ -2,34 +2,33 @@ package treegross.base.thinning;
 
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
-import treegross.base.TreatmentRuleStand;
 
 public enum ThinningType {
-    SingleTreeSelection("ThinningType.singleTreeSelection", 0) {
+    SingleTreeSelection("ThinningType.singleTreeSelection", "sts") {
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new SingleTreeSelectionThinner(cropTreesOnly, volumeAlreadyOut);
         }
     },
-    ThinningFromAbove("ThinningType.thinningFromAbove", 1) {
+    ThinningFromAbove("ThinningType.thinningFromAbove", "tfa") {
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new FromAboveThinner(volumeAlreadyOut);
         }
     },
-    ThinningFromBelow("ThinningType.thinningFromBelow", 2) {
+    ThinningFromBelow("ThinningType.thinningFromBelow", "tfb") {
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new FromBelowThinner(volumeAlreadyOut);
         }
     },
-    ThinningQD("ThinningType.thinningQD", 3) {
+    ThinningQD("ThinningType.thinningQD", "qd") {
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new QDThinner(cropTreesOnly);
         }
     },
-    ClearCut("ThinningType.clearCut", 9) {
+    ClearCut("ThinningType.clearCut", "cc") {
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             throw new UnsupportedOperationException("Not supported yet.");
@@ -39,23 +38,23 @@ public enum ThinningType {
     private static final ResourceBundle bundle = ResourceBundle.getBundle("treegross/treegross");
 
     private final String resourceKey;
-    private final int value;
+    private final String value;
      
-    private ThinningType(String resourceKey, int value) {
+    private ThinningType(String resourceKey, String value) {
         this.resourceKey = resourceKey;
         this.value = value;
     }
     
-    public static ThinningType forValue(int typeNumber) {
+    public static ThinningType forShortName(String shortName) {
         for (ThinningType type : values()) {
-            if (type.value() == typeNumber) {
+            if (type.shortName().equals(shortName)) {
                 return type;
             }
         }
-        throw new NoSuchElementException("No thinning type found for number:" + typeNumber);
+        throw new NoSuchElementException("No thinning type found for short name:" + shortName);
     }
 
-    public int value() {
+    public String shortName() {
         return value;
     }
     

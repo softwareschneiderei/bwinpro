@@ -353,16 +353,16 @@ public class LoadTreegrossStand {
                     int target = rs.getInt("targetDBH");
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
-                    int thinningType = rs.getInt("ThinningType");
-                    String moderateThinning = rs.getString("ModerateThinning");
                     ThinningModeName thinningModeName = thinningModeNameFrom(rs);
+                    ThinningType thinningType = ThinningType.forShortName(rs.getString("ThinningType"));
+                    String moderateThinning = rs.getString("ModerateThinning");
                     String thinningIntensity = rs.getString("ThinningIntensity");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
-                        species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, ThinningType.forValue(thinningType), thinningIntensity);
+                        species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, thinningType, thinningIntensity);
                         species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeName, moderateThinning);
                     });
                 }
