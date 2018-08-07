@@ -118,6 +118,7 @@ public class TreatmentRuleStand {
     /**
      * release crop trees species dependent
      */
+    // FIXME: currently unused in simulation
     public boolean releaseCropTreesSpeciesDependent;
     /**
      * cut competing crop trees

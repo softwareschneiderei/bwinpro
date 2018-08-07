@@ -119,7 +119,7 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             Tree neighbor = st.tr[cropTree.neighbor[i]];
             if (neighbor.d > 7
                     && neighbor.isLiving()
-                    && (st.trule.cutCompetingCropTrees || !neighbor.crop)
+                    && !neighbor.crop
                     && !neighbor.habitat) {
                 double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
                 double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)

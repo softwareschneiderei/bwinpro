@@ -7,13 +7,6 @@ import treegross.base.TreatmentRuleStand;
 public enum ThinningType {
     SingleTreeSelection("ThinningType.singleTreeSelection", 0) {
         @Override
-        public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
-            super.applyTo(rules, cropTreesOnly);
-            rules.cutCompetingCropTrees = true;
-            rules.releaseCropTreesSpeciesDependent = true;
-        }
-
-        @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new SingleTreeSelectionThinner(cropTreesOnly, volumeAlreadyOut);
         }
@@ -31,13 +24,6 @@ public enum ThinningType {
         }
     },
     ThinningQD("ThinningType.thinningQD", 3) {
-        @Override
-        public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
-            super.applyTo(rules, cropTreesOnly);
-            rules.cutCompetingCropTrees = true;
-            rules.releaseCropTreesSpeciesDependent = true;
-        }
-
         @Override
         public Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut) {
             return new QDThinner(cropTreesOnly);
@@ -75,10 +61,6 @@ public enum ThinningType {
     
     public abstract Thinner thinner(boolean cropTreesOnly, double volumeAlreadyOut);
     
-    public void applyTo(TreatmentRuleStand rules, boolean cropTreesOnly) {
-        
-    }
- 
     @Override
     public String toString() {
         return bundle.getString(resourceKey);
