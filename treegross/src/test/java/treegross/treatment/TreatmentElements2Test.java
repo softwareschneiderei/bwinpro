@@ -10,7 +10,6 @@ import treegross.base.Species;
 import treegross.base.TGTextFunction;
 import treegross.base.thinning.HeightBasedThinning;
 import treegross.base.thinning.SpeciesThinningSettings;
-import treegross.base.thinning.ThinningType;
 import treegross.base.thinning.ThinningValueRange;
 
 public class TreatmentElements2Test {
@@ -56,6 +55,6 @@ public class TreatmentElements2Test {
     }
 
     private static SpeciesThinningSettings thinningSettings() {
-        return SpeciesThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, 1);
+        return SpeciesThinningSettings.heightBasedScenarioSetting("10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0", 1);
     }
 }

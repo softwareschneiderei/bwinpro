@@ -34,29 +34,22 @@ public enum TreatmentTableColumn {
             return sp.thinningSettings().getMode();
         }
     },
-    ThinningHeight("TreatmentTableColumn.thinningHeight") {
-        @Override
-        public Object cellValueOf(Species sp) {
-            return integerFormat().format(sp.trule.minCropTreeHeight);
-        }
-    },
     ThinningType("TreatmentTableColumn.thinningType") {
         @Override
-        protected void setCellEditor(TableColumnModel columnModel) {
-            columnModel.getColumn(ordinal()).setCellEditor(new DefaultCellEditor(new JComboBox(treegross.base.thinning.ThinningType.values())));
-        }
-        
-        @Override
         public Object cellValueOf(Species sp) {
-            // TODO: change this to dynamic thinning type with a thinning definition
-            return sp.thinningSettings().type();
+            return sp.thinningSettings().typeDefinition();
         }
-        
     },
     ThinningIntensity("TreatmentTableColumn.thinningIntensity") {
         @Override
         public Object cellValueOf(Species sp) {
             return sp.thinningSettings().intensityDefinition();
+        }
+    },
+    ThinningHeight("TreatmentTableColumn.thinningHeight") {
+        @Override
+        public Object cellValueOf(Species sp) {
+            return integerFormat().format(sp.trule.minCropTreeHeight);
         }
     },
     TargetD("TreatmentTableColumn.targetD") {

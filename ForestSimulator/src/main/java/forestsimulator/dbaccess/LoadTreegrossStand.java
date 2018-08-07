@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
-import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 
 /**
@@ -354,7 +353,7 @@ public class LoadTreegrossStand {
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
                     ThinningModeName thinningModeName = thinningModeNameFrom(rs);
-                    ThinningType thinningType = ThinningType.forShortName(rs.getString("ThinningType"));
+                    String thinningType = rs.getString("ThinningType");
                     String moderateThinning = rs.getString("ModerateThinning");
                     String thinningIntensity = rs.getString("ThinningIntensity");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {

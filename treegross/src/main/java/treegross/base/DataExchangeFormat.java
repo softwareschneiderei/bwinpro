@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static treegross.base.SiteIndex.si;
 import treegross.base.thinning.SpeciesThinningSettings;
-import treegross.base.thinning.ThinningType;
 import treegross.random.RandomNumber;
 
 /**
@@ -503,7 +502,9 @@ public class DataExchangeFormat {
                     if (st.sp[i].code == codeSp[j]) {
                         st.sp[i].trule.targetDiameter = tdSp[j];
                         // TODO: read thinning type from somewhere
-                        st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, tISp[j]);
+                        st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(
+                                "10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
+                                tISp[j]);
                         st.sp[i].trule.targetDiameterLayer = tdlSp[j];
                         st.sp[i].trule.targetAgeLayer = talSp[j];
                         st.sp[i].trule.targetCrownPercent = tcpSp[j];
@@ -770,7 +771,9 @@ public class DataExchangeFormat {
                         st.sp[i].trule.targetCrownPercent = tcpSp[j];
                         st.sp[i].trule.minCropTreeHeight = cthSp[j];
                         st.sp[i].trule.maxAge = maxAgeSp[j];
-                        st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, thIntensSp[j]);
+                        st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(
+                                "10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
+                                thIntensSp[j]);
                     }
 
                 }
@@ -874,7 +877,9 @@ public class DataExchangeFormat {
             s = in.readLine();
             stx = new StringTokenizer(s, delim);
             for (int i = 0; i < st.nspecies; i++) {
-                st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(ThinningType.SingleTreeSelection, Double.parseDouble(stx.nextToken()));
+                st.sp[i].trule.thinningSettings = SpeciesThinningSettings.heightBasedScenarioSetting(
+                        "10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
+                        Double.parseDouble(stx.nextToken()));
             }
 
             s = in.readLine();

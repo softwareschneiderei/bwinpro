@@ -548,7 +548,7 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
                 s.trule.numberCropTreesWanted = (int) (Integer.parseInt((String) (speciesTable.getValueAt(row, CropTrees.ordinal()))) * s.trule.targetCrownPercent / 100.0);
                 s.trule.thinningSettings = s.thinningSettings().with(
                         (ThinningModeName) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningMode.ordinal()),
-                        (ThinningType) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningType.ordinal()),
+                        (String) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningType.ordinal()),
                         (String) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningIntensity.ordinal())
                 );
             });

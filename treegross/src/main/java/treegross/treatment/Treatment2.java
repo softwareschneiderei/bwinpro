@@ -18,8 +18,11 @@
  */
 package treegross.treatment;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import treegross.base.Species;
 import treegross.base.Stand;
+import treegross.base.thinning.ThinningType;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -27,6 +30,7 @@ import treegross.base.Stand;
  * http://webdoc.sub.gwdg.de/diss/2006/duda/
  */
 public class Treatment2 {
+    private static final Logger logger = Logger.getLogger(Treatment2.class.getName());
 
     public static final int HT_TARGET_DIAMETER = 0;
     /*Realitic version of target diameter harvesting process*/
@@ -158,7 +162,9 @@ public class Treatment2 {
 
             // species-specific thinning
             for (Species species : st.species()) {
-                species.trule.thinningSettings.type().thinner(st.trule.cropTreesOnly, te.vout).thin(st, species);
+                final ThinningType thinningType = species.trule.thinningSettings.typeFor(species.referenceTree());
+                logger.log(Level.INFO, "Thinning {0} using {1}", new Object[]{species.code, thinningType.shortName()});
+                thinningType.thinner(st.trule.cropTreesOnly, te.vout).thin(st, species);
             }
             
             //if thinning amount was not high enough: set thinned trees alive
