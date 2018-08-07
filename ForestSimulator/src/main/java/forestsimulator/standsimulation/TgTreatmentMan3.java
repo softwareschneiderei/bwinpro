@@ -23,7 +23,6 @@ import static forestsimulator.standsimulation.TreatmentTableColumn.CropTrees;
 import static forestsimulator.standsimulation.TreatmentTableColumn.Mixture;
 import static forestsimulator.standsimulation.TreatmentTableColumn.TargetD;
 import static forestsimulator.standsimulation.TreatmentTableColumn.ThinningHeight;
-import static forestsimulator.standsimulation.TreatmentTableColumn.ThinningMode;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,7 +41,6 @@ import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
 import treegross.base.thinning.ThinningModeName;
-import treegross.base.thinning.ThinningType;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.random.RandomNumber;
 
@@ -473,7 +471,7 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
         for (Species sp : st.species()) {
             speciesData.addRow(TreatmentTableColumn.rowFor(sp).toArray());
             Double flant = Math.round(sp.trule.targetCrownPercent / (10.0)) / 10.0;
-            pflArten = pflArten + sp.code + "[" + flant.toString() + "];";
+            pflArten = new StringBuilder(pflArten).append(sp.code).append("[").append(flant).append("];").toString();
         }
         if (st.status == 0) {
             speciesCodeTextField.setText(pflArten);

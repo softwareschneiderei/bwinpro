@@ -69,7 +69,7 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         do {
 // update competition overlap for crop trees
         // TODO: http://issuetracker.intranet:20002/browse/BWIN-63 has this to be species specific?
-            st.forTreesMatching(isCropTreeOf(species), tree -> tree.updateCompetition());
+            st.forTreesMatching(isCropTreeOf(species), Tree::updateCompetition);
 // find crop with most competition, defined as that tree with greates ratio of
 // actual c66xy divided by maximum c66
             int indexOfCroptree = -9;
