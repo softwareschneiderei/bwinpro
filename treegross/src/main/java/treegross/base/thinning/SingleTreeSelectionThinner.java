@@ -1,5 +1,6 @@
 package treegross.base.thinning;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 import treegross.base.OutType;
 import treegross.base.Species;
@@ -67,48 +68,50 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         }
         boolean continueThinning = true;
         do {
-// update competition overlap for crop trees
-        // TODO: http://issuetracker.intranet:20002/browse/BWIN-63 has this to be species specific?
+            // update competition overlap for crop trees
+            // TODO: http://issuetracker.intranet:20002/browse/BWIN-63 has this to be species specific?
             st.forTreesMatching(isCropTreeOf(species), Tree::updateCompetition);
-// find crop with most competition, defined as that tree with greates ratio of
-// actual c66xy divided by maximum c66
-            int indexOfCroptree = -9;
-            double maxCompetition = -99999.9;
-            for (int i = 0; i < st.ntrees; i++) {
-                final Tree tree = st.tr[i];
-                if (isCropTreeOf(species).test(tree)) {
-                    double c66Ratio = TreatmentElements2.calculateC66Ratio(tree, species.thinningIntensity());
-                    // remember tree if c66Ratio is greater than maxCompetition
-                    if (c66Ratio > maxCompetition) {
-                        indexOfCroptree = i;
-                        maxCompetition = c66Ratio;
-                    }
-                }
+            Optional<Tree> cropTree = findCropTreeWithMostCompetition(st, species);
+            // release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
+            // crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
+            // into the limit of twice the crown radius of the crop tree size
+            if (!cropTree.isPresent()) {
+                break;
             }
-// release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
-// crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
-// into the limit of twice the crown radius of the crop tree size
-//
-// Find neighbor who comes closest
-            if (indexOfCroptree >= 0) {
-                int merk = findClosestNeighbor(st, st.tr[indexOfCroptree], intensity);
-                // if merk > 9 then cut tree else stop crop tree release
-                if (merk == -9) {
-                    continueThinning = false;
-                } else {
-                    Tree competitor = st.tr[merk];
-                    competitor.takeOut(st.year, OutType.THINNED);
-                    thinned += (competitor.fac * competitor.v);
-                    maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
-                    if (maxBasalAreaOut <= 0.0) {
-                        continueThinning = false;
-                    }
-                }
-            } else {
+            // Find neighbor who comes closest
+            int merk = findClosestNeighbor(st, cropTree.get(), intensity);
+            // if merk > 9 then cut tree else stop crop tree release
+            if (merk == -9) {
                 continueThinning = false;
+            } else {
+                Tree competitor = st.tr[merk];
+                competitor.takeOut(st.year, OutType.THINNED);
+                thinned += (competitor.fac * competitor.v);
+                maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
+                if (maxBasalAreaOut <= 0.0) {
+                    continueThinning = false;
+                }
             }
         } //stop if max thinning amount is reached or all competitors are taken out
         while (thinned < vmaxthinning && continueThinning);
+    }
+
+    private Optional<Tree> findCropTreeWithMostCompetition(Stand st, Species species) {
+        // find crop with most competition, defined as that tree with greates ratio of
+        // actual c66xy divided by maximum c66
+        Optional<Tree> cropTree = Optional.empty();
+        double maxCompetition = -Double.MAX_VALUE;
+        for (Tree tree : st.trees()) {
+            if (isCropTreeOf(species).test(tree)) {
+                double c66Ratio = TreatmentElements2.calculateC66Ratio(tree, species.thinningIntensity());
+                // remember tree if c66Ratio is greater than maxCompetition
+                if (c66Ratio > maxCompetition) {
+                    cropTree = Optional.of(tree);
+                    maxCompetition = c66Ratio;
+                }
+            }
+        }
+        return cropTree;
     }
 
     private int findClosestNeighbor(Stand st, Tree cropTree, double intensity) {

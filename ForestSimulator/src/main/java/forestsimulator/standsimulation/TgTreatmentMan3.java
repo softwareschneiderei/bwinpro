@@ -552,12 +552,12 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
             });
         }
         double sum = 0.0;
-        for (int i = 0; i < st.nspecies; i++) {
-            sum += st.sp[i].trule.targetCrownPercent;
+        for (Species sp : st.species()) {
+            sum += sp.trule.targetCrownPercent;
         }
         // TODO: what to do if sum is 0?
-        for (int i = 0; i < st.nspecies; i++) {
-            st.sp[i].trule.targetCrownPercent = 100.0 * st.sp[i].trule.targetCrownPercent / sum; //NOSONAR
+        for (Species sp : st.species()) {
+            sp.trule.targetCrownPercent = 100.0 * sp.trule.targetCrownPercent / sum; //NOSONAR
         }
         loadTable();
     }

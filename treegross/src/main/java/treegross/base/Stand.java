@@ -1601,12 +1601,12 @@ public class Stand {
     public void selectNeighborTrees() {
         double eA[] = null;
         if (ntrees > 0) {
-            eA = new double[tr[0].maxNeighbor];
+            eA = new double[Tree.maxNeighbor];
         }
         for (int i = 0; i < ntrees; i++) {
             //if (tr[i].no.indexOf("413") >-1)
             if (tr[i].isLiving() || tr[i].out == year) {
-                for (int k = 0; k < tr[i].maxNeighbor; k++) {
+                for (int k = 0; k < Tree.maxNeighbor; k++) {
                     eA[k] = 9999.9;
                     tr[i].neighbor[k] = -9;
                 }
@@ -1621,13 +1621,13 @@ public class Stand {
 
                         if (entf < minimumRadius && tr[j].h > tr[i].cb) {
                             int merk = -9; // hier misnus 9
-                            for (int k = 0; k < tr[i].maxNeighbor; k++) {
+                            for (int k = 0; k < Tree.maxNeighbor; k++) {
                                 if (eA[k] > entf && merk < 0) {
                                     merk = k;
                                 }
                             }
                             if (merk > -1) { // hier -1??
-                                for (int k = tr[i].maxNeighbor - 2; k >= merk; k--) {
+                                for (int k = Tree.maxNeighbor - 2; k >= merk; k--) {
                                     tr[i].neighbor[k + 1] = tr[i].neighbor[k];
                                     eA[k + 1] = eA[k];
                                 }
@@ -1638,7 +1638,7 @@ public class Stand {
                     }
                 }
                 tr[i].nNeighbor = 0;
-                for (int k = 0; k < tr[i].maxNeighbor; k++) {
+                for (int k = 0; k < Tree.maxNeighbor; k++) {
                     if (eA[k] < 9999.0) {
                         tr[i].nNeighbor++;
                     }

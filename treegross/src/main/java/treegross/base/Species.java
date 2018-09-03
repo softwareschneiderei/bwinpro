@@ -398,15 +398,6 @@ public class Species {
         }
         return totalPrice;
     }
-    
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("species ").append(code).append(" ageh100:").append(h100age).append(" dg:")
-                .append(dg).append(" hg:").append(hg).append(" d100:").append(d100)
-                .append(" G:").append(gha);
-        return sb.toString();
-    }
 
     public Tree referenceTree() {
         Tree atree = new Tree();
@@ -428,5 +419,14 @@ public class Species {
 
     public double thinningIntensity() {
         return trule.thinningSettings.intensityFor(referenceTree());
+    }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("species ").append(code).append(" ageh100:").append(h100age).append(" dg:")
+                .append(dg).append(" hg:").append(hg).append(" d100:").append(d100)
+                .append(" G:").append(gha);
+        return sb.toString();
     }
 }
