@@ -54,7 +54,6 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         // 3. Find tree with the highest differenz in overlap - tolerable overlap
         // 4. Remove for the crop tree of 3.) the tree with the greates overlap area
         // 5. Start with 1. again
-
         double intensity = 2.0 - species.thinningIntensity();
         if (intensity == 0.0) {
             intensity = 1.0;
@@ -66,10 +65,8 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         if (maxBasalAreaOut <= 0.0) {
             return;
         }
-        boolean continueThinning = true;
         do {
             // update competition overlap for crop trees
-            // TODO: http://issuetracker.intranet:20002/browse/BWIN-63 has this to be species specific?
             st.forTreesMatching(isCropTreeOf(species), Tree::updateCompetition);
             Optional<Tree> cropTree = findCropTreeWithMostCompetition(st, species);
             // release the crop tree with indexOfCropTree and take out neighbor, which comes closest with the
@@ -79,21 +76,18 @@ public class SingleTreeSelectionThinner extends AreaThinner {
                 break;
             }
             // Find neighbor who comes closest
-            int merk = findClosestNeighbor(st, cropTree.get(), intensity);
-            // if merk > 9 then cut tree else stop crop tree release
-            if (merk == -9) {
-                continueThinning = false;
-            } else {
-                Tree competitor = st.tr[merk];
-                competitor.takeOut(st.year, OutType.THINNED);
-                thinned += (competitor.fac * competitor.v);
-                maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
-                if (maxBasalAreaOut <= 0.0) {
-                    continueThinning = false;
-                }
+            Optional<Tree> closestNeighbor = findClosestNeighbor(st, cropTree.get(), intensity);
+            if (!closestNeighbor.isPresent()) {
+                break;
             }
-        } //stop if max thinning amount is reached or all competitors are taken out
-        while (thinned < vmaxthinning && continueThinning);
+            Tree competitor = closestNeighbor.get();
+            competitor.takeOut(st.year, OutType.THINNED);
+            thinned += (competitor.fac * competitor.v);
+            maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
+            if (maxBasalAreaOut <= 0.0) {
+                break;
+            }
+        } while (thinned < vmaxthinning); //stop if max thinning amount is reached
     }
 
     private Optional<Tree> findCropTreeWithMostCompetition(Stand st, Species species) {
@@ -114,9 +108,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         return cropTree;
     }
 
-    private int findClosestNeighbor(Stand st, Tree cropTree, double intensity) {
+    private Optional<Tree> findClosestNeighbor(Stand st, Tree cropTree, double intensity) {
         double dist = 9999.0;
-        int merk = -9;
+        Optional<Tree> closestNeighbor = Optional.empty();
         double h66 = cropTree.cb;
         for (int i = 0; i < cropTree.nNeighbor; i++) {
             Tree neighbor = st.tr[cropTree.neighbor[i]];
@@ -128,12 +122,12 @@ public class SingleTreeSelectionThinner extends AreaThinner {
                 double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
                         + Math.pow(cropTree.y - neighbor.y, 2.0));
                 if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
-                    merk = cropTree.neighbor[i];
+                    closestNeighbor = Optional.of(neighbor);
                     dist = ent - radius;
                 }
             }
         }
-        return merk;
+        return closestNeighbor;
     }
     
     private Predicate<Tree> isCropTreeOf(Species species) {
