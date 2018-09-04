@@ -80,6 +80,8 @@ public class TreatmentRuleSpecies implements Cloneable {
      * maxOutVolume)!
      */
     public SpeciesThinningSettings thinningSettings;
+    
+    public String competitorTakeOutDefinition = "";
 
     /**
      * define numbers of treatment regulations

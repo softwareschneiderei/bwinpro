@@ -13,13 +13,13 @@ import treegross.base.thinning.ThinningModeName;
 public enum TreatmentTableColumn {
     Species("TreatmentTableColumn.species") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return sp.spDef.shortName;
         }
     },
     Code("TreatmentTableColumn.code") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return sp.code;
         }
     },
@@ -30,37 +30,37 @@ public enum TreatmentTableColumn {
         }
 
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return sp.thinningSettings().getMode();
         }
     },
     ThinningType("TreatmentTableColumn.thinningType") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return sp.thinningSettings().typeDefinition();
         }
     },
     ThinningIntensity("TreatmentTableColumn.thinningIntensity") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return sp.thinningSettings().intensityDefinition();
         }
     },
     ThinningHeight("TreatmentTableColumn.thinningHeight") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return integerFormat().format(sp.trule.minCropTreeHeight);
         }
     },
     TargetD("TreatmentTableColumn.targetD") {
         @Override
-        public Object cellValueOf(Species sp) {
-            return integerFormat().format(sp.trule.targetDiameter); //To change body of generated methods, choose Tools | Templates.
+        protected Object cellValueOf(Species sp) {
+            return integerFormat().format(sp.trule.targetDiameter);
         }
     },
     CropTrees("TreatmentTableColumn.croptrees") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             long nct = Math.round(sp.trule.numberCropTreesWanted / (sp.trule.targetCrownPercent / 100.0));
             if (nct <= 1) {
                 nct = sp.spDef.cropTreeNumber;
@@ -68,9 +68,15 @@ public enum TreatmentTableColumn {
             return String.valueOf(nct);
         }
     },
+    CompetitorCount("TreatmentTableColumn.competitorsCount") {
+        @Override
+        protected Object cellValueOf(Species sp) {
+            return sp.trule.competitorTakeOutDefinition;
+        }
+    },
     Mixture("TreatmentTableColumn.mixture") {
         @Override
-        public Object cellValueOf(Species sp) {
+        protected Object cellValueOf(Species sp) {
             return integerFormat().format(sp.trule.targetCrownPercent);
         }
     };

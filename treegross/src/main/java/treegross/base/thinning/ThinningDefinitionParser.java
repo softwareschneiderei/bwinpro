@@ -24,8 +24,8 @@ public class ThinningDefinitionParser<V> {
         }
         return Arrays.stream(thinningDefinition.split(";"))
                 .map(triple -> addThinningFactorRange(triple))
-                .filter(range -> range.isPresent())
-                .map(range -> range.get())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(toList());
     }
 

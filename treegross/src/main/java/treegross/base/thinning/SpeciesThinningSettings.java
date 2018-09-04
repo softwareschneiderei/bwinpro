@@ -1,48 +1,47 @@
 package treegross.base.thinning;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import treegross.base.Tree;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningFactorParser;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningTypeParser;
 
 public class SpeciesThinningSettings {
+    public static final SpeciesThinningSettings defaultSettings = SpeciesThinningSettings.heightBasedScenarioSetting(
+            "10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
+            "10.0/0.8/22.0;22.0/0.8/28.0;28.0/0.7/100.0");
     
     public static final SpeciesThinningSettings ageBasedScenarioSetting(String typeDefinition, double intensity) {
-        return new SpeciesThinningSettings(ThinningModeName.AGE, typeDefinition, "", intensity, tree -> Double.valueOf(tree.age));
+        return new SpeciesThinningSettings(ThinningModeName.AGE, typeDefinition, "", intensity);
     }
 
     public static final SpeciesThinningSettings ageBasedScenarioSetting(String typeDefinition, String intensityDefinition) {
-        return new SpeciesThinningSettings(ThinningModeName.AGE, typeDefinition, intensityDefinition, tree -> Double.valueOf(tree.age));
+        return new SpeciesThinningSettings(ThinningModeName.AGE, typeDefinition, intensityDefinition);
     }
 
     public static final SpeciesThinningSettings heightBasedScenarioSetting(String typeDefinition, double intensity) {
-        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, typeDefinition, "", intensity, tree -> tree.h);
+        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, typeDefinition, "", intensity);
     }
 
     public static final SpeciesThinningSettings heightBasedScenarioSetting(String typeDefinition, String intensityDefinition) {
-        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, typeDefinition, intensityDefinition, tree -> tree.h);
+        return new SpeciesThinningSettings(ThinningModeName.HEIGHT, typeDefinition, intensityDefinition);
     }
 
     private final List<ThinningValueRange<Double>> intensityRanges;
     private final List<ThinningValueRange<ThinningType>> typeRanges;
     private final ThinningModeName mode;
     private final double intensityDefault;
-    private final Function<Tree, Double> attributeExtractor;
     private final String intensityDefinition;
     private final String typeDefinition;
 
-    private SpeciesThinningSettings(ThinningModeName mode, String typeDefinition, String intensityDefinition, Function<Tree, Double> attributeExtractor) {
-        this(mode, typeDefinition, intensityDefinition, ModerateThinning.defaultThinningFactor, attributeExtractor);
+    private SpeciesThinningSettings(ThinningModeName mode, String typeDefinition, String intensityDefinition) {
+        this(mode, typeDefinition, intensityDefinition, ModerateThinning.defaultThinningFactor);
     }
 
     private SpeciesThinningSettings(
             ThinningModeName mode,
             String typeDefinition,
             String intensityDefinition,
-            double intensityDefault,
-            Function<Tree, Double> attributeExtractor) {
+            double intensityDefault) {
         super();
         this.mode = mode;
         this.intensityDefinition = intensityDefinition;
@@ -50,11 +49,14 @@ public class SpeciesThinningSettings {
         this.intensityRanges = thinningFactorParser.parseDefinition(intensityDefinition);
         this.typeRanges = thinningTypeParser.parseDefinition(typeDefinition);
         this.intensityDefault = intensityDefault;
-        this.attributeExtractor = attributeExtractor;
     }
 
     public SpeciesThinningSettings with(ThinningModeName thinningModeName, String newTypeDefinition, String newIntensityDefinition) {
-        return new SpeciesThinningSettings(thinningModeName, newTypeDefinition, newIntensityDefinition, intensityDefault, attributeExtractor);
+        return new SpeciesThinningSettings(
+                thinningModeName,
+                newTypeDefinition,
+                newIntensityDefinition,
+                intensityDefault);
     }
 
     public ThinningModeName getMode() {
@@ -70,7 +72,7 @@ public class SpeciesThinningSettings {
     }
     
     public ThinningType typeFor(Tree referenceTree) {
-        return firstFactorFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
+        return mode.firstFactorFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
     }
 
     /**
@@ -80,13 +82,7 @@ public class SpeciesThinningSettings {
      * @return intensity for the given tree
      */
     public double intensityFor(Tree referenceTree) {
-        return firstFactorFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
-    }
-
-    private <T> Optional<T> firstFactorFoundFor(List<ThinningValueRange<T>> ranges, Tree tree) {
-        return ranges.stream()
-                .map(range -> range.factorFor(attributeExtractor.apply(tree)))
-                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
+        return mode.firstFactorFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
     }
 
     @Override

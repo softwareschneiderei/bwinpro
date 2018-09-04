@@ -549,6 +549,7 @@ private void harvestingTypeComboBoxActionPerformed(java.awt.event.ActionEvent ev
                         (String) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningType.ordinal()),
                         (String) speciesTable.getValueAt(row, TreatmentTableColumn.ThinningIntensity.ordinal())
                 );
+                s.trule.competitorTakeOutDefinition = (String) speciesTable.getValueAt(row, TreatmentTableColumn.CompetitorCount.ordinal());
             });
         }
         double sum = 0.0;

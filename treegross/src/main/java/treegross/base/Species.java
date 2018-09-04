@@ -412,7 +412,7 @@ public class Species {
     
     public SpeciesThinningSettings thinningSettings() {
         if (trule.thinningSettings == null) {
-            return SpeciesThinningSettings.heightBasedScenarioSetting("10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0", "10.0/0.8/22.0;22.0/0.8/28.0;28.0/0.7/100.0");
+            return SpeciesThinningSettings.defaultSettings;
         }
         return trule.thinningSettings;
     }

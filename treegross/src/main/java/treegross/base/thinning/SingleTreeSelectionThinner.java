@@ -1,5 +1,6 @@
 package treegross.base.thinning;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import treegross.base.OutType;
@@ -13,6 +14,9 @@ import treegross.treatment.TreatmentElements2;
  *
  */
 public class SingleTreeSelectionThinner extends AreaThinner {
+    
+    private int competitorsTakenOut = 0;
+    private Optional<Double> competitorFactor;
     
     SingleTreeSelectionThinner(boolean cropTreesOnly, double volumeAlreadyOut) {
         super(!cropTreesOnly, volumeAlreadyOut);
@@ -47,6 +51,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         if (vmaxthinning <= 0) {
             return;
         }
+        List<ThinningValueRange<Double>> valueRanges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(species.trule.competitorTakeOutDefinition);
+        competitorFactor = species.trule.thinningSettings.getMode().firstFactorFoundFor(valueRanges, species.referenceTree());
+
         // Thinning is done iteratively tree by tree
         // 1. Calculate the overlap of all crop trees
         // 2. Calculate tolerable overlap of crop tree according to Spellmann et al,
@@ -83,11 +90,21 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             Tree competitor = closestNeighbor.get();
             competitor.takeOut(st.year, OutType.THINNED);
             thinned += (competitor.fac * competitor.v);
+            competitorsTakenOut++;
             maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
             if (maxBasalAreaOut <= 0.0) {
                 break;
             }
-        } while (thinned < vmaxthinning); //stop if max thinning amount is reached
+        } while (continueThinning(species, vmaxthinning)); //stop if max thinning amount is reached
+    }
+
+    private boolean continueThinning(Species species, double vmaxthinning) {
+        if (species.trule.competitorTakeOutDefinition.isEmpty()) {
+            return thinned < vmaxthinning;
+        }
+        // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
+        int competitorsToTakeOut = (int) (species.trule.numberCropTreesWanted * competitorFactor.orElse(1d));
+        return competitorsTakenOut < competitorsToTakeOut;
     }
 
     private Optional<Tree> findCropTreeWithMostCompetition(Stand st, Species species) {
