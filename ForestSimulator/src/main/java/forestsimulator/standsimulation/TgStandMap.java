@@ -99,22 +99,19 @@ public class TgStandMap extends JPanel implements MouseListener {
             lettersize = 52;
             screenToJpeg = true;
         }
-//                
         Dimension d = getSize();
         w = d.width;
         h = d.height;
-//
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         if (doJPEG == true) {
             g2d = (Graphics2D) img.getGraphics();
         }
-//
         g2d.setColor(Color.white);
         g2d.fillRect(0, 0, w, h);
         g2d.setColor(Color.black);
 
-        if (st.year > 0) //only if a stand is loaded
-        {	// draw stand name and size 
+        if (st.year > 0) { //only if a stand is loaded
+            // draw stand name and size 
             g2d.setFont(new java.awt.Font("Tahoma", 0, lettersize));
 
             if (standMapInfo == true) {
@@ -134,7 +131,6 @@ public class TgStandMap extends JPanel implements MouseListener {
                 g2d.drawString("N/ha to.: " + number.format(st.nhatotal), w - 100, 150);
                 g2d.drawString("G/ha to.: " + number.format(st.bhatotal), w - 100, 175);
             }
-
         }
 
         // determine scale factor for graph
@@ -349,7 +345,7 @@ public class TgStandMap extends JPanel implements MouseListener {
             yy = (-(y - h + 40) / sk) + ymin;
             emin = 9999.9;
             for (i = 0; i < st.ntrees; i++) {
-                if (st.tr[i].out < 0 || st.tr[i].out == st.year) //only living trees can be thinned
+                if (st.tr[i].isLiving() || st.tr[i].out == st.year) //only living trees can be thinned
                 {
                     ent = Math.pow((xx - st.tr[i].x), 2.0) + Math.pow((yy - st.tr[i].y), 2.0);
                     if (ent > 0) {
@@ -364,10 +360,9 @@ public class TgStandMap extends JPanel implements MouseListener {
                     }
                 }
             }
-            if (emin < 1.0 && mouseThinning == true) {
-                if (st.tr[merk].out < 0) {
-                    st.tr[merk].out = st.year;
-                    st.tr[merk].outtype = OutType.THINNED;
+            if (emin < 1.0 && mouseThinning) {
+                if (st.tr[merk].isLiving()) {
+                    st.tr[merk].takeOut(st.year, OutType.THINNED);
                 } else {
                     st.tr[merk].out = -1;
                     st.tr[merk].outtype = OutType.STANDING;
@@ -375,7 +370,7 @@ public class TgStandMap extends JPanel implements MouseListener {
 //                    frame.updatetp(false);
                 st.notifyStandChanged("tree thinned");
             }
-            if (emin < 1.0 && mouseCropTree == true) {
+            if (emin < 1.0 && mouseCropTree) {
                 st.tr[merk].crop = st.tr[merk].crop != true;
 //                    frame.updatetp(false);
                 st.notifyStandChanged("croptree selected");

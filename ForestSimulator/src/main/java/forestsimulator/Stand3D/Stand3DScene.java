@@ -483,26 +483,13 @@ public class Stand3DScene extends JPanel {
     }
 
     private static void setTreeStatusInStand(Stand st, UserData ud) {
-        boolean crop = false;
-        boolean tempcrop = false;
-        boolean habitat = false;
         for (int i = 0; i < st.ntrees; i++) {
-            String name = ud.name;
-            if (st.tr[i].no.compareTo(name) == 0) {
-                if (ud.marker == TreeMarker.CROP) {
-                    crop = true;
-                }
-                if (ud.marker == TreeMarker.TEMP_CROP) {
-                    tempcrop = true;
-                }
-                if (ud.marker == TreeMarker.HABITAT) {
-                    habitat = true;
-                }
-                st.tr[i].crop = crop;
-                st.tr[i].tempcrop = tempcrop;
-                st.tr[i].habitat = habitat;
+            if (st.tr[i].no.compareTo(ud.name) == 0) {
+                st.tr[i].crop = ud.marker == TreeMarker.CROP;
+                st.tr[i].tempcrop = ud.marker == TreeMarker.TEMP_CROP;
+                st.tr[i].habitat = ud.marker == TreeMarker.HABITAT;
                 st.notifyStandChanged("treestatus changed");
-                i = st.ntrees; // sofortiger abbruch
+                return;
             }
         }
     }
@@ -510,12 +497,11 @@ public class Stand3DScene extends JPanel {
     private void harvestTreeInStand(BranchGroup tree) {
         for (int i = 0; i < st.ntrees; i++) {
             UserData ud = (UserData) tree.getUserData();
-            String name = ud.name;
-            if (st.tr[i].no.compareTo(name) == 0) {
-                st.tr[i].out = st.year;
-                st.tr[i].outtype = OutType.THINNED;
+            if (st.tr[i].no.compareTo(ud.name) == 0) {
+                // TODO: Should this have OutType.HARVESTED?
+                st.tr[i].takeOut(st.year, OutType.THINNED);
                 treelist.trees[treelist.findTreeByUserData(ud)].harvestTree(base);
-                i = st.ntrees; // sofortiger Abbruch
+                return;
             }
         }
     }
