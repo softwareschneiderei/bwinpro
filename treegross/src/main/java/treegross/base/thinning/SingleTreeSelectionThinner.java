@@ -10,6 +10,7 @@ import treegross.base.Species;
 import treegross.base.Stand;
 import treegross.base.Tree;
 import treegross.treatment.TreatmentElements2;
+import static treegross.treatment.TreatmentElements2.getNCropTrees;
 
 /**
  * Thinning by releasing the crop trees
@@ -67,8 +68,11 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         }
 
         double maxBasalAreaOut = TreatmentElements2.reduceBaOut(st);
+        // TODO: use actual crop trees or wanted crop trees?
+        // final double cropTreeCount = species.trule.numberCropTreesWanted
+        final double cropTreeCount = getNCropTrees(st);
 
-        while (continueThinning(species, vmaxthinning, maxBasalAreaOut)) { //stop if max thinning amount is reached
+        while (continueThinning(species.trule.competitorTakeOutDefinition, cropTreeCount, vmaxthinning, maxBasalAreaOut)) { //stop if max thinning amount is reached
             // update competition overlap for crop trees
             st.forTreesMatching(isCropTreeOf(species), Tree::updateCompetition);
             Optional<Tree> cropTree = findCropTreeWithMostCompetition(st, species);
@@ -93,12 +97,12 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         }
     }
 
-    private boolean continueThinning(Species species, double vmaxthinning, double maxBasalAreaOut) {
-        if (species.trule.competitorTakeOutDefinition.isEmpty()) {
+    private boolean continueThinning(String competitorThinningDefinition, double cropTreeCount, double vmaxthinning, double maxBasalAreaOut) {
+        if (competitorThinningDefinition.isEmpty()) {
             return thinned < vmaxthinning && maxBasalAreaOut > 0;
         }
         // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
-        int competitorsToTakeOut = (int) (species.trule.numberCropTreesWanted * competitorFactor.orElse(1d));
+        int competitorsToTakeOut = (int) (cropTreeCount * competitorFactor.orElse(1d));
         logger.log(Level.INFO, "Competitors taken out: {0} of {1}", new Object[]{ competitorsTakenOut, competitorsToTakeOut });
         return competitorsTakenOut < competitorsToTakeOut;
     }

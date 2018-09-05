@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import treegross.base.Species;
 import treegross.base.Stand;
 import treegross.base.thinning.ThinningType;
+import static treegross.treatment.TreatmentElements2.getNCropTrees;
 
 /**
  * @author	Henriette Duda for more information see: Duda, H. (2006): Vergleich
@@ -146,12 +147,12 @@ public class Treatment2 {
                 sumcroptrees += st.sp[i].trule.numberCropTreesWanted;
             }
 
-            if (te.getNCropTrees(st) > sumcroptrees * st.size) {
+            if (getNCropTrees(st) > sumcroptrees * st.size) {
                 st.resetCropTrees();
             }
             //
             // Selection and reselection of Crop Trees
-            if (te.getNCropTrees(st) <= 0 || st.trule.reselectCropTrees) {
+            if (getNCropTrees(st) <= 0 || st.trule.reselectCropTrees) {
                 // select defined number of crop trees
                 //number is reduced, depending on dg of leading layer
                 // TODO: maybe take thinning type into account, e.g. if ThinningType.SingleTreeSelection is used

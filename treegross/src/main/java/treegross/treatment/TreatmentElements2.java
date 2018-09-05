@@ -882,7 +882,7 @@ public class TreatmentElements2 {
      * @param st treegross.base.stand object
      * @return crop tree number
      */
-    public double getNCropTrees(Stand st) {
+    public static double getNCropTrees(Stand st) {
         double nCT = 0;
         for (int i = 0; i < st.ntrees; i++) {
             if (st.tr[i].crop && st.tr[i].isLiving()) {
