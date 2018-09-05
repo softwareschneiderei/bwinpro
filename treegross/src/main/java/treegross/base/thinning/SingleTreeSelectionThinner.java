@@ -3,6 +3,8 @@ package treegross.base.thinning;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import treegross.base.OutType;
 import treegross.base.Species;
 import treegross.base.Stand;
@@ -14,6 +16,7 @@ import treegross.treatment.TreatmentElements2;
  *
  */
 public class SingleTreeSelectionThinner extends AreaThinner {
+    private static final Logger logger = Logger.getLogger(SingleTreeSelectionThinner.class.getName());
     
     private int competitorsTakenOut = 0;
     private Optional<Double> competitorFactor;
@@ -37,7 +40,7 @@ public class SingleTreeSelectionThinner extends AreaThinner {
      * @param species the species of the crop trees
      */
     public void thinCropTreeCompetition(Stand st, Species species) {
-
+        logger.info("Thinning crop tree competition");
         //set max thinning volume (vmaxthinning) if outaken amount (vout) 
         //has not reached max allowed amount for stand (st.size*st.trule.maxThinningVolume)
         double vmaxthinning = st.size * st.trule.maxThinningVolume - thinned;
@@ -66,7 +69,6 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             intensity = 1.0;
         }
 
-        //double maxBasalAreaOut = st.bha - maxStandBasalArea;
         double maxBasalAreaOut = TreatmentElements2.reduceBaOut(st);
 
         if (maxBasalAreaOut <= 0.0) {
@@ -80,30 +82,30 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             // crown to the crop tree's crown at height crown base. Neighbors are taken out only if they come
             // into the limit of twice the crown radius of the crop tree size
             if (!cropTree.isPresent()) {
+                logger.log(Level.INFO, "No crop tree for species: {0}", species.code);
                 break;
             }
             // Find neighbor who comes closest
             Optional<Tree> closestNeighbor = findClosestNeighbor(st, cropTree.get(), intensity);
             if (!closestNeighbor.isPresent()) {
+                logger.log(Level.INFO, "No closest neighbour.", species.code);
                 break;
             }
             Tree competitor = closestNeighbor.get();
             competitor.takeOut(st.year, OutType.THINNED);
             thinned += (competitor.fac * competitor.v);
             competitorsTakenOut++;
-            maxBasalAreaOut = maxBasalAreaOut - (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
-            if (maxBasalAreaOut <= 0.0) {
-                break;
-            }
-        } while (continueThinning(species, vmaxthinning)); //stop if max thinning amount is reached
+            maxBasalAreaOut -= (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
+        } while (continueThinning(species, vmaxthinning, maxBasalAreaOut)); //stop if max thinning amount is reached
     }
 
-    private boolean continueThinning(Species species, double vmaxthinning) {
+    private boolean continueThinning(Species species, double vmaxthinning, double maxBasalAreaOut) {
         if (species.trule.competitorTakeOutDefinition.isEmpty()) {
-            return thinned < vmaxthinning;
+            return thinned < vmaxthinning && maxBasalAreaOut > 0;
         }
         // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
         int competitorsToTakeOut = (int) (species.trule.numberCropTreesWanted * competitorFactor.orElse(1d));
+        logger.log(Level.INFO, "Competitors taken out: {0} of {1}", new Object[]{ competitorsTakenOut, competitorsToTakeOut });
         return competitorsTakenOut < competitorsToTakeOut;
     }
 
