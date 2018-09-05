@@ -51,9 +51,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             vmaxthinning = st.size * st.trule.maxOutVolume - vout;
         }
 
-        if (vmaxthinning <= 0) {
-            return;
-        }
+//        if (vmaxthinning <= 0) {
+//            return;
+//        }
         List<ThinningValueRange<Double>> valueRanges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(species.trule.competitorTakeOutDefinition);
         competitorFactor = species.trule.thinningSettings.getMode().firstFactorFoundFor(valueRanges, species.referenceTree());
 
@@ -71,10 +71,10 @@ public class SingleTreeSelectionThinner extends AreaThinner {
 
         double maxBasalAreaOut = TreatmentElements2.reduceBaOut(st);
 
-        if (maxBasalAreaOut <= 0.0) {
-            return;
-        }
-        do {
+//        if (maxBasalAreaOut <= 0.0) {
+//            return;
+//        }
+        while (continueThinning(species, vmaxthinning, maxBasalAreaOut)) { //stop if max thinning amount is reached
             // update competition overlap for crop trees
             st.forTreesMatching(isCropTreeOf(species), Tree::updateCompetition);
             Optional<Tree> cropTree = findCropTreeWithMostCompetition(st, species);
@@ -96,7 +96,7 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             thinned += (competitor.fac * competitor.v);
             competitorsTakenOut++;
             maxBasalAreaOut -= (competitor.fac * Math.PI * Math.pow(competitor.d / 200.0, 2.0)) / st.size;
-        } while (continueThinning(species, vmaxthinning, maxBasalAreaOut)); //stop if max thinning amount is reached
+        }
     }
 
     private boolean continueThinning(Species species, double vmaxthinning, double maxBasalAreaOut) {
