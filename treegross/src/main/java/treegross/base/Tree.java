@@ -26,6 +26,7 @@ import treegross.random.RandomNumber;
  * TreeGrOSS : class tree defines the trees for class stand
  */
 public class Tree implements Cloneable {
+    public static final int minimumThresholdDBH = 7;
 
     public long universalID = 0;
     /**

@@ -116,15 +116,7 @@ public class LoadTreegrossStand {
                     int g30 = rs.getInt("g30");
                     int g35 = rs.getInt("g35");
                     double kb = (g0 + g5 + g10 + g15 + g20 + g25 + g30 + g35) / 40.0;
-                    String zfx = "";
-                    Object zfxo = rs.getObject("zf");
-                    if (zfxo != null) {
-                        zfx = zfxo.toString().trim();
-                    }
-                    int zf = 0;
-                    if (zfx.compareTo("z") == 0 || zfx.compareTo("Z") == 0) {
-                        zf = 1;
-                    }
+                    int zf = readCropTreeFromDB(rs);
                     String oux = "";
                     Object ouxo = rs.getObject("ou");
                     if (ouxo != null) {
@@ -205,6 +197,19 @@ public class LoadTreegrossStand {
             logger.log(Level.SEVERE, "Could not load tree from database", e);
         }
         logger.fine("Added trees to stand.");
+    }
+
+    private int readCropTreeFromDB(final ResultSet rs) throws SQLException {
+        String zfx = "";
+        Object zfxo = rs.getObject("zf");
+        if (zfxo != null) {
+            zfx = zfxo.toString().trim();
+        }
+        int zf = 0;
+        if (zfx.equalsIgnoreCase("z")) {
+            zf = 1;
+        }
+        return zf;
     }
 
     private StandMetaData standMetadata(Connection connection, String edvId, int selectedAufn) {
@@ -353,15 +358,17 @@ public class LoadTreegrossStand {
                     int crop = rs.getInt("CropTrees");
                     int mix = rs.getInt("Mix");
                     ThinningModeName thinningModeName = thinningModeNameFrom(rs);
-                    String thinningType = rs.getString("ThinningType");
                     String moderateThinning = rs.getString("ModerateThinning");
+                    String thinningType = rs.getString("ThinningType");
                     String thinningIntensity = rs.getString("ThinningIntensity");
+                    String thinningCompetitors = rs.getString("ThinningCompetitors");
                     st.speciesFor(rs.getInt("Code")).ifPresent(species -> {
                         species.trule.minCropTreeHeight = height;
                         species.trule.targetDiameter = target;
                         species.trule.targetCrownPercent = mix;
                         species.trule.numberCropTreesWanted = crop;
                         species.trule.thinningSettings = ScenarioThinningSettingMode.forName(thinningModeName, thinningType, thinningIntensity);
+                        species.trule.competitorTakeOutDefinition = thinningCompetitors == null ? "" : thinningCompetitors;
                         species.spDef.moderateThinning = ModerateThinningMode.forName(thinningModeName, moderateThinning);
                     });
                 }
