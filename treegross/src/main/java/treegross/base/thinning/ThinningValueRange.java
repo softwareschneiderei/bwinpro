@@ -7,8 +7,8 @@ import java.util.Optional;
 
 public class ThinningValueRange<V> {
 
-    private final double start;
-    private final double end;
+    final double start;
+    final double end;
     private final V value;
     
     public ThinningValueRange(double start, double end, V value) {

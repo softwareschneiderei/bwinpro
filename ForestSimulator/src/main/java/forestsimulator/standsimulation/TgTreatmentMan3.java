@@ -28,6 +28,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import static java.text.MessageFormat.format;
 import java.time.Year;
 import java.util.*;
 import java.util.logging.Level;
@@ -40,6 +41,9 @@ import javax.swing.table.DefaultTableModel;
 import treegross.base.*;
 import treegross.base.rule.SkidTrailRules;
 import treegross.base.rule.ThinningRegime;
+import treegross.base.thinning.DefinedRanges;
+import treegross.base.thinning.SpeciesThinningSettings;
+import treegross.base.thinning.ThinningDefinitionParser;
 import treegross.base.thinning.ThinningModeName;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.random.RandomNumber;
@@ -384,18 +388,46 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
         final String climateScenario = (String) climateScenarioComboBox.getSelectedItem();
         EnvironmentVariables environmentalData = environmentalDatabase.environmentalDataFor(st.location, climateScenario);
         if (environmentalData.dataMissingFor(Year.of(st.year), Year.of(st.year + simTime))) {
-            if (continueQuestionAnswer() == JOptionPane.NO_OPTION) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.climateData.incomplete.title",
+                    "TgTreatmentMan3.climateData.incomplete.message") == JOptionPane.NO_OPTION) {
                 return;
             }
         }
         simulation = new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, climateScenario);
     }
-    
     // TODO: http://issuetracker.intranet:20002/browse/BWIN-89 check intensity definition, type definition and competitor factor definition if the cover the range 0-200 years or 0-100m height
     // and show dialog if not
 
     for (Species species : st.species()) {
+        final SpeciesThinningSettings thinningSettings = species.trule.thinningSettings;
         logger.log(Level.INFO, "Using thinning settings:\n {0}", species.trule.thinningSettings);
+        if (!thinningSettings.intensityCoverageComplete()) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.intensityDefinition.incomplete.title",
+                    "TgTreatmentMan3.intensityDefinition.incomplete.message",
+                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+        if (!species.trule.thinningSettings.typeCoverageComplete()) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.typeDefinition.incomplete.title",
+                    "TgTreatmentMan3.typeDefinition.incomplete.message",
+                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
+        final String competitorThinningDefinition = species.trule.competitorTakeOutDefinition;
+        DefinedRanges<Double> competitorThinning = ThinningDefinitionParser.thinningFactorParser.parseDefinition(competitorThinningDefinition);
+        if (!competitorThinning.empty() && thinningSettings.getMode().coverageComplete(competitorThinning)) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.competitorDefinition.incomplete.title",
+                    "TgTreatmentMan3.competitorDefinition.incomplete.message",
+                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                return;
+            }
+        }
     }
     for (int i = 0; i < nSimSteps; i++) {
         int time = st.timeStep;
@@ -409,11 +441,19 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
 
-    private int continueQuestionAnswer() {
+    private int continueQuestionAnswer(String titleKey, String messageKey) {
         return JOptionPane.showConfirmDialog(
                 getParent(),
-                messages.getString("TgTreatmentMan3.climateData.incomplete.message"),
-                messages.getString("TgTreatmentMan3.climateData.incomplete.title"),
+                messages.getString(titleKey),
+                messages.getString(titleKey),
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
+
+    private int continueQuestionAnswer(String titleKey, String messageKey, ThinningModeName mode) {
+        return JOptionPane.showConfirmDialog(
+                getParent(),
+                format(messages.getString(messageKey), mode.min, mode.max),
+                messages.getString(titleKey),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 

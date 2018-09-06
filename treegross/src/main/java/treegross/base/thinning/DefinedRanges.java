@@ -26,6 +26,15 @@ public class DefinedRanges<V> {
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
     
+    public boolean cover(double min, double max) {
+        Optional<Double> start = ranges.stream().map(range -> range.start).min(Double::compare);
+        Optional<Double> end = ranges.stream().map(range -> range.end).max(Double::compare);
+        if (!start.isPresent() || !end.isPresent()) {
+            return false;
+        }
+        return start.get() <= min && end.get() >= max;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -50,6 +59,5 @@ public class DefinedRanges<V> {
         }
         return true;
     }
-    
-    
+
 }

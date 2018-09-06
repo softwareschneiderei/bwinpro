@@ -1,6 +1,5 @@
 package treegross.base.thinning;
 
-import java.util.List;
 import treegross.base.Tree;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningFactorParser;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningTypeParser;
@@ -71,9 +70,17 @@ public class SpeciesThinningSettings {
         return intensityDefinition;
     }
     
+    public boolean typeCoverageComplete() {
+        return mode.coverageComplete(typeRanges);
+    }
+
     // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
     public ThinningType typeFor(Tree referenceTree) {
         return mode.firstValueFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
+    }
+
+    public boolean intensityCoverageComplete() {
+        return mode.coverageComplete(intensityRanges);
     }
 
     /**
