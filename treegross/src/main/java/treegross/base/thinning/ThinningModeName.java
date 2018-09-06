@@ -31,10 +31,15 @@ public enum ThinningModeName {
         throw new IllegalArgumentException("No thinning mode for name '" + name + "'");
     }
 
-    public <T> Optional<T> firstFactorFoundFor(List<ThinningValueRange<T>> ranges, Tree tree) {
-        return ranges.stream()
-                .map((ThinningValueRange<T> range) -> range.factorFor(criterionValueOf(tree)))
-                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
+    public <T> Optional<T> firstValueFoundFor(DefinedRanges<T> ranges, Tree tree) {
+        return ranges.firstValueFoundFor(criterionValueOf(tree));
+    }
+    
+    public <T> T bestValueFor(List<ThinningValueRange<T>> ranges, Tree tree) {
+        // If value is below defined ranges use value of first range
+        
+        // if value is above defined ranges use value of last range
+        return null;
     }
     
     private double criterionValueOf(Tree tree) {

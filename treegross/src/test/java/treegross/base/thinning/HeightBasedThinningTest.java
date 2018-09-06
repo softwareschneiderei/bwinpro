@@ -32,11 +32,11 @@ public class HeightBasedThinningTest {
         assertThat(thinning.thinningFactorFor(t)).isEqualTo(1d);
     }
 
-    private static List<ThinningValueRange<Double>> rangesFor(double... factors) {
+    private static DefinedRanges<Double> rangesFor(double... factors) {
         List<ThinningValueRange<Double>> ranges = new ArrayList<>();
         for (int i = 0; i < factors.length - 2; i += 3) {
             ranges.add(new ThinningValueRange(factors[i], factors[ i + 2], factors[i + 1]));
         }
-        return ranges;
+        return new DefinedRanges(ranges);
     }
 }

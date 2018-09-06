@@ -2,8 +2,6 @@ package treegross.base.thinning;
 
 import static java.lang.Double.parseDouble;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
@@ -18,15 +16,16 @@ public class ThinningDefinitionParser<V> {
         this.valueParser = valueParser;
     }
 
-    public List<ThinningValueRange<V>> parseDefinition(String thinningDefinition) throws NumberFormatException {
+    public DefinedRanges<V> parseDefinition(String thinningDefinition) throws NumberFormatException {
         if (thinningDefinition == null) {
-            return Collections.emptyList();
+            return new DefinedRanges();
         }
-        return Arrays.stream(thinningDefinition.split(";"))
+        // TODO: http://issuetracker.intranet:20002/browse/BWIN-89 check intervals for continuing
+        return new DefinedRanges(Arrays.stream(thinningDefinition.split(";"))
                 .map(triple -> addThinningFactorRange(triple))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(toList());
+                .collect(toList()));
     }
 
     private Optional<ThinningValueRange<V>> addThinningFactorRange(String triple) throws IllegalArgumentException, NumberFormatException {
@@ -43,4 +42,5 @@ public class ThinningDefinitionParser<V> {
                 parseDouble(values[2]),
                 valueParser.apply(values[1])));
     }
+
 }

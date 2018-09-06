@@ -1,6 +1,5 @@
 package treegross.base.thinning;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -52,8 +51,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
             vmaxthinning = st.size * st.trule.maxOutVolume - vout;
         }
 
-        List<ThinningValueRange<Double>> valueRanges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(species.trule.competitorTakeOutDefinition);
-        competitorFactor = species.trule.thinningSettings.getMode().firstFactorFoundFor(valueRanges, species.referenceTree());
+        DefinedRanges<Double> valueRanges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(species.trule.competitorTakeOutDefinition);
+        // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
+        competitorFactor = species.trule.thinningSettings.getMode().firstValueFoundFor(valueRanges, species.referenceTree());
 
         // Thinning is done iteratively tree by tree
         // 1. Calculate the overlap of all crop trees

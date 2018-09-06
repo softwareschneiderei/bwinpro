@@ -1,5 +1,6 @@
 package forestsimulator.standsimulation;
 
+import static forestsimulator.standsimulation.ForestSimulator.batchLogger;
 import forestsimulator.util.StopWatch;
 import java.text.MessageFormat;
 import java.time.Year;
@@ -50,6 +51,6 @@ public class ClimateSensitiveSimulation extends Simulation {
     }
     
     private void logToBatchLog(String message) {
-        ForestSimulator.batchLogger.log(Level.INFO, message);
+        batchLogger.log(Level.INFO, message);
     }
 }

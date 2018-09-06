@@ -1,14 +1,12 @@
 package treegross.base.thinning;
 
-import java.util.List;
-import java.util.Optional;
 import treegross.base.Tree;
 import static treegross.base.thinning.ModerateThinning.defaultThinningFactor;
 
 public class AgeBasedThinning implements ModerateThinning {
 
     private final String thinningDefinition;
-    private final List<ThinningValueRange<Double>> ranges;
+    private final DefinedRanges<Double> ranges;
 
     public AgeBasedThinning(String thinningDefinition) {
         this.thinningDefinition = thinningDefinition;
@@ -24,15 +22,9 @@ public class AgeBasedThinning implements ModerateThinning {
      */
     @Override
     public double thinningFactorFor(Tree tree) {
-        return firstFactorFoundFor(tree).orElse(defaultThinningFactor);
+        return ranges.firstValueFoundFor(tree.age).orElse(defaultThinningFactor);
     }
 
-    private Optional<Double> firstFactorFoundFor(Tree tree) {
-        return ranges.stream()
-                .map(range -> range.factorFor(tree.age))
-                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
-    }
-    
     @Override
     public String definition() {
         return thinningDefinition;

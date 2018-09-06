@@ -15,10 +15,10 @@ public class ThinningDefinitionParserTest {
     public void parseThinningRanges() {
         ThinningDefinitionParser thinning = ThinningDefinitionParser.thinningFactorParser;
 
-        assertThat(thinning.parseDefinition(("10.0/0.8/22.0;22.0/0.75/28.0;28.0/0.7/100.0"))).containsExactly(
+        assertThat(thinning.parseDefinition(("10.0/0.8/22.0;22.0/0.75/28.0;28.0/0.7/100.0"))).isEqualTo(new DefinedRanges(
                 new ThinningValueRange(10d, 22d, 0.8d),
                 new ThinningValueRange(22d, 28d, 0.75d),
-                new ThinningValueRange(28d, 100d, 0.7d)
+                new ThinningValueRange(28d, 100d, 0.7d))
         );
     }
     
@@ -45,6 +45,6 @@ public class ThinningDefinitionParserTest {
     public void emptyDefinitionYieldsEmptyRanges() {
         ThinningDefinitionParser thinning = ThinningDefinitionParser.thinningTypeParser;
         
-        assertThat(thinning.parseDefinition("")).isEmpty();
+        assertThat(thinning.parseDefinition("").empty()).isTrue();
     }
 }

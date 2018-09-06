@@ -26,8 +26,8 @@ public class SpeciesThinningSettings {
         return new SpeciesThinningSettings(ThinningModeName.HEIGHT, typeDefinition, intensityDefinition);
     }
 
-    private final List<ThinningValueRange<Double>> intensityRanges;
-    private final List<ThinningValueRange<ThinningType>> typeRanges;
+    private final DefinedRanges<Double> intensityRanges;
+    private final DefinedRanges<ThinningType> typeRanges;
     private final ThinningModeName mode;
     private final double intensityDefault;
     private final String intensityDefinition;
@@ -71,8 +71,9 @@ public class SpeciesThinningSettings {
         return intensityDefinition;
     }
     
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
     public ThinningType typeFor(Tree referenceTree) {
-        return mode.firstFactorFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
+        return mode.firstValueFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
     }
 
     /**
@@ -81,8 +82,9 @@ public class SpeciesThinningSettings {
      * @param referenceTree
      * @return intensity for the given tree
      */
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
     public double intensityFor(Tree referenceTree) {
-        return mode.firstFactorFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
+        return mode.firstValueFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
     }
 
     @Override

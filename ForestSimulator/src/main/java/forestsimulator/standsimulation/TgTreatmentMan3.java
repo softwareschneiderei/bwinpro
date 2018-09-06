@@ -390,6 +390,9 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
         }
         simulation = new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, climateScenario);
     }
+    
+    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89 check intensity definition, type definition and competitor factor definition if the cover the range 0-200 years or 0-100m height
+    // and show dialog if not
 
     for (Species species : st.species()) {
         logger.log(Level.INFO, "Using thinning settings:\n {0}", species.trule.thinningSettings);
@@ -406,7 +409,7 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
 
-    private int continueQuestionAnswer() throws HeadlessException {
+    private int continueQuestionAnswer() {
         return JOptionPane.showConfirmDialog(
                 getParent(),
                 messages.getString("TgTreatmentMan3.climateData.incomplete.message"),

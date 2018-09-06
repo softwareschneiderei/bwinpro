@@ -1,19 +1,17 @@
 package treegross.base.thinning;
 
-import java.util.List;
-import java.util.Optional;
 import treegross.base.Tree;
 
 public class HeightBasedThinning implements ModerateThinning {
 
     private final String thinningDefinition;
-    private final List<ThinningValueRange<Double>> ranges;
+    private final DefinedRanges<Double> ranges;
 
     public HeightBasedThinning(String thinningDefinition) {
         this(thinningDefinition, ThinningDefinitionParser.thinningFactorParser.parseDefinition(thinningDefinition));
     }
     
-    public HeightBasedThinning(String thinningDefinition, List<ThinningValueRange<Double>> ranges) {
+    public HeightBasedThinning(String thinningDefinition, DefinedRanges<Double> ranges) {
         super();
         this.thinningDefinition = thinningDefinition;
         this.ranges = ranges;
@@ -28,15 +26,9 @@ public class HeightBasedThinning implements ModerateThinning {
      */
     @Override
     public double thinningFactorFor(Tree tree) {
-        return firstFactorFoundFor(tree).orElse(defaultThinningFactor);
+        return ranges.firstValueFoundFor(tree.h).orElse(defaultThinningFactor);
     }
 
-    private Optional<Double> firstFactorFoundFor(Tree tree) {
-        return ranges.stream()
-                .map(range -> range.factorFor(tree.h))
-                .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
-    }
-    
     @Override
     public String definition() {
         return thinningDefinition;
