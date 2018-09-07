@@ -23,7 +23,6 @@ import static forestsimulator.standsimulation.TreatmentTableColumn.CropTrees;
 import static forestsimulator.standsimulation.TreatmentTableColumn.Mixture;
 import static forestsimulator.standsimulation.TreatmentTableColumn.TargetD;
 import static forestsimulator.standsimulation.TreatmentTableColumn.ThinningHeight;
-import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -402,11 +401,12 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     for (Species species : st.species()) {
         final SpeciesThinningSettings thinningSettings = species.trule.thinningSettings;
         logger.log(Level.INFO, "Using thinning settings:\n {0}", species.trule.thinningSettings);
+        // TODO: add species to message
         if (!thinningSettings.intensityCoverageComplete()) {
             if (continueQuestionAnswer(
                     "TgTreatmentMan3.intensityDefinition.incomplete.title",
                     "TgTreatmentMan3.intensityDefinition.incomplete.message",
-                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                    species) == JOptionPane.NO_OPTION) {
                 return;
             }
         }
@@ -414,17 +414,18 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
             if (continueQuestionAnswer(
                     "TgTreatmentMan3.typeDefinition.incomplete.title",
                     "TgTreatmentMan3.typeDefinition.incomplete.message",
-                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                    species) == JOptionPane.NO_OPTION) {
                 return;
             }
         }
         final String competitorThinningDefinition = species.trule.competitorTakeOutDefinition;
         DefinedRanges<Double> competitorThinning = ThinningDefinitionParser.thinningFactorParser.parseDefinition(competitorThinningDefinition);
+        // TODO: check why this is not working correctly
         if (!competitorThinning.empty() && thinningSettings.getMode().coverageComplete(competitorThinning)) {
             if (continueQuestionAnswer(
                     "TgTreatmentMan3.competitorDefinition.incomplete.title",
                     "TgTreatmentMan3.competitorDefinition.incomplete.message",
-                    thinningSettings.getMode()) == JOptionPane.NO_OPTION) {
+                    species) == JOptionPane.NO_OPTION) {
                 return;
             }
         }
@@ -449,10 +450,11 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 
-    private int continueQuestionAnswer(String titleKey, String messageKey, ThinningModeName mode) {
+    private int continueQuestionAnswer(String titleKey, String messageKey, Species species) {
+        ThinningModeName mode = species.trule.thinningSettings.getMode();
         return JOptionPane.showConfirmDialog(
                 getParent(),
-                format(messages.getString(messageKey), mode.min, mode.max),
+                format(messages.getString(messageKey), species.code, mode.min, mode.max),
                 messages.getString(titleKey),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
