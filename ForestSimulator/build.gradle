@@ -1,5 +1,5 @@
 apply plugin: 'application'
-version = '7.8-0.7dev'
+version = '7.8-0.7'
 
 mainClassName = 'forestsimulator.standsimulation.ForestSimulator'
 
