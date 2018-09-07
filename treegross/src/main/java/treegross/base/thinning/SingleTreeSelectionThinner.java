@@ -19,7 +19,7 @@ public class SingleTreeSelectionThinner extends AreaThinner {
     private static final Logger logger = Logger.getLogger(SingleTreeSelectionThinner.class.getName());
     
     private int competitorsTakenOut = 0;
-    private Optional<Double> competitorFactor;
+    private double competitorFactor;
     
     SingleTreeSelectionThinner(boolean cropTreesOnly, double volumeAlreadyOut) {
         super(!cropTreesOnly, volumeAlreadyOut);
@@ -52,8 +52,14 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         }
 
         DefinedRanges<Double> valueRanges = ThinningDefinitionParser.thinningFactorParser.parseDefinition(species.trule.competitorTakeOutDefinition);
-        // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
-        competitorFactor = species.trule.thinningSettings.getMode().firstValueFoundFor(valueRanges, species.referenceTree());
+        final ThinningModeName mode = species.trule.thinningSettings.getMode();
+        competitorFactor = mode.bestValueFor(valueRanges, species.referenceTree(), 1d);
+        if (!valueRanges.empty() && !mode.firstValueFoundFor(valueRanges, species.referenceTree()).isPresent()) {
+            batchLogger().log(
+                    Level.INFO,
+                    "No competitor thinning factor found for criterion {0} = {1}. Using best value {2}.",
+                    new Object[]{mode, mode.criterionValueOf(species.referenceTree()), competitorFactor});
+        }
 
         // Thinning is done iteratively tree by tree
         // 1. Calculate the overlap of all crop trees
@@ -101,9 +107,8 @@ public class SingleTreeSelectionThinner extends AreaThinner {
         if (competitorThinningDefinition.isEmpty()) {
             return thinned < vmaxthinning && maxBasalAreaOut > 0;
         }
-        // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
-        int competitorsToTakeOut = (int) (cropTreeCount * competitorFactor.orElse(1d));
-        logger.log(Level.INFO, "Competitors taken out: {0} of {1}", new Object[]{ competitorsTakenOut, competitorsToTakeOut });
+        int competitorsToTakeOut = (int) (cropTreeCount * competitorFactor);
+        logger.log(Level.FINE, "Competitors taken out: {0} of {1}", new Object[]{ competitorsTakenOut, competitorsToTakeOut });
         return competitorsTakenOut < competitorsToTakeOut;
     }
 
@@ -149,5 +154,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
     
     private Predicate<Tree> isCropTreeOf(Species species) {
         return tree -> tree.isLiving() && tree.crop && tree.isOf(species);
+    }
+
+    private Logger batchLogger() {
+        return Logger.getLogger("BatchLogger");
     }
 }

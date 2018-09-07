@@ -41,14 +41,11 @@ public enum ThinningModeName {
         return ranges.firstValueFoundFor(criterionValueOf(tree));
     }
     
-    public <T> T bestValueFor(DefinedRanges<T> ranges, Tree tree) {
-        // If value is below defined ranges use value of first range
-        
-        // if value is above defined ranges use value of last range
-        return null;
+    public <T> T bestValueFor(DefinedRanges<T> ranges, Tree tree, T fallBack) {
+        return ranges.bestValueFor(criterionValueOf(tree), fallBack);
     }
     
-    private double criterionValueOf(Tree tree) {
+    public double criterionValueOf(Tree tree) {
         return attributeExtractor.apply(tree);
     }
    

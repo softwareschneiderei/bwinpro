@@ -32,7 +32,7 @@ import javax.swing.JTextArea;
 import treegross.base.*;
 
 public class ForestSimulator {
-    public static final Logger batchLogger = Logger.getLogger("BatchLogger");
+    private static final Logger batchLogger = Logger.getLogger("BatchLogger");
     private static final Logger logger = Logger.getLogger(TgJFrame.class.getName());
     private static final ResourceBundle messages = ResourceBundle.getBundle("forestsimulator/gui");
 

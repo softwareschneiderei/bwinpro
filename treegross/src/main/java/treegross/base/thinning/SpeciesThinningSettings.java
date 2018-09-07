@@ -1,5 +1,8 @@
 package treegross.base.thinning;
 
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import treegross.base.Tree;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningFactorParser;
 import static treegross.base.thinning.ThinningDefinitionParser.thinningTypeParser;
@@ -74,9 +77,8 @@ public class SpeciesThinningSettings {
         return mode.coverageComplete(typeRanges);
     }
 
-    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
     public ThinningType typeFor(Tree referenceTree) {
-        return mode.firstValueFoundFor(typeRanges, referenceTree).orElse(ThinningType.SingleTreeSelection);
+        return valueFor(typeRanges, referenceTree, ThinningType.SingleTreeSelection);
     }
 
     public boolean intensityCoverageComplete() {
@@ -89,9 +91,22 @@ public class SpeciesThinningSettings {
      * @param referenceTree
      * @return intensity for the given tree
      */
-    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89
     public double intensityFor(Tree referenceTree) {
-        return mode.firstValueFoundFor(intensityRanges, referenceTree).orElse(intensityDefault);
+        return valueFor(intensityRanges, referenceTree, intensityDefault);
+    }
+
+    private <T> T valueFor(DefinedRanges<T> ranges, Tree referenceTree, T fallBack) {
+        Optional<T> value = mode.firstValueFoundFor(ranges, referenceTree);
+        if (!value.isPresent()) {
+            T bestValue = mode.bestValueFor(ranges, referenceTree, fallBack);
+            logger().log(Level.INFO, "No value found for mode {0}. Using best value {1}.", new Object[]{mode, bestValue});
+            return bestValue;
+        }
+        return value.get();
+    }
+
+    private static Logger logger() {
+        return Logger.getLogger("BatchLogger");
     }
 
     @Override

@@ -25,14 +25,40 @@ public class DefinedRanges<V> {
                 .map(range -> range.factorFor(value))
                 .filter(Optional::isPresent).findFirst().orElse(Optional.empty());
     }
-    
+
+    public V bestValueFor(double value, V fallBack) {
+        if (empty()) {
+            return fallBack;
+        }
+        return firstValueFoundFor(value).orElseGet(() -> {
+            if (value >= max().get()) {
+                return ranges.get(ranges.size() - 1).getValue();
+            }
+            ThinningValueRange<V> bestRange = ranges.get(0);
+            for (ThinningValueRange<V> range : ranges) {
+                if (value < range.end && value > range.start) {
+                    bestRange = range;
+                } 
+            }
+            return bestRange.getValue();
+        });
+    }
+
     public boolean cover(double min, double max) {
-        Optional<Double> start = ranges.stream().map(range -> range.start).min(Double::compare);
-        Optional<Double> end = ranges.stream().map(range -> range.end).max(Double::compare);
+        Optional<Double> start = min();
+        Optional<Double> end = max();
         if (!start.isPresent() || !end.isPresent()) {
             return false;
         }
         return start.get() <= min && end.get() >= max;
+    }
+
+    private Optional<Double> max() {
+        return ranges.stream().map(range -> range.end).max(Double::compare);
+    }
+
+    private Optional<Double> min() {
+        return ranges.stream().map(range -> range.start).min(Double::compare);
     }
     
     @Override
@@ -59,5 +85,4 @@ public class DefinedRanges<V> {
         }
         return true;
     }
-
 }
