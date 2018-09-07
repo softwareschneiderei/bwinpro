@@ -395,39 +395,9 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
         }
         simulation = new ClimateSensitiveSimulation(st, true, useMortality, environmentalDatabase, climateScenario);
     }
-    // TODO: http://issuetracker.intranet:20002/browse/BWIN-89 check intensity definition, type definition and competitor factor definition if the cover the range 0-200 years or 0-100m height
-    // and show dialog if not
-
     for (Species species : st.species()) {
-        final SpeciesThinningSettings thinningSettings = species.trule.thinningSettings;
-        logger.log(Level.INFO, "Using thinning settings:\n {0}", species.trule.thinningSettings);
-        // TODO: add species to message
-        if (!thinningSettings.intensityCoverageComplete()) {
-            if (continueQuestionAnswer(
-                    "TgTreatmentMan3.intensityDefinition.incomplete.title",
-                    "TgTreatmentMan3.intensityDefinition.incomplete.message",
-                    species) == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
-        if (!species.trule.thinningSettings.typeCoverageComplete()) {
-            if (continueQuestionAnswer(
-                    "TgTreatmentMan3.typeDefinition.incomplete.title",
-                    "TgTreatmentMan3.typeDefinition.incomplete.message",
-                    species) == JOptionPane.NO_OPTION) {
-                return;
-            }
-        }
-        final String competitorThinningDefinition = species.trule.competitorTakeOutDefinition;
-        DefinedRanges<Double> competitorThinning = ThinningDefinitionParser.thinningFactorParser.parseDefinition(competitorThinningDefinition);
-        // TODO: check why this is not working correctly
-        if (!competitorThinning.empty() && thinningSettings.getMode().coverageComplete(competitorThinning)) {
-            if (continueQuestionAnswer(
-                    "TgTreatmentMan3.competitorDefinition.incomplete.title",
-                    "TgTreatmentMan3.competitorDefinition.incomplete.message",
-                    species) == JOptionPane.NO_OPTION) {
-                return;
-            }
+        if (checkThinningRanges(species)) {
+            return;
         }
     }
     for (int i = 0; i < nSimSteps; i++) {
@@ -441,6 +411,38 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
         simTime -= st.timeStep;
     }
 }//GEN-LAST:event_startSimulationButtonActionPerformed
+
+    private boolean checkThinningRanges(Species species) throws NumberFormatException {
+        final SpeciesThinningSettings thinningSettings = species.trule.thinningSettings;
+        logger.log(Level.INFO, "Using thinning settings:\n {0}", species.trule.thinningSettings);
+        if (!thinningSettings.intensityCoverageComplete()) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.intensityDefinition.incomplete.title",
+                    "TgTreatmentMan3.intensityDefinition.incomplete.message",
+                    species) == JOptionPane.NO_OPTION) {
+                return true;
+            }
+        }
+        if (!species.trule.thinningSettings.typeCoverageComplete()) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.typeDefinition.incomplete.title",
+                    "TgTreatmentMan3.typeDefinition.incomplete.message",
+                    species) == JOptionPane.NO_OPTION) {
+                return true;
+            }
+        }
+        final String competitorThinningDefinition = species.trule.competitorTakeOutDefinition;
+        DefinedRanges<Double> competitorThinning = ThinningDefinitionParser.thinningFactorParser.parseDefinition(competitorThinningDefinition);
+        if (!competitorThinning.empty() && !thinningSettings.getMode().coverageComplete(competitorThinning)) {
+            if (continueQuestionAnswer(
+                    "TgTreatmentMan3.competitorDefinition.incomplete.title",
+                    "TgTreatmentMan3.competitorDefinition.incomplete.message",
+                    species) == JOptionPane.NO_OPTION) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private int continueQuestionAnswer(String titleKey, String messageKey) {
         return JOptionPane.showConfirmDialog(

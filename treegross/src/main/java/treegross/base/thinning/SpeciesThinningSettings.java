@@ -6,8 +6,8 @@ import static treegross.base.thinning.ThinningDefinitionParser.thinningTypeParse
 
 public class SpeciesThinningSettings {
     public static final SpeciesThinningSettings defaultSettings = SpeciesThinningSettings.heightBasedScenarioSetting(
-            "10.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
-            "10.0/0.8/22.0;22.0/0.8/28.0;28.0/0.7/100.0");
+            "0.0/sts/22.0;22.0/sts/28.0;28.0/sts/100.0",
+            "0.0/0.8/22.0;22.0/0.8/28.0;28.0/0.7/100.0");
     
     public static final SpeciesThinningSettings ageBasedScenarioSetting(String typeDefinition, double intensity) {
         return new SpeciesThinningSettings(ThinningModeName.AGE, typeDefinition, "", intensity);
