@@ -28,6 +28,7 @@ import static treegross.base.SiteIndex.si;
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  */
 public class EditorPanel extends JPanel {
+    private static final int layerColumn = 17;
 
     String urlcodebase = "";
     Stand st = null;
@@ -64,26 +65,23 @@ public class EditorPanel extends JPanel {
         st.ncpnt = 0;
         st.year = 2008;
         changeCoordinateSystemButton.setText(messages.getString("EditorPanel.changeCoordinateSystemButton.toPolar.text"));
+        treeTable.getColumnModel().getColumn(layerColumn).setCellEditor(new DefaultCellEditor(new JComboBox(Layer.values())));
     }
 
     private int getInt(String txt) {
-        int erg = -9;
         try {
-            erg = Integer.parseInt(txt.trim());
+            return Integer.parseInt(txt.trim());
         } catch (NumberFormatException e) {
-            erg = -9;
+            return -9;
         }
-        return erg;
     }
 
     private double getDouble(String txt) {
-        double erg = -99.0;
         try {
-            erg = Double.parseDouble(txt.trim());
+            return Double.parseDouble(txt.trim());
         } catch (NumberFormatException e) {
-            erg = -9;
+            return -9;
         }
-        return erg;
     }
 
     private boolean getBoolean(String txt) {
@@ -140,8 +138,8 @@ public class EditorPanel extends JPanel {
                 } else {
                     st.tr[m].remarks = "";
                 }
-                if (treeTable.getValueAt(i, 17) != null) {
-                    st.tr[m].layer = Layer.fromInt(getInt((String) treeTable.getValueAt(i, 17)));
+                if (treeTable.getValueAt(i, layerColumn) != null) {
+                    st.tr[m].layer = (Layer) treeTable.getValueAt(i, layerColumn);
                 } else {
                     st.tr[m].layer = Layer.NONE;
                 }
@@ -205,7 +203,7 @@ public class EditorPanel extends JPanel {
             f.setMaximumFractionDigits(4);
             f.setMinimumFractionDigits(4);
             treeTable.setValueAt(st.tr[i].remarks, i, 16);
-            treeTable.setValueAt(String.valueOf(st.tr[i].layer), i, 17);
+            treeTable.setValueAt(st.tr[i].layer, i, layerColumn);
         }
     }
 
