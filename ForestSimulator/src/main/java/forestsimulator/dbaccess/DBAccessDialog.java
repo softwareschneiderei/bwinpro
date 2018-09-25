@@ -31,6 +31,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RootPaneContainer;
@@ -535,7 +536,9 @@ public class DBAccessDialog extends JDialog {
         }
         javax.swing.JFileChooser jf = new javax.swing.JFileChooser();
         jf.setCurrentDirectory(new File(localPath));
-        jf.showOpenDialog(this);
+        if (JFileChooser.APPROVE_OPTION != jf.showOpenDialog(this)) {
+            return;
+        }
         File verzeichnis = jf.getSelectedFile();
         databaseFilenameTextField.setText(verzeichnis.getAbsolutePath());
     }//GEN-LAST:event_selectFileButtonActionPerformed
