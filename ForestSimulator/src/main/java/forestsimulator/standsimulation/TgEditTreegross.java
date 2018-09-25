@@ -24,8 +24,8 @@ import treegross.base.*;
  * @author  nagel
  */
 public class TgEditTreegross extends JDialog {
-    Stand st;
-    EditorPanel editorPanel = new EditorPanel();
+    private final EditorPanel editorPanel = new EditorPanel();
+    private Stand st;
         
     public TgEditTreegross(Frame parent, boolean modal, Stand stand) {
         super(parent, modal);
