@@ -301,6 +301,7 @@ public class Stand {
      */
     public Stand(int scaleMethod) {
         super();
+        location = new StandLocation("", "");
         random = new RandomNumber(RandomNumber.PSEUDO);
         scaleMan = new ScaleManager(this);
         scaleMan.setScaleMethod(scaleMethod);
