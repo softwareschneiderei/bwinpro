@@ -308,6 +308,9 @@ public class Stand3DScene extends JPanel {
     }
 
     private void setShowAllSpecies() {
+        if (st == null) {
+            return;
+        }
         sts = new int[st.nspecies];
         for (int i = 0; i < st.nspecies; i++) {
             sts[i] = st.sp[i].code;

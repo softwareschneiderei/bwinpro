@@ -139,7 +139,6 @@ public class TgNewStand extends JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void createAreaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAreaButtonActionPerformed
-        System.out.println("Create area" + tf0.getText());
         st.newStand();
         st.ncpnt = 0;
         st.nspecies = 0;
@@ -176,11 +175,6 @@ public class TgNewStand extends JDialog {
         frame.updatetp(false);
         dispose();
     }//GEN-LAST:event_createAreaButtonActionPerformed
-    
-    /**
-     * @param args the command line arguments
-     */
-    
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox areaShapeComboBox;

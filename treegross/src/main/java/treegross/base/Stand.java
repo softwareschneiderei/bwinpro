@@ -331,6 +331,7 @@ public class Stand {
      */
     public void newStand() {
         clear();
+        location = new StandLocation("", "");
         distanceDependent = false;
         //randomGrowthEffects=RandomNumber.PSEUDO;
         random = new RandomNumber(RandomNumber.PSEUDO);

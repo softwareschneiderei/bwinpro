@@ -447,7 +447,7 @@ private void startSimulationButtonActionPerformed(java.awt.event.ActionEvent evt
     private int continueQuestionAnswer(String titleKey, String messageKey) {
         return JOptionPane.showConfirmDialog(
                 getParent(),
-                messages.getString(titleKey),
+                messages.getString(messageKey),
                 messages.getString(titleKey),
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
