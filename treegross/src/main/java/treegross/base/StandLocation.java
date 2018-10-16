@@ -4,8 +4,8 @@ public class StandLocation {
     private static final String defaultFederalState = "BW";
 
     public final String federalState;
-    public final String growingSubRegion;
     public final String growingRegion;
+    public final String growingSubRegion;
 
     public StandLocation(String growingRegion, String growingSubRegion) {
         this(defaultFederalState, growingRegion, growingSubRegion);
@@ -21,10 +21,10 @@ public class StandLocation {
         this.growingSubRegion = growingSubRegion;
     }
     
-    public static String regionFrom(String growthSubregion) {
-        if (growthSubregion.contains("/")) {
-            return growthSubregion.split("/")[0];
+    public static String regionFrom(String growingSubregion) {
+        if (growingSubregion.contains("/")) {
+            return growingSubregion.split("/")[0];
         }
-        return growthSubregion;
+        return growingSubregion;
     }
 }

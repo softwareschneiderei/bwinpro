@@ -274,12 +274,11 @@ public class TgJFrame extends JFrame implements ActionListener, ItemListener, St
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
         String cmd = e.getActionCommand();
-        System.out.println(cmd);
         if (obj instanceof JMenuItem) {
             if (cmd.equals("new")) {
                 yt.setYieldTableNew();
                 showIframes();
-                JDialog newstand = new TgNewStand(this, true, st, this, language.locale());
+                JDialog newstand = new TgNewStand(this, st, this, this.user);
                 Model mo = new Model();
                 st.setModelRegion(mo.getPlugInName(plugIn));
                 newstand.setVisible(true);

@@ -20,23 +20,87 @@ GNU General Public License for more details.
  */
 package forestsimulator.standsimulation;
 
+import forestsimulator.dbaccess.ConnectionFactory;
 import java.awt.Frame;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ComboBoxModel;
 import treegross.base.*;
-import java.util.*;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
 
 
 public class TgNewStand extends JDialog {
+    private static final Logger logger = Logger.getLogger(TgNewStand.class.getName());
     private final Stand st;
     private final TgJFrame frame;
+    private final TgUser userSettings;
+    private final ConnectionFactory connectionFactory;
+    private final Map<String, Map<String, List<String>>> locations;
 
-    public TgNewStand(Frame parent, boolean modal, Stand st1, TgJFrame owner, 
-                      Locale preferredLanguage) {
-        super(parent, modal);
+    public TgNewStand(Frame parent, Stand st1, TgJFrame owner, TgUser userSettings) {
+        super(parent, true);
+        this.connectionFactory = new ConnectionFactory();
+        this.userSettings = userSettings;
+        this.locations = loadAvailableLocations();
         st = st1;
         frame = owner;
         initComponents();
+    }
+    
+    private Map<String, Map<String, List<String>>> loadAvailableLocations() {
+        Map<String, Map<String, List<String>>> availableLocations = new HashMap<>();
+        availableLocations.put("", Collections.emptyMap());
+        if (!userSettings.getClimateDatabase().exists()) {
+            return availableLocations;
+        }
+        try (Connection connection = connectionFactory.openDBConnection(userSettings.getClimateDatabase(), "", "");
+                Statement stmt = connection.createStatement()) {
+            try (ResultSet rs = stmt.executeQuery("select distinct federal_state_code, growing_subregion from input_data")) {
+                while (rs.next()) {
+                    final String state = rs.getString("federal_state_code");
+                    final String growingSubregion = rs.getString("growing_subregion");
+                    final String region = StandLocation.regionFrom(growingSubregion);
+                    availableLocations.putIfAbsent(state, new HashMap<>());
+                    availableLocations.get(state).putIfAbsent(region, new ArrayList<>());
+                    availableLocations.get(state).get(region).add(growingSubregion);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Problem with climate database", e);
+        }
+        return availableLocations;
+    }
+    
+    private ComboBoxModel<String> availableStates() {
+        return new DefaultComboBoxModel<>(this.locations.keySet().toArray(new String[0]));
+    }
+    
+    private void updateSubRegionModel() {
+        String region = selectedRegion();
+        List<String> subRegions = this.locations.get(selectedState()).getOrDefault(region, Collections.emptyList());
+        subRegionComboBox.setModel(new DefaultComboBoxModel<>(subRegions.toArray(new String[0])));
+    }
+
+    private String selectedState() {
+        return (String) stateComboBox.getSelectedItem();
+    }
+    
+    private String selectedRegion() {
+        return (String) regionComboBox.getSelectedItem();
+    }
+
+    private String selectedSubRegion() {
+        return (String) this.subRegionComboBox.getSelectedItem();
     }
     
     /** This method is called from within the constructor to
@@ -55,24 +119,29 @@ public class TgNewStand extends JDialog {
         areaShapeComboBox = new javax.swing.JComboBox();
         standNameTextField = new javax.swing.JTextField();
         standNameLabel = new javax.swing.JLabel();
+        climateDataLabel = new javax.swing.JLabel();
+        stateComboBox = new javax.swing.JComboBox<>();
+        regionComboBox = new javax.swing.JComboBox<>();
+        subRegionComboBox = new javax.swing.JComboBox<>();
+        stateLabel = new javax.swing.JLabel();
+        regionLabel = new javax.swing.JLabel();
+        subRegionLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("forestsimulator/gui"); // NOI18N
         setTitle(bundle.getString("TgNewStand.title")); // NOI18N
         setModal(true);
 
-        jPanel1.setBackground(new java.awt.Color(246, 188, 188));
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setPreferredSize(new java.awt.Dimension(500, 250));
 
-        newStandInfoLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
+        newStandInfoLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         newStandInfoLabel.setText(bundle.getString("TgNewStand.newStandInfoLabel.text")); // NOI18N
 
         areaSizeLabel.setText(bundle.getString("TgNewStand.areaSizeLabel.text")); // NOI18N
 
-        tf0.setText(bundle.getString("TgNewStand.tf0.text")); // NOI18N
+        tf0.setText("0.2"); // NOI18N
 
-        createAreaButton.setBackground(new java.awt.Color(204, 0, 0));
         createAreaButton.setText(bundle.getString("TgNewStand.createAreaButton.text")); // NOI18N
         createAreaButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -86,51 +155,91 @@ public class TgNewStand extends JDialog {
 
         standNameLabel.setText(bundle.getString("TgNewStand.standNameLabel.text")); // NOI18N
 
+        climateDataLabel.setText(bundle.getString("TgNewStand.climateDataLabel.text")); // NOI18N
+
+        stateComboBox.setModel(availableStates());
+        stateComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stateComboBoxActionPerformed(evt);
+            }
+        });
+
+        regionComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regionComboBoxActionPerformed(evt);
+            }
+        });
+
+        stateLabel.setText(bundle.getString("TgNewStand.stateLabel.text")); // NOI18N
+
+        regionLabel.setText(bundle.getString("TgNewStand.regionLabel.text")); // NOI18N
+
+        subRegionLabel.setText(bundle.getString("TgNewStand.subRegionLabel.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(newStandInfoLabel)
+                    .addComponent(climateDataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(standNameLabel)
+                            .addComponent(areaSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(standNameTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(stateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(newStandInfoLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addComponent(standNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(10, 10, 10)
-                            .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(18, 18, 18)
-                            .addComponent(areaSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(80, 80, 80)
-                            .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(60, 60, 60)
-                            .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(318, 318, 318)
-                            .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(26, 26, 26))
+                        .addComponent(regionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(regionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(subRegionLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subRegionComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(newStandInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(standNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(areaSizeLabel)
+                    .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(newStandInfoLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(standNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(standNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(areaSizeLabel))
-                    .addComponent(tf0, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(areaShapeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(climateDataLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(stateComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(regionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(subRegionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(stateLabel)
+                    .addComponent(regionLabel)
+                    .addComponent(subRegionLabel))
+                .addGap(18, 18, 18)
+                .addComponent(createAreaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
@@ -146,6 +255,10 @@ public class TgNewStand extends JDialog {
         st.setSize(Double.parseDouble(tf0.getText()));
         st.standname = standNameTextField.getText();
         st.year = 2008;
+        st.location = new StandLocation(
+                selectedState(),
+                selectedRegion(),
+                selectedSubRegion());
 
         if (areaShapeComboBox.getSelectedIndex() == 0) {
             double len = Math.sqrt(10000 * st.size);
@@ -175,16 +288,38 @@ public class TgNewStand extends JDialog {
         frame.updatetp(false);
         dispose();
     }//GEN-LAST:event_createAreaButtonActionPerformed
-    
+
+    private void stateComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stateComboBoxActionPerformed
+        Map<String, List<String>> regions = this.locations.get(selectedState());
+        regionComboBox.setModel(new DefaultComboBoxModel<>(regions.keySet().toArray(new String[0])));
+        if (regions.keySet().isEmpty()) {
+            updateSubRegionModel();
+            return;
+        }
+        regionComboBox.setSelectedIndex(0);
+        updateSubRegionModel();
+    }//GEN-LAST:event_stateComboBoxActionPerformed
+
+    private void regionComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regionComboBoxActionPerformed
+        updateSubRegionModel();
+    }//GEN-LAST:event_regionComboBoxActionPerformed
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox areaShapeComboBox;
     private javax.swing.JLabel areaSizeLabel;
+    private javax.swing.JLabel climateDataLabel;
     private javax.swing.JButton createAreaButton;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel newStandInfoLabel;
+    private javax.swing.JComboBox<String> regionComboBox;
+    private javax.swing.JLabel regionLabel;
     private javax.swing.JLabel standNameLabel;
     private javax.swing.JTextField standNameTextField;
+    private javax.swing.JComboBox<String> stateComboBox;
+    private javax.swing.JLabel stateLabel;
+    private javax.swing.JComboBox<String> subRegionComboBox;
+    private javax.swing.JLabel subRegionLabel;
     private javax.swing.JTextField tf0;
     // End of variables declaration//GEN-END:variables
-    
+
 }
