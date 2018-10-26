@@ -18,7 +18,7 @@ public class DynamicSiteIndexCalculatorTest {
         DynamicSiteIndexCalculator calculator = new DynamicSiteIndexCalculator(spruceFunction);
         
         assertThat(calculator.computeSiteIndex(Year.of(2018), si(39.80825), testEnvironment()).value)
-                .isCloseTo(39.78825479, delta);
+                .isCloseTo(39.786779, delta);
     }
     
     /**
@@ -35,7 +35,7 @@ public class DynamicSiteIndexCalculatorTest {
     private static EnvironmentVariables testEnvironment() {
         EnvironmentVariables result = new EnvironmentVariables();
         // Add standardized environmental values 
-        result.addGrowingSeason(new SeasonMeanValues(Year.of(2018), 0.075, 0.063, new AnnualNitrogenDeposition(0.184)));
+        result.addGrowingSeason(new SeasonMeanValues(Year.of(2018), 0.075, 0.063, 0.0894365497, new AnnualNitrogenDeposition(0.184)));
         return result;
     }
 }

@@ -1,4 +1,5 @@
 apply plugin: 'application'
+apply from: "$rootDir/gradle/integration-test.gradle"
 version = '7.8-1.0RC1'
 
 mainClassName = 'forestsimulator.standsimulation.ForestSimulator'

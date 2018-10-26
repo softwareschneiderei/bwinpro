@@ -38,6 +38,7 @@ class LongtermEnvironmentVariables extends EnvironmentVariables {
                     yearlyValues.year,
                     standardizeValues(yearlyValues.meanTemperature, longtermTemperatureMean),
                     standardizeValues(yearlyValues.meanPrecipitationSum, longtermPrecipitationMean),
+                    yearlyValues.aridityIndex,
                     new AnnualNitrogenDeposition(standardizeValues(yearlyValues.nitrogenDeposition.value, longtermNitrogenDeposition.value))));
         }
         return result;

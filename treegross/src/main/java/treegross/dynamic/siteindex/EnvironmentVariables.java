@@ -1,6 +1,5 @@
 package treegross.dynamic.siteindex;
 
-import java.time.Month;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -59,7 +58,7 @@ public class EnvironmentVariables implements Iterable<SeasonMeanValues> {
 
     // TODO: change double to aridity index type
     public double aridityIndexOf(Year year) {
-        return Month.values().length * growingSeasonPrecipitationSumOf(year) / (growingSeasonMeanTemperatureOf(year) + 10);
+        return growingSeasons.get(year).aridityIndex;
     }
     
     public void addGrowingSeason(SeasonMeanValues growingSeason) {
@@ -71,7 +70,7 @@ public class EnvironmentVariables implements Iterable<SeasonMeanValues> {
             this.growingSeasons.put(seasonValues.year, seasonValues);
         });
     }
-    
+
     public EnvironmentVariables calculate5YearMeans() {
         final SlidingMeanCalculator<SeasonMeanValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
         if (!growingSeasons.isEmpty()) {
@@ -92,7 +91,8 @@ public class EnvironmentVariables implements Iterable<SeasonMeanValues> {
                     growingSeason.year,
                     window.meanOf(season -> season.meanTemperature),
                     window.meanOf(season -> season.meanPrecipitationSum),
-                    new AnnualNitrogenDeposition(window.meanOf(season -> season.nitrogenDeposition.value))));
+                    window.meanOf(season -> season.aridityIndex),
+                    new AnnualNitrogenDeposition(growingSeason.nitrogenDeposition.value)));
         });
         return result;
     }

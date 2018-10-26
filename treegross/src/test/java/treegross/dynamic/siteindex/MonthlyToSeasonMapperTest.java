@@ -1,7 +1,6 @@
 package treegross.dynamic.siteindex;
 
 import java.time.Year;
-import org.assertj.core.api.Assertions;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.data.Offset;
 import org.junit.Test;
@@ -21,8 +20,9 @@ public class MonthlyToSeasonMapperTest {
                 new MonthlyValues(17, 165, new AnnualNitrogenDeposition(80d))
         );
         assertThat(seasonValues.meanTemperature).isCloseTo(14.833d, delta);
-        assertThat(seasonValues.meanPrecipitationSum).isCloseTo(76.333d, Offset.offset(0.001d));
-        assertThat(seasonValues.nitrogenDeposition.value).isCloseTo(80d, Offset.offset(0.001d));
+        assertThat(seasonValues.meanPrecipitationSum).isCloseTo(76.333d, delta);
+        assertThat(seasonValues.nitrogenDeposition.value).isCloseTo(80d, delta);
+        assertThat(seasonValues.aridityIndex).isCloseTo(36.8862400838d, delta);
     }
 
     @Test
@@ -39,5 +39,6 @@ public class MonthlyToSeasonMapperTest {
         assertThat(seasonValues.meanTemperature).isCloseTo(16.0306d, delta);
         assertThat(seasonValues.meanPrecipitationSum).isCloseTo(41.58281d, delta);
         assertThat(seasonValues.nitrogenDeposition.value).isCloseTo(8.73394253153122d, delta);
+        assertThat(seasonValues.aridityIndex).isCloseTo(19.1695d, delta);
     }
 }
