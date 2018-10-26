@@ -19,7 +19,7 @@ import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.AnnualNitrogenDeposition;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.EnvironmentalDataProvider;
-import treegross.dynamic.siteindex.GrowingSeasonValues;
+import treegross.dynamic.siteindex.SeasonMeanValues;
 import treegross.dynamic.siteindex.MonthlyToSeasonMapper;
 
 public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvider {
@@ -70,7 +70,7 @@ public class DatabaseEnvironmentalDataProvider implements EnvironmentalDataProvi
                 new AnnualNitrogenDeposition(rs.getDouble("NDeposition_annual_sum_kghaa"))));
     }
 
-    private static GrowingSeasonValues mapMonthliesToSeason(Map.Entry<Year, List<MonthlyValues>> entry) {
+    private static SeasonMeanValues mapMonthliesToSeason(Map.Entry<Year, List<MonthlyValues>> entry) {
         return new MonthlyToSeasonMapper().mapMonthlies(entry.getKey(), entry.getValue());
     }
 }

@@ -10,8 +10,8 @@ import java.util.TreeMap;
 import treegross.util.MeanCalculator;
 import treegross.util.SlidingMeanCalculator;
 
-public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
-    private final Map<Year, GrowingSeasonValues> growingSeasons = new TreeMap<>();
+public class EnvironmentVariables implements Iterable<SeasonMeanValues> {
+    private final Map<Year, SeasonMeanValues> growingSeasons = new TreeMap<>();
 
     public EnvironmentVariables() {
         super();
@@ -62,18 +62,18 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
         return Month.values().length * growingSeasonPrecipitationSumOf(year) / (growingSeasonMeanTemperatureOf(year) + 10);
     }
     
-    public void addGrowingSeason(GrowingSeasonValues growingSeason) {
+    public void addGrowingSeason(SeasonMeanValues growingSeason) {
         addGrowingSeasons(Arrays.asList(growingSeason));
     }
 
-    public void addGrowingSeasons(Iterable<GrowingSeasonValues> growingSeasons) {
+    public void addGrowingSeasons(Iterable<SeasonMeanValues> growingSeasons) {
         growingSeasons.forEach((seasonValues) -> {
             this.growingSeasons.put(seasonValues.year, seasonValues);
         });
     }
     
     public EnvironmentVariables calculate5YearMeans() {
-        final SlidingMeanCalculator<GrowingSeasonValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
+        final SlidingMeanCalculator<SeasonMeanValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
         if (!growingSeasons.isEmpty()) {
             slidingMeanCalculator.fillCalculatorWindow(iterator().next());
         }
@@ -84,11 +84,11 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
         return calculateMeanWith(new Weighted5YearMeanCalculator<>());
     }
 
-    private EnvironmentVariables calculateMeanWith(MeanCalculator<GrowingSeasonValues> window) {
+    private EnvironmentVariables calculateMeanWith(MeanCalculator<SeasonMeanValues> window) {
         EnvironmentVariables result = new EnvironmentVariables();
         forEach(growingSeason -> {
             window.add(growingSeason);
-            result.addGrowingSeason(new GrowingSeasonValues(
+            result.addGrowingSeason(new SeasonMeanValues(
                     growingSeason.year,
                     window.meanOf(season -> season.meanTemperature),
                     window.meanOf(season -> season.meanPrecipitationSum),
@@ -104,7 +104,7 @@ public class EnvironmentVariables implements Iterable<GrowingSeasonValues> {
     }
 
     @Override
-    public Iterator<GrowingSeasonValues> iterator() {
+    public Iterator<SeasonMeanValues> iterator() {
         return growingSeasons.values().iterator();
     }
 

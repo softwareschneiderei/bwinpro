@@ -30,11 +30,11 @@ class LongtermEnvironmentVariables extends EnvironmentVariables {
 
     public EnvironmentVariables standardized(EnvironmentVariables environment) {
         EnvironmentVariables result = new EnvironmentVariables();
-        for (GrowingSeasonValues yearlyValues : environment) {
+        for (SeasonMeanValues yearlyValues : environment) {
             double longtermTemperatureMean = growingSeasonMeanTemperatureOf(yearlyValues.year);
             double longtermPrecipitationMean = growingSeasonPrecipitationSumOf(yearlyValues.year);
             AnnualNitrogenDeposition longtermNitrogenDeposition = nitrogenDepositionOf(yearlyValues.year);
-            result.addGrowingSeason(new GrowingSeasonValues(
+            result.addGrowingSeason(new SeasonMeanValues(
                     yearlyValues.year,
                     standardizeValues(yearlyValues.meanTemperature, longtermTemperatureMean),
                     standardizeValues(yearlyValues.meanPrecipitationSum, longtermPrecipitationMean),

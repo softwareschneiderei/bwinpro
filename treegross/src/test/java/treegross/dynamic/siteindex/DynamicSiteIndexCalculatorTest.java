@@ -35,7 +35,7 @@ public class DynamicSiteIndexCalculatorTest {
     private static EnvironmentVariables testEnvironment() {
         EnvironmentVariables result = new EnvironmentVariables();
         // Add standardized environmental values 
-        result.addGrowingSeason(new GrowingSeasonValues(Year.of(2018), 0.075, 0.063, new AnnualNitrogenDeposition(0.184)));
+        result.addGrowingSeason(new SeasonMeanValues(Year.of(2018), 0.075, 0.063, new AnnualNitrogenDeposition(0.184)));
         return result;
     }
 }
