@@ -45,4 +45,9 @@ public class SiteIndex {
         final SiteIndex other = (SiteIndex) obj;
         return Double.doubleToLongBits(this.value) == Double.doubleToLongBits(other.value);
     }
+
+    @Override
+    public String toString() {
+        return "SiteIndex{" + "value=" + value + '}';
+    }
 }

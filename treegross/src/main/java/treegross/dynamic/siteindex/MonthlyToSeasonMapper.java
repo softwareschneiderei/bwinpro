@@ -18,7 +18,7 @@ public class MonthlyToSeasonMapper {
         return new SeasonMeanValues(year, meanTemperature, meanPrecipitation, aridityIndex, monthlyValues.get(0).nitrogenDeposition);
     }
     
-    private Double calculateAridityIndexOf(double meanTemperature, double meanPrecipitationSum) {
+    public static Double calculateAridityIndexOf(double meanTemperature, double meanPrecipitationSum) {
         return Month.values().length * meanPrecipitationSum / (meanTemperature + 10);
     }
 }

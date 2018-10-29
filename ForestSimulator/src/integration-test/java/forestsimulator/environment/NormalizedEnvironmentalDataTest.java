@@ -40,8 +40,7 @@ public class NormalizedEnvironmentalDataTest {
             
             assertThat(normalized.growingSeasonMeanTemperatureOf(year)).isCloseTo(expectedValues[0], delta);
             assertThat(normalized.growingSeasonPrecipitationSumOf(year)).isCloseTo(expectedValues[1], delta);
-            // TODO: need verify the calculations for the aridity index
-//            assertThat(normalized.aridityIndexOf(year)).isCloseTo(expectedValues[2], delta);
+            assertThat(normalized.aridityIndexOf(year)).isCloseTo(expectedValues[2], delta);
             assertThat(normalized.nitrogenDepositionOf(year).value).isCloseTo(expectedValues[3], delta);
         });
     }
