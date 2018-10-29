@@ -1,6 +1,5 @@
 package treegross.dynamic.siteindex;
 
-import java.util.Iterator;
 import java.util.stream.StreamSupport;
 import treegross.util.SlidingMeanCalculator;
 
@@ -17,14 +16,10 @@ class LongtermEnvironmentVariables {
         if (rawValues.iterator().hasNext()) {
             slidingMeanCalculator.fillCalculatorWindow(rawValues.iterator().next());
         }
-        int year = 0;
         StreamSupport.stream(rawValues.spliterator(), false).limit(slidingMeanCalculator.windowSize()).forEachOrdered(mean -> {
-            System.out.println("-----" + mean);
             slidingMeanCalculator.add(mean);
         });
         meanTemperature = slidingMeanCalculator.meanOf(season -> season.meanTemperature);
-        System.out.println("Mean temp" + growingSeasonMeanTemperature());
-        
         precipitationSum = slidingMeanCalculator.meanOf(season -> season.meanPrecipitationSum);
         aridityIndex = slidingMeanCalculator.meanOf(season -> season.aridityIndex);
         nitrogenDepositionValue = slidingMeanCalculator.meanOf(season -> season.nitrogenDeposition.value);
@@ -42,7 +37,7 @@ class LongtermEnvironmentVariables {
         return new AnnualNitrogenDeposition(0.8947 * nitrogenDepositionValue - 2);
     }
 
-    private double aridityIndexOf() {
+    public double aridityIndexOf() {
         return 1.1187 * aridityIndex - 5.7999;
     }
 }

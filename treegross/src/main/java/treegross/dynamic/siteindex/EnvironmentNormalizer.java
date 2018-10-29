@@ -19,7 +19,7 @@ public class EnvironmentNormalizer {
                     yearlyValues.year,
                     standardizeValues(yearlyValues.meanTemperature, longtermVariables.growingSeasonMeanTemperature()),
                     standardizeValues(yearlyValues.meanPrecipitationSum, longtermVariables.growingSeasonPrecipitationSum()),
-                    yearlyValues.aridityIndex,
+                    standardizeValues(yearlyValues.aridityIndex, longtermVariables.aridityIndexOf()),
                     new AnnualNitrogenDeposition(standardizeValues(yearlyValues.nitrogenDeposition.value, longtermVariables.nitrogenDeposition().value))));
         }
         return result;
