@@ -1,5 +1,6 @@
 package forestsimulator.standsimulation;
 
+import forestsimulator.gui.ComboBoxTableCellRenderer;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,6 +67,8 @@ public class EditorPanel extends JPanel {
         st.year = 2008;
         changeCoordinateSystemButton.setText(messages.getString("EditorPanel.changeCoordinateSystemButton.toPolar.text"));
         treeTable.getColumnModel().getColumn(layerColumn).setCellEditor(new DefaultCellEditor(new JComboBox(Layer.values())));
+        // XXX: workaround to display the combobox editors in a proper way
+        treeTable.setRowHeight(new ComboBoxTableCellRenderer().getTableCellRendererComponent(treeTable, "", true, true, 0, 0).getPreferredSize().height);
     }
 
     private int getInt(String txt) {

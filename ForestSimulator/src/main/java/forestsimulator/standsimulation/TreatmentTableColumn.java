@@ -1,5 +1,6 @@
 package forestsimulator.standsimulation;
 
+import forestsimulator.gui.ComboBoxTableCellRenderer;
 import static forestsimulator.util.NumberFormatters.integerFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,11 @@ public enum TreatmentTableColumn {
         @Override
         protected void setCellEditor(TableColumnModel columnModel) {
             columnModel.getColumn(ordinal()).setCellEditor(new DefaultCellEditor(new JComboBox(ThinningModeName.values())));
+        }
+
+        @Override
+        protected void setCellRenderer(TableColumnModel columnModel) {
+            columnModel.getColumn(ordinal()).setCellRenderer(new ComboBoxTableCellRenderer());
         }
 
         @Override
@@ -89,9 +95,10 @@ public enum TreatmentTableColumn {
         this.resourceKey = resourceKey;
     }
 
-    public static void applyCellEditors(TableColumnModel columnModel) {
+    public static void applyCellRendering(TableColumnModel columnModel) {
         for (TreatmentTableColumn value : values()) {
             value.setCellEditor(columnModel);
+            value.setCellRenderer(columnModel);
         }
     }
     
@@ -111,6 +118,10 @@ public enum TreatmentTableColumn {
     }    
 
     protected void setCellEditor(TableColumnModel columnModel) {
+        // do nothing by default
+    }
+
+    protected void setCellRenderer(TableColumnModel columnModel) {
         // do nothing by default
     }
 }

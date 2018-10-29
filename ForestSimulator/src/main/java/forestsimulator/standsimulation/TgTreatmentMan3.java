@@ -18,6 +18,7 @@ package forestsimulator.standsimulation;
 
 import forestsimulator.dbaccess.ConnectionFactory;
 import forestsimulator.dbaccess.DatabaseEnvironmentalDataProvider;
+import forestsimulator.gui.ComboBoxTableCellRenderer;
 import static forestsimulator.standsimulation.TreatmentTableColumn.Code;
 import static forestsimulator.standsimulation.TreatmentTableColumn.CropTrees;
 import static forestsimulator.standsimulation.TreatmentTableColumn.Mixture;
@@ -70,8 +71,9 @@ public class TgTreatmentMan3 extends JPanel {
 
         speciesData = new DefaultTableModel(TreatmentTableColumn.values(), 0);
         speciesTable.setModel(speciesData);
-        TreatmentTableColumn.applyCellEditors(speciesTable.getColumnModel());
-
+        TreatmentTableColumn.applyCellRendering(speciesTable.getColumnModel());
+        // XXX: workaround to display the combobox editors in a proper way
+        speciesTable.setRowHeight(new ComboBoxTableCellRenderer().getTableCellRendererComponent(speciesTable, "", true, true, 0, 0).getPreferredSize().height);
         loadTable();
     }
 
