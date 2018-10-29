@@ -467,8 +467,8 @@ public class LoadTreegrossStand {
     public void saveSpecies(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement(
                 "INSERT INTO ProgArt (edvid, auf, art, wiederholung, szenario, gpro, simschritt, alt, nha, gha, vha,"
-                + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + " dg, hg, d100, h100, nhaa, ghaa, vhaa, si)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
                 stmt.setString(1, ids);
                 stmt.setInt(2, aufs);
@@ -488,6 +488,8 @@ public class LoadTreegrossStand {
                 stmt.setDouble(16, st.sp[i].nhaout);
                 stmt.setDouble(17, st.sp[i].ghaout);
                 stmt.setDouble(18, st.sp[i].vhaout);
+                stmt.setDouble(19, st.sp[i].hbon);
+                
                 stmt.execute();
             }
         } catch (SQLException e) {
@@ -501,8 +503,8 @@ public class LoadTreegrossStand {
     public void saveSpeciesV2(Connection dbconn, Stand st, String ids, int aufs, int sims, int nwieder) {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgArt"
                 + " (edvid, auf, art, wiederholung,szenario, gpro, simschritt, alt, nha, gha, vha,"
-                + " dg, hg, d100, h100, nhaa, ghaa, vhaa)"
-                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                + " dg, hg, d100, h100, nhaa, ghaa, vhaa, si)"
+                + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             for (int i = 0; i < st.nspecies; i++) {
                 Double ggha = st.sp[i].gha;
                 Double vvha = st.sp[i].vol;
@@ -514,7 +516,7 @@ public class LoadTreegrossStand {
                 Double aalt = st.sp[i].h100age;
                 Double gpro = calculateGPro(st, st.sp[i]);
                 int art = st.sp[i].code;
-
+                Double si = st.sp[i].hbon;
                 // SUMME Grundfläche und Volumen der Nutzung  
                 double nnhaa = 0.0;
                 double gghaa = 0.0;
@@ -544,6 +546,7 @@ public class LoadTreegrossStand {
                 stmt.setDouble(16, nnhaa);
                 stmt.setDouble(17, gghaa);
                 stmt.setDouble(18, vvhaa);
+                stmt.setDouble(19, si);
 
                 stmt.execute();
             }
