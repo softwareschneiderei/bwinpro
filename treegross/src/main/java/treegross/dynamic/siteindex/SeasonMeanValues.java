@@ -21,4 +21,11 @@ public class SeasonMeanValues {
         this.aridityIndex = aridityIndex;
         this.nitrogenDeposition = nitrogenDeposition;
     }
+
+    @Override
+    public String toString() {
+        return "SeasonMeanValues{" + "year=" + year + ", meanTemperature=" + meanTemperature + ", meanPrecipitationSum=" + meanPrecipitationSum + ", aridityIndex=" + aridityIndex + ", nitrogenDeposition=" + nitrogenDeposition + '}';
+    }
+    
+    
 }

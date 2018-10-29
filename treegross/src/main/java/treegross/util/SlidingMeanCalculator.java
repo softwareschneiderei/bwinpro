@@ -23,6 +23,7 @@ public class SlidingMeanCalculator<E> implements MeanCalculator<E> {
         return window.stream().map(mapper).reduce(0d, (sum, value) -> sum + value) / window.size();
     }
     
+    @Override
     public int windowSize() {
         return windowSize;
     }

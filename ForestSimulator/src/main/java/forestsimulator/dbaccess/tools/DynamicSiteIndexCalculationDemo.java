@@ -7,7 +7,7 @@ import treegross.base.SiteIndex;
 import static treegross.base.SiteIndex.si;
 import treegross.base.StandLocation;
 import treegross.dynamic.siteindex.DynamicSiteIndexProgression;
-import treegross.dynamic.siteindex.EnvironmentStandardizer;
+import treegross.dynamic.siteindex.EnvironmentNormalizer;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.Projection;
 
@@ -30,7 +30,7 @@ public class DynamicSiteIndexCalculationDemo {
         
         dsiProjection.length = 5;
         DynamicSiteIndexModel dsiFunction = new DynamicSiteIndexModel();
-        DynamicSiteIndexProgression dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndexProgression(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, EnvironmentStandardizer.standardize(dsiEnvironment));
+        DynamicSiteIndexProgression dsi = new DynamicSiteIndexCalculation(new DynamicSiteIndexProgression(initialSiteIndex())).recursiveProjection(dsiProjection, dsiFunction, EnvironmentNormalizer.normalize(dsiEnvironment));
         System.out.println("Dynamic site index: " + dsi.siIntermediates);
         System.out.println("Dynamic site index after " + dsiProjection.length + " years: " + dsi.endSiteIndex());
     }

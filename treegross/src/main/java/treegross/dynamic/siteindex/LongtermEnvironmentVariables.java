@@ -1,50 +1,48 @@
 package treegross.dynamic.siteindex;
 
-import java.time.Year;
+import java.util.Iterator;
+import java.util.stream.StreamSupport;
+import treegross.util.SlidingMeanCalculator;
 
-class LongtermEnvironmentVariables extends EnvironmentVariables {
+class LongtermEnvironmentVariables {
+
+    private final double meanTemperature;
+    private final double precipitationSum;
+    private final double aridityIndex;
+    private final double nitrogenDepositionValue;
     
-    public LongtermEnvironmentVariables(EnvironmentVariables mean5Year) {
-        super(mean5Year);
-    }
-
-    @Override
-    public double growingSeasonMeanTemperatureOf(Year year) {
-        return 0.9859 * super.growingSeasonMeanTemperatureOf(year) - 0.8488;
-    }
-
-    @Override
-    public double growingSeasonPrecipitationSumOf(Year year) {
-        return 1.0799 * super.growingSeasonPrecipitationSumOf(year) - 10.691;
-    }
-
-    @Override
-    public AnnualNitrogenDeposition nitrogenDepositionOf(Year year) {
-        return new AnnualNitrogenDeposition(0.8947 * super.nitrogenDepositionOf(year).value - 4.355);
-    }
-
-    @Override
-    public double aridityIndexOf(Year year) {
-        return 1.1187 * super.aridityIndexOf(year) - 5.7999;
-    }
-
-    public EnvironmentVariables standardized(EnvironmentVariables environment) {
-        EnvironmentVariables result = new EnvironmentVariables();
-        for (SeasonMeanValues yearlyValues : environment) {
-            double longtermTemperatureMean = growingSeasonMeanTemperatureOf(yearlyValues.year);
-            double longtermPrecipitationMean = growingSeasonPrecipitationSumOf(yearlyValues.year);
-            AnnualNitrogenDeposition longtermNitrogenDeposition = nitrogenDepositionOf(yearlyValues.year);
-            result.addGrowingSeason(new SeasonMeanValues(
-                    yearlyValues.year,
-                    standardizeValues(yearlyValues.meanTemperature, longtermTemperatureMean),
-                    standardizeValues(yearlyValues.meanPrecipitationSum, longtermPrecipitationMean),
-                    yearlyValues.aridityIndex,
-                    new AnnualNitrogenDeposition(standardizeValues(yearlyValues.nitrogenDeposition.value, longtermNitrogenDeposition.value))));
+    public LongtermEnvironmentVariables(EnvironmentVariables rawValues) {
+        super();
+        final SlidingMeanCalculator<SeasonMeanValues> slidingMeanCalculator = new SlidingMeanCalculator<>(5);
+        if (rawValues.iterator().hasNext()) {
+            slidingMeanCalculator.fillCalculatorWindow(rawValues.iterator().next());
         }
-        return result;
+        int year = 0;
+        StreamSupport.stream(rawValues.spliterator(), false).limit(slidingMeanCalculator.windowSize()).forEachOrdered(mean -> {
+            System.out.println("-----" + mean);
+            slidingMeanCalculator.add(mean);
+        });
+        meanTemperature = slidingMeanCalculator.meanOf(season -> season.meanTemperature);
+        System.out.println("Mean temp" + growingSeasonMeanTemperature());
+        
+        precipitationSum = slidingMeanCalculator.meanOf(season -> season.meanPrecipitationSum);
+        aridityIndex = slidingMeanCalculator.meanOf(season -> season.aridityIndex);
+        nitrogenDepositionValue = slidingMeanCalculator.meanOf(season -> season.nitrogenDeposition.value);
     }
 
-    private double standardizeValues(double yearlyMean, double longtermMean) {
-        return (yearlyMean - longtermMean) / longtermMean;
+    public double growingSeasonMeanTemperature() {
+        return 0.9859 * meanTemperature - 0.8488;
+    }
+
+    public double growingSeasonPrecipitationSum() {
+        return 1.0799 * precipitationSum - 10.691;
+    }
+
+    public AnnualNitrogenDeposition nitrogenDeposition() {
+        return new AnnualNitrogenDeposition(0.8947 * nitrogenDepositionValue - 2);
+    }
+
+    private double aridityIndexOf() {
+        return 1.1187 * aridityIndex - 5.7999;
     }
 }

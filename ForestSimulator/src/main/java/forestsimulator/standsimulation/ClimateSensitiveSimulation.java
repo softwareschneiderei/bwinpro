@@ -11,9 +11,9 @@ import java.util.stream.IntStream;
 import treegross.base.SiteIndex;
 import treegross.base.Stand;
 import treegross.base.Tree;
-import static treegross.dynamic.siteindex.EnvironmentStandardizer.standardize;
 import treegross.dynamic.siteindex.EnvironmentVariables;
 import treegross.dynamic.siteindex.EnvironmentalDataProvider;
+import static treegross.dynamic.siteindex.EnvironmentNormalizer.normalize;
 
 public class ClimateSensitiveSimulation extends Simulation {
     private final EnvironmentVariables environmentVariables;
@@ -22,7 +22,7 @@ public class ClimateSensitiveSimulation extends Simulation {
     public ClimateSensitiveSimulation(Stand st, boolean applyTreatment, boolean executeMortality, EnvironmentalDataProvider environmentProvider, String climateScenario) {
         super(st, applyTreatment, executeMortality);
         this.climateScenario = climateScenario;
-        this.environmentVariables = standardize(environmentProvider.environmentalDataFor(st.location, climateScenario));
+        this.environmentVariables = normalize(environmentProvider.environmentalDataFor(st.location, climateScenario));
     }
 
     @Override
