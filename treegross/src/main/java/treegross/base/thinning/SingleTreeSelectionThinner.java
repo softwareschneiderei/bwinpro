@@ -141,6 +141,9 @@ public class SingleTreeSelectionThinner extends AreaThinner {
                     && !neighbor.crop
                     && !neighbor.habitat) {
                 double radius = neighbor.calculateCwAtHeight(h66) / 2.0;
+                if(radius == 0) { // radius is zero when neigbor tree crown base is higher than h66 of crop tree --> take crown width of neigbor tree instead
+                    radius = neighbor.cw / 2.0;
+                }
                 double ent = Math.sqrt(Math.pow(cropTree.x - neighbor.x, 2.0)
                         + Math.pow(cropTree.y - neighbor.y, 2.0));
                 if ((ent - radius < cropTree.cw * (0.75 / intensity)) && dist > (ent - radius)) {
