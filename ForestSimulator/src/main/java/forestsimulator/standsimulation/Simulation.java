@@ -35,15 +35,15 @@ public class Simulation {
             mortality.printElapsedTime();
         }
         st.descspecies();
+        StopWatch save = new StopWatch("Publishing stand").start();
+        publishStand.accept(st);
+        save.printElapsedTime();
         StopWatch grow = new StopWatch("Growing").start();
         // first year of dsi calculation is the next year
         int startYear = st.year + 1;
         st.grow(numberOfYears, st.ingrowthActive);
         grow.printElapsedTime();
         actionsAfterGrowing(startYear, numberOfYears);
-        StopWatch save = new StopWatch("Publishing stand").start();
-        publishStand.accept(st);
-        save.printElapsedTime();
     }
     
     protected Stand getStand() {
