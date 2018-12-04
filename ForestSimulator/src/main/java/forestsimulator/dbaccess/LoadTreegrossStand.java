@@ -568,7 +568,7 @@ public class LoadTreegrossStand {
         try (PreparedStatement stmt = dbconn.prepareStatement("INSERT INTO ProgBestand (edvid, auf, simschritt, wiederholung, szenario, alt, nha, gha, vha, dg, hg, d100, h100, nhaa, ghaa, vhaa, vhaazst)"
                 + " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             st.descspecies();
-            double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0);
+            double vvhaa = st.getVhaTargetDiameter(0) + st.getVhaThinning(0) + st.getVhaFallen(0);
 
             stmt.setString(1, ids);
             stmt.setInt(2, aufs);

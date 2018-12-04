@@ -714,14 +714,7 @@ public class Stand {
      * @return a volume
      */
     public double getVhaTargetDiameter(int spe) {
-        double vha = 0.0;
-        for (int i = 0; i < ntrees; i++) {
-            if (tr[i].outtype == OutType.HARVESTED && tr[i].out == year
-                    && ((tr[i].code == spe) || (spe == 0))) {
-                vha = vha + tr[i].fac * tr[i].v;
-            }
-        }
-        return vha / size;
+        return vhaByType(spe, OutType.HARVESTED);
     }
 
     /**
@@ -732,11 +725,26 @@ public class Stand {
      * @return a volume
      */
     public double getVhaThinning(int spe) {
+        return vhaByType(spe, OutType.THINNED);
+    }
+
+    /**
+     * get thinning volume per hectare of this year of the total volume (spe=0)
+     * or species volume (spe=code)
+     *
+     * @param spe
+     * @return a volume
+     */
+    public double getVhaFallen(int spe) {
+        return vhaByType(spe, OutType.FALLEN);
+    }
+
+    private double vhaByType(int spe, OutType outType) {
         double vha = 0.0;
         for (int i = 0; i < ntrees; i++) {
-            if (tr[i].outtype == OutType.THINNED && tr[i].out == year
+            if (tr[i].outtype == outType && tr[i].out == year
                     && ((tr[i].code == spe) || (spe == 0))) {
-                vha += +tr[i].fac * tr[i].v;
+                vha += tr[i].fac * tr[i].v;
             }
         }
         return vha / size;
